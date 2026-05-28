@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isotopes &amp; Atomic Mass Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Isotopes &amp; Atomic Mass Laboratory</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Mass Spectrometry &amp; Nuclear Abundance Simulator</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" onclick="toggleUserGuide(true)" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📖</span> Operational Manual
+        </button>
+        <button id="btn-reset" onclick="resetWorkspace()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Lab
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Tab View switching) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Primary Tab Controls -->
+      <div class="flex items-center space-x-2">
+        <button id="tab-sandbox" onclick="switchTab('sandbox')" class="px-5 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-sm transition-all flex items-center gap-1.5">
+          ⚛️ Isotope Builder Sandbox
+        </button>
+        <button id="tab-mixtures" onclick="switchTab('mixtures')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
+          🧪 Isotope Mixtures &amp; Abundance
+        </button>
+      </div>
+
+      <!-- Quick Element Selection Bar -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-500 uppercase">Target Element:</span>
+        <div class="flex items-center gap-1 bg-white p-1 rounded border border-slate-200" id="element-quick-bar">
+          <!-- Populated dynamically in script -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Master Layout Split: Left (Simulation Workbench), Right (Viva sidebar) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+      <section class="lg:col-span-9 flex flex-col divide-y divide-slate-200">
+        
+        <!-- MAIN CANVAS ARENA -->
+        <div class="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 flex-1">
+          
+          <!-- Steppers / Count Controllers (4 Columns of 9) -->
+          <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+            
+            <!-- Dynamic Controls Container (Switches between Sandbox & Mixtures counts) -->
+            <div class="space-y-6" id="controls-panel">
+              <!-- Content injected by JavaScript based on active tab -->
+            </div>
+
+            <!-- Atomic Symbol Visualizer Widget -->
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm space-y-3 relative overflow-hidden flex flex-col items-center justify-center">
+              <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide border-b border-slate-100 pb-1.5 w-full text-center">
+                Atomic Symbol Notation
+              </div>
+              <div class="relative inline-block my-3 font-serif select-none" id="symbol-card">
+                <span class="absolute top-0 left-[-16px] text-xs font-semibold text-indigo-600" id="sym-mass-num">--</span>
+                <span class="absolute bottom-0 left-[-16px] text-xs font-semibold text-slate-500" id="sym-proton-num">--</span>
+                <span class="text-5xl font-black text-slate-900 mx-1" id="sym-element-char">--</span>
+                <span class="absolute top-0 right-[-14px] text-xs font-extrabold text-amber-600" id="sym-net-charge"></span>
+              </div>
+              <div class="text-[11px] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full" id="sym-stability-tag">
+                Stable Isotope
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Visualizer Arena: Classical Model / Physical Balance Scale (8 Columns of 9) -->
+          <div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex flex-col min-h-[460px]">
+            <canvas id="atomCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Spectrometer Telemetry & Viva Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <!-- Mass Spectrometer Telemetry -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm space-y-3">
+          <div class="border-b border-slate-700 pb-1.5 flex items-center justify-between">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Mass Spectrometer Telemetry</span>
+            <span class="text-[8px] text-emerald-400 font-bold uppercase tracking-wider animate-pulse">live feed</span>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between font-mono">
+              <span class="text-slate-400 font-semibold">Element:</span>
+              <span class="font-bold text-white" id="tel-element-name">--</span>
+            </div>
+            <div class="flex justify-between font-mono">
+              <span class="text-slate-400 font-semibold">Avg Periodic Mass:</span>
+              <span class="font-bold text-white" id="tel-standard-mass">-- u</span>
+            </div>
+            <div class="flex justify-between font-mono">
+              <span class="text-slate-400 font-semibold">Your Sample Mass:</span>
+              <span class="font-bold text-emerald-400" id="tel-calculated-mass">-- u</span>
+            </div>
+            <div class="flex justify-between font-mono">
+              <span class="text-slate-400 font-semibold">Abundance in Nature:</span>
+              <span class="font-bold text-indigo-300" id="tel-abundance">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Viva Assessment Desk Header -->
+        <div class="bg-indigo-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
+            <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Challenges</h2>
+          </div>
+          <div class="bg-indigo-850 px-2.5 py-1 rounded text-xs font-bold font-mono text-pink-400" id="viva-score-tag">
+            SCORE: 0 / 5
+          </div>
+        </div>
+
+        <!-- viva voce cards list -->
+        <div class="space-y-3" id="viva-cards-container">
+          <!-- Populated dynamically via script -->
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-slate-50 px-6 py-4 mt-auto text-xs text-slate-500">
+      <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p>© 2026 Sparkl Nuclear Laboratories. Precision Isotopes Abundance Module.</p>
+        <p class="font-medium text-slate-450">Apparatus ID: SP-ISOTOPE-9042</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Overlay -->
+  <div id="user-guide-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 shadow-2xl relative">
+      <button onclick="toggleUserGuide(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-650 font-bold text-lg">✕</button>
+      <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+        📖 ISOTOPES virtual laboratory manual
+      </h2>
+      
+      <div class="text-xs text-slate-600 space-y-3 leading-relaxed max-h-[380px] overflow-y-auto pr-2">
+        <p class="font-bold text-slate-700">Explore isotopic structures, nucleon stability limits, and dynamic mixture mass calculations:</p>
+        
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <h3 class="font-bold text-indigo-700 uppercase tracking-wide mb-1">1. Isotope Builder Sandbox</h3>
+          <p>Select any element from the quick selection bar. Use Protons (+/-), Neutrons (+/-), and Electrons (+/-) steppers to assemble stable or unstable nuclei. Observe the spinning electron shells, nuclear core packed coordinates, and real-time radioactive shaking vibration for unstable isotopes.</p>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <h3 class="font-bold text-indigo-700 uppercase tracking-wide mb-1">2. Isotope Mixtures &amp; Abundance</h3>
+          <p>Switch to the Mixtures tab. Here you can add or subtract counts of different isotopes in a sample. Telemetry calculates the weighted average atomic mass of your customized mixture and represents it on a vectors-drawn physical balancing scale, matching it against the standard periodic table value.</p>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <h3 class="font-bold text-indigo-700 uppercase tracking-wide mb-1">3. Viva Voce Questions</h3>
+          <p>Answer the 5 multiple choice questions on the right-hand desk. Each selection will lock in color-coded feedback. Click "Show Scientific Verification" at the bottom of each card to expand advanced LaTeX proofs compiled by MathJax!</p>
+        </div>
+      </div>
+
+      <div class="mt-5 pt-3 border-t border-slate-200 flex justify-end">
+        <button onclick="toggleUserGuide(false)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded text-xs transition">
+          Acknowledge &amp; Start Lab
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulation Application Logic Script -->
+  <script>
+    // --- PERIODIC TABLE DATABASE ---
+    const PERIODIC_TABLE = {
+      1: {
+        name: "Hydrogen", symbol: "H", standardAtomicMass: 1.008, stableNeutrons: [0, 1],
+        knownIsotopes: {
+          1: { name: "Protium", abundance: 99.98, stable: true },
+          2: { name: "Deuterium", abundance: 0.02, stable: true },
+          3: { name: "Tritium", abundance: null, stable: false, halfLife: "12.3 Years" }
+        }
+      },
+      2: {
+        name: "Helium", symbol: "He", standardAtomicMass: 4.0026, stableNeutrons: [1, 2],
+        knownIsotopes: {
+          3: { name: "Helium-3", abundance: 0.0001, stable: true },
+          4: { name: "Helium-4", abundance: 99.999, stable: true },
+          5: { name: "Helium-5", abundance: null, stable: false, halfLife: "700 Yoctoseconds" }
+        }
+      },
+      3: {
+        name: "Lithium", symbol: "Li", standardAtomicMass: 6.94, stableNeutrons: [3, 4],
+        knownIsotopes: {
+          6: { name: "Lithium-6", abundance: 7.59, stable: true },
+          7: { name: "Lithium-7", abundance: 92.41, stable: true },
+          8: { name: "Lithium-8", abundance: null, stable: false, halfLife: "840 Milliseconds" }
+        }
+      },
+      4: {
+        name: "Beryllium", symbol: "Be", standardAtomicMass: 9.0122, stableNeutrons: [5],
+        knownIsotopes: {
+          7: { name: "Beryllium-7", abundance: null, stable: false, halfLife: "53.2 Days" },
+          9: { name: "Beryllium-9", abundance: 100.0, stable: true },
+          10: { name: "Beryllium-10", abundance: null, stable: false, halfLife: "1.39 Million Years" }
+        }
+      },
+      5: {
+        name: "Boron", symbol: "B", standardAtomicMass: 10.811, stableNeutrons: [5, 6],
+        knownIsotopes: {
+          10: { name: "Boron-10", abundance: 19.9, stable: true },
+          11: { name: "Boron-11", abundance: 80.1, stable: true },
+          12: { name: "Boron-12", abundance: null, stable: false, halfLife: "20.2 Milliseconds" }
+        }
+      },
+      6: {
+        name: "Carbon", symbol: "C", standardAtomicMass: 12.011, stableNeutrons: [6, 7],
+        knownIsotopes: {
+          12: { name: "Carbon-12", abundance: 98.93, stable: true },
+          13: { name: "Carbon-13", abundance: 1.07, stable: true },
+          14: { name: "Carbon-14", abundance: null, stable: false, halfLife: "5,730 Years" }
+        }
+      },
+      7: {
+        name: "Nitrogen", symbol: "N", standardAtomicMass: 14.007, stableNeutrons: [7, 8],
+        knownIsotopes: {
+          14: { name: "Nitrogen-14", abundance: 99.63, stable: true },
+          15: { name: "Nitrogen-15", abundance: 0.37, stable: true },
+          16: { name: "Nitrogen-16", abundance: null, stable: false, halfLife: "7.13 Seconds" }
+        }
+      },
+      8: {
+        name: "Oxygen", symbol: "O", standardAtomicMass: 15.999, stableNeutrons: [8, 9, 10],
+        knownIsotopes: {
+          16: { name: "Oxygen-16", abundance: 99.76, stable: true },
+          17: { name: "Oxygen-17", abundance: 0.04, stable: true },
+          18: { name: "Oxygen-18", abundance: 0.20, stable: true }
+        }
+      },
+      35: {
+        name: "Bromine", symbol: "Br", standardAtomicMass: 79.904, stableNeutrons: [44, 46],
+        knownIsotopes: {
+          79: { name: "Bromine-79", abundance: 50.69, stable: true },
+          81: { name: "Bromine-81", abundance: 49.31, stable: true },
+          82: { name: "Bromine-82", abundance: null, stable: false, halfLife: "35.3 Hours" }
+        }
+      }
+    };
+
+    // --- APP STATE ---
+    let currentTab = 'sandbox'; // 'sandbox' or 'mixtures'
+    let protons = 1;
+    let neutrons = 0;
+    let electrons = 1;
+
+    // Mixture component tallies
+    let mixIsotopeACount = 5;
+    let mixIsotopeBCount = 5;
+    let mixIsotopeCCount = 0;
+
+    // Derived values
+    let mixIsotopeAMass = 1;
+    let mixIsotopeBMass = 2;
+    let mixIsotopeCMass = 3;
+
+    // Viva mechanics
+    let score = 0;
+    let answers = { q1: null, q2: null, q3: null, q4: null, q5: null };
+
+    // Canvas scaling
+    let dpi = window.devicePixelRatio || 1;
+    let canvas, ctx;
+    let animationFrameId;
+
+    // --- INITIALIZE LAB ---
+    window.addEventListener('load', () => {
+      initApp();
+      window.addEventListener('resize', handleResize);
+    });
+
+    function initApp() {
+      canvas = document.getElementById('atomCanvas');
+      ctx = canvas.getContext('2d');
+
+      // 1. Populate element quick select bar
+      const quickBar = document.getElementById('element-quick-bar');
+      quickBar.innerHTML = '';
+      Object.keys(PERIODIC_TABLE).forEach(z => {
+        const symbol = PERIODIC_TABLE[z].symbol;
+        const btn = document.createElement('button');
+        btn.id = `btn-el-${z}`;
+        btn.onclick = () => selectElement(parseInt(z));
+        btn.className = "px-2.5 py-1 rounded text-xs font-bold font-mono transition";
+        btn.textContent = symbol;
+        quickBar.appendChild(btn);
+      });
+
+      // 2. Render Viva Voce cards
+      renderVivaCards();
+
+      // 3. Set starting configuration
+      selectElement(1);
+      
+      // 4. Start animation loop
+      tick();
+    }
+
+    function handleResize() {
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      updateUI();
+    }
+
+    // --- WORKSPACE NAVIGATION ---
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.getElementById('tab-sandbox').className = `px-5 py-1.5 text-xs font-bold rounded shadow-sm transition-all ${tabId === 'sandbox' ? 'bg-indigo-600 text-white' : 'bg-slate-200 hover:bg-slate-350 text-slate-700'}`;
+      document.getElementById('tab-mixtures').className = `px-5 py-1.5 text-xs font-bold rounded shadow-sm transition-all ${tabId === 'mixtures' ? 'bg-indigo-600 text-white' : 'bg-slate-200 hover:bg-slate-350 text-slate-700'}`;
+      
+      updateUI();
+    }
+
+    function toggleUserGuide(show) {
+      const modal = document.getElementById('user-guide-modal');
+      modal.className = show ? "fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4" : "hidden";
+    }
+
+    function resetWorkspace() {
+      selectElement(protons);
+    }
+
+    // --- PHYSICS COMPILATION ---
+    function selectElement(z) {
+      protons = z;
+      electrons = z;
+      
+      const targetElement = PERIODIC_TABLE[z];
+      neutrons = targetElement.stableNeutrons[0] !== undefined ? targetElement.stableNeutrons[0] : z;
+
+      // Populate mixture defaults
+      const masses = Object.keys(targetElement.knownIsotopes || {}).map(Number).sort((a,b) => a-b);
+      mixIsotopeAMass = masses[0] || (protons + (targetElement.stableNeutrons[0] || 0));
+      mixIsotopeBMass = masses[1] || (protons + (targetElement.stableNeutrons[1] || (targetElement.stableNeutrons[0] !== undefined ? targetElement.stableNeutrons[0] + 1 : 1)));
+      mixIsotopeCMass = masses[2] || (protons + (targetElement.stableNeutrons[2] || (targetElement.stableNeutrons[0] !== undefined ? targetElement.stableNeutrons[0] + 2 : 2)));
+
+      mixIsotopeACount = 5;
+      mixIsotopeBCount = 5;
+      mixIsotopeCCount = 0;
+
+      // Active quick selection style
+      Object.keys(PERIODIC_TABLE).forEach(k => {
+        const btn = document.getElementById(`btn-el-${k}`);
+        if (parseInt(k) === z) {
+          btn.className = "px-2.5 py-1 bg-indigo-600 text-white font-bold font-mono rounded text-xs shadow-sm transition-all";
+        } else {
+          btn.className = "px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-600 font-bold font-mono rounded text-xs transition-all";
+        }
+      });
+
+      handleResize();
+    }
+
+    function getIsotopeStability(z, n) {
+      const element = PERIODIC_TABLE[z];
+      const massNum = z + n;
+      
+      if (element.knownIsotopes && element.knownIsotopes[massNum]) {
+        const iso = element.knownIsotopes[massNum];
+        return {
+          stable: iso.stable,
+          halfLife: iso.stable ? null : iso.halfLife,
+          abundance: iso.abundance
+        };
+      }
+      
+      const stableNeutrons = element.stableNeutrons || [z];
+      const isStable = stableNeutrons.includes(n);
+      
+      if (isStable) {
+        return { stable: true, halfLife: null, abundance: null };
+      } else {
+        const minStable = Math.min(...stableNeutrons);
+        const maxStable = Math.max(...stableNeutrons);
+        const diff = n < minStable ? minStable - n : n - maxStable;
+        
+        let halfLife = "Trace / Microseconds";
+        if (diff <= 1) halfLife = "Short Half-life (Hours)";
+        else if (diff <= 3) halfLife = "Very Short (Seconds)";
+        
+        return { stable: false, halfLife, abundance: null };
+      }
+    }
+
+    // --- VIEWPORT RENDERING & LOGIC ---
+    function updateUI() {
+      const element = PERIODIC_TABLE[protons];
+      const massNumber = protons + neutrons;
+      const netCharge = protons - electrons;
+      const stability = getIsotopeStability(protons, neutrons);
+
+      // 1. Dynamic notation widget
+      document.getElementById('sym-mass-num').textContent = massNumber;
+      document.getElementById('sym-proton-num').textContent = protons;
+      document.getElementById('sym-element-char').textContent = element.symbol;
+      
+      const chargeEl = document.getElementById('sym-net-charge');
+      if (netCharge === 0) {
+        chargeEl.textContent = "";
+      } else {
+        chargeEl.textContent = netCharge > 0 ? `+${netCharge}` : netCharge;
+      }
+
+      const tagEl = document.getElementById('sym-stability-tag');
+      if (stability.stable) {
+        tagEl.className = "text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full";
+        tagEl.textContent = "Stable Isotope";
+      } else {
+        tagEl.className = "text-[11px] font-semibold text-rose-700 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-full animate-pulse";
+        tagEl.textContent = `Unstable (${stability.halfLife || 'Radioactive'})`;
+      }
+
+      // 2. Control count sidebars
+      const ctrlPanel = document.getElementById('controls-panel');
+      if (currentTab === 'sandbox') {
+        ctrlPanel.innerHTML = `
+          <div class="space-y-4">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Nuclide Steppers</span>
+            
+            <!-- Protons stepper -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <span class="text-xs font-bold text-rose-600">Protons (Z)</span>
+              <div class="flex items-center gap-2">
+                <button onclick="changeProtons(-1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">-</button>
+                <span class="text-xs font-bold font-mono w-6 text-center">${protons}</span>
+                <button onclick="changeProtons(1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">+</button>
+              </div>
+            </div>
+
+            <!-- Neutrons stepper -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <span class="text-xs font-bold text-slate-650">Neutrons (N)</span>
+              <div class="flex items-center gap-2">
+                <button onclick="changeNeutrons(-1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">-</button>
+                <span class="text-xs font-bold font-mono w-6 text-center">${neutrons}</span>
+                <button onclick="changeNeutrons(1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">+</button>
+              </div>
+            </div>
+
+            <!-- Electrons stepper -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <span class="text-xs font-bold text-yellow-600">Electrons (e⁻)</span>
+              <div class="flex items-center gap-2">
+                <button onclick="changeElectrons(-1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">-</button>
+                <span class="text-xs font-bold font-mono w-6 text-center">${electrons}</span>
+                <button onclick="changeElectrons(1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        ctrlPanel.innerHTML = `
+          <div class="space-y-4">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Mixture Ratios (amu)</span>
+            
+            <!-- Isotope A -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-blue-600">Isotope A</span>
+                <span class="text-[10px] text-slate-400 font-semibold font-mono">${mixIsotopeAMass} amu</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="changeMixA(-1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">-</button>
+                <span class="text-xs font-bold font-mono w-6 text-center">${mixIsotopeACount}</span>
+                <button onclick="changeMixA(1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">+</button>
+              </div>
+            </div>
+
+            <!-- Isotope B -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-emerald-600">Isotope B</span>
+                <span class="text-[10px] text-slate-400 font-semibold font-mono">${mixIsotopeBMass} amu</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="changeMixB(-1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">-</button>
+                <span class="text-xs font-bold font-mono w-6 text-center">${mixIsotopeBCount}</span>
+                <button onclick="changeMixB(1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">+</button>
+              </div>
+            </div>
+
+            <!-- Isotope C -->
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between shadow-xs">
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-rose-600">Isotope C</span>
+                <span class="text-[10px] text-slate-400 font-semibold font-mono">${mixIsotopeCMass} amu</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="changeMixC(-1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">-</button>
+                <span class="text-xs font-bold font-mono w-6 text-center">${mixIsotopeCCount}</span>
+                <button onclick="changeMixC(1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-100 hover:bg-slate-200 text-xs font-black">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. Spectrograph/Telemetry side panel
+      document.getElementById('tel-element-name').textContent = element.name;
+      document.getElementById('tel-standard-mass').textContent = element.standardAtomicMass + " u";
+
+      let sampleMass = 0;
+      let abundanceStr = "Trace / unstable";
+
+      if (currentTab === 'sandbox') {
+        sampleMass = massNumber;
+        if (stability.abundance !== undefined && stability.abundance !== null) {
+          abundanceStr = `${stability.abundance.toFixed(2)}%`;
+        } else {
+          abundanceStr = stability.stable ? "Trace / Stable" : "Radioactive decay";
+        }
+      } else {
+        const total = mixIsotopeACount + mixIsotopeBCount + mixIsotopeCCount;
+        if (total > 0) {
+          sampleMass = (mixIsotopeAMass * mixIsotopeACount + mixIsotopeBMass * mixIsotopeBCount + mixIsotopeCMass * mixIsotopeCCount) / total;
+          abundanceStr = `Mixture (${total} Atoms)`;
+        } else {
+          sampleMass = 0;
+          abundanceStr = "No mixture loaded";
+        }
+      }
+
+      document.getElementById('tel-calculated-mass').textContent = sampleMass.toFixed(4) + " u";
+      document.getElementById('tel-abundance').textContent = abundanceStr;
+    }
+
+    // --- STEPPER BINDERS ---
+    function changeProtons(val) {
+      let p = protons + val;
+      if (p < 1) p = 1;
+      if (p > 35) p = 35; // Cap at Bromine
+      selectElement(p);
+    }
+
+    function changeNeutrons(val) {
+      let n = neutrons + val;
+      if (n < 0) n = 0;
+      if (n > 60) n = 60;
+      neutrons = n;
+      updateUI();
+    }
+
+    function changeElectrons(val) {
+      let e = electrons + val;
+      if (e < 0) e = 0;
+      if (e > 50) e = 50;
+      electrons = e;
+      updateUI();
+    }
+
+    function changeMixA(val) {
+      let c = mixIsotopeACount + val;
+      if (c < 0) c = 0;
+      if (c > 20) c = 20;
+      mixIsotopeACount = c;
+      updateUI();
+    }
+
+    function changeMixB(val) {
+      let c = mixIsotopeBCount + val;
+      if (c < 0) c = 0;
+      if (c > 20) c = 20;
+      mixIsotopeBCount = c;
+      updateUI();
+    }
+
+    function changeMixC(val) {
+      let c = mixIsotopeCCount + val;
+      if (c < 0) c = 0;
+      if (c > 20) c = 20;
+      mixIsotopeCCount = c;
+      updateUI();
+    }
+
+    function loadExperimentPreset(z) {
+      selectElement(z);
+      switchTab('mixtures');
+    }
+
+    // --- ANIMATION INTERACTIVE DRAW ---
+    function tick() {
+      drawCanvas();
+      animationFrameId = requestAnimationFrame(tick);
+    }
+
+    function drawCanvas() {
+      const width = canvas.width;
+      const height = canvas.height;
+      ctx.clearRect(0,0,width,height);
+
+      // Dark futuristic theme background
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw grid system
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.25)';
+      ctx.lineWidth = 1 * dpi;
+      const step = 30 * dpi;
+      for (let x = 0; x < width; x += step) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += step) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      const cX = width / 2;
+      const cY = height / 2;
+
+      if (currentTab === 'sandbox') {
+        const time = Date.now() / 1000;
+        const stability = getIsotopeStability(protons, neutrons);
+
+        // Shake nucleus core if radioactive
+        let sX = cX;
+        let sY = cY;
+        if (!stability.stable) {
+          sX += Math.sin(time * 35) * 3 * dpi;
+          sY += Math.cos(time * 30) * 3 * dpi;
+        }
+
+        // Draw Electron shell concentric paths
+        const shellRadius = [80 * dpi, 130 * dpi, 180 * dpi];
+        ctx.strokeStyle = 'rgba(129, 140, 248, 0.25)';
+        ctx.lineWidth = 1.5 * dpi;
+        
+        shellRadius.forEach(r => {
+          ctx.beginPath();
+          ctx.arc(sX, sY, r, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+
+        // Draw Electron particles spinning along shells
+        const maxDrawElectrons = Math.min(electrons, 12);
+        for (let i = 0; i < maxDrawElectrons; i++) {
+          const shellIdx = Math.floor(i / 4);
+          const r = shellRadius[shellIdx] || shellRadius[2];
+          const speed = (3 - shellIdx) * 1.2;
+          const angle = time * speed + (i * Math.PI / 2);
+
+          const eX = sX + r * Math.cos(angle);
+          const eY = sY + r * Math.sin(angle);
+
+          // Glowing aura
+          let glow = ctx.createRadialGradient(eX, eY, 1 * dpi, eX, eY, 6 * dpi);
+          glow.addColorStop(0, '#ffffff');
+          glow.addColorStop(0.3, '#facc15'); // Yellow electron
+          glow.addColorStop(1, 'rgba(0,0,0,0)');
+          
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(eX, eY, 6 * dpi, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw Nucleus packed spheres core
+        const nRadius = 8 * dpi;
+        const totalNucleons = Math.min(protons + neutrons, 25);
+        
+        // Random deterministic seed position layouts so nucleus looks clumped together
+        const nucleonOffsets = [];
+        for (let j = 0; j < totalNucleons; j++) {
+          const radiusMult = Math.sqrt(j) * 9 * dpi;
+          const theta = j * 2.39996; // Golden ratio angle
+          nucleonOffsets.push({
+            dx: radiusMult * Math.cos(theta),
+            dy: radiusMult * Math.sin(theta),
+            isProton: j < protons
+          });
+        }
+
+        // Draw neutrons first as background layer
+        nucleonOffsets.forEach(n => {
+          if (!n.isProton) {
+            drawNucleonSphere(sX + n.dx, sY + n.dy, nRadius, false);
+          }
+        });
+
+        // Draw protons on top
+        nucleonOffsets.forEach(n => {
+          if (n.isProton) {
+            drawNucleonSphere(sX + n.dx, sY + n.dy, nRadius, true);
+          }
+        });
+
+      } else {
+        // --- MIXTURES MODE: DRAW VECTOR PHYSICAL SCALES ---
+        const scaleAngle = clampScaleAngle();
+
+        // 1. Draw Stand / Base
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(cX - 8 * dpi, cY - 20 * dpi, 16 * dpi, 140 * dpi);
+        
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(cX - 60 * dpi, cY + 110 * dpi, 120 * dpi, 15 * dpi);
+
+        // 2. Draw dynamic tilting crossbar
+        ctx.save();
+        ctx.translate(cX, cY - 20 * dpi);
+        ctx.rotate(scaleAngle);
+
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 6 * dpi;
+        ctx.beginPath();
+        ctx.moveTo(-110 * dpi, 0);
+        ctx.lineTo(110 * dpi, 0);
+        ctx.stroke();
+
+        // Pivot Center Dot
+        ctx.fillStyle = '#e2e8f0';
+        ctx.beginPath();
+        ctx.arc(0, 0, 7 * dpi, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 3. Draw hanging support wires and pans
+        drawHangingPan(-110 * dpi, 0, "Your Mix", mixIsotopeACount + mixIsotopeBCount + mixIsotopeCCount);
+        drawHangingPan(110 * dpi, 0, "Standard", 8);
+
+        ctx.restore();
+      }
+    }
+
+    function drawNucleonSphere(x, y, r, isProton) {
+      let grad = ctx.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r);
+      if (isProton) {
+        grad.addColorStop(0, '#fca5a5'); // Crimson Protons
+        grad.addColorStop(0.3, '#ef4444');
+        grad.addColorStop(1, '#991b1b');
+      } else {
+        grad.addColorStop(0, '#e2e8f0'); // Slate Neutrons
+        grad.addColorStop(0.3, '#64748b');
+        grad.addColorStop(1, '#334155');
+      }
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 0.5 * dpi;
+      ctx.stroke();
+    }
+
+    function drawHangingPan(x, y, label, atomCount) {
+      ctx.save();
+      // Keep pan upright even when crossbar rotates
+      ctx.translate(x, y);
+      ctx.rotate(-clampScaleAngle());
+
+      // Wires
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1.5 * dpi;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-25 * dpi, 55 * dpi);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(25 * dpi, 55 * dpi);
+      ctx.stroke();
+
+      // Flat pan
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(-35 * dpi, 55 * dpi, 70 * dpi, 6 * dpi);
+
+      // Atoms in pan
+      const count = Math.min(atomCount, 12);
+      for (let i = 0; i < count; i++) {
+        const row = Math.floor(i / 5);
+        const col = i % 5;
+        const ax = (-18 + col * 9) * dpi;
+        const ay = (47 - row * 7) * dpi;
+        
+        ctx.fillStyle = label === "Your Mix" ? '#3b82f6' : '#cbd5e1';
+        ctx.beginPath();
+        ctx.arc(ax, ay, 5.5 * dpi, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#020617';
+        ctx.lineWidth = 0.5 * dpi;
+        ctx.stroke();
+      }
+
+      // Label below pan
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `bold ${8 * dpi}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(label, 0, 75 * dpi);
+
+      ctx.restore();
+    }
+
+    function clampScaleAngle() {
+      const element = PERIODIC_TABLE[protons];
+      const standardMass = element.standardAtomicMass;
+      let calculatedMass = 0;
+      
+      const total = mixIsotopeACount + mixIsotopeBCount + mixIsotopeCCount;
+      if (total > 0) {
+        calculatedMass = (mixIsotopeAMass * mixIsotopeACount + mixIsotopeBMass * mixIsotopeBCount + mixIsotopeCMass * mixIsotopeCCount) / total;
+      }
+      
+      const diff = calculatedMass - standardMass;
+      // Clamped tilt
+      return Math.max(-0.15, Math.min(0.15, diff * 0.15));
+    }
+
+    // --- VIVA ASSESSMENT DESK ---
+    const VIVA_QUESTIONS = [
+      {
+        id: "q1",
+        title: "Q1. BORON ISOTOPES ABUNDANCE",
+        question: "Boron has an average atomic mass of $10.811\\text{ amu}$ on the periodic table. Based on this, which isotope is more abundant in nature?",
+        options: [
+          { text: "Boron-10 is more abundant.", isCorrect: false, exp: "Incorrect. If Boron-10 were more abundant, the average mass would be closer to 10 amu." },
+          { text: "Boron-11 is more abundant.", isCorrect: true, exp: "Correct! Since 10.811 is much closer to 11 than to 10, the heavier isotope Boron-11 must have a much higher natural percent abundance (~80%)." }
+        ],
+        verification: "By weighted average calculations: $10.811 = x(10.013) + (1-x)(11.009)$ yielding $x \\approx 0.199$ (19.9% Boron-10 and 80.1% Boron-11)."
+      },
+      {
+        id: "q2",
+        title: "Q2. HYDROGEN ISOTOPES",
+        question: "An isotope of Hydrogen containing exactly 1 proton and 2 neutrons is called:",
+        options: [
+          { text: "Protium", isCorrect: false, exp: "Incorrect. Protium contains 0 neutrons." },
+          { text: "Deuterium", isCorrect: false, exp: "Incorrect. Deuterium contains 1 neutron." },
+          { text: "Tritium", isCorrect: true, exp: "Correct! Tritium contains 1 proton and 2 neutrons, giving it a mass number of 3." }
+        ],
+        verification: "The isotopes of hydrogen are Protium ($^1H$), Deuterium ($^2H$), and Tritium ($^3H$, where $A = Z+N = 1+2 = 3$)."
+      },
+      {
+        id: "q3",
+        title: "Q3. BROMINE PREDICTIVE RATIOS",
+        question: "Two stable isotopes of Bromine exist: Bromine-79 and Bromine-81. If standard mass of Bromine is $79.904\\text{ amu}$, what is the natural ratio?",
+        options: [
+          { text: "Nearly equal abundance (~50% each)", isCorrect: true, exp: "Correct! Since 79.904 is almost exactly the midpoint (80.0) between 79 and 81, the two isotopes must be present in approximately equal amounts (~50.7% to ~49.3%)." },
+          { text: "Bromine-79 is significantly higher (~90%)", isCorrect: false, exp: "Incorrect. If Bromine-79 were 90%, the average mass would be much closer to 79.1 amu." }
+        ],
+        verification: "Weighted mixture ratios: $x(78.918) + (1-x)(80.916) = 79.904 \\implies x \\approx 0.5069$ (50.69% abundance for Br-79)."
+      },
+      {
+        id: "q4",
+        title: "Q4. STABILITY VS NATURAL ABUNDANCE",
+        question: "What is the general relationship between isotope stability and natural percent abundance in nature?",
+        options: [
+          { text: "Unstable isotopes are highly abundant because they decay very slowly.", isCorrect: false, exp: "Incorrect. Unstable radioactive isotopes decay spontaneously." },
+          { text: "Unstable isotopes are extremely rare/non-abundant because they decay into other elements over time.", isCorrect: true, exp: "Correct! Stable isotopes do not decay and thus accumulate to form the vast majority of natural isotopic abundances." }
+        ],
+        verification: "Spontaneous decay limits radioactive isotopes: $N(t) = N_0 e^{-\\lambda t}$. Unstable nuclei with short half-lives decay quickly into stable progeny, making them extremely rare in natural planetary materials."
+      },
+      {
+        id: "q5",
+        title: "Q5. CHARACTERISTICS OF MASS NUMBER",
+        question: "Why is the mass number (A) of a specific single atom always a whole number, while the average atomic mass is a decimal?",
+        options: [
+          { text: "Mass number counts distinct whole particles, while the average atomic mass is a weighted average of decimal abundances.", isCorrect: true, exp: "Correct! An atom can only have integer counts of nucleons, but mixtures are weighted on natural fractional proportions." },
+          { text: "Electrons add fractional mass that rounds up the atomic weight.", isCorrect: false, exp: "Incorrect. Electron mass is negligible." }
+        ],
+        verification: "Mass number $A = Z+N \\in \\mathbb{Z}^+$ is a discrete integer representing counts of nucleons. Atomic weight is a continuous weighted average: $M_{\\text{avg}} = \\sum M_i p_i \\in \\mathbb{R}^+$."
+      }
+    ];
+
+    function renderVivaCards() {
+      const container = document.getElementById('viva-cards-container');
+      container.innerHTML = '';
+
+      VIVA_QUESTIONS.forEach((q, qidx) => {
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm";
+        
+        let optionsHtml = '';
+        q.options.forEach((opt, oidx) => {
+          optionsHtml += `
+            <button id="opt-${q.id}-${oidx}" onclick="selectVivaAnswer('${q.id}', ${oidx}, ${opt.isCorrect}, '${opt.exp}')" class="w-full text-left p-2.5 rounded-lg text-xs transition border bg-white hover:bg-slate-50 border-slate-200 text-slate-700">
+              <span class="font-bold">${oidx === 0 ? 'A' : oidx === 1 ? 'B' : 'C'}) </span>${opt.text}
+            </button>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="space-y-2">
+            <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">${q.title}</span>
+            <h4 class="text-xs font-bold text-slate-800 leading-snug">${q.question}</h4>
+            <div class="flex flex-col gap-2 pt-1">
+              ${optionsHtml}
+            </div>
+            <div id="feedback-${q.id}" class="text-[10px] italic font-semibold text-slate-500 hidden mt-1"></div>
+            
+            <button onclick="toggleVerification('${q.id}')" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100 mt-2">
+              <span id="btn-text-${q.id}">Show Scientific Verification</span>
+              <span id="btn-arrow-${q.id}" class="transform transition-transform">▼</span>
+            </button>
+            <div id="viva-panel-${q.id}" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
+                ${q.verification}
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectVivaAnswer(qid, oidx, isCorrect, feedbackText) {
+      if (answers[qid] !== null) return; // Answer already selected
+      answers[qid] = oidx;
+
+      const feedbackEl = document.getElementById(`feedback-${qid}`);
+      feedbackEl.textContent = feedbackText;
+      feedbackEl.classList.remove('hidden');
+
+      // Style chosen button
+      const selectedBtn = document.getElementById(`opt-${qid}-${oidx}`);
+      if (isCorrect) {
+        selectedBtn.className = "w-full text-left p-2.5 rounded-lg text-xs font-bold border bg-emerald-50 border-emerald-300 text-emerald-800";
+        score++;
+        document.getElementById('viva-score-tag').textContent = `SCORE: ${score} / 5`;
+      } else {
+        selectedBtn.className = "w-full text-left p-2.5 rounded-lg text-xs font-bold border bg-rose-50 border-rose-300 text-rose-800";
+      }
+
+      // Disable all options in the card
+      const totalOptions = VIVA_QUESTIONS.find(q => q.id === qid).options.length;
+      for (let i = 0; i < totalOptions; i++) {
+        document.getElementById(`opt-${qid}-${i}`).disabled = true;
+      }
+    }
+
+    function toggleVerification(qid) {
+      const panel = document.getElementById(`viva-panel-${qid}`);
+      const btnText = document.getElementById(`btn-text-${qid}`);
+      const btnArrow = document.getElementById(`btn-arrow-${qid}`);
+
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([panel]);
+        }
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+  </script>
+</body>
+</html>

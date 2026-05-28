@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energy Forms &amp; Changes Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col md:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 md:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Energy Forms &amp; Changes Lab</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Precision Mechanical, Thermal, Radiant &amp; Electrical Physics</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <button onclick="resetWorkspace()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-750 transition-all flex items-center gap-1.5">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Workspace
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Play/Pause Controls -->
+      <div class="flex items-center space-x-2">
+        <button id="btnPlayPause" onclick="togglePlayPause()" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <i data-lucide="pause" id="playIcon" class="w-4 h-4"></i> <span id="playText">Pause</span>
+        </button>
+      </div>
+
+      <!-- Toggles -->
+      <div class="flex items-center space-x-6">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chkShowEnergy" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Energy Symbols</span>
+        </label>
+      </div>
+
+      <!-- Efficiency & Active status -->
+      <div class="flex items-center">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Status: </span>
+        <span class="ml-1.5 text-xs font-extrabold text-indigo-600 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full font-mono">Thermodynamics Engine Online</span>
+      </div>
+    </div>
+
+    <!-- Master Layout Split -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE (9 Columns) -->
+      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 bg-slate-50">
+        
+        <!-- Interactive Controls (5 Columns) -->
+        <div class="md:col-span-5 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-5">
+            
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i> Apparatus Setup
+            </h3>
+
+            <!-- Select Source -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">1. Choose Energy Source</span>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="src-bicycle" onclick="setSource('bicycle')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>🚴</span> Bicycle
+                </button>
+                <button id="src-faucet" onclick="setSource('faucet')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>💧</span> Faucet
+                </button>
+                <button id="src-sun" onclick="setSource('sun')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>☀️</span> Sunlight
+                </button>
+                <button id="src-teakettle" onclick="setSource('teakettle')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>🫖</span> Kettle
+                </button>
+              </div>
+            </div>
+
+            <!-- Select Converter -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">2. Choose Energy Changer</span>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="chg-wheel" onclick="setChanger('wheel')" class="py-2 px-2 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>⚙️</span> Generator
+                </button>
+                <button id="chg-solar" onclick="setChanger('solar')" class="py-2 px-2 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>🎛️</span> Solar Panel
+                </button>
+              </div>
+            </div>
+
+            <!-- Select User -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">3. Choose Output User</span>
+              <div class="grid grid-cols-2 gap-2">
+                <button id="usr-beaker" onclick="setUser('beaker')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>🧪</span> Beaker
+                </button>
+                <button id="usr-bulb" onclick="setUser('bulb')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>💡</span> Incand. Bulb
+                </button>
+                <button id="usr-cfl" onclick="setUser('cfl')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>🌀</span> CFL Bulb
+                </button>
+                <button id="usr-fan" onclick="setUser('fan')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
+                  <span>🎐</span> Fan
+                </button>
+              </div>
+            </div>
+
+            <!-- Flow Rate Slider -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Energy Source Flow Rate (%)</span>
+                <input type="number" id="numFlow" min="0" max="100" value="50" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="rngFlow" min="0" max="100" value="50" class="w-full">
+            </div>
+
+            <!-- Cloud Cover Slider (Sunlight exclusive) -->
+            <div id="panelClouds" class="hidden">
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Cloud Cover (%)</span>
+                <input type="number" id="numClouds" min="0" max="100" value="0" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="rngClouds" min="0" max="100" value="0" class="w-full">
+            </div>
+
+          </div>
+
+          <!-- Live Telemetry feed -->
+          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2">
+            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="activity" class="w-3.5 h-3.5 text-indigo-500"></i> System Telemetry
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+              <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                <div class="text-[9px] font-bold text-slate-400 uppercase">Efficiency</div>
+                <div id="lblEfficiency" class="text-sm font-extrabold text-indigo-600 mt-0.5">98%</div>
+              </div>
+              <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                <div class="text-[9px] font-bold text-slate-400 uppercase">Power Output</div>
+                <div id="lblPower" class="text-sm font-extrabold text-emerald-600 mt-0.5">0 W</div>
+              </div>
+              <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                <div class="text-[9px] font-bold text-slate-400 uppercase">Temperature</div>
+                <div id="lblTemp" class="text-sm font-extrabold text-rose-600 mt-0.5">25.0 °C</div>
+              </div>
+              <div class="bg-slate-50 p-2 rounded border border-slate-100">
+                <div class="text-[9px] font-bold text-slate-400 uppercase">CO₂ Saved</div>
+                <div id="lblCo2" class="text-sm font-extrabold text-teal-600 mt-0.5">0.000 g</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation Screen (7 Columns) -->
+        <div class="md:col-span-7 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (4 Columns) -->
+      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[780px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+            <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+          </div>
+          <div class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950 border border-emerald-800 px-2.5 py-1 rounded">
+            SCORE: <span id="lblScore">0</span> / 4
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does the Energy Forms &amp; Changes suite demonstrate the First Law of Thermodynamics?
+              </h4>
+              
+              <div class="flex flex-col gap-2 pt-2">
+                <button onclick="submitAnswer(1, 'A', true)" id="q1-optA" class="q1-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>A) </strong> Thermal energy of steam kettle converts to mechanical turbine work, electrical current, and back to thermal energy in beaker: $\sum E_{\text{in}} = \sum E_{\text{out}}$.
+                </button>
+                <button onclick="submitAnswer(1, 'B', false)" id="q1-optB" class="q1-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>B) </strong> Chemical energy is completely destroyed during cycling, producing heat out of nothing: $\Delta U < 0$.
+                </button>
+              </div>
+
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                The First Law states that energy cannot be created or destroyed, only transformed:
+                $$\Delta U = Q - W$$
+                In the Kettle-Generator-Beaker system, thermal energy of steam ($Q_{\text{steam}}$) transforms into mechanical work ($W_{\text{wheel}}$), which converts to electrical energy ($E_e$), and finally dissipates as thermal heat in the beaker:
+                $$\sum E_{\text{in}} = \sum E_{\text{out}}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does a photovoltaic solar cell fail to extract energy from a bicycle wheel or water faucet?
+              </h4>
+
+              <div class="flex flex-col gap-2 pt-2">
+                <button onclick="submitAnswer(2, 'A', true)" id="q2-optA" class="q2-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>A) </strong> Solar cells rely on the photoelectric effect, requiring photons with energy $h\nu \ge E_g$ to excite electrons. Kinetic masses lack photon fields.
+                </button>
+                <button onclick="submitAnswer(2, 'B', false)" id="q2-optB" class="q2-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>B) </strong> Kinetic energy streams generate high voltage waves that block silicon semiconductors.
+                </button>
+              </div>
+
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Solar cells operate on the **photoelectric effect**. Photons with energy $h\nu$ greater than the semiconductor bandgap $E_g$ excite valence electrons to the conduction band:
+                $$h\nu \ge E_g$$
+                Kinetic streams (water/steam) or thermal vibrations have energies in the sub-eV range, which are far below the silicon bandgap threshold ($E_g \approx 1.11\text{ eV}$), yielding zero quantum conversion:
+                $$\text{Quantum Yield } \Phi = 0$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does a Fluorescent CFL bulb operate at a much higher luminous efficacy than an Incandescent bulb?
+              </h4>
+
+              <div class="flex flex-col gap-2 pt-2">
+                <button onclick="submitAnswer(3, 'A', false)" id="q3-optA" class="q3-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>A) </strong> Incandescent bulbs emit purely mechanical light, whereas CFL tubes utilize chemical voltage.
+                </button>
+                <button onclick="submitAnswer(3, 'B', true)" id="q3-optB" class="q3-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>B) </strong> Incandescent filaments lose 90% of energy as invisible infrared heat, whereas CFL phosphors emit mostly visible wave bands.
+                </button>
+              </div>
+
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                The luminous efficiency $\eta$ is the ratio of visible light power output to total electrical power input. Incandescent bulbs emit light via blackbody radiation at $T \approx 2800\text{ K}$, where the peak emission is in the infrared spectrum:
+                $$\lambda_{\text{peak}} T = b \implies \lambda_{\text{peak}} \approx 1000\text{ nm}$$
+                This results in $\approx 90\%$ lost as heat ($E_{th}$). CFLs excite mercury vapor to emit UV light which is converted by phosphor coatings, yielding higher visible efficacy:
+                $$\eta_{\text{CFL}} \approx 4.5 \times \eta_{\text{incandescent}}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why can we never achieve exactly 100% conversion efficiency in any of these setups?
+              </h4>
+
+              <div class="flex flex-col gap-2 pt-2">
+                <button onclick="submitAnswer(4, 'A', false)" id="q4-optA" class="q4-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>A) </strong> Fluid flow rates compress air molecule structures to create negative electrical fields.
+                </button>
+                <button onclick="submitAnswer(4, 'B', true)" id="q4-optB" class="q4-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
+                  <strong>B) </strong> Mechanical friction and electrical resistance inevitably disperse energy into thermal entropy.
+                </button>
+              </div>
+
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                Mechanical friction and electrical resistance inevitably degrade some energy into thermal heat (entropy increase), as dictated by the Second Law of Thermodynamics:
+                $$\Delta S_{\text{universe}} > 0$$
+                This means absolute 100% mechanical-to-electrical conversion is physically impossible.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Legend Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-semibold gap-3">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-slate-500">Energy Tokens:</span>
+        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-emerald-650 inline-block text-center text-white text-[9px] font-extrabold leading-3">C</span> Chemical</span>
+        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-indigo-600 inline-block text-center text-white text-[9px] font-extrabold leading-3">M</span> Mechanical</span>
+        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-blue-600 inline-block text-center text-white text-[9px] font-extrabold leading-3">E</span> Electrical</span>
+        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-amber-500 inline-block text-center text-white text-[9px] font-extrabold leading-3">L</span> Light</span>
+        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-rose-650 inline-block text-center text-white text-[9px] font-extrabold leading-3">T</span> Thermal</span>
+      </div>
+      <span>* Real-time Kinetic &amp; Spectral thermodynamics simulation framework.</span>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Canvas Simulation Logic -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Canvas Setup
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Setup State
+    let activeSource = 'bicycle'; // bicycle, faucet, sun, teakettle
+    let activeChanger = 'wheel';   // wheel, solar
+    let activeUser = 'beaker';     // beaker, bulb, cfl, fan
+
+    let energyFlowRate = 50;
+    let clouds = 0;
+    let showEnergySymbols = true;
+    let isPlaying = true;
+
+    // Simulation metrics
+    let beakerTemp = 25.0;
+    let powerOutput = 0;
+    let efficiencyRating = 98;
+    let co2Saved = 0.0;
+    let generatorRpm = 0;
+    let solarIntensity = 0;
+
+    // Animation state
+    let particles = [];
+    let particleId = 0;
+    let lastTime = 0;
+    let bicycleAngle = 0;
+    let wheelAngle = 0;
+    let steamParticles = [];
+    let waterDroplets = [];
+
+    // Viva Voce answers state
+    let answers = { q1: null, q2: null, q3: null, q4: null };
+    let score = 0;
+
+    // Handle Window Resizing with High-DPI support
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpi = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      ctx.resetTransform();
+      ctx.scale(dpi, dpi);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('btnPlayPause');
+      const text = document.getElementById('playText');
+      if (isPlaying) {
+        btn.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i> <span>Pause</span>`;
+        text.innerText = 'Pause';
+      } else {
+        btn.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i> <span>Play</span>`;
+        text.innerText = 'Play';
+      }
+      lucide.createIcons();
+    }
+
+    function setSource(src) {
+      activeSource = src;
+      // Toggle Cloud slider panel visibility
+      const panelClouds = document.getElementById('panelClouds');
+      if (src === 'sun') {
+        panelClouds.classList.remove('hidden');
+      } else {
+        panelClouds.classList.add('hidden');
+      }
+      updateUIButtons('src', src, ['bicycle', 'faucet', 'sun', 'teakettle']);
+      particles = [];
+    }
+
+    function setChanger(chg) {
+      activeChanger = chg;
+      updateUIButtons('chg', chg, ['wheel', 'solar']);
+      particles = [];
+    }
+
+    function setUser(usr) {
+      activeUser = usr;
+      updateUIButtons('usr', usr, ['beaker', 'bulb', 'cfl', 'fan']);
+      particles = [];
+    }
+
+    function updateUIButtons(prefix, selectedVal, allVals) {
+      allVals.forEach(val => {
+        const btn = document.getElementById(`${prefix}-${val}`);
+        if (val === selectedVal) {
+          btn.className = "py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-indigo-600 border-indigo-500 text-white flex items-center justify-center gap-1.5 shadow-sm shadow-indigo-950";
+        } else {
+          btn.className = "py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5";
+        }
+      });
+    }
+
+    // Synced range and numeric inputs
+    function setupSyncedInputs(sliderId, numId, callback) {
+      const slider = document.getElementById(sliderId);
+      const num = document.getElementById(numId);
+
+      slider.addEventListener('input', (e) => {
+        num.value = e.target.value;
+        callback(parseFloat(e.target.value));
+      });
+
+      num.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value);
+        const min = parseFloat(num.min);
+        const max = parseFloat(num.max);
+        if (isNaN(val)) return;
+        if (val < min) val = min;
+        if (val > max) val = max;
+        num.value = val;
+        slider.value = val;
+        callback(val);
+      });
+    }
+
+    setupSyncedInputs('rngFlow', 'numFlow', (val) => {
+      energyFlowRate = val;
+    });
+
+    setupSyncedInputs('rngClouds', 'numClouds', (val) => {
+      clouds = val;
+    });
+
+    document.getElementById('chkShowEnergy').addEventListener('change', (e) => {
+      showEnergySymbols = e.target.checked;
+    });
+
+    // Reset workspace
+    function resetWorkspace() {
+      setSource('bicycle');
+      setChanger('wheel');
+      setUser('beaker');
+      energyFlowRate = 50;
+      clouds = 0;
+      beakerTemp = 25.0;
+      powerOutput = 0;
+      co2Saved = 0;
+      particles = [];
+      steamParticles = [];
+      waterDroplets = [];
+      bicycleAngle = 0;
+      wheelAngle = 0;
+
+      document.getElementById('rngFlow').value = 50;
+      document.getElementById('numFlow').value = 50;
+      document.getElementById('rngClouds').value = 0;
+      document.getElementById('numClouds').value = 0;
+      document.getElementById('chkShowEnergy').checked = true;
+
+      // Reset score and viva answers
+      score = 0;
+      document.getElementById('lblScore').innerText = '0';
+      answers = { q1: null, q2: null, q3: null, q4: null };
+      
+      // Reset option styles
+      const classes = ['q1-opt', 'q2-opt', 'q3-opt', 'q4-opt'];
+      classes.forEach((cls, qIdx) => {
+        const buttons = document.getElementsByClassName(cls);
+        for (let btn of buttons) {
+          btn.disabled = false;
+          btn.className = "text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium";
+        }
+      });
+    }
+
+    // Compatibility check
+    function getCompatibilityError() {
+      if (activeSource === 'sun' && activeChanger === 'wheel') {
+        return "Incompatible Changer:\nA mechanical turbine generator cannot extract radiant energy from electromagnetic rays.";
+      }
+      if ((activeSource === 'bicycle' || activeSource === 'faucet' || activeSource === 'teakettle') && activeChanger === 'solar') {
+        return "Incompatible Changer:\nRadiant solar panels cannot harvest mechanical motion, water drops, or fluid vapour.";
+      }
+      return null;
+    }
+
+    // Viva Voce answers toggle
+    function submitAnswer(qId, choice, isCorrect) {
+      if (answers[`q${qId}`] !== null) return;
+      answers[`q${qId}`] = choice;
+
+      const optA = document.getElementById(`q${qId}-optA`);
+      const optB = document.getElementById(`q${qId}-optB`);
+
+      optA.disabled = true;
+      optB.disabled = true;
+
+      if (choice === 'A') {
+        optA.className = isCorrect 
+          ? "text-left p-2.5 rounded-lg text-xs transition border bg-emerald-50 border-emerald-300 text-emerald-800 font-bold" 
+          : "text-left p-2.5 rounded-lg text-xs transition border bg-rose-50 border-rose-300 text-rose-800 font-bold";
+      } else {
+        optB.className = isCorrect 
+          ? "text-left p-2.5 rounded-lg text-xs transition border bg-emerald-50 border-emerald-300 text-emerald-800 font-bold" 
+          : "text-left p-2.5 rounded-lg text-xs transition border bg-rose-50 border-rose-300 text-rose-800 font-bold";
+      }
+
+      if (isCorrect) {
+        score++;
+        document.getElementById('lblScore').innerText = score;
+      }
+    }
+
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const arrow = document.getElementById(`btn-arrow-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        arrow.style.transform = 'rotate(180deg)';
+        btnText.innerText = 'Hide Scientific Verification';
+      } else {
+        panel.classList.add('hidden');
+        arrow.style.transform = 'rotate(0deg)';
+        btnText.innerText = 'Show Scientific Verification';
+      }
+    }
+
+    // Particles Spawning and Dynamics
+    const ENERGY_BADGES = {
+      Chemical: { color: '#10b981', code: 'C' },
+      Mechanical: { color: '#4f46e5', code: 'M' },
+      Electrical: { color: '#2563eb', code: 'E' },
+      Light: { color: '#f59e0b', code: 'L' },
+      Thermal: { color: '#e11d48', code: 'T' }
+    };
+
+    function updateSimulation(time) {
+      if (!lastTime) lastTime = time;
+      const dt = Math.min(0.05, (time - lastTime) / 1000);
+      lastTime = time;
+
+      if (!isPlaying) {
+        requestAnimationFrame(updateSimulation);
+        return;
+      }
+
+      const compError = getCompatibilityError();
+
+      // Physical state calculators
+      if (activeUser === 'beaker') {
+        efficiencyRating = 98;
+      } else if (activeUser === 'bulb') {
+        efficiencyRating = 10;
+      } else if (activeUser === 'cfl') {
+        efficiencyRating = 45;
+      } else if (activeUser === 'fan') {
+        efficiencyRating = 75;
+      }
+
+      document.getElementById('lblEfficiency').innerText = `${efficiencyRating}%`;
+
+      if (compError) {
+        powerOutput = 0;
+        generatorRpm = 0;
+        solarIntensity = 0;
+      } else {
+        if (activeChanger === 'wheel') {
+          if (activeSource === 'bicycle') generatorRpm = energyFlowRate * 1.5;
+          else if (activeSource === 'faucet') generatorRpm = energyFlowRate * 1.8;
+          else if (activeSource === 'teakettle') generatorRpm = energyFlowRate * 1.6;
+          powerOutput = Math.round(generatorRpm * 0.95);
+        } else if (activeChanger === 'solar' && activeSource === 'sun') {
+          const cloudFactor = (100 - clouds) / 100;
+          solarIntensity = (energyFlowRate * cloudFactor);
+          powerOutput = Math.round(solarIntensity * 1.25);
+        } else {
+          powerOutput = 0;
+        }
+      }
+
+      document.getElementById('lblPower').innerText = `${powerOutput} W`;
+
+      // Beaker Temperature rise
+      if (activeUser === 'beaker') {
+        if (powerOutput > 0) {
+          beakerTemp = Math.min(100.0, beakerTemp + (powerOutput * 0.04 * dt));
+        } else {
+          beakerTemp = Math.max(20.0, beakerTemp - (0.6 * dt));
+        }
+      } else {
+        beakerTemp = Math.max(20.0, beakerTemp - (2.0 * dt));
+      }
+      document.getElementById('lblTemp').innerText = `${beakerTemp.toFixed(1)} °C`;
+
+      // CO2 saved
+      if (powerOutput > 0) {
+        co2Saved += powerOutput * 0.015 * dt;
+      }
+      document.getElementById('lblCo2').innerText = `${co2Saved.toFixed(3)} g`;
+
+      // Update bicycle wheel spin
+      if (activeSource === 'bicycle' && !compError) {
+        bicycleAngle += (energyFlowRate / 100) * 8 * dt;
+      }
+
+      // Update generator water wheel spin
+      if (activeChanger === 'wheel' && !compError) {
+        wheelAngle += (generatorRpm / 100) * 12 * dt;
+      }
+
+      // Generate particles
+      if (showEnergySymbols && !compError && energyFlowRate > 10 && Math.random() < (energyFlowRate / 100) * 0.06) {
+        let spawnType = 'Chemical';
+        if (activeSource === 'faucet' || activeSource === 'teakettle') spawnType = 'Mechanical';
+        if (activeSource === 'sun') spawnType = 'Light';
+
+        particles.push({
+          id: particleId++,
+          type: spawnType,
+          progress: 0.0,
+          speed: 0.15 + Math.random() * 0.1
+        });
+      }
+
+      // Update particles progress
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.progress += p.speed * dt;
+
+        // Path conversion rules
+        if (p.progress >= 0.4 && p.progress < 0.75) {
+          // Inside converter
+          if (activeChanger === 'wheel') p.type = 'Mechanical';
+          if (activeChanger === 'solar') p.type = 'Electrical';
+        } else if (p.progress >= 0.75) {
+          // inside user output
+          if (activeUser === 'beaker') {
+            p.type = 'Thermal';
+          } else if (activeUser === 'bulb') {
+            p.type = Math.random() > 0.7 ? 'Thermal' : 'Light';
+          } else if (activeUser === 'cfl') {
+            p.type = Math.random() > 0.9 ? 'Thermal' : 'Light';
+          } else if (activeUser === 'fan') {
+            p.type = 'Mechanical';
+          }
+        }
+
+        if (p.progress >= 1.0) {
+          particles.splice(i, 1);
+        }
+      }
+
+      // Draw layers
+      draw(compError);
+
+      requestAnimationFrame(updateSimulation);
+    }
+
+    // DRAW LOGIC
+    function draw(compError) {
+      const rect = canvas.getBoundingClientRect();
+      const wWidth = rect.width;
+      const wHeight = rect.height;
+      
+      ctx.clearRect(0, 0, wWidth, wHeight);
+
+      // Solid background
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, wWidth, wHeight);
+
+      // Clean tech grids
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      const gridSpacing = 24;
+      for (let x = 0; x < wWidth; x += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, wHeight);
+        ctx.stroke();
+      }
+      for (let y = 0; y < wHeight; y += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(wWidth, y);
+        ctx.stroke();
+      }
+
+      if (compError) {
+        // Draw incompatibility message directly on canvas
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.08)';
+        ctx.fillRect(0, 0, wWidth, wHeight);
+
+        ctx.fillStyle = '#EF4444';
+        ctx.font = 'bold 16px "Plus Jakarta Sans"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        ctx.fillText('⚠️ SYSTEM INCOMPATIBLE', wWidth / 2, wHeight / 2 - 25);
+        ctx.fillStyle = '#94A3B8';
+        ctx.font = '500 12px "Plus Jakarta Sans"';
+        
+        const lines = compError.split('\n');
+        ctx.fillText(lines[0], wWidth / 2, wHeight / 2 + 5);
+        ctx.fillText(lines[1], wWidth / 2, wHeight / 2 + 25);
+        return;
+      }
+
+      // Linear Path wires / flows behind elements
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(160, 220);
+      ctx.lineTo(400, 220);
+      ctx.lineTo(640, 220);
+      ctx.stroke();
+
+      // DRAW SOURCE (160, 220)
+      drawSourceElement();
+
+      // DRAW CONVERTER (400, 220)
+      drawConverterElement();
+
+      // DRAW USER (640, 220)
+      drawUserElement();
+
+      // DRAW ENERGY TOKENS
+      if (showEnergySymbols) {
+        particles.forEach(p => {
+          const posX = 160 + p.progress * 480;
+          // Sine curve trajectory
+          const posY = 220 + Math.sin(p.progress * Math.PI * 4) * 20;
+
+          const badge = ENERGY_BADGES[p.type] || ENERGY_BADGES.Mechanical;
+          
+          ctx.save();
+          ctx.fillStyle = badge.color;
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = badge.color;
+          ctx.beginPath();
+          ctx.roundRect(posX - 9, posY - 9, 18, 18, 4);
+          ctx.fill();
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = 'extrabold 10px "Plus Jakarta Sans"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(badge.code, posX, posY);
+          ctx.restore();
+        });
+      }
+    }
+
+    // Drawer helper modules
+    function drawSourceElement() {
+      ctx.save();
+      ctx.translate(160, 220);
+
+      if (activeSource === 'bicycle') {
+        // Bicycle and rider drawing
+        // Back wheel
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(-25, 20, 15, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Front wheel
+        ctx.beginPath();
+        ctx.arc(25, 20, 15, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Spin wheel line
+        ctx.save();
+        ctx.translate(-25, 20);
+        ctx.rotate(bicycleAngle);
+        ctx.beginPath();
+        ctx.moveTo(-15, 0); ctx.lineTo(15, 0);
+        ctx.stroke();
+        ctx.restore();
+
+        // Frame
+        ctx.strokeStyle = '#6366F1';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(-25, 20); // rear axel
+        ctx.lineTo(-5, 5);   // bracket
+        ctx.lineTo(20, 5);   // neck
+        ctx.lineTo(25, 20);  // front axel
+        ctx.moveTo(-5, 5);
+        ctx.lineTo(-12, -15); // seat post
+        ctx.moveTo(20, 5);
+        ctx.lineTo(18, -15); // handlebars
+        ctx.stroke();
+
+        // Rider bicyclist
+        ctx.fillStyle = '#EC4899'; // cute pink body
+        ctx.beginPath();
+        ctx.arc(-12, -28, 7, 0, Math.PI * 2); // head
+        ctx.fill();
+
+        ctx.strokeStyle = '#EC4899';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-12, -21); // neck
+        ctx.lineTo(-8, -2);   // torso
+        ctx.stroke();
+
+        // Pedaling legs based on angle
+        const pedalY = Math.sin(bicycleAngle) * 8;
+        ctx.strokeStyle = '#F43F5E';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-8, -5);
+        ctx.lineTo(-2, pedalY);
+        ctx.stroke();
+
+      } else if (activeSource === 'faucet') {
+        // Pipe Spout
+        ctx.fillStyle = '#64748B';
+        ctx.fillRect(-20, -50, 40, 15);
+        
+        ctx.fillStyle = '#475569';
+        ctx.beginPath();
+        ctx.moveTo(-12, -35);
+        ctx.lineTo(-10, -5);
+        ctx.lineTo(10, -5);
+        ctx.lineTo(12, -35);
+        ctx.closePath();
+        ctx.fill();
+
+        // Blue running water stream
+        if (energyFlowRate > 5) {
+          const flowH = 65;
+          const grad = ctx.createLinearGradient(0, -5, 0, flowH);
+          grad.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+          grad.addColorStop(1, 'rgba(59, 130, 246, 0.1)');
+          ctx.fillStyle = grad;
+          
+          // Flow pulsing width
+          const pulseW = 6 + Math.sin(bicycleAngle * 2) * 1.5;
+          ctx.fillRect(-pulseW/2, -5, pulseW, flowH);
+        }
+
+      } else if (activeSource === 'sun') {
+        // Glowing sun
+        ctx.save();
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = '#F59E0B';
+        ctx.fillStyle = '#F59E0B';
+        ctx.beginPath();
+        ctx.arc(0, -10, 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Rays
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+        ctx.lineWidth = 2.5;
+        const rays = 8;
+        for (let i = 0; i < rays; i++) {
+          const theta = (i / rays) * Math.PI * 2 + bicycleAngle * 0.1;
+          const startR = 26;
+          const endR = 40 + Math.sin(bicycleAngle * 3 + i) * 4;
+          ctx.beginPath();
+          ctx.moveTo(startR * Math.cos(theta), -10 + startR * Math.sin(theta));
+          ctx.lineTo(endR * Math.cos(theta), -10 + endR * Math.sin(theta));
+          ctx.stroke();
+        }
+
+      } else if (activeSource === 'teakettle') {
+        // Stove base fire
+        if (energyFlowRate > 5) {
+          ctx.fillStyle = '#EF4444';
+          ctx.beginPath();
+          ctx.moveTo(-16, 25);
+          ctx.lineTo(-8, 12);
+          ctx.lineTo(0, 25);
+          ctx.lineTo(8, 10);
+          ctx.lineTo(16, 25);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // Kettle pot
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.roundRect(-24, -10, 48, 30, [4, 4, 0, 0]);
+        ctx.fill();
+
+        // Lid
+        ctx.fillStyle = '#475569';
+        ctx.fillRect(-18, -15, 36, 5);
+
+        // Spout
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(18, 0);
+        ctx.lineTo(34, -18);
+        ctx.stroke();
+
+        // Steam clouds
+        if (energyFlowRate > 5) {
+          ctx.fillStyle = 'rgba(226, 232, 240, 0.35)';
+          const steamParticlesCount = 3;
+          for (let i = 0; i < steamParticlesCount; i++) {
+            const offsetX = 34 + Math.sin(bicycleAngle * 0.5 + i) * 6;
+            const offsetY = -18 - (bicycleAngle * 2 + i * 15) % 30;
+            ctx.beginPath();
+            ctx.arc(offsetX, offsetY, 5 + i * 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawConverterElement() {
+      ctx.save();
+      ctx.translate(400, 220);
+
+      if (activeChanger === 'wheel') {
+        // Generator waterwheel base stand
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(-15, 45);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(15, 45);
+        ctx.stroke();
+
+        // Paddles rotate
+        ctx.save();
+        ctx.rotate(wheelAngle);
+
+        ctx.strokeStyle = '#64748B';
+        ctx.lineWidth = 3.5;
+        const paddles = 6;
+        for (let i = 0; i < paddles; i++) {
+          const theta = (i / paddles) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(30 * Math.cos(theta), 30 * Math.sin(theta));
+          ctx.stroke();
+
+          // Paddle cup
+          ctx.fillStyle = '#1e293b';
+          ctx.beginPath();
+          ctx.arc(30 * Math.cos(theta), 30 * Math.sin(theta), 8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        // Inner copper core
+        ctx.fillStyle = '#b45309';
+        ctx.beginPath();
+        ctx.arc(0, 0, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+
+      } else if (activeChanger === 'solar') {
+        // Tilted solar cells panels
+        ctx.fillStyle = '#1E3A8A';
+        ctx.strokeStyle = '#3B82F6';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-25, 20);
+        ctx.lineTo(-10, -20);
+        ctx.lineTo(25, -20);
+        ctx.lineTo(10, 20);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.beginPath();
+        ctx.moveTo(-17, 0); ctx.lineTo(17, 0);
+        ctx.moveTo(-8, -10); ctx.lineTo(8, -10);
+        ctx.moveTo(-21, 10); ctx.lineTo(21, 10);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawUserElement() {
+      ctx.save();
+      ctx.translate(640, 220);
+
+      if (activeUser === 'beaker') {
+        // Transparent Beaker outline
+        ctx.strokeStyle = '#94A3B8';
+        ctx.lineWidth = 3;
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.12)';
+        ctx.beginPath();
+        ctx.moveTo(-20, -25);
+        ctx.lineTo(-20, 25);
+        ctx.lineTo(20, 25);
+        ctx.lineTo(20, -25);
+        ctx.stroke();
+        ctx.fill();
+
+        // Water level inside
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.35)';
+        ctx.fillRect(-18, 5, 36, 18);
+
+        // Bubbles if temp > 70
+        if (beakerTemp > 70) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          const bubbleCount = 4;
+          for (let i = 0; i < bubbleCount; i++) {
+            const bx = -14 + (bicycleAngle * 5 + i * 12) % 28;
+            const by = 20 - (bicycleAngle * 10 + i * 8) % 18;
+            ctx.beginPath();
+            ctx.arc(bx, by, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Thermometer
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(25, -25, 6, 50);
+        
+        // Liquid level column
+        const pct = (beakerTemp - 20) / 80;
+        const fillH = Math.max(2, 46 * pct);
+        ctx.fillStyle = '#EF4444';
+        ctx.fillRect(26, 23 - fillH, 4, fillH);
+
+      } else if (activeUser === 'bulb') {
+        const glow = powerOutput > 5;
+        // Aura
+        if (glow) {
+          const auraRad = 20 + (powerOutput / 100) * 25;
+          const grad = ctx.createRadialGradient(0, -12, 2, 0, -12, auraRad);
+          grad.addColorStop(0, 'rgba(253, 224, 71, 0.7)');
+          grad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, -12, auraRad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Brass base screw
+        ctx.fillStyle = '#64748B';
+        ctx.fillRect(-8, 12, 16, 10);
+
+        // Filament core glow
+        ctx.strokeStyle = glow ? '#FBBF24' : '#475569';
+        ctx.lineWidth = glow ? 3 : 1.5;
+        ctx.beginPath();
+        ctx.arc(0, -10, 16, Math.PI * 0.75, Math.PI * 2.25);
+        ctx.lineTo(4, 12);
+        ctx.lineTo(-4, 12);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.strokeStyle = glow ? '#EF4444' : '#64748B';
+        ctx.beginPath();
+        ctx.moveTo(-5, -6);
+        ctx.lineTo(0, -16);
+        ctx.lineTo(5, -6);
+        ctx.stroke();
+
+      } else if (activeUser === 'cfl') {
+        const glow = powerOutput > 5;
+        if (glow) {
+          const auraRad = 20 + (powerOutput / 100) * 25;
+          const grad = ctx.createRadialGradient(0, -12, 2, 0, -12, auraRad);
+          grad.addColorStop(0, 'rgba(14, 165, 233, 0.7)');
+          grad.addColorStop(1, 'rgba(14, 165, 233, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(0, -12, auraRad, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Base
+        ctx.fillStyle = '#64748B';
+        ctx.fillRect(-8, 12, 16, 10);
+
+        // CFL Swirl glass
+        ctx.strokeStyle = glow ? '#38BDF8' : '#475569';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-6, 8);
+        ctx.lineTo(-6, -18);
+        ctx.quadraticCurveTo(-6, -26, 0, -26);
+        ctx.quadraticCurveTo(6, -26, 6, -18);
+        ctx.lineTo(6, 8);
+        ctx.stroke();
+
+      } else if (activeUser === 'fan') {
+        // Stand
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(0, 10);
+        ctx.lineTo(0, 35);
+        ctx.moveTo(-15, 35);
+        ctx.lineTo(15, 35);
+        ctx.stroke();
+
+        // Blades
+        ctx.save();
+        ctx.translate(0, -8);
+        if (powerOutput > 5) {
+          ctx.rotate(bicycleAngle * 3);
+        }
+        ctx.fillStyle = '#10B981';
+        const blades = 3;
+        for (let i = 0; i < blades; i++) {
+          ctx.save();
+          ctx.rotate((i / blades) * Math.PI * 2);
+          ctx.beginPath();
+          ctx.ellipse(0, -14, 6, 12, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    // Start simulation loop
+    setSource('bicycle');
+    requestAnimationFrame(updateSimulation);
+  </script>
+</body>
+</html>

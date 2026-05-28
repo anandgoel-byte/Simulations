@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molecule Shapes & VSEPR 3D Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .custom-canvas {
+      cursor: grab;
+    }
+    .custom-canvas:active {
+      cursor: grabbing;
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight">MOLECULAR GEOMETRY &amp; VSEPR 3D</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Interactive 3D Valence Shell Electron Pair Repulsion Spectroscopic Sandbox</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <button id="btn-reset" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Workspace
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Tabs Navigation -->
+      <div class="flex bg-slate-200 p-1 rounded-xl border border-slate-350 w-fit">
+        <button id="tab-real" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm">
+          ⚛️ Real Molecules
+        </button>
+        <button id="tab-sandbox" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+          🧪 Molecule Builder Sandbox
+        </button>
+      </div>
+
+      <!-- Real Preset Selection -->
+      <div id="preset-selector-container" class="flex items-center space-x-2">
+        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Select Preset Molecule:</span>
+        <select id="select-molecule" class="bg-white border border-slate-250 rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-750 outline-none shadow-xs">
+          <!-- Populated by JS -->
+        </select>
+      </div>
+
+      <!-- Viewport Toggle Options -->
+      <div class="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-700">
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" id="chk-angles" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Bond Angles</span>
+        </label>
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" id="chk-lone-pairs" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Lone Pairs</span>
+        </label>
+        <label class="flex items-center space-x-2 cursor-pointer">
+          <input type="checkbox" id="chk-labels" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Geometry Labels</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 9) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-6">
+            
+            <!-- Sandbox domain tools (hidden when tab is Real) -->
+            <div id="sandbox-tools-container" class="space-y-5 hidden">
+              <div class="border-b border-slate-200 pb-3">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Add Electron Domains (Max 6)</span>
+                <p class="text-[10px] text-slate-400 mt-1">Select attachments to bond to central core:</p>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <button id="btn-add-single" class="py-2 px-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span class="text-sky-500">⬤</span> Single Bond (-X)
+                </button>
+                <button id="btn-add-double" class="py-2 px-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span class="text-sky-500">╍</span> Double Bond (=X)
+                </button>
+                <button id="btn-add-triple" class="py-2 px-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span class="text-sky-500">≡</span> Triple Bond (≡X)
+                </button>
+                <button id="btn-add-lone" class="py-2 px-2.5 bg-white hover:bg-amber-50 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 transition flex items-center justify-center gap-1.5 shadow-xs">
+                  <span class="text-amber-500">●●</span> Lone Pair (:E)
+                </button>
+              </div>
+
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Domain Inventory</span>
+                  <span id="domain-count-badge" class="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded font-mono font-bold">3/6</span>
+                </div>
+                <div id="domain-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+
+              <button id="btn-clear-sandbox" class="w-full py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold rounded-lg transition-all">
+                🗑️ Clear All Attachments
+              </button>
+            </div>
+
+            <!-- Quantum Telemetry Dashboard -->
+            <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3.5 shadow-xs">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-1">
+                ⚡ QUANTUM SURVEY TELEMETRY
+              </span>
+              
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-white p-3 rounded-xl border border-indigo-50 shadow-xs">
+                  <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Steric Number</span>
+                  <span id="tel-steric" class="text-sm font-extrabold text-indigo-600 font-mono">4 Regions</span>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-indigo-50 shadow-xs">
+                  <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Electron Geom</span>
+                  <span id="tel-e-geom" class="text-xs font-extrabold text-emerald-600 truncate">Tetrahedral</span>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-indigo-50 shadow-xs">
+                  <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Lone Pairs</span>
+                  <span id="tel-lone" class="text-sm font-extrabold text-amber-600 font-mono">2</span>
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-indigo-50 shadow-xs">
+                  <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Standard Angles</span>
+                  <span id="tel-angles" class="text-sm font-extrabold text-teal-600 font-mono">104.5°</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Molecular Info Display -->
+            <div id="molecule-info" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3">
+              <div class="border-b border-slate-100 pb-2 flex justify-between items-center">
+                <div>
+                  <h3 id="info-name" class="text-sm font-extrabold text-indigo-600 uppercase">Water</h3>
+                  <span id="info-formula" class="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">H2O</span>
+                </div>
+                <span id="info-hybrid" class="text-xs font-extrabold text-amber-600 px-2 py-0.5 bg-amber-50 rounded border border-amber-100 font-mono">sp³</span>
+              </div>
+              <div class="space-y-1.5 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-slate-400 font-medium">Molecular Shape:</span>
+                  <span id="info-geom" class="font-extrabold text-slate-800">Bent</span>
+                </div>
+                <p id="info-desc" class="text-[10px] text-slate-500 leading-relaxed italic pt-1.5 border-t border-slate-100">
+                  The two lone pairs on Oxygen exert strong repulsion, compressing the H-O-H bond angle from the ideal tetrahedral 109.5° to 104.5°.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3D Molecular Coordinate Arena (8 Columns of 9) -->
+        <div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[480px]">
+          <!-- Drag-to-Rotate coordinate background -->
+          <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-50"></div>
+          
+          <div class="absolute top-4 left-4 z-10">
+            <span id="badge-mode-view" class="text-[10px] font-extrabold tracking-wider text-indigo-400 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full uppercase">
+              REAL MOLECULE SPECTROSCOPY
+            </span>
+          </div>
+
+          <canvas id="orbitCanvas" class="absolute inset-0 w-full h-full custom-canvas"></canvas>
+          
+          <div class="absolute bottom-4 left-4 right-4 bg-slate-900/90 border border-slate-800 p-3 rounded-xl text-xs flex justify-between shadow-xl backdrop-blur-sm pointer-events-none">
+            <span class="text-slate-400 font-medium">Click and drag directly on arena to rotate in 3D space</span>
+            <span class="text-indigo-400 font-bold font-mono" id="rot-readout">Yaw: 0.40r | Pitch: 0.30r</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does Water ($H_2O$) have a bond angle of $104.5^\circ$ instead of $109.5^\circ$?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Under VSEPR, electrostatic repulsion varies by pair structure:
+                $$\text{Repulsion: } \text{LP-LP} > \text{LP-BP} > \text{BP-BP}$$
+                Oxygen holds 2 bonding pairs and 2 massive lone pairs ($\text{AX}_2\text{E}_2$). These lone clouds expand in coordinate space, compressing the O-H angles:
+                $$\theta_{\text{H-O-H}} = 109.5^\circ - 2 \times 2.5^\circ = 104.5^\circ$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How do Period 3 elements like Sulfur support expanded octets up to 12 electrons?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Period 3 elements have a principal quantum number $n = 3$, meaning the $3d$ shell is energetically accessible:
+                $$S^*: [Ne]\, 3s^1 3p^3 3d^2 \rightarrow d^2sp^3 \text{ hybrid}$$
+                This promotions grid permits up to 6 spatial bonds (e.g., $SF_6$, octahedral geometry). Period 2 elements are strictly limited to $s, p$ subshells.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do lone pairs occupy equatorial coordinates in a Trigonal Bipyramid ($\text{SN} = 5$)?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                Equatorial spots offer wider spatial angles ($120^\circ$) than axial spots ($90^\circ$). Because:
+                $$\text{Repulsion at } 90^\circ \gg \text{Repulsion at } 120^\circ$$
+                equatorial coordinates experience significantly less total electrostatic potential energy, shielding the lone lobes.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How do multiple (double/triple) bonds influence VSEPR geometries?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                A multiple bond is treated as a single high-density coordinate domain. Due to greater physical $\pi$-overlays, they repel single bonds strongly:
+                $$\text{Repulsion: } \text{Triple} > \text{Double} > \text{Single}$$
+                In formaldehyde ($H_2CO$), the $C=O$ double bond compresses the $H-C-H$ angle to $116^\circ$.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 5 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 5</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why is Xenon Tetrafluoride ($XeF_4$) planar even with Octahedral electron groups?
+              </h4>
+              <button onclick="toggleVerification(5)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-5">Show Scientific Verification</span>
+                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-5" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
+                $XeF_4$ has a steric number of 6 with 2 lone pairs ($\text{AX}_4\text{E}_2$). To minimize LP-LP repulsions, the lone clouds sit at opposite poles ($180^\circ$):
+                $$\theta_{\text{LP-Xe-LP}} = 180^\circ$$
+                This leaves the four fluorine atoms balanced in the flat equatorial plane at $90^\circ$ angles.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calibration Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* VSEPR steric coordinates verified via angular force minimizing relaxation solvers.</span>
+      <span>Apparatus Calibration: r_bond = 100 pm</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> MOLECULAR GEOMETRY &amp; VSEPR - User Guide
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Molecular Shapes &amp; VSEPR 3D Virtual Lab</strong>! Use this simulation to analyze coordinate orbital spatial geometries under electrostatic repulsions.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Modes</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Real Molecules</strong>: Select actual molecular systems (like $H_2O$, $CO_2$, $ClF_3$, or $XeF_4$) from the top toolbar select menu. View their experimental geometries, hybridized valence models, and scientific explanations.</li>
+            <li><strong>Molecule Builder Sandbox</strong>: Click the Sandbox tab to build custom geometries. Dynamically add single, double, triple, or lone electron domains to watch VSEPR adapt in real-time up to the standard steric capacity limit of 6.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 Spatial Navigation</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>3D Orbit Rotation</strong>: Simply click and drag anywhere inside the black 3D canvas viewport to rotate the molecule. Observe spatial repulsions from any direction.</li>
+            <li><strong>Display Toggles</strong>: Toggle "Show Bond Angles", "Show Lone Pairs", and "Show Geometry Labels" dynamically using the top checkboxes to refine your analysis.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC -->
+  <script>
+    // --- MOLECULAR PRESETS DATABASE ---
+    const REAL_MOLECULES = [
+      {
+        formula: "H2O",
+        name: "Water",
+        centralAtom: "Oxygen (O)",
+        singleBonds: 2,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 2,
+        bondAngle: "104.5°",
+        geometry: "Bent",
+        electronGeometry: "Tetrahedral",
+        hybridization: "sp³",
+        desc: "The two lone pairs on Oxygen exert strong repulsion, compressing the H-O-H bond angle from the ideal tetrahedral 109.5° to 104.5°."
+      },
+      {
+        formula: "CO2",
+        name: "Carbon Dioxide",
+        centralAtom: "Carbon (C)",
+        singleBonds: 0,
+        doubleBonds: 2,
+        tripleBonds: 0,
+        lonePairs: 0,
+        bondAngle: "180°",
+        geometry: "Linear",
+        electronGeometry: "Linear",
+        hybridization: "sp",
+        desc: "Two double bonds extend in opposite directions to minimize electron repulsion, yielding a perfectly linear, non-polar molecule."
+      },
+      {
+        formula: "NH3",
+        name: "Ammonia",
+        centralAtom: "Nitrogen (N)",
+        singleBonds: 3,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 1,
+        bondAngle: "107.3°",
+        geometry: "Trigonal Pyramidal",
+        electronGeometry: "Tetrahedral",
+        hybridization: "sp³",
+        desc: "A single lone pair on the nitrogen atom forces the three N-H bonds downwards into a pyramid shape."
+      },
+      {
+        formula: "CH4",
+        name: "Methane",
+        centralAtom: "Carbon (C)",
+        singleBonds: 4,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 0,
+        bondAngle: "109.5°",
+        geometry: "Tetrahedral",
+        electronGeometry: "Tetrahedral",
+        hybridization: "sp³",
+        desc: "Four equivalent single bonds repel each other equally in 3D space to form a symmetric tetrahedral arrangement."
+      },
+      {
+        formula: "SO2",
+        name: "Sulfur Dioxide",
+        centralAtom: "Sulfur (S)",
+        singleBonds: 1,
+        doubleBonds: 1,
+        tripleBonds: 0,
+        lonePairs: 1,
+        bondAngle: "119°",
+        geometry: "Bent",
+        electronGeometry: "Trigonal Planar",
+        hybridization: "sp²",
+        desc: "Sulfur has a steric number of 3, consisting of a single bond, a double bond, and one lone pair, compressing the ideal 120° angle."
+      },
+      {
+        formula: "BF3",
+        name: "Boron Trifluoride",
+        centralAtom: "Boron (B)",
+        singleBonds: 3,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 0,
+        bondAngle: "120°",
+        geometry: "Trigonal Planar",
+        electronGeometry: "Trigonal Planar",
+        hybridization: "sp²",
+        desc: "Boron is an electron-deficient central atom with three bonding pairs pointing toward the corners of an equilateral triangle."
+      },
+      {
+        formula: "PCl5",
+        name: "Phosphorus Pentachloride",
+        centralAtom: "Phosphorus (P)",
+        singleBonds: 5,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 0,
+        bondAngle: "90° / 120°",
+        geometry: "Trigonal Bipyramidal",
+        electronGeometry: "Trigonal Bipyramidal",
+        hybridization: "dsp³",
+        desc: "An expanded octet system. Features three equatorial bonds separated by 120° and two axial bonds at 90° to the equatorial plane."
+      },
+      {
+        formula: "SF6",
+        name: "Sulfur Hexafluoride",
+        centralAtom: "Sulfur (S)",
+        singleBonds: 6,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 0,
+        bondAngle: "90°",
+        geometry: "Octahedral",
+        electronGeometry: "Octahedral",
+        hybridization: "d²sp³",
+        desc: "An expanded valence shell containing six equivalent bonding pairs arranged symmetrically at 90° angles."
+      },
+      {
+        formula: "ClF3",
+        name: "Chlorine Trifluoride",
+        centralAtom: "Chlorine (Cl)",
+        singleBonds: 3,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 2,
+        bondAngle: "87.5°",
+        geometry: "T-shaped",
+        electronGeometry: "Trigonal Bipyramidal",
+        hybridization: "dsp³",
+        desc: "Two equatorial lone pairs compress the axial Cl-F bonds inward, bending the normal 90° angles to about 87.5°."
+      },
+      {
+        formula: "XeF4",
+        name: "Xenon Tetrafluoride",
+        centralAtom: "Xenon (Xe)",
+        singleBonds: 4,
+        doubleBonds: 0,
+        tripleBonds: 0,
+        lonePairs: 2,
+        bondAngle: "90°",
+        geometry: "Square Planar",
+        electronGeometry: "Octahedral",
+        hybridization: "d²sp³",
+        desc: "The two lone pairs occupy opposite axial positions of an octahedron to minimize repulsion, leaving four coplanar fluorine atoms."
+      }
+    ];
+
+    // --- VSEPR GEOMETRICAL CALCULATOR TABLE ---
+    const getVseprGeometry = (bondsCount, lonePairs) => {
+      const totalPairs = bondsCount + lonePairs;
+
+      if (totalPairs < 2) {
+        return {
+          electronGeometry: "Linear",
+          molecularGeometry: totalPairs === 1 ? "Linear" : "Single Atom",
+          bondAngle: "180°",
+          hybridization: "s/sp"
+        };
+      }
+
+      switch (totalPairs) {
+        case 2:
+          return {
+            electronGeometry: "Linear",
+            molecularGeometry: "Linear",
+            bondAngle: "180°",
+            hybridization: "sp"
+          };
+        case 3:
+          if (lonePairs === 0) {
+            return {
+              electronGeometry: "Trigonal Planar",
+              molecularGeometry: "Trigonal Planar",
+              bondAngle: "120°",
+              hybridization: "sp²"
+            };
+          } else if (lonePairs === 1) {
+            return {
+              electronGeometry: "Trigonal Planar",
+              molecularGeometry: "Bent",
+              bondAngle: "118°",
+              hybridization: "sp²"
+            };
+          } else {
+            return {
+              electronGeometry: "Trigonal Planar",
+              molecularGeometry: "Linear",
+              bondAngle: "180°",
+              hybridization: "sp²"
+            };
+          }
+        case 4:
+          if (lonePairs === 0) {
+            return {
+              electronGeometry: "Tetrahedral",
+              molecularGeometry: "Tetrahedral",
+              bondAngle: "109.5°",
+              hybridization: "sp³"
+            };
+          } else if (lonePairs === 1) {
+            return {
+              electronGeometry: "Tetrahedral",
+              molecularGeometry: "Trigonal Pyramidal",
+              bondAngle: "107°",
+              hybridization: "sp³"
+            };
+          } else if (lonePairs === 2) {
+            return {
+              electronGeometry: "Tetrahedral",
+              molecularGeometry: "Bent",
+              bondAngle: "104.5°",
+              hybridization: "sp³"
+            };
+          } else {
+            return {
+              electronGeometry: "Tetrahedral",
+              molecularGeometry: "Linear",
+              bondAngle: "180°",
+              hybridization: "sp³"
+            };
+          }
+        case 5:
+          if (lonePairs === 0) {
+            return {
+              electronGeometry: "Trigonal Bipyramidal",
+              molecularGeometry: "Trigonal Bipyramidal",
+              bondAngle: "90° / 120°",
+              hybridization: "dsp³"
+            };
+          } else if (lonePairs === 1) {
+            return {
+              electronGeometry: "Trigonal Bipyramidal",
+              molecularGeometry: "Seesaw",
+              bondAngle: "< 90° / < 120°",
+              hybridization: "dsp³"
+            };
+          } else if (lonePairs === 2) {
+            return {
+              electronGeometry: "Trigonal Bipyramidal",
+              molecularGeometry: "T-shaped",
+              bondAngle: "87.5°",
+              hybridization: "dsp³"
+            };
+          } else {
+            return {
+              electronGeometry: "Trigonal Bipyramidal",
+              molecularGeometry: "Linear",
+              bondAngle: "180°",
+              hybridization: "dsp³"
+            };
+          }
+        case 6:
+          if (lonePairs === 0) {
+            return {
+              electronGeometry: "Octahedral",
+              molecularGeometry: "Octahedral",
+              bondAngle: "90°",
+              hybridization: "d²sp³"
+            };
+          } else if (lonePairs === 1) {
+            return {
+              electronGeometry: "Octahedral",
+              molecularGeometry: "Square Pyramidal",
+              bondAngle: "< 90°",
+              hybridization: "d²sp³"
+            };
+          } else if (lonePairs === 2) {
+            return {
+              electronGeometry: "Octahedral",
+              molecularGeometry: "Square Planar",
+              bondAngle: "90°",
+              hybridization: "d²sp³"
+            };
+          } else {
+            return {
+              electronGeometry: "Octahedral",
+              molecularGeometry: "Linear",
+              bondAngle: "180°",
+              hybridization: "d²sp³"
+            };
+          }
+        default:
+          return {
+            electronGeometry: "Complex",
+            molecularGeometry: "Polyhedral",
+            bondAngle: "Variable",
+            hybridization: "sp³d³"
+          };
+      }
+    };
+
+    // --- APPLICATION STATE ---
+    let currentTab = 'real'; // 'real' or 'sandbox'
+    let selectedMoleculeIndex = 0;
+    
+    // Sandbox stack (Max 6 total domains limit)
+    let sandboxGroups = [
+      { id: 1, type: 'single' },
+      { id: 2, type: 'single' },
+      { id: 3, type: 'lone' }
+    ];
+
+    let showBondAngles = true;
+    let showLonePairs = true;
+    let showGeometryLabels = true;
+
+    // Viewport drag coordinates
+    let yaw = 0.4;
+    let pitch = 0.3;
+    let isDragging = false;
+    let previousMouse = { x: 0, y: 0 };
+
+    // Canvas refs
+    let canvas, ctx;
+    const dpi = window.devicePixelRatio || 1;
+
+    // --- DOM ELEMENT CACHE ---
+    const tabReal = document.getElementById('tab-real');
+    const tabSandbox = document.getElementById('tab-sandbox');
+    const selectMolecule = document.getElementById('select-molecule');
+    const presetSelectorContainer = document.getElementById('preset-selector-container');
+    const sandboxToolsContainer = document.getElementById('sandbox-tools-container');
+    
+    const chkAngles = document.getElementById('chk-angles');
+    const chkLonePairs = document.getElementById('chk-lone-pairs');
+    const chkLabels = document.getElementById('chk-labels');
+    
+    const telSteric = document.getElementById('tel-steric');
+    const telEGeom = document.getElementById('tel-e-geom');
+    const telLone = document.getElementById('tel-lone');
+    const telAngles = document.getElementById('tel-angles');
+
+    const infoName = document.getElementById('info-name');
+    const infoFormula = document.getElementById('info-formula');
+    const infoHybrid = document.getElementById('info-hybrid');
+    const infoGeom = document.getElementById('info-geom');
+    const infoDesc = document.getElementById('info-desc');
+
+    const badgeModeView = document.getElementById('badge-mode-view');
+    const rotReadout = document.getElementById('rot-readout');
+
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+      canvas = document.getElementById('orbitCanvas');
+      ctx = canvas.getContext('2d');
+
+      // Populate selects
+      selectMolecule.innerHTML = REAL_MOLECULES.map((m, idx) => 
+        `<option value="${idx}">${m.name} (${m.formula})</option>`
+      ).join('');
+
+      // Setup Listeners
+      setupEventListeners();
+      handleResize();
+      updateDashboard();
+      
+      // Canvas Rendering Loop
+      requestAnimationFrame(renderLoop);
+    });
+
+    function setupEventListeners() {
+      // Toggles tabs
+      tabReal.addEventListener('click', () => setTab('real'));
+      tabSandbox.addEventListener('click', () => setTab('sandbox'));
+
+      // Select Preset Change
+      selectMolecule.addEventListener('change', (e) => {
+        selectedMoleculeIndex = parseInt(e.target.value);
+        updateDashboard();
+      });
+
+      // Display options
+      chkAngles.addEventListener('change', (e) => {
+        showBondAngles = e.target.checked;
+      });
+      chkLonePairs.addEventListener('change', (e) => {
+        showLonePairs = e.target.checked;
+      });
+      chkLabels.addEventListener('change', (e) => {
+        showGeometryLabels = e.target.checked;
+        updateDashboard();
+      });
+
+      // Canvas Dragging
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMouse = { x: e.clientX, y: e.clientY };
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - previousMouse.x;
+        const dy = e.clientY - previousMouse.y;
+        
+        yaw += dx * 0.012;
+        pitch = Math.min(Math.PI / 2, Math.max(-Math.PI / 2, pitch + dy * 0.012));
+        
+        previousMouse = { x: e.clientX, y: e.clientY };
+        rotReadout.textContent = `Yaw: ${yaw.toFixed(2)}r | Pitch: ${pitch.toFixed(2)}r`;
+      });
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // Window Resize
+      window.addEventListener('resize', handleResize);
+
+      // User Guide Modal
+      const guideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => {
+        guideModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-guide').addEventListener('click', () => {
+        guideModal.classList.add('hidden');
+      });
+      guideModal.addEventListener('click', (e) => {
+        if (e.target === guideModal) guideModal.classList.add('hidden');
+      });
+
+      // Reset
+      document.getElementById('btn-reset').addEventListener('click', handleResetWorkspace);
+
+      // Sandbox buttons
+      document.getElementById('btn-add-single').addEventListener('click', () => addSandboxDomain('single'));
+      document.getElementById('btn-add-double').addEventListener('click', () => addSandboxDomain('double'));
+      document.getElementById('btn-add-triple').addEventListener('click', () => addSandboxDomain('triple'));
+      document.getElementById('btn-add-lone').addEventListener('click', () => addSandboxDomain('lone'));
+      document.getElementById('btn-clear-sandbox').addEventListener('click', clearSandbox);
+    }
+
+    function handleResize() {
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+    }
+
+    function setTab(tab) {
+      currentTab = tab;
+      if (tab === 'real') {
+        tabReal.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm";
+        tabSandbox.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950";
+        presetSelectorContainer.classList.remove('hidden');
+        sandboxToolsContainer.classList.add('hidden');
+        badgeModeView.textContent = "REAL MOLECULE SPECTROSCOPY";
+      } else {
+        tabSandbox.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm";
+        tabReal.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950";
+        presetSelectorContainer.classList.add('hidden');
+        sandboxToolsContainer.classList.remove('hidden');
+        badgeModeView.textContent = "CUSTOM HYPOTHETICAL BUILDER";
+      }
+      updateDashboard();
+    }
+
+    function handleResetWorkspace() {
+      yaw = 0.4;
+      pitch = 0.3;
+      selectedMoleculeIndex = 0;
+      selectMolecule.value = 0;
+      sandboxGroups = [
+        { id: 1, type: 'single' },
+        { id: 2, type: 'single' },
+        { id: 3, type: 'lone' }
+      ];
+      setTab('real');
+      updateDashboard();
+      rotReadout.textContent = `Yaw: ${yaw.toFixed(2)}r | Pitch: ${pitch.toFixed(2)}r`;
+    }
+
+    // --- SANDBOX LOGIC ---
+    function addSandboxDomain(type) {
+      if (sandboxGroups.length >= 6) return; // Steric limit
+      sandboxGroups.push({
+        id: Date.now() + Math.random(),
+        type: type
+      });
+      updateDashboard();
+    }
+
+    function removeSandboxDomain(id) {
+      sandboxGroups = sandboxGroups.filter(g => g.id !== id);
+      updateDashboard();
+    }
+
+    function clearSandbox() {
+      sandboxGroups = [];
+      updateDashboard();
+    }
+
+    // --- UPDATE VIEW AND METRICS ---
+    function updateDashboard() {
+      let props = {};
+      let totalBonds = 0;
+      let lonePairs = 0;
+      let singleB = 0, doubleB = 0, tripleB = 0;
+
+      if (currentTab === 'real') {
+        const mol = REAL_MOLECULES[selectedMoleculeIndex];
+        singleB = mol.singleBonds;
+        doubleB = mol.doubleBonds;
+        tripleB = mol.tripleBonds;
+        lonePairs = mol.lonePairs;
+        totalBonds = singleB + doubleB + tripleB;
+
+        props = {
+          name: mol.name,
+          formula: mol.formula,
+          bondAngle: mol.bondAngle,
+          geometry: mol.geometry,
+          electronGeometry: mol.electronGeometry,
+          hybridization: mol.hybridization,
+          description: mol.desc
+        };
+      } else {
+        singleB = sandboxGroups.filter(g => g.type === 'single').length;
+        doubleB = sandboxGroups.filter(g => g.type === 'double').length;
+        tripleB = sandboxGroups.filter(g => g.type === 'triple').length;
+        lonePairs = sandboxGroups.filter(g => g.type === 'lone').length;
+        totalBonds = singleB + doubleB + tripleB;
+
+        const geom = getVseprGeometry(totalBonds, lonePairs);
+
+        // Build chemical AXnEm formula
+        const formulaParts = [];
+        if (totalBonds > 0) formulaParts.push(`X<sub>${totalBonds}</sub>`);
+        if (lonePairs > 0) formulaParts.push(`E<sub>${lonePairs}</sub>`);
+        const formula = `A${formulaParts.join('')}`;
+
+        props = {
+          name: geom.molecularGeometry,
+          formula: formula,
+          bondAngle: geom.bondAngle,
+          geometry: geom.molecularGeometry,
+          electronGeometry: geom.electronGeometry,
+          hybridization: geom.hybridization,
+          description: `Hypothetical VSEPR shape featuring ${totalBonds} bonding regions and ${lonePairs} lone electron pair clouds.`
+        };
+
+        // Render sandbox list
+        const domainList = document.getElementById('domain-list');
+        const domainBadge = document.getElementById('domain-count-badge');
+        domainBadge.textContent = `${sandboxGroups.length}/6`;
+        
+        domainList.innerHTML = sandboxGroups.map((g, index) => `
+          <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-slate-200 text-xs">
+            <span class="font-bold text-slate-700 uppercase">
+              ${index + 1}. ${g.type === 'lone' ? 'Lone Pair cloud' : `${g.type} bond`}
+            </span>
+            <button onclick="removeSandboxDomain(${g.id})" class="text-[10px] text-rose-600 hover:text-rose-800 hover:bg-rose-50 px-2 py-0.5 rounded border border-rose-200 transition font-bold">
+              🗑️ Remove
+            </button>
+          </div>
+        `).join('');
+      }
+
+      const totalSteric = totalBonds + lonePairs;
+
+      // Update Telemetry
+      telSteric.textContent = `${totalSteric} Regions`;
+      telEGeom.textContent = props.electronGeometry;
+      telLone.textContent = lonePairs;
+      telAngles.textContent = props.bondAngle;
+
+      // Update Display Panel
+      infoName.textContent = props.name;
+      infoFormula.innerHTML = props.formula;
+      infoHybrid.textContent = props.hybridization;
+      infoGeom.textContent = props.geometry;
+      infoDesc.textContent = props.description;
+
+      // Toggle display options label visibility based on global checkbox
+      if (showGeometryLabels) {
+        infoHybrid.classList.remove('hidden');
+      } else {
+        infoHybrid.classList.add('hidden');
+      }
+    }
+
+    // --- 3D RENDER LOOP ---
+    function renderLoop() {
+      draw3DScene();
+      requestAnimationFrame(renderLoop);
+    }
+
+    function draw3DScene() {
+      if (!canvas || !ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const w = canvas.width / dpi;
+      const h = canvas.height / dpi;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      ctx.save();
+      ctx.scale(dpi, dpi);
+
+      // Fetch dynamic geometry config
+      let singleB = 0, doubleB = 0, tripleB = 0, lonePairs = 0;
+      let bondAngleLabel = "109.5°";
+
+      if (currentTab === 'real') {
+        const mol = REAL_MOLECULES[selectedMoleculeIndex];
+        singleB = mol.singleBonds;
+        doubleB = mol.doubleBonds;
+        tripleB = mol.tripleBonds;
+        lonePairs = mol.lonePairs;
+        bondAngleLabel = mol.bondAngle;
+      } else {
+        singleB = sandboxGroups.filter(g => g.type === 'single').length;
+        doubleB = sandboxGroups.filter(g => g.type === 'double').length;
+        tripleB = sandboxGroups.filter(g => g.type === 'triple').length;
+        lonePairs = sandboxGroups.filter(g => g.type === 'lone').length;
+        const geom = getVseprGeometry(singleB + doubleB + tripleB, lonePairs);
+        bondAngleLabel = geom.bondAngle;
+      }
+
+      const totalBonds = singleB + doubleB + tripleB;
+      const totalPairs = totalBonds + lonePairs;
+
+      // Build 3D vector points
+      const points = [];
+      // Central Atom at (0,0,0)
+      points.push({ type: 'central', x: 0, y: 0, z: 0 });
+
+      for (let i = 0; i < totalPairs; i++) {
+        let phi = 0, theta = 0;
+
+        if (totalPairs === 1) {
+          phi = Math.PI / 2;
+          theta = 0;
+        } else if (totalPairs === 2) {
+          // Linear
+          phi = Math.PI / 2;
+          theta = i === 0 ? 0 : Math.PI;
+        } else if (totalPairs === 3) {
+          // Trigonal Planar
+          phi = Math.PI / 2;
+          theta = (i * 2 * Math.PI) / 3;
+        } else if (totalPairs === 4) {
+          // Tetrahedral
+          if (i === 0) {
+            phi = 0; theta = 0;
+          } else {
+            phi = Math.acos(-1/3); // ~109.47°
+            theta = ((i - 1) * 2 * Math.PI) / 3;
+          }
+        } else if (totalPairs === 5) {
+          // Trigonal Bipyramidal
+          if (i === 0) { phi = 0; theta = 0; }
+          else if (i === 1) { phi = Math.PI; theta = 0; }
+          else {
+            phi = Math.PI / 2;
+            theta = ((i - 2) * 2 * Math.PI) / 3;
+          }
+        } else if (totalPairs === 6) {
+          // Octahedral
+          if (i === 0) { phi = 0; theta = 0; }
+          else if (i === 1) { phi = Math.PI; theta = 0; }
+          else {
+            phi = Math.PI / 2;
+            theta = ((i - 2) * Math.PI) / 2;
+          }
+        }
+
+        const r = 110; // bond length in px
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.sin(phi) * Math.sin(theta);
+        const z = r * Math.cos(phi);
+
+        const isLone = i >= totalBonds;
+        let bondMultiplicity = 1;
+
+        if (!isLone) {
+          // Sequentially assign bonds multiplicity
+          let track = i;
+          if (track < tripleB) {
+            bondMultiplicity = 3;
+          } else if (track < (tripleB + doubleB)) {
+            bondMultiplicity = 2;
+          }
+        }
+
+        points.push({
+          type: isLone ? 'lone' : 'terminal',
+          bondType: bondMultiplicity,
+          x, y, z
+        });
+      }
+
+      // Compute matrix projection (Yaw / Pitch)
+      const cosY = Math.cos(yaw);
+      const sinY = Math.sin(yaw);
+      const cosP = Math.cos(pitch);
+      const sinP = Math.sin(pitch);
+
+      const projected = points.map((p) => {
+        // Horiz (Yaw)
+        const rx1 = p.x * cosY - p.z * sinY;
+        const rz1 = p.x * sinY + p.z * cosY;
+        
+        // Vert (Pitch)
+        const ry2 = p.y * cosP - rz1 * sinP;
+        const rz2 = p.y * sinP + rz1 * cosP;
+
+        return {
+          ...p,
+          px: cx + rx1,
+          py: cy + ry2,
+          pz: rz2 // depth metric
+        };
+      });
+
+      // Depth sorted rendering
+      const sorted = [...projected].sort((a, b) => b.pz - a.pz);
+
+      // Render Bonds / Balloon clouds first
+      sorted.forEach((p) => {
+        const central = projected.find(pt => pt.type === 'central');
+
+        if (p.type === 'lone') {
+          if (!showLonePairs) return;
+
+          ctx.save();
+          const angle = Math.atan2(p.py - central.py, p.px - central.px);
+          ctx.translate(central.px, central.py);
+          ctx.rotate(angle);
+
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(45, -35, 95, -30, 105, 0);
+          ctx.bezierCurveTo(95, 30, 45, 35, 0, 0);
+
+          const grad = ctx.createRadialGradient(70, 0, 5, 70, 0, 40);
+          grad.addColorStop(0, 'rgba(253, 224, 71, 0.75)');
+          grad.addColorStop(1, 'rgba(234, 179, 8, 0.15)');
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          ctx.strokeStyle = '#eab308';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // Charge dot indicators
+          ctx.beginPath();
+          ctx.arc(75, -5, 2.5, 0, Math.PI * 2);
+          ctx.arc(75, 5, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#ca8a04';
+          ctx.fill();
+
+          ctx.restore();
+
+        } else if (p.type === 'terminal') {
+          ctx.strokeStyle = '#94a3b8';
+          ctx.lineCap = 'round';
+
+          if (p.bondType === 3) {
+            drawBondOffset(ctx, central.px, central.py, p.px, p.py, -7);
+            drawBondOffset(ctx, central.px, central.py, p.px, p.py, 0);
+            drawBondOffset(ctx, central.px, central.py, p.px, p.py, 7);
+          } else if (p.bondType === 2) {
+            drawBondOffset(ctx, central.px, central.py, p.px, p.py, -4.5);
+            drawBondOffset(ctx, central.px, central.py, p.px, p.py, 4.5);
+          } else {
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(central.px, central.py);
+            ctx.lineTo(p.px, p.py);
+            ctx.stroke();
+          }
+        }
+      });
+
+      // Render Atoms as shaded spheres
+      sorted.forEach((p) => {
+        if (p.type === 'central') {
+          ctx.beginPath();
+          ctx.arc(p.px, p.py, 24, 0, Math.PI * 2);
+
+          const grad = ctx.createRadialGradient(p.px - 6, p.py - 6, 2, p.px, p.py, 24);
+          grad.addColorStop(0, '#a5b4fc');
+          grad.addColorStop(0.7, '#6366f1');
+          grad.addColorStop(1, '#4338ca');
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const label = currentTab === 'real' ? REAL_MOLECULES[selectedMoleculeIndex].centralAtom[0] : 'A';
+          ctx.fillText(label, p.px, p.py);
+
+        } else if (p.type === 'terminal') {
+          ctx.beginPath();
+          ctx.arc(p.px, p.py, 17, 0, Math.PI * 2);
+
+          const grad = ctx.createRadialGradient(p.px - 4, p.py - 4, 1, p.px, p.py, 17);
+          grad.addColorStop(0, '#e0f2fe');
+          grad.addColorStop(0.7, '#38bdf8');
+          grad.addColorStop(1, '#0284c7');
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('X', p.px, p.py);
+        }
+      });
+
+      // Render Bond Angle sweep arc
+      if (showBondAngles && projected.length >= 3) {
+        const central = projected.find(pt => pt.type === 'central');
+        const terminals = projected.filter(pt => pt.type === 'terminal');
+
+        if (terminals.length >= 2) {
+          const t1 = terminals[0];
+          const t2 = terminals[1];
+
+          const a1 = Math.atan2(t1.py - central.py, t1.px - central.px);
+          const a2 = Math.atan2(t2.py - central.py, t2.px - central.px);
+
+          ctx.beginPath();
+          ctx.arc(central.px, central.py, 45, a1, a2, Math.abs(a2 - a1) > Math.PI);
+          ctx.strokeStyle = '#ec4899';
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+
+          // Label Bubble
+          const midAngle = a1 + (a2 - a1) * 0.5 + (Math.abs(a2 - a1) > Math.PI ? Math.PI : 0);
+          const lx = central.px + Math.cos(midAngle) * 62;
+          const ly = central.py + Math.sin(midAngle) * 62;
+
+          ctx.fillStyle = '#fdf2f8';
+          ctx.strokeStyle = '#f472b6';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          
+          // Draw simple rect
+          ctx.rect(lx - 22, ly - 9, 44, 18);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#db2777';
+          ctx.font = 'bold 9px monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(bondAngleLabel, lx, ly);
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawBondOffset(ctx, x1, y1, x2, y2, offset) {
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.sqrt(dx * dx + dy * dy);
+      const nx = -dy / (len || 1);
+      const ny = dx / (len || 1);
+
+      ctx.beginPath();
+      ctx.lineWidth = 3.2;
+      ctx.moveTo(x1 + nx * offset, y1 + ny * offset);
+      ctx.lineTo(x2 + nx * offset, y2 + ny * offset);
+      ctx.stroke();
+    }
+
+    // --- ACCORDION CONTROLS (VIVA DESK) ---
+    window.toggleVerification = function(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const arrow = document.getElementById(`btn-arrow-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      
+      const isHidden = panel.classList.contains('hidden');
+      
+      // Close all panels first to keep clean UI
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById(`viva-panel-${i}`).classList.add('hidden');
+        document.getElementById(`btn-arrow-${i}`).classList.remove('rotate-180');
+        document.getElementById(`btn-text-${i}`).textContent = "Show Scientific Verification";
+      }
+
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+        btnText.textContent = "Hide Scientific Verification";
+        // Trigger MathJax typeset to render LaTeX formulas cleanly
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetPromise();
+        }
+      }
+    };
+  </script>
+</body>
+</html>

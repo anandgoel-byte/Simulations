@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Virtual Labs</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161920;
+    --surface2: #1e222c;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.18);
+    --text: #e8eaf0;
+    --muted: #7a7f91;
+    --physics: #4fc3f7;
+    --chemistry: #a5d6a7;
+    --modern: #ce93d8;
+    --biology: #ffcc80;
+    --math: #f48fb1;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 2.5rem 3rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .logo-area h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .logo-area p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .stat { text-align: right; }
+  .stat-num { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: #fff; font-weight: 700; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* SEARCH */
+  .search-wrap {
+    position: relative;
+  }
+  .search-wrap input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 7px 12px 7px 34px;
+    font-size: 0.82rem;
+    font-family: 'DM Sans', sans-serif;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input:focus { border-color: var(--border-hover); }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 0.85rem;
+    pointer-events: none;
+  }
+
+  main {
+    flex: 1;
+    padding: 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .subject-section {}
+
+  .subject-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .subject-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .subject-title { font-family: 'Space Mono', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; }
+  .subject-line { flex: 1; height: 1px; background: var(--border); }
+  .subject-count { font-size: 0.75rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .lab-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.3rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+  }
+
+  .lab-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 10px 0 0 10px;
+  }
+
+  .lab-card:hover { background: var(--surface2); border-color: var(--border-hover); transform: translateY(-2px); }
+  .lab-card:hover::before { opacity: 1; }
+  .lab-card:active { transform: translateY(0); }
+
+  .lab-card.hidden { display: none; }
+
+  .card-topic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    width: fit-content;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .card-name { font-size: 0.92rem; font-weight: 500; color: #fff; line-height: 1.35; }
+  .card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+  .card-arrow {
+    margin-top: auto;
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s, gap 0.2s;
+  }
+  .lab-card:hover .card-arrow { gap: 8px; }
+
+  /* COLOR SCHEMES */
+  .physics .subject-dot { background: var(--physics); }
+  .physics .subject-title { color: var(--physics); }
+  .physics .lab-card::before { background: var(--physics); }
+  .physics .card-topic-badge { background: rgba(79,195,247,0.12); color: var(--physics); }
+  .physics .lab-card:hover .card-arrow { color: var(--physics); }
+
+  .chemistry .subject-dot { background: var(--chemistry); }
+  .chemistry .subject-title { color: var(--chemistry); }
+  .chemistry .lab-card::before { background: var(--chemistry); }
+  .chemistry .card-topic-badge { background: rgba(165,214,167,0.12); color: var(--chemistry); }
+  .chemistry .lab-card:hover .card-arrow { color: var(--chemistry); }
+
+  .modern .subject-dot { background: var(--modern); }
+  .modern .subject-title { color: var(--modern); }
+  .modern .lab-card::before { background: var(--modern); }
+  .modern .card-topic-badge { background: rgba(206,147,216,0.12); color: var(--modern); }
+  .modern .lab-card:hover .card-arrow { color: var(--modern); }
+
+  .biology .subject-dot { background: var(--biology); }
+  .biology .subject-title { color: var(--biology); }
+  .biology .lab-card::before { background: var(--biology); }
+  .biology .card-topic-badge { background: rgba(255,204,128,0.12); color: var(--biology); }
+  .biology .lab-card:hover .card-arrow { color: var(--biology); }
+
+  .math .subject-dot { background: var(--math); }
+  .math .subject-title { color: var(--math); }
+  .math .lab-card::before { background: var(--math); }
+  .math .card-topic-badge { background: rgba(244,143,177,0.12); color: var(--math); }
+  .math .lab-card:hover .card-arrow { color: var(--math); }
+
+  /* no-results */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* IFRAME OVERLAY */
+  .sim-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    flex-direction: column;
+  }
+  .sim-overlay.active { display: flex; }
+
+  .sim-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .sim-title { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: #fff; font-weight: 700; }
+
+  .sim-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .sim-close:hover { background: var(--surface2); border-color: var(--border-hover); }
+
+  .sim-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <h1>// Virtual Labs</h1>
+    <p>Interactive science simulations — click any card to launch</p>
+  </div>
+  <div class="header-right">
+    <div class="search-wrap">
+      <span class="search-icon">&#9906;</span>
+      <input type="text" id="searchInput" placeholder="Search simulations..." oninput="filterLabs()" />
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Subjects</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="total-count">30</div>
+      <div class="stat-label">Simulations</div>
+    </div>
+  </div>
+</header>
+
+<main id="mainContent">
+
+  <!-- ═══════════════════════════════════════════════ PHYSICS -->
+  <div class="subject-section physics" id="sec-physics">
+    <div class="subject-header">
+      <div class="subject-dot"></div>
+      <div class="subject-title">Physics</div>
+      <div class="subject-line"></div>
+      <div class="subject-count" id="cnt-physics">12 labs</div>
+    </div>
+    <div class="card-grid">
+
+      <div class="lab-card" data-name="buoyancy archimedes fluids" onclick="openLab('Buoyancy.html','Buoyancy — Archimedes Principle')">
+        <span class="card-topic-badge">Fluids</span>
+        <div class="card-name">Buoyancy</div>
+        <div class="card-desc">Explore Archimedes' principle, floating, and submerged objects.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="electromagnetic induction faraday emi" onclick="openLab('EMI.html','Electromagnetic Induction')">
+        <span class="card-topic-badge">Electromagnetism</span>
+        <div class="card-name">Electromagnetic Induction</div>
+        <div class="card-desc">Visualize Faraday's law and induced EMF with moving magnets.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="electromagnetic waves emw light" onclick="openLab('EMW.html','Electromagnetic Waves')">
+        <span class="card-topic-badge">Electromagnetism</span>
+        <div class="card-name">Electromagnetic Waves</div>
+        <div class="card-desc">Observe E and B field oscillations and wave propagation.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="elliptical orbit kepler planets" onclick="openLab('Elliptical.html','Elliptical Orbits')">
+        <span class="card-topic-badge">Mechanics</span>
+        <div class="card-name">Elliptical Orbits</div>
+        <div class="card-desc">Simulate planetary motion and Kepler's laws in action.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="energy forms changes thermal electrical" onclick="openLab('Energy-forms-changes.html','Energy Forms & Changes')">
+        <span class="card-topic-badge">Energy</span>
+        <div class="card-name">Energy Forms & Changes</div>
+        <div class="card-desc">Convert between thermal, electrical, and mechanical energy.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="color vision optics light wavelength" onclick="openLab('Color_Vision_Virtual_Laboratory.html','Color Vision Lab')">
+        <span class="card-topic-badge">Optics</span>
+        <div class="card-name">Color Vision (Full)</div>
+        <div class="card-desc">Explore how light wavelengths produce color perception.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="ohms law voltage current resistance" onclick="openLab('ohmslaw.html','Ohm\'s Law & Electronic Transport')">
+        <span class="card-topic-badge">Electricity</span>
+        <div class="card-name">Ohm's Law (Extended)</div>
+        <div class="card-desc">Investigate voltage, current, resistance and electronic transport.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="ohms law circuit resistance" onclick="openLab('ohms-law-lab.html','Ohm\'s Law Virtual Laboratory')">
+        <span class="card-topic-badge">Electricity</span>
+        <div class="card-name">Ohm's Law Lab</div>
+        <div class="card-desc">Classic V=IR experiment with interactive circuit builder.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="ohms law resistance compact" onclick="openLab('Ohom_s.html','Ohm\'s Law & Resistance')">
+        <span class="card-topic-badge">Electricity</span>
+        <div class="card-name">Ohm's Law (Compact)</div>
+        <div class="card-desc">Streamlined resistance and voltage simulation.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="pendulum mechanical energy oscillation" onclick="openLab('pendulum.html','Pendulum & Mechanical Energy')">
+        <span class="card-topic-badge">Mechanics</span>
+        <div class="card-name">Pendulum</div>
+        <div class="card-desc">Study pendulum motion, period, and energy conservation.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="projectile motion kinematics aerodynamics" onclick="openLab('Projectile.html','Projectile Kinematics & Aerodynamics')">
+        <span class="card-topic-badge">Mechanics</span>
+        <div class="card-name">Projectile Motion</div>
+        <div class="card-desc">Launch projectiles and explore range, height, and drag effects.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="refraction prism chromatic dispersion light" onclick="openLab('Refraction.html','Prism Refraction & Chromatic Dispersion')">
+        <span class="card-topic-badge">Optics</span>
+        <div class="card-name">Prism Refraction</div>
+        <div class="card-desc">Bend light through a prism and observe chromatic dispersion.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ WAVES -->
+  <div class="subject-section physics" id="sec-waves">
+    <div class="subject-header">
+      <div class="subject-dot"></div>
+      <div class="subject-title">Waves & Optics</div>
+      <div class="subject-line"></div>
+      <div class="subject-count" id="cnt-waves">3 labs</div>
+    </div>
+    <div class="card-grid">
+
+      <div class="lab-card" data-name="wave interference superposition" onclick="openLab('Wave_Interference_Lab.html','Wave Interference & Superposition')">
+        <span class="card-topic-badge">Waves</span>
+        <div class="card-name">Wave Interference</div>
+        <div class="card-desc">Observe constructive and destructive interference patterns.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="young double slit interference diffraction" onclick="openLab('Young_Double_Slit.html','Young\'s Double Slit Interference')">
+        <span class="card-topic-badge">Waves</span>
+        <div class="card-name">Young's Double Slit</div>
+        <div class="card-desc">Classic experiment demonstrating light's wave nature through diffraction.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="vector addition equations forces" onclick="openLab('vector-addition-equations_all.html','Vector Addition & Equations')">
+        <span class="card-topic-badge">Vectors</span>
+        <div class="card-name">Vector Addition</div>
+        <div class="card-desc">Add vectors graphically and algebraically, explore resultant forces.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ CHEMISTRY -->
+  <div class="subject-section chemistry" id="sec-chemistry">
+    <div class="subject-header">
+      <div class="subject-dot"></div>
+      <div class="subject-title">Chemistry</div>
+      <div class="subject-line"></div>
+      <div class="subject-count" id="cnt-chemistry">6 labs</div>
+    </div>
+    <div class="card-grid">
+
+      <div class="lab-card" data-name="photoelectric effect chemistry photon" onclick="openLab('Chem_Photoelectric.html','Photoelectric Effect — Chemistry')">
+        <span class="card-topic-badge">Quantum Chem</span>
+        <div class="card-name">Photoelectric Effect</div>
+        <div class="card-desc">Investigate photon energy and electron ejection from metal surfaces.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="kinetic molecular theory gas laws pressure" onclick="openLab('kinetic-molecular-theory-lab.html','Kinetic Molecular Theory')">
+        <span class="card-topic-badge">Gas Laws</span>
+        <div class="card-name">Kinetic Molecular Theory</div>
+        <div class="card-desc">Observe gas particle motion, pressure, volume, and temperature.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="isotopes atoms neutrons nucleus" onclick="openLab('Isotope.html','Isotopes')">
+        <span class="card-topic-badge">Atomic Structure</span>
+        <div class="card-name">Isotopes</div>
+        <div class="card-desc">Build atoms, vary neutron numbers, and explore isotope properties.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="mole concept quantum scaling avogadro" onclick="openLab('MoleConcept.html','The Mole Concept & Quantum Scaling')">
+        <span class="card-topic-badge">Stoichiometry</span>
+        <div class="card-name">The Mole Concept</div>
+        <div class="card-desc">Explore Avogadro's number, molar mass, and quantum scaling.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="molecules shapes vsepr 3d geometry" onclick="openLab('Molecules.html','Molecule Shapes & VSEPR 3D')">
+        <span class="card-topic-badge">Molecular Geometry</span>
+        <div class="card-name">Molecule Shapes (VSEPR)</div>
+        <div class="card-desc">Build and rotate 3D molecular geometries using VSEPR theory.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="molecules shapes vsepr 3d v2" onclick="openLab('Molecules__2_.html','Molecule Shapes & VSEPR 3D v2')">
+        <span class="card-topic-badge">Molecular Geometry</span>
+        <div class="card-name">Molecule Shapes v2</div>
+        <div class="card-desc">Updated VSEPR simulation with enhanced 3D controls.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ MODERN PHYSICS -->
+  <div class="subject-section modern" id="sec-modern">
+    <div class="subject-header">
+      <div class="subject-dot"></div>
+      <div class="subject-title">Modern Physics</div>
+      <div class="subject-line"></div>
+      <div class="subject-count" id="cnt-modern">7 labs</div>
+    </div>
+    <div class="card-grid">
+
+      <div class="lab-card" data-name="atomic models thomson rutherford" onclick="openLab('Automic.html','Atomic Models')">
+        <span class="card-topic-badge">Atomic Theory</span>
+        <div class="card-name">Atomic Models</div>
+        <div class="card-desc">Journey through Thomson, Rutherford, and quantum atomic models.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="bohr model atom electron transitions" onclick="openLab('Bohr_Atom.html','Bohr Model of the Atom')">
+        <span class="card-topic-badge">Atomic Theory</span>
+        <div class="card-name">Bohr Model</div>
+        <div class="card-desc">Simulate electron transitions and spectral emission lines.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="3d orbital shapes quantum probability" onclick="openLab('3d_Orbital.html','3D Atomic Orbitals')">
+        <span class="card-topic-badge">Quantum Model</span>
+        <div class="card-name">3D Atomic Orbitals</div>
+        <div class="card-desc">Visualize s, p, d orbital shapes and probability densities in 3D.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="black body radiation planck ultraviolet" onclick="openLab('Black_Body_Radiation.html','Black Body Radiation')">
+        <span class="card-topic-badge">Quantum Origins</span>
+        <div class="card-name">Black Body Radiation</div>
+        <div class="card-desc">Explore Planck's law and UV catastrophe through spectral curves.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="de broglie wavelength wave particle duality" onclick="openLab('Broglie.html','de Broglie Wavelength')">
+        <span class="card-topic-badge">Wave-Particle</span>
+        <div class="card-name">de Broglie Wavelength</div>
+        <div class="card-desc">Discover the wave nature of matter and matter-wave duality.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="photoelectric effect quantum wave particle new" onclick="openLab('New-PHoto.html','Quantum Photoelectric Effect & Wave-Particle Duality')">
+        <span class="card-topic-badge">Quantum Origins</span>
+        <div class="card-name">Photoelectric Effect (Full)</div>
+        <div class="card-desc">Advanced simulation combining photoelectric effect and wave-particle duality.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="photoelectric effect quantum virtual" onclick="openLab('nPhotoelectric.html','Quantum Photoelectric Effect')">
+        <span class="card-topic-badge">Quantum Origins</span>
+        <div class="card-name">Photoelectric Effect (Classic)</div>
+        <div class="card-desc">Standard photoelectric simulation with energy and frequency controls.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ BIOLOGY -->
+  <div class="subject-section biology" id="sec-biology">
+    <div class="subject-header">
+      <div class="subject-dot"></div>
+      <div class="subject-title">Biology</div>
+      <div class="subject-line"></div>
+      <div class="subject-count" id="cnt-biology">3 labs</div>
+    </div>
+    <div class="card-grid">
+
+      <div class="lab-card" data-name="cell membrane transport diffusion osmosis" onclick="openLab('membrane.html','Cell Membrane Transport')">
+        <span class="card-topic-badge">Cell Biology</span>
+        <div class="card-name">Cell Membrane</div>
+        <div class="card-desc">Explore diffusion, osmosis, and active transport across membranes.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="membrane compact transport" onclick="openLab('memb.html','Membrane (Compact)')">
+        <span class="card-topic-badge">Cell Biology</span>
+        <div class="card-name">Membrane (Compact)</div>
+        <div class="card-desc">Streamlined membrane transport simulation.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+      <div class="lab-card" data-name="color vision cone cells sensory biology" onclick="openLab('color-vision-lab.html','Color Vision Lab (Compact)')">
+        <span class="card-topic-badge">Sensory Biology</span>
+        <div class="card-name">Color Vision (Compact)</div>
+        <div class="card-desc">Investigate cone cells and how the eye perceives wavelengths of light.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ MATHEMATICS -->
+  <div class="subject-section math" id="sec-math">
+    <div class="subject-header">
+      <div class="subject-dot"></div>
+      <div class="subject-title">Mathematics</div>
+      <div class="subject-line"></div>
+      <div class="subject-count" id="cnt-math">1 lab</div>
+    </div>
+    <div class="card-grid">
+
+      <div class="lab-card" data-name="sets theory alexandria library venn" onclick="openLab('sets.html','Introduction to Sets Theory')">
+        <span class="card-topic-badge">Set Theory</span>
+        <div class="card-name">Introduction to Sets</div>
+        <div class="card-desc">Explore union, intersection, and subsets through interactive Venn diagrams.</div>
+        <div class="card-arrow">Launch lab →</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="no-results" id="noResults">No simulations match your search.</div>
+
+</main>
+
+<footer>
+  Virtual Labs Launcher &mdash; click any card to open simulation &bull; all simulation files must be in the same folder as this launcher
+</footer>
+
+<!-- SIMULATION OVERLAY -->
+<div class="sim-overlay" id="simOverlay">
+  <div class="sim-topbar">
+    <span class="sim-title" id="simTitle">Simulation</span>
+    <button class="sim-close" onclick="closeLab()">&#x2715; Close</button>
+  </div>
+  <iframe class="sim-iframe" id="simFrame" src="" title="Science Simulation"></iframe>
+</div>
+
+<script>
+  function openLab(file, title) {
+    document.getElementById('simTitle').textContent = title;
+    document.getElementById('simFrame').src = file;
+    document.getElementById('simOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLab() {
+    document.getElementById('simOverlay').classList.remove('active');
+    document.getElementById('simFrame').src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLab(); });
+
+  function filterLabs() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.lab-card');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const name = card.querySelector('.card-name').textContent.toLowerCase();
+      const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+      const badge = card.querySelector('.card-topic-badge').textContent.toLowerCase();
+      const data = (card.dataset.name || '').toLowerCase();
+      const match = !q || name.includes(q) || desc.includes(q) || badge.includes(q) || data.includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+
+    // Hide empty sections
+    document.querySelectorAll('.subject-section').forEach(sec => {
+      const anyVisible = [...sec.querySelectorAll('.lab-card')].some(c => !c.classList.contains('hidden'));
+      sec.style.display = anyVisible ? '' : 'none';
+    });
+
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    document.getElementById('total-count').textContent = visible || 30;
+  }
+</script>
+</body>
+</html>

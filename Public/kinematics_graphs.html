@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinematics Graphs Virtual Laboratory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Slider Styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #e2e8f0;
+            border-radius: 9999px;
+            height: 6px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -5px;
+            background-color: #4f46e5;
+            border-radius: 9999px;
+            height: 16px;
+            width: 16px;
+            transition: all 0.15s ease-in-out;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background-color: #3730a3;
+            transform: scale(1.15);
+        }
+
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        @keyframes fadeZoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-enter {
+            animation: fadeZoomIn 0.2s ease forwards;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-10 object-contain">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight">1D KINEMATICS CALCULUS MATRIX</h1>
+                    <p class="text-[11px] text-slate-400 font-medium">Position, Velocity, and Acceleration vs. Time
+                        Graphs Laboratory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+                    <span>📘</span> User Guide
+                </button>
+                <span class="hidden sm:inline-flex w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span>
+            </div>
+        </header>
+
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <button id="btn-run"
+                    class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5"><span>▶</span>
+                    Play Motion</button>
+                <button id="btn-pause"
+                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5"><span>⏸</span>
+                    Pause</button>
+                <button id="btn-reset"
+                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5"><span>🔄</span>
+                    Reset</button>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-semibold text-slate-500">Scenarios:</span>
+                <button id="preset-1"
+                    class="px-3 py-1 bg-indigo-600 text-white font-bold text-xs rounded-lg transition-all shadow-sm">🚀
+                    Uniform Accel.</button>
+                <button id="preset-2"
+                    class="px-3 py-1 bg-white text-slate-700 border border-slate-200 font-bold text-xs rounded-lg transition-all hover:bg-slate-50">🛑
+                    Turnaround</button>
+                <button id="preset-3"
+                    class="px-3 py-1 bg-white text-slate-700 border border-slate-200 font-bold text-xs rounded-lg transition-all hover:bg-slate-50">〰️
+                    Harmonic Wave</button>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button id="btn-zoom-in"
+                    class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all">Zoom
+                    In</button>
+                <button id="btn-zoom-out"
+                    class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all">Zoom
+                    Out</button>
+                <button id="btn-recenter"
+                    class="p-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded transition-all"
+                    title="Recenter Camera">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <section
+                class="lg:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[780px] viva-scrollbar">
+                <div class="space-y-5">
+
+                    <div
+                        class="bg-indigo-50 border border-indigo-100 rounded-xl p-3.5 text-xs text-indigo-900 leading-relaxed">
+                        <strong>Interactive Instruction:</strong> Click and drag any of the <span
+                            class="text-indigo-600 font-bold">4 colored nodes</span> inside the <strong>Velocity
+                            Arena</strong> viewport to explicitly shape the velocity profile curve. The corresponding
+                        Calculus differentials and integrations update automatically.
+                    </div>
+
+                    <div>
+                        <div
+                            class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            <span>Initial Boundary Position ($x_0$)</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" id="num-p1" step="0.5" min="-10" max="10" value="0"
+                                    class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                                <span class="text-[10px] text-slate-400 font-semibold">m</span>
+                            </div>
+                        </div>
+                        <input type="range" id="slider-p1" min="-10" max="10" step="0.5" value="0" class="w-full">
+                        <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                            <span>-10 m</span><span>10 m</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div
+                            class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            <span>Simulation Run Scale ($t_{max}$)</span>
+                            <div class="flex items-center space-x-1">
+                                <input type="number" id="num-p2" step="1" min="5" max="20" value="10"
+                                    class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                                <span class="text-[10px] text-slate-400 font-semibold">s</span>
+                            </div>
+                        </div>
+                        <input type="range" id="slider-p2" min="5" max="20" step="1" value="10" class="w-full">
+                        <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                            <span>5 s</span><span>20 s</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 pt-4 space-y-2.5">
+                        <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block">Visual
+                            Overlays</span>
+
+                        <label
+                            class="flex items-center space-x-2 text-[11px] font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="chk-overlay1" checked
+                                class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                            <span>Show Vector Tangent Slope ($a = \frac{dv}{dt}$)</span>
+                        </label>
+
+                        <label
+                            class="flex items-center space-x-2 text-[11px] font-semibold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="chk-overlay2" checked
+                                class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                            <span>Show Definite Integration Area ($x = \int v \, dt$)</span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="space-y-4">
+                    <div class="border-t border-slate-200 pt-4">
+                        <span
+                            class="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block mb-2">Instantaneous
+                            Kinematics State</span>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
+                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Clock
+                                    Execution ($t$)</div>
+                                <div id="telem-4" class="text-sm font-bold text-indigo-400 font-mono mt-0.5">—</div>
+                            </div>
+                            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
+                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Position ($x$)
+                                </div>
+                                <div id="telem-1" class="text-sm font-bold text-amber-400 font-mono mt-0.5">—</div>
+                            </div>
+                            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
+                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Velocity ($v$)
+                                </div>
+                                <div id="telem-2" class="text-sm font-bold text-emerald-400 font-mono mt-0.5">—</div>
+                            </div>
+                            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
+                                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Acceleration
+                                    ($a$)</div>
+                                <div id="telem-3" class="text-sm font-bold text-blue-400 font-mono mt-0.5">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2.5">
+                        <span
+                            class="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block border-b border-slate-100 pb-1">Dynamic
+                            Range Scales</span>
+                        <div class="space-y-2 text-[10px] font-bold text-slate-600">
+                            <div>
+                                <div class="flex justify-between mb-0.5">
+                                    <span class="text-emerald-600">Peak Positional Displacement</span>
+                                    <span id="label-ke" class="font-mono">0.00 m</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div id="bar-ke" class="bg-emerald-500 h-full transition-all duration-75"
+                                        style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-0.5">
+                                    <span class="text-blue-600">Peak Acceleration Load</span>
+                                    <span id="label-pe" class="font-mono">0.00 m/s²</span>
+                                </div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div id="bar-pe" class="bg-blue-500 h-full transition-all duration-75"
+                                        style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex justify-between items-center border-t border-slate-100 pt-2 text-[9px] text-slate-400 font-bold font-mono">
+                                <span>TOTAL CALCULUS SAMPLES</span>
+                                <span id="label-total-e" class="text-slate-800 text-[11px] font-extrabold">1000
+                                    steps</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-8 relative bg-slate-950 overflow-hidden flex flex-col justify-between min-h-[500px] border-8 border-slate-900">
+
+                <div class="flex justify-between items-center z-10 px-4 py-3 bg-slate-900/90 border-b border-slate-800">
+                    <div class="flex space-x-1.5 p-1 bg-slate-950/60 rounded-xl border border-slate-800">
+                        <button id="tab-primary"
+                            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm flex items-center gap-1.5">
+                            📈 Velocity Arena (Editable Profile)
+                        </button>
+                        <button id="tab-secondary"
+                            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+                            ⚛️ Position & Acceleration Derivatives
+                        </button>
+                    </div>
+                    <div id="particle-runner"
+                        class="w-12 h-6 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-center text-xs font-bold font-mono text-emerald-400 overflow-hidden relative">
+                        <div id="runner-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute left-1"></div>
+                        <span class="text-[9px] ml-3">RUN</span>
+                    </div>
+                </div>
+
+                <div class="relative flex-1 flex items-center justify-center p-4">
+                    <canvas id="primaryCanvas"
+                        class="w-full h-[460px] block cursor-grab active:cursor-grabbing"></canvas>
+
+                    <div id="secondaryContainer" class="hidden w-full flex-col items-center gap-3">
+                        <canvas id="secondaryCanvas"
+                            class="w-full h-[420px] bg-slate-950 rounded-xl border border-slate-800"></canvas>
+                        <div class="flex gap-4 text-[10px] font-mono mt-1 select-none">
+                            <span class="text-amber-400">● Position $x(t)$ (Integral Area)</span>
+                            <span class="text-blue-400">● Acceleration $a(t)$ (Differential Derivative
+                                Derivative)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[780px] overflow-y-auto viva-scrollbar">
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+                    <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab
+                        Desk</span>
+                    <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+                </div>
+
+                <div class="space-y-3">
+                    <div
+                        class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
+                                1</span>
+                            <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                                How is a point of turnaround (velocity cross-over) illustrated across all three curves?
+                            </h4>
+                            <button onclick="toggleViva(1)"
+                                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                                <span id="viva-btn-text-1">Show Scientific Verification</span>
+                                <span id="viva-btn-arrow-1" class="transform transition-transform">▼</span>
+                            </button>
+                        </div>
+                        <div id="viva-panel-1"
+                            class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+                            <div
+                                class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                                When an object reverses direction, its velocity function explicitly crosses the time
+                                axis, meaning:
+                                $$v(t) = 0 \quad \text{and changes sign}$$
+                                On the position curve $x(t)$, this inflection matches a local extremum value (maximum or
+                                minimum height) because:
+                                $$\frac{dx}{dt} = 0$$
+                                The acceleration curve simply tracks the local slope at that instant, which remains
+                                independent of zero-crossing.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-300 transition-all shadow-sm">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
+                                2</span>
+                            <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                                What configuration on the $v(t)$ profile yields a constant value inside the acceleration
+                                plot?
+                            </h4>
+                            <button onclick="toggleViva(2)"
+                                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                                <span id="viva-btn-text-2">Show Scientific Verification</span>
+                                <span id="viva-btn-arrow-2" class="transform transition-transform">▼</span>
+                            </button>
+                        </div>
+                        <div id="viva-panel-2"
+                            class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+                            <div
+                                class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                                Constant acceleration requires a completely linear velocity slope profile:
+                                $$v(t) = mt + c \implies a(t) = \frac{dv}{dt} = m = \text{constant}$$
+                                Correspondingly, evaluating the mathematical definite integral shows that the position
+                                curve grows quadratically:
+                                $$x(t) = \int (mt+c)dt = \frac{1}{2}mt^2 + ct + x_0$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-purple-300 transition-all shadow-sm">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
+                                3</span>
+                            <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                                If the velocity curve forms a local peak (extremum), what happens to the acceleration
+                                state?
+                            </h4>
+                            <button onclick="toggleViva(3)"
+                                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                                <span id="viva-btn-text-3">Show Scientific Verification</span>
+                                <span id="viva-btn-arrow-3" class="transform transition-transform">▼</span>
+                            </button>
+                        </div>
+                        <div id="viva-panel-3"
+                            class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+                            <div
+                                class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                                When $v(t)$ hits a relative peak or trough, its tangent slope becomes perfectly
+                                horizontal. By calculus definitions:
+                                $$\frac{dv}{dt} = 0 \implies a(t) = 0$$
+                                Therefore, the acceleration graph features an explicit roots intersection crossing
+                                ($a=0$) at that exact coordinate timestamp.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-orange-300 transition-all shadow-sm">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
+                                4</span>
+                            <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                                How does changing the $x_0$ initial condition boundary affect the velocity and
+                                acceleration graphs?
+                            </h4>
+                            <button onclick="toggleViva(4)"
+                                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                                <span id="viva-btn-text-4">Show Scientific Verification</span>
+                                <span id="viva-btn-arrow-4" class="transform transition-transform">▼</span>
+                            </button>
+                        </div>
+                        <div id="viva-panel-4"
+                            class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+                            <div
+                                class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                                Varying $x_0$ adds a scalar vertical transformation offset onto the integrated
+                                positional dataset:
+                                $$x(t) = x_0 + \int_{0}^{t} v(\tau) \, d\tau$$
+                                Because derivative operators filter out standalone scalar additions ($\frac{d}{dt}(x_0)
+                                = 0$), both the velocity and acceleration values remain entirely unaffected.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-red-300 transition-all shadow-sm">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
+                                5</span>
+                            <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                                What does a negative area under the curve on a Velocity-Time graph physically imply?
+                            </h4>
+                            <button onclick="toggleViva(5)"
+                                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                                <span id="viva-btn-text-5">Show Scientific Verification</span>
+                                <span id="viva-btn-arrow-5" class="transform transition-transform">▼</span>
+                            </button>
+                        </div>
+                        <div id="viva-panel-5"
+                            class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+                            <div
+                                class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
+                                An area located below the $v=0$ axis line signifies accumulation of negative physical
+                                displacement:
+                                $$\Delta x = \int v(t) \, dt < 0$$ This indicates that the object is traveling backward
+                                    relative to the coordinate system's positive orientation, shifting $x(t)$ downward.
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+        </main>
+
+        <footer
+            class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+            <span>* Calculus evaluation matrices synced via numerical cubic spline discretization.</span>
+            <span>Sparkl Virtual Laboratory — Kinematics Core Solver v2.0</span>
+        </footer>
+    </div>
+
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 modal-enter">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <span>📘</span> 1D Kinematics Matrix — User Guide
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+            </div>
+            <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2">
+                <p>This virtual laboratory visually matches the relationships between position, velocity, and
+                    acceleration through interactive calculus evaluation modeling.</p>
+
+                <div class="space-y-2">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Interactive Features
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li><strong>Malleable Nodes</strong>: Drag any of the 4 colorful circular handle pins inside the
+                            Velocity Arena view up or down to set unique speed profiles.</li>
+                        <li><strong>Boundary Constants</strong>: Adjust initial displacement properties ($x_0$) to
+                            change the position graph's initial offset.</li>
+                        <li><strong>Dynamic Integration Overlays</strong>: Toggle visual fill bounds to highlight the
+                            geometric accumulation of position.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">📊 Mathematical Analysis Specs
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li><strong>Velocity Slope</strong>: Derivative values yield local acceleration vectors.</li>
+                        <li><strong>Integral Evaluation</strong>: Area tracking computes absolute change in positions
+                            over time.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-3 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        'use strict';
+
+        // GLOBAL ANIMATION STATE
+        let isPlaying = false;
+        let currentTab = 'primary';
+        let scaleZoom = 1.0;
+        let panX = 0, panY = 0;
+        let clockTime = 0;
+        let lastTime = null;
+
+        // Physics Constants and Inputs
+        let x0 = 0.0;
+        let tMax = 10.0;
+
+        // Checkbox toggles
+        let showTangent = true;
+        let showAreaFill = true;
+
+        // Draggable Handle Handles Node Arrays for Velocity Profile Curve
+        // Track 4 discrete spline coordinates across time percentages [0%, 33%, 66%, 100%]
+        let vNodes = [
+            { tPct: 0.00, vVal: 2.0 },
+            { tPct: 0.33, vVal: 5.0 },
+            { tPct: 0.66, vVal: -3.0 },
+            { tPct: 1.00, vVal: 4.0 }
+        ];
+        let selectedNodeIdx = null;
+
+        // DOM References
+        const primaryCanvas = document.getElementById('primaryCanvas');
+        const ctx = primaryCanvas.getContext('2d');
+        const secondaryCanvas = document.getElementById('secondaryCanvas');
+        const ctxSec = secondaryCanvas.getContext('2d');
+        const secondaryContainer = document.getElementById('secondaryContainer');
+
+        const btnRun = document.getElementById('btn-run');
+        const btnPause = document.getElementById('btn-pause');
+        const btnReset = document.getElementById('btn-reset');
+        const btnZoomIn = document.getElementById('btn-zoom-in');
+        const btnZoomOut = document.getElementById('btn-zoom-out');
+        const btnRecenter = document.getElementById('btn-recenter');
+
+        const tabPrimary = document.getElementById('tab-primary');
+        const tabSecondary = document.getElementById('tab-secondary');
+
+        const userGuideModal = document.getElementById('user-guide-modal');
+        const btnOpenGuide = document.getElementById('btn-open-guide');
+        const btnCloseGuide = document.getElementById('btn-close-guide');
+        const btnCloseGuideConfirm = document.getElementById('btn-close-guide-confirm');
+
+        const telem1 = document.getElementById('telem-1');
+        const telem2 = document.getElementById('telem-2');
+        const telem3 = document.getElementById('telem-3');
+        const telem4 = document.getElementById('telem-4');
+
+        const labelKE = document.getElementById('label-ke');
+        const barKE = document.getElementById('bar-ke');
+        const labelPE = document.getElementById('label-pe');
+        const barPE = document.getElementById('bar-pe');
+
+        // Node Colors for reference
+        const nodeColors = ['#ef4444', '#3b82f6', '#10b981', '#a855f7'];
+
+        // PARAMETER CONTROLS SYNC
+        function updateX0(val) {
+            val = Math.max(-10, Math.min(10, parseFloat(val) || 0));
+            x0 = val;
+            document.getElementById('slider-p1').value = val;
+            document.getElementById('num-p1').value = val;
+        }
+        document.getElementById('slider-p1').addEventListener('input', e => updateX0(e.target.value));
+        document.getElementById('num-p1').addEventListener('change', e => updateX0(e.target.value));
+
+        function updateTMax(val) {
+            val = Math.max(5, Math.min(20, parseFloat(val) || 10));
+            tMax = val;
+            document.getElementById('slider-p2').value = val;
+            document.getElementById('num-p2').value = val;
+            if (clockTime > tMax) clockTime = tMax;
+        }
+        document.getElementById('slider-p2').addEventListener('input', e => updateTMax(e.target.value));
+        document.getElementById('num-p2').addEventListener('change', e => updateTMax(e.target.value));
+
+        document.getElementById('chk-overlay1').addEventListener('change', e => showTangent = e.target.checked);
+        document.getElementById('chk-overlay2').addEventListener('change', e => showAreaFill = e.target.checked);
+
+        // SCENARIO PRESETS SETUP
+        const PRESETS = {
+            1: { x0: -5, tMax: 10, v: [0, 2.5, 5, 7.5] }, // Constant linear acceleration
+            2: { x0: 2, tMax: 12, v: [6, 2, -2, -6] },  // Constant negation change turnaround
+            3: { x0: 0, tMax: 10, v: [0, 6, -6, 0] }    // Cyclic velocity wave
+        };
+
+        function applyPreset(key) {
+            const p = PRESETS[key];
+            if (!p) return;
+            updateX0(p.x0);
+            updateTMax(p.tMax);
+            for (let i = 0; i < 4; i++) {
+                vNodes[i].vVal = p.v[i];
+            }
+            resetSim();
+            [1, 2, 3].forEach(idx => {
+                document.getElementById('preset-' + idx).className = idx === key
+                    ? 'px-3 py-1 bg-indigo-600 text-white font-bold text-xs rounded-lg transition-all shadow-sm'
+                    : 'px-3 py-1 bg-white text-slate-700 border border-slate-200 font-bold text-xs rounded-lg transition-all hover:bg-slate-50';
+            });
+        }
+        document.getElementById('preset-1').addEventListener('click', () => applyPreset(1));
+        document.getElementById('preset-2').addEventListener('click', () => applyPreset(2));
+        document.getElementById('preset-3').addEventListener('click', () => applyPreset(3));
+
+        // KINEMATICS MATRIX CALCULATOR PIPELINE (CUBIC HERMITE CALCULATION)
+        // Interpolate velocity at given runtime timestamp
+        function getVelocityAt(t) {
+            let pct = t / tMax;
+            if (pct <= 0) return vNodes[0].vVal;
+            if (pct >= 1) return vNodes[3].vVal;
+
+            // Locate relevant indices bounding current time block
+            let i = 0;
+            while (i < vNodes.length - 1 && vNodes[i + 1].tPct < pct) { i++; }
+
+            let p0 = vNodes[i], p1 = vNodes[i + 1];
+            let h = p1.tPct - p0.tPct;
+            let localT = (pct - p0.tPct) / h;
+
+            // Approximate Hermite derivative slope values
+            let m0 = 0, m1 = 0;
+            if (i === 0) {
+                m0 = (vNodes[1].vVal - vNodes[0].vVal) / (vNodes[1].tPct - vNodes[0].tPct);
+                m1 = (vNodes[2].vVal - vNodes[0].vVal) / (vNodes[2].tPct - vNodes[0].tPct);
+            } else if (i === 1) {
+                m0 = (vNodes[2].vVal - vNodes[0].vVal) / (vNodes[2].tPct - vNodes[0].tPct);
+                m1 = (vNodes[3].vVal - vNodes[1].vVal) / (vNodes[3].tPct - vNodes[1].tPct);
+            } else {
+                m0 = (vNodes[3].vVal - vNodes[1].vVal) / (vNodes[3].tPct - vNodes[1].tPct);
+                m1 = (vNodes[3].vVal - vNodes[2].vVal) / (vNodes[3].tPct - vNodes[2].tPct);
+            }
+
+            // Scaling derivatives
+            m0 *= h; m1 *= h;
+
+            // Cubic Hermite basis vectors
+            let h00 = 2 * Math.pow(localT, 3) - 3 * Math.pow(localT, 2) + 1;
+            let h10 = Math.pow(localT, 3) - 2 * Math.pow(localT, 2) + localT;
+            let h01 = -2 * Math.pow(localT, 3) + 3 * Math.pow(localT, 2);
+            let h11 = Math.pow(localT, 3) - Math.pow(localT, 2);
+
+            return h00 * p0.vVal + h10 * m0 + h01 * p1.vVal + h11 * m1;
+        }
+
+        // Numerical calculus steps via finite differentiation
+        function getAccelerationAt(t) {
+            let dt = 0.005;
+            let tA = Math.max(0, t - dt);
+            let tB = Math.min(tMax, t + dt);
+            return (getVelocityAt(tB) - getVelocityAt(tA)) / (tB - tA);
+        }
+
+        // Accumulate definitive integral via multi-step Simpson rule evaluation
+        function getPositionAt(t) {
+            let steps = 160;
+            let h = t / steps;
+            let sum = getVelocityAt(0) + getVelocityAt(t);
+
+            for (let i = 1; i < steps; i++) {
+                let currentIterT = i * h;
+                sum += (i % 2 === 0 ? 2 : 4) * getVelocityAt(currentIterT);
+            }
+            return x0 + (h / 3) * sum;
+        }
+
+        // TELEMETRY REFRESH SYNC
+        let maxDisplacementTrack = 1.0;
+        let maxAccelerationTrack = 1.0;
+
+        function updateTelemetry() {
+            let currentX = getPositionAt(clockTime);
+            let currentV = getVelocityAt(clockTime);
+            let currentA = getAccelerationAt(clockTime);
+
+            telem1.textContent = currentX.toFixed(2) + ' m';
+            telem2.textContent = currentV.toFixed(2) + ' m/s';
+            telem3.textContent = currentA.toFixed(2) + ' m/s²';
+            telem4.textContent = clockTime.toFixed(2) + ' s';
+
+            if (Math.abs(currentX) > maxDisplacementTrack) maxDisplacementTrack = Math.abs(currentX);
+            if (Math.abs(currentA) > maxAccelerationTrack) maxAccelerationTrack = Math.abs(currentA);
+
+            labelKE.textContent = maxDisplacementTrack.toFixed(2) + ' m';
+            labelPE.textContent = maxAccelerationTrack.toFixed(2) + ' m/s²';
+
+            barKE.style.width = Math.min(100, (Math.abs(currentX) / maxDisplacementTrack) * 100) + '%';
+            barPE.style.width = Math.min(100, (Math.abs(currentA) / maxAccelerationTrack) * 100) + '%';
+        }
+
+        // CANVAS MAPPING HELPER TRANSFORMATIONS
+        function getVelocityCoords(t, v, W, H) {
+            let margin = 45;
+            let x = margin + (t / tMax) * (W - 2 * margin);
+            // Let max range maps to v = [-10, 10]
+            let centerY = H / 2;
+            let y = centerY - (v / 10) * (H / 2 - margin);
+            return { x, y };
+        }
+
+        function getSecondaryCoords(t, val, maxVal, W, H_block, yOffset) {
+            let margin = 45;
+            let x = margin + (t / tMax) * (W - 2 * margin);
+            let centerY = yOffset + H_block / 2;
+            let y = centerY - (val / maxVal) * (H_block / 2 - 15);
+            return { x, y };
+        }
+
+        // PRIMARY ARENA RENDERING PIPELINE (VELOCITY CONTROL PANEL)
+        function drawScene() {
+            const dpr = window.devicePixelRatio || 1;
+            const W = primaryCanvas.clientWidth;
+            const H = primaryCanvas.clientHeight;
+            if (primaryCanvas.width !== W * dpr || primaryCanvas.height !== H * dpr) {
+                primaryCanvas.width = W * dpr; primaryCanvas.height = H * dpr;
+            }
+            ctx.save(); ctx.resetTransform(); ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, W, H);
+
+            // Camera pan/zoom frame wraps
+            ctx.translate(W / 2 + panX, H / 2 + panY);
+            ctx.scale(scaleZoom, scaleZoom);
+            ctx.translate(-W / 2, -H / 2);
+
+            let margin = 45;
+            let centerY = H / 2;
+
+            // Draw horizontal coordinate grid lines
+            ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(margin, centerY); ctx.lineTo(W - margin, centerY); // Main axis
+            ctx.stroke();
+
+            ctx.strokeStyle = '#334155'; ctx.setLineDash([4, 4]);
+            for (let vTicks = -8; vTicks <= 8; vTicks += 4) {
+                if (vTicks === 0) continue;
+                let tY = centerY - (vTicks / 10) * (H / 2 - margin);
+                ctx.beginPath(); ctx.moveTo(margin, tY); ctx.lineTo(W - margin, tY); ctx.stroke();
+                ctx.fillStyle = '#64748b'; ctx.font = '9px monospace';
+                ctx.fillText(vTicks + " m/s", 10, tY + 3);
+            }
+            ctx.setLineDash([]);
+
+            // Integration visual highlight overlay
+            if (showAreaFill) {
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
+                ctx.beginPath();
+                let startPt = getVelocityCoords(0, 0, W, H);
+                ctx.moveTo(startPt.x, startPt.y);
+
+                let sampledPointsCount = Math.floor((clockTime / tMax) * 300);
+                for (let stepIdx = 0; stepIdx <= sampledPointsCount; stepIdx++) {
+                    let evalT = (stepIdx / 300) * tMax;
+                    let evalV = getVelocityAt(evalT);
+                    let c = getVelocityCoords(evalT, evalV, W, H);
+                    ctx.lineTo(c.x, c.y);
+                }
+                let endPt = getVelocityCoords(clockTime, 0, W, H);
+                ctx.lineTo(endPt.x, endPt.y);
+                ctx.closePath(); ctx.fill();
+            }
+
+            // Draw Main Velocity Spline Curve path
+            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            let initCoords = getVelocityCoords(0, getVelocityAt(0), W, H);
+            ctx.moveTo(initCoords.x, initCoords.y);
+            for (let stepIdx = 1; stepIdx <= 200; stepIdx++) {
+                let evalT = (stepIdx / 200) * tMax;
+                let coords = getVelocityCoords(evalT, getVelocityAt(evalT), W, H);
+                ctx.lineTo(coords.x, coords.y);
+            }
+            ctx.stroke();
+
+            // Draw active playback tracking indicator line
+            let trackX = getVelocityCoords(clockTime, 0, W, H).x;
+            ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(trackX, margin); ctx.lineTo(trackX, H - margin); ctx.stroke();
+
+            // Tangent acceleration vector visualization overlay
+            if (showTangent) {
+                let curV = getVelocityAt(clockTime);
+                let curA = getAccelerationAt(clockTime);
+                let centerPos = getVelocityCoords(clockTime, curV, W, H);
+                // Map slope angle
+                let scaleDeltaX = 40;
+                let scaleDeltaY = -curA * 15;
+                drawArrow(ctx, centerPos.x - scaleDeltaX, centerPos.y - scaleDeltaY, centerPos.x + scaleDeltaX, centerPos.y + scaleDeltaY, '#3b82f6');
+            }
+
+            // Render Draggable Spline Handle Rings
+            for (let idx = 0; idx < vNodes.length; idx++) {
+                let n = vNodes[idx];
+                let c = getVelocityCoords(n.tPct * tMax, n.vVal, W, H);
+                ctx.fillStyle = nodeColors[idx]; ctx.beginPath();
+                ctx.arc(c.x, c.y, selectedNodeIdx === idx ? 9 : 7, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+            }
+
+            // Chart Labeling Metadata Text
+            ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 12px sans-serif';
+            ctx.fillText("VELOCITY ARENA PROFILE: v(t) vs. Time", margin, 24);
+
+            ctx.restore();
+        }
+
+        // SECONDARY VIEWPORT RENDERING (POSITION & ACCELERATION MULTI-AXIS GRAPH)
+        function drawSecondaryChart() {
+            const dpr = window.devicePixelRatio || 1;
+            const W = secondaryCanvas.clientWidth;
+            const H = secondaryCanvas.clientHeight;
+            if (secondaryCanvas.width !== W * dpr || secondaryCanvas.height !== H * dpr) {
+                secondaryCanvas.width = W * dpr; secondaryCanvas.height = H * dpr;
+            }
+            ctxSec.save(); ctxSec.resetTransform(); ctxSec.scale(dpr, dpr);
+            ctxSec.clearRect(0, 0, W, H);
+
+            let margin = 45;
+            let H_block = H / 2;
+
+            // Axis zero base lines
+            ctxSec.strokeStyle = '#334155'; ctxSec.lineWidth = 1;
+            ctxSec.beginPath();
+            ctxSec.moveTo(margin, H_block / 2); ctxSec.lineTo(W - margin, H_block / 2); // Position mid base
+            ctxSec.moveTo(margin, H_block + H_block / 2); ctxSec.lineTo(W - margin, H_block + H_block / 2); // Accel mid base
+            ctxSec.stroke();
+
+            // Scan calculus curve lines datasets
+            ctxSec.lineWidth = 2.5;
+            let totalResolutionPoints = 150;
+
+            // Render Position curve series
+            ctxSec.strokeStyle = '#f59e0b'; ctxSec.beginPath();
+            for (let ptIdx = 0; ptIdx <= totalResolutionPoints; ptIdx++) {
+                let evalT = (ptIdx / totalResolutionPoints) * tMax;
+                let posVal = getPositionAt(evalT);
+                let c = getSecondaryCoords(evalT, posVal, Math.max(maxDisplacementTrack, 1), W, H_block, 0);
+                ptIdx === 0 ? ctxSec.moveTo(c.x, c.y) : ctxSec.lineTo(c.x, c.y);
+            }
+            ctxSec.stroke();
+
+            // Render Acceleration curve series
+            ctxSec.strokeStyle = '#3b82f6'; ctxSec.beginPath();
+            for (let ptIdx = 0; ptIdx <= totalResolutionPoints; ptIdx++) {
+                let evalT = (ptIdx / totalResolutionPoints) * tMax;
+                let accelVal = getAccelerationAt(evalT);
+                let c = getSecondaryCoords(evalT, accelVal, Math.max(maxAccelerationTrack, 1), W, H_block, H_block);
+                ptIdx === 0 ? ctxSec.moveTo(c.x, c.y) : ctxSec.lineTo(c.x, c.y);
+            }
+            ctxSec.stroke();
+
+            // Active loop pointer vertical timeline bar lines
+            let trackX = margin + (clockTime / tMax) * (W - 2 * margin);
+            ctxSec.strokeStyle = 'rgba(99, 102, 241, 0.45)'; ctxSec.lineWidth = 1.5;
+            ctxSec.beginPath(); ctxSec.moveTo(trackX, 10); ctxSec.lineTo(trackX, H - 10); ctxSec.stroke();
+
+            // Titles labeling text strings
+            ctxSec.fillStyle = '#94a3b8'; ctxSec.font = '10px monospace';
+            ctxSec.fillText("Displacement x(t) [Scale Boundary Range Max: ±" + maxDisplacementTrack.toFixed(1) + " m]", margin, 20);
+            ctxSec.fillText("Acceleration a(t) [Scale Boundary Range Max: ±" + maxAccelerationTrack.toFixed(1) + " m/s²]", margin, H_block + 20);
+
+            ctxSec.restore();
+        }
+
+        // ANIMATION LOOP EXECUTION CORE TICK
+        function tick(timestamp) {
+            requestAnimationFrame(tick);
+
+            if (isPlaying) {
+                if (lastTime == null) lastTime = timestamp;
+                let dt = (timestamp - lastTime) / 1000;
+                lastTime = timestamp;
+
+                clockTime += dt;
+                if (clockTime >= tMax) {
+                    clockTime = tMax;
+                    isPlaying = false; // Clamp and halt animation loop
+                }
+                updateTelemetry();
+            } else {
+                lastTime = null;
+            }
+
+            // Track active view state and update elements accordingly
+            if (currentTab === 'primary') drawScene();
+            else drawSecondaryChart();
+        }
+
+        function resetSim() {
+            isPlaying = false;
+            clockTime = 0;
+            maxDisplacementTrack = 1.0;
+            maxAccelerationTrack = 1.0;
+            updateTelemetry();
+            drawScene();
+            drawSecondaryChart();
+        }
+
+        // HELPER ARROW DRAW VECTOR GRAPHICS
+        function drawArrow(context, x1, y1, x2, y2, color) {
+            let dx = x2 - x1, dy = y2 - y1;
+            let len = Math.sqrt(dx * dx + dy * dy);
+            if (len < 2) return;
+            let angle = Math.atan2(dy, dx);
+            let headLen = 6;
+
+            context.save();
+            context.strokeStyle = color; context.fillStyle = color; context.lineWidth = 2;
+            context.beginPath(); context.moveTo(x1, y1); context.lineTo(x2, y2); context.stroke();
+            context.beginPath(); context.moveTo(x2, y2);
+            context.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+            context.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+            context.closePath(); context.fill();
+            context.restore();
+        }
+
+        // MOUSE EVENT INTERACTIVE CLICKS ENGINE
+        function checkNodeClick(mouseX, mouseY) {
+            let W = primaryCanvas.clientWidth;
+            let H = primaryCanvas.clientHeight;
+            for (let idx = 0; idx < vNodes.length; idx++) {
+                let n = vNodes[idx];
+                let c = getVelocityCoords(n.tPct * tMax, n.vVal, W, H);
+                let dist = Math.hypot(mouseX - c.x, mouseY - c.y);
+                if (dist < 15) return idx; // Node selection threshold index match found
+            }
+            return null;
+        }
+
+        primaryCanvas.addEventListener('mousedown', e => {
+            let rect = primaryCanvas.getBoundingClientRect();
+            let mX = e.clientX - rect.left;
+            let mY = e.clientY - rect.top;
+
+            let clickedIdx = checkNodeClick(mX, mY);
+            if (clickedIdx !== null) {
+                selectedNodeIdx = clickedIdx;
+            }
+        });
+
+        window.addEventListener('mousemove', e => {
+            if (selectedNodeIdx !== null) {
+                let rect = primaryCanvas.getBoundingClientRect();
+                let mY = e.clientY - rect.top;
+                let H = primaryCanvas.clientHeight;
+                let margin = 45;
+
+                // Invert mapping from pixel Y back to absolute velocity value scale bounding rules
+                let centerY = H / 2;
+                let calculatedV = ((centerY - mY) / (H / 2 - margin)) * 10;
+                // Clamp properties safely within bounds
+                calculatedV = Math.max(-10, Math.min(10, calculatedV));
+
+                vNodes[selectedNodeIdx].vVal = calculatedV;
+                resetSim();
+            }
+        });
+
+        window.addEventListener('mouseup', () => { selectedNodeIdx = null; });
+
+        // INTERFACE WIRE CONNECTIONS CONTROLS
+        btnRun.addEventListener('click', () => { isPlaying = true; });
+        btnPause.addEventListener('click', () => { isPlaying = false; });
+        btnReset.addEventListener('click', () => { resetSim(); });
+
+        btnZoomIn.addEventListener('click', () => { scaleZoom = Math.min(scaleZoom * 1.2, 4); });
+        btnZoomOut.addEventListener('click', () => { scaleZoom = Math.max(scaleZoom * 0.8, 0.4); });
+        btnRecenter.addEventListener('click', () => { scaleZoom = 1; panX = 0; panY = 0; });
+
+        tabPrimary.addEventListener('click', () => {
+            currentTab = 'primary';
+            primaryCanvas.classList.remove('hidden');
+            secondaryContainer.classList.add('hidden');
+            tabPrimary.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm flex items-center gap-1.5';
+            tabSecondary.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5';
+        });
+
+        tabSecondary.addEventListener('click', () => {
+            currentTab = 'secondary';
+            primaryCanvas.classList.add('hidden');
+            secondaryContainer.classList.remove('hidden');
+            secondaryContainer.style.display = 'flex';
+            tabSecondary.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-sm flex items-center gap-1.5';
+            tabPrimary.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5';
+        });
+
+        btnOpenGuide.addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+        btnCloseGuide.addEventListener('click', () => userGuideModal.classList.add('hidden'));
+        btnCloseGuideConfirm.addEventListener('click', () => userGuideModal.classList.add('hidden'));
+
+        function toggleViva(n) {
+            const panel = document.getElementById('viva-panel-' + n);
+            const btnTxt = document.getElementById('viva-btn-text-' + n);
+            const arrow = document.getElementById('viva-btn-arrow-' + n);
+            const open = panel.classList.contains('hidden');
+            panel.classList.toggle('hidden', !open);
+            btnTxt.textContent = open ? 'Hide Scientific Verification' : 'Show Scientific Verification';
+            arrow.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+            if (open && window.MathJax) MathJax.typesetPromise([panel]);
+        }
+
+        window.addEventListener('load', () => {
+            resetSim();
+            userGuideModal.classList.remove('hidden');
+            requestAnimationFrame(tick);
+        });
+    </script>
+</body>
+
+</html>
+
+```

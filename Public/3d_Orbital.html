@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Molecular Orbital Hybridization Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  
+  <!-- Three.js and OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .lab-circuit-stage {
+      background-color: #0b0f19 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      border: 8px solid #111827 !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight">3D MOLECULAR ORBITAL HYBRIDIZATION</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Quantum Chemistry &amp; Bonding Orbitals Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> Laboratory Guide
+        </button>
+        <button id="btn-reset" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Simulation
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Auto Rotate, View Overlays) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Rotation Toggle -->
+      <div class="flex items-center space-x-2">
+        <button id="btn-rotate-toggle" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>⏸</span> Pause Auto-Rotation
+        </button>
+        <button id="btn-recenter" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🎥</span> Recenter View
+        </button>
+      </div>
+
+      <!-- Overlays Toggles -->
+      <div class="flex flex-wrap items-center gap-6">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-hybrid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Hybrid Orbitals (σ)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer" id="lbl-unhybridized">
+          <input type="checkbox" id="chk-unhybridized" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Unhybridized p-Orbitals (π)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-guide" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Geometric Guide Cage</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (8 Columns) -->
+      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 8) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-6">
+            
+            <!-- Plot Mode Navigation Tab Bar Selector -->
+            <div>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Workspace Tab View</span>
+              <div class="flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 w-full">
+                <button id="tab-simulation" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs">
+                  ⚛️ 3D Sandbox
+                </button>
+                <button id="tab-analogies" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+                  🎨 Analogy
+                </button>
+              </div>
+            </div>
+
+            <!-- Configuration select-state buttons deck -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Hybridization Preset states</span>
+              <div class="grid grid-cols-5 gap-1.5 text-xs font-bold">
+                <button id="btn-state-sp" class="py-2 rounded border transition-all bg-indigo-600 border-indigo-600 text-white">sp</button>
+                <button id="btn-state-sp2" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp²</button>
+                <button id="btn-state-sp3" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp³</button>
+                <button id="btn-state-sp3d" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp³d</button>
+                <button id="btn-state-sp3d2" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp³d²</button>
+              </div>
+            </div>
+
+            <!-- Slider 1: Orbital Opacity -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Orbital Lobe Opacity</span>
+                <input type="number" id="num-opacity" step="0.05" min="0.20" max="1.00" value="0.80" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="slider-opacity" min="0.20" max="1.00" step="0.05" value="0.80" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>20%</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Auto-Rotate Speed -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Auto-Rotation Speed</span>
+                <input type="number" id="num-rotate-speed" step="0.1" min="0.0" max="3.0" value="1.0" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="slider-rotate-speed" min="0.0" max="3.0" step="0.1" value="1.0" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0.0x</span>
+                <span>3.0x</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: Orbital Lobe Scale -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Orbital Scale (Size)</span>
+                <input type="number" id="num-scale" step="0.05" min="0.50" max="1.50" value="1.00" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="slider-scale" min="0.50" max="1.50" step="0.05" value="1.00" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>50%</span>
+                <span>150%</span>
+              </div>
+            </div>
+
+            <!-- Mathematical Wave Blending equation display card -->
+            <div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex flex-col justify-center text-[10px] shadow-sm">
+              <span class="text-indigo-800 block text-[9px] uppercase tracking-wide font-extrabold mb-1.5">Wave Blending Lobe Equation</span>
+              <div class="bg-white p-2.5 rounded border border-indigo-100/80 text-center flex items-center justify-center min-h-[50px] shadow-2xs">
+                <div id="equation-display" class="text-[10px] w-full text-slate-800"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Canvas and Analogy Container (8 Columns of 8) -->
+        <div class="md:col-span-8 relative bg-slate-950 overflow-hidden min-h-[480px]">
+          
+          <!-- Tab 1: WebGL 3D Sandbox -->
+          <div id="view-simulation" class="absolute inset-0 w-full h-full lab-circuit-stage flex flex-col justify-between p-4">
+            <div class="flex justify-between items-center z-10 pointer-events-none">
+              <span class="text-[9px] font-bold tracking-widest text-emerald-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 uppercase">
+                Continuous WebGL Probability Space
+              </span>
+              <div class="flex gap-4 text-[9px] text-slate-400 font-mono bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span> (+) Wave Phase</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> (−) Wave Phase</span>
+              </div>
+            </div>
+
+            <!-- Three.js Container Mount Point -->
+            <div id="three-container" class="absolute inset-0 w-full h-full z-0 cursor-grab active:cursor-grabbing"></div>
+          </div>
+
+          <!-- Tab 2: The Paint Bucket Analogy -->
+          <div id="view-analogies" class="hidden absolute inset-0 w-full h-full bg-slate-900 p-6 flex flex-col gap-6 text-white overflow-y-auto z-10 viva-scrollbar">
+            <div>
+              <h2 class="text-xl font-bold mb-2 text-purple-400">🎨 The Paint Bucket Analogy</h2>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                In quantum chemistry, atomic orbitals are individual wavefunctions representing different energy levels. 
+                Hybridization is exactly like mixing paint. If you blend distinct buckets of color together, you produce a set of completely uniform, equivalent, directional hybrid shades.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <span class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Before Hybridization</span>
+                  <h3 class="text-base font-bold text-slate-200 mt-1">Distinct Ingredients</h3>
+                  <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    We start with spherical $s$-orbitals (yellow paint) and dumbbell-shaped $p$-orbitals (blue paint), each holding different energies and coordinates.
+                  </p>
+                </div>
+                <div class="mt-4 flex gap-3 justify-center">
+                  <div class="flex flex-col items-center gap-1">
+                    <div class="w-8 h-10 rounded-t border border-amber-600 bg-amber-500/10 flex flex-col justify-end overflow-hidden">
+                      <div class="h-5 w-full bg-amber-500"></div>
+                    </div>
+                    <span class="text-[9px] text-amber-400 font-bold font-mono">1 x s (yellow)</span>
+                  </div>
+                  <div class="text-slate-500 flex items-center text-lg font-bold">+</div>
+                  <div class="flex flex-col items-center gap-1">
+                    <div class="w-8 h-10 rounded-t border border-indigo-600 bg-indigo-50/10 flex flex-col justify-end overflow-hidden">
+                      <div class="h-5 w-full bg-indigo-500"></div>
+                    </div>
+                    <span class="text-[9px] text-indigo-400 font-bold font-mono">3 x p (blue)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <span class="text-[9px] uppercase font-bold text-purple-400 tracking-wider">After Hybridization</span>
+                  <h3 class="text-base font-bold text-slate-200 mt-1">Blended Equivalent Results</h3>
+                  <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    Once blended (e.g. for $sp^3$), the wave ingredients are combined. We pour them back into **four identical buckets of green-purple paint**, each identical in properties.
+                  </p>
+                </div>
+                <div class="mt-4 flex gap-1.5 justify-center">
+                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+                    <div class="h-4 w-full bg-purple-600"></div>
+                  </div>
+                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+                    <div class="h-4 w-full bg-purple-600"></div>
+                  </div>
+                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+                    <div class="h-4 w-full bg-purple-600"></div>
+                  </div>
+                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+                    <div class="h-4 w-full bg-purple-600"></div>
+                  </div>
+                  <div class="flex flex-col justify-center ml-2">
+                    <span class="text-[9px] text-purple-400 font-bold font-mono">4 x sp³ lobes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-850 text-xs">
+              <h4 class="font-bold text-slate-200 mb-1 flex items-center gap-1">🔬 Sigma (σ) vs. Pi (π) Bonding Mechanics</h4>
+              <p class="text-slate-400 leading-normal mb-2">
+                Understanding single and multiple bonds is impossible without overlapping shapes:
+              </p>
+              <ul class="list-disc list-inside text-slate-400 space-y-1.5 ml-1 leading-normal">
+                <li><strong>Sigma Bonds (σ):</strong> Formed by **head-on** overlapping along the internuclear axis. These have cylindrical symmetry and allow free rotation of atoms.</li>
+                <li><strong>Pi Bonds (π):</strong> Formed by **sideways** overlapping of remaining unhybridized p-orbitals. These lock atomic rotation, enabling double/triple structures.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Diagnostics & Viva Workspace (4 Columns) -->
+      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <!-- Live physics variables telemetry dashboard -->
+        <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+          <h3 class="text-[11px] font-bold uppercase tracking-widest text-indigo-800 flex items-center gap-1.5">⚡ QUANTUM HYBRID TELEMETRY</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Orbital Geometry</span>
+              <span id="telemetry-geometry" class="text-xs font-bold text-purple-600 leading-tight block">Linear</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Ideal Bond Angle</span>
+              <span id="telemetry-angle" class="text-xs font-bold text-emerald-600 leading-tight block">180°</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">S-Character</span>
+              <span id="telemetry-schar" class="text-xs font-bold text-amber-600 leading-tight block">50.0%</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">P/D-Character</span>
+              <span id="telemetry-pdchar" class="text-xs font-bold text-indigo-600 leading-tight block">50.0% p / 0.0% d</span>
+            </div>
+          </div>
+          
+          <!-- Real molecule example tip block -->
+          <div class="bg-white p-2.5 rounded-xl border border-indigo-100/60 shadow-xs text-[10px]">
+            <span class="font-bold text-slate-500 uppercase tracking-wide block mb-0.5">Molecule Examples</span>
+            <span id="telemetry-example" class="text-slate-700 leading-normal block font-medium"></span>
+          </div>
+        </div>
+
+        <!-- Dynamic Lobe Character Balance Gauge -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+          <h3 class="text-xs font-bold uppercase text-slate-700 tracking-wider">📋 Orbital Lobe Character Balance</h3>
+          
+          <div class="space-y-2.5 text-[11px] font-medium text-slate-600">
+            <!-- s-Character bar gauge -->
+            <div>
+              <div class="flex justify-between font-bold mb-0.5">
+                <span class="text-amber-500">s-Character Percentage</span>
+                <span id="gauge-s-text" class="font-mono text-slate-700">50.0%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="gauge-s-bar" class="bg-amber-500 h-full transition-all duration-300" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <!-- p-Character bar gauge -->
+            <div>
+              <div class="flex justify-between font-bold mb-0.5">
+                <span class="text-blue-500">p-Character Percentage</span>
+                <span id="gauge-p-text" class="font-mono text-slate-700">50.0%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="gauge-p-bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 50%"></div>
+              </div>
+            </div>
+
+            <!-- d-Character bar gauge -->
+            <div>
+              <div class="flex justify-between font-bold mb-0.5">
+                <span class="text-purple-500">d-Character Percentage</span>
+                <span id="gauge-d-text" class="font-mono text-slate-700">0.0%</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div id="gauge-d-bar" class="bg-purple-500 h-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Viva Voce Lab Desk Banner -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the orbital hybridization of the central carbon atoms in Acetylene ($H-C\equiv C-H$)?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options">
+                <!-- Option buttons dynamically generated -->
+              </div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+              
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
+                Linear combination mixing equations of $s$ and $p_z$ atomic wavefunctions:
+                $$\psi_{\text{hybrid}} = \frac{1}{\sqrt{2}}\psi_s \pm \frac{1}{\sqrt{2}}\psi_z$$
+                The remaining two perpendicular unhybridized $p$-orbitals ($p_x$, $p_y$) overlap laterally to form two $\pi$ bonds:
+                $$\pi_x = p_x^A + p_x^B, \quad \pi_y = p_y^A + p_y^B$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which of the following molecular geometries corresponds to $sp^3d^2$ hybridization of the central atom?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500 leading-relaxed">
+                Octahedral geometries mix one $s$, three $p$, and two $d$ atomic orbitals together:
+                $$\text{Linear Combination: } s + p_x + p_y + p_z + d_{z^2} + d_{x^2-y^2}$$
+                The resulting six hybrid orbitals are mutually orthogonal and point along the spatial Cartesian coordinates.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the theoretical bond angle of methane ($CH_4$), which exhibits $sp^3$ hybridization?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500 leading-relaxed">
+                By solving the spatial dot product of the hybrid orbital axes:
+                $$\vec{\psi}_i \cdot \vec{\psi}_j = \cos\theta$$
+                For tetrahedral $sp^3$ hybrids, the coefficients dictate:
+                $$\cos\theta = -\frac{1}{3} \implies \theta = \arccos\left(-\frac{1}{3}\right) \approx 109.47^\circ$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How are Pi ($\pi$) bonds formed in a double or triple bond?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500 leading-relaxed">
+                Pi ($\pi$) bonds are characterized by a planar nodal surface passing through the internuclear axis:
+                $$\psi_{\pi}(\vec{r}) = c_1 \phi_{2p_x}^A(\vec{r}) + c_2 \phi_{2p_x}^B(\vec{r})$$
+                Formed via sideways, lateral overlap of unhybridized $p$-orbitals perpendicular to the sigma bond axis.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calibration Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Copyright © 2026 Sparkl Quantum Electrodynamics Laboratory Modules. Rebuilt via structural clean-room modular code patterns for modern browser interpretation.</span>
+      <span>Apparatus: Bohr-Hamiltonian Probability Wave Fields</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> QUANTUM MOLECULAR OPERATIONS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>3D Molecular Orbital Hybridization Virtual Lab</strong>! Use this workspace to explore hybrid coordinate orbitals, characters, and wave blends:</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Functions</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Hybrid Presets</strong>: Select different hybrid states (sp, sp², sp³, etc.) to immediately re-orient orbital major and minor wave phases along ideal geometric vertices.</li>
+            <li><strong>Interactive Sliders</strong>: Finely tune the opacity, auto-rotation speed, and coordinate orbital size. Change them on range inputs or type values directly in adjacent numerical input boxes.</li>
+            <li><strong>Tab Selector Views</strong>: Switch between the 3D Sandbox and the educational Paint Bucket Analogy mode to see the intuitive representation of wave blend mathematics.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 3D Viewport Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Rotate Viewport</strong>: Click, hold, and drag directly inside the dark probability space canvas to rotate the camera.</li>
+            <li><strong>Pinch / Scroll to Zoom</strong>: Use your mouse scroll wheel or gesture to zoom in and out of the molecular structure.</li>
+            <li><strong>Toggles</strong>: Dynamically show/hide sigma lobes, unhybridized pi dumbbells, or geometric skeleton outlines.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Initialize Experiments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real-time Interactive Physics Solver & WebGL Renderer -->
+  <script>
+    // Configuration states data dictionary
+    const StateConfigs = {
+      sp: {
+        geometry: 'Linear',
+        sChar: '50.0%',
+        pChar: '50.0%',
+        dChar: '0.0%',
+        sNum: 50,
+        pNum: 50,
+        dNum: 0,
+        angle: '180°',
+        example: 'Acetylene (C<sub>2</sub>H<sub>2</sub>) or Beryllium Chloride (BeCl<sub>2</sub>)',
+        equation: '$$\\psi_{\\text{hybrid}} = \\frac{1}{\\sqrt{2}}\\psi_s \\pm \\frac{1}{\\sqrt{2}}\\psi_z$$',
+        lobes: [
+          { dir: new THREE.Vector3(0, 0, 1) },
+          { dir: new THREE.Vector3(0, 0, -1) }
+        ],
+        unhybridized: [
+          { axis: 'x', color: '#3b82f6' }, 
+          { axis: 'y', color: '#10b981' }  
+        ]
+      },
+      sp2: {
+        geometry: 'Trigonal Planar',
+        sChar: '33.3%',
+        pChar: '66.7%',
+        dChar: '0.0%',
+        sNum: 33.3,
+        pNum: 66.7,
+        dNum: 0,
+        angle: '120°',
+        example: 'Ethylene (C<sub>2</sub>H<sub>4</sub>) or Boron Trifluoride (BF<sub>3</sub>)',
+        equation: '$$\\psi_1 = \\frac{1}{\\sqrt{3}}\\psi_s + \\sqrt{\\frac{2}{3}}\\psi_x$$',
+        lobes: [
+          { dir: new THREE.Vector3(1, 0, 0) },
+          { dir: new THREE.Vector3(-0.5, Math.sqrt(3)/2, 0) },
+          { dir: new THREE.Vector3(-0.5, -Math.sqrt(3)/2, 0) }
+        ],
+        unhybridized: [
+          { axis: 'z', color: '#3b82f6' } 
+        ]
+      },
+      sp3: {
+        geometry: 'Tetrahedral',
+        sChar: '25.0%',
+        pChar: '75.0%',
+        dChar: '0.0%',
+        sNum: 25,
+        pNum: 75,
+        dNum: 0,
+        angle: '109.5°',
+        example: 'Methane (CH<sub>4</sub>) or Water (H<sub>2</sub>O)',
+        equation: '$$\\psi_i = \\frac{1}{2}\\psi_s + \\frac{\\sqrt{3}}{2}\\psi_{p,i}$$',
+        lobes: [
+          { dir: new THREE.Vector3(1, 1, 1).normalize() },
+          { dir: new THREE.Vector3(1, -1, -1).normalize() },
+          { dir: new THREE.Vector3(-1, 1, -1).normalize() },
+          { dir: new THREE.Vector3(-1, -1, 1).normalize() }
+        ],
+        unhybridized: []
+      },
+      sp3d: {
+        geometry: 'Trigonal Bipyramidal',
+        sChar: '20.0%',
+        pChar: '60.0%',
+        dChar: '20.0%',
+        sNum: 20,
+        pNum: 60,
+        dNum: 20,
+        angle: '90° & 120°',
+        example: 'Phosphorus Pentachloride (PCl<sub>5</sub>) or Sulfur Tetrafluoride (SF<sub>4</sub>)',
+        equation: '$$s + p_x + p_y + p_z + d_{z^2}$$',
+        lobes: [
+          { dir: new THREE.Vector3(0, 0, 1) },
+          { dir: new THREE.Vector3(0, 0, -1) },
+          { dir: new THREE.Vector3(1, 0, 0) },
+          { dir: new THREE.Vector3(-0.5, Math.sqrt(3)/2, 0) },
+          { dir: new THREE.Vector3(-0.5, -Math.sqrt(3)/2, 0) }
+        ],
+        unhybridized: []
+      },
+      sp3d2: {
+        geometry: 'Octahedral',
+        sChar: '16.7%',
+        pChar: '50.0%',
+        dChar: '33.3%',
+        sNum: 16.7,
+        pNum: 50,
+        dNum: 33.3,
+        angle: '90°',
+        example: 'Sulfur Hexafluoride (SF<sub>6</sub>) or Xenon Tetrafluoride (XeF<sub>4</sub>)',
+        equation: '$$s + p_x + p_y + p_z + d_{z^2} + d_{x^2-y^2}$$',
+        lobes: [
+          { dir: new THREE.Vector3(1, 0, 0) },
+          { dir: new THREE.Vector3(-1, 0, 0) },
+          { dir: new THREE.Vector3(0, 1, 0) },
+          { dir: new THREE.Vector3(0, -1, 0) },
+          { dir: new THREE.Vector3(0, 0, 1) },
+          { dir: new THREE.Vector3(0, 0, -1) }
+        ],
+        unhybridized: []
+      }
+    };
+
+    // System reactive state
+    let appState = {
+      currentTab: 'simulation', // 'simulation' or 'analogies'
+      activeStateKey: 'sp',
+      opacity: 0.8,
+      rotationSpeed: 1.0,
+      scale: 1.0,
+      showHybrid: true,
+      showUnhybridized: true,
+      showGuide: true,
+      isAutoRotating: true,
+      
+      // Viva assessments scoring
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    // DOM selectors
+    const btnOpenGuide = document.getElementById('btn-open-guide');
+    const btnCloseGuide = document.getElementById('btn-close-guide');
+    const btnCloseGuideConfirm = document.getElementById('btn-close-guide-confirm');
+    const userGuideModal = document.getElementById('user-guide-modal');
+    
+    const btnReset = document.getElementById('btn-reset');
+    const btnRotateToggle = document.getElementById('btn-rotate-toggle');
+    const btnRecenter = document.getElementById('btn-recenter');
+
+    const chkHybrid = document.getElementById('chk-hybrid');
+    const chkUnhybridized = document.getElementById('chk-unhybridized');
+    const chkGuide = document.getElementById('chk-guide');
+    const lblUnhybridized = document.getElementById('lbl-unhybridized');
+
+    const tabSimulation = document.getElementById('tab-simulation');
+    const tabAnalogies = document.getElementById('tab-analogies');
+    const viewSimulation = document.getElementById('view-simulation');
+    const viewAnalogies = document.getElementById('view-analogies');
+
+    const sliderOpacity = document.getElementById('slider-opacity');
+    const numOpacity = document.getElementById('num-opacity');
+    const sliderRotateSpeed = document.getElementById('slider-rotate-speed');
+    const numRotateSpeed = document.getElementById('num-rotate-speed');
+    const sliderScale = document.getElementById('slider-scale');
+    const numScale = document.getElementById('num-scale');
+
+    const equationDisplay = document.getElementById('equation-display');
+
+    // Telemetry and gauges DOM selectors
+    const telGeometry = document.getElementById('telemetry-geometry');
+    const telAngle = document.getElementById('telemetry-angle');
+    const telSChar = document.getElementById('telemetry-schar');
+    const telPDChar = document.getElementById('telemetry-pdchar');
+    const telExample = document.getElementById('telemetry-example');
+
+    const gaugeSText = document.getElementById('gauge-s-text');
+    const gaugeSBar = document.getElementById('gauge-s-bar');
+    const gaugePText = document.getElementById('gauge-p-text');
+    const gaugePBar = document.getElementById('gauge-p-bar');
+    const gaugeDText = document.getElementById('gauge-d-text');
+    const gaugeDBar = document.getElementById('gauge-d-bar');
+
+    const labelVivaScore = document.getElementById('viva-score');
+
+    // State Key Presets elements
+    const stateButtons = {
+      sp: document.getElementById('btn-state-sp'),
+      sp2: document.getElementById('btn-state-sp2'),
+      sp3: document.getElementById('btn-state-sp3'),
+      sp3d: document.getElementById('btn-state-sp3d'),
+      sp3d2: document.getElementById('btn-state-sp3d2')
+    };
+
+    // Three.js instances
+    let scene, camera, renderer, controls, orbitalGroup;
+
+    // Initialize 3D Engine
+    function initThree() {
+      const container = document.getElementById('three-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b0f19);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.set(4, 3, 5);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio || 1);
+      container.appendChild(renderer.domElement);
+
+      // 4. OrbitControls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.autoRotate = appState.isAutoRotating;
+      controls.autoRotateSpeed = appState.rotationSpeed * 1.5;
+
+      // 5. Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight1.position.set(10, 15, 10);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0xa855f7, 0.4);
+      dirLight2.position.set(-10, -15, -10);
+      scene.add(dirLight2);
+
+      // 6. Orbital Group
+      orbitalGroup = new THREE.Group();
+      scene.add(orbitalGroup);
+
+      // Start tick render animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Listeners
+      window.addEventListener('resize', handleThreeResize);
+      
+      // Initial draw
+      rebuild3DModel();
+    }
+
+    function handleThreeResize() {
+      const container = document.getElementById('three-container');
+      if (!container || !camera || !renderer) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    // Helper: Create outline cage showing geometry boundary
+    function createGeometryGuideLines(stateKey) {
+      let geometry;
+      if (stateKey === 'sp') {
+        const points = [new THREE.Vector3(0, 0, -1.6), new THREE.Vector3(0, 0, 1.6)];
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+      } else if (stateKey === 'sp2') {
+        const points = [
+          new THREE.Vector3(1.6, 0, 0),
+          new THREE.Vector3(-0.8, Math.sqrt(3)/2 * 1.6, 0),
+          new THREE.Vector3(-0.8, -Math.sqrt(3)/2 * 1.6, 0),
+          new THREE.Vector3(1.6, 0, 0)
+        ];
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+      } else if (stateKey === 'sp3') {
+        const v = [
+          new THREE.Vector3(1, 1, 1).normalize().multiplyScalar(1.6),
+          new THREE.Vector3(1, -1, -1).normalize().multiplyScalar(1.6),
+          new THREE.Vector3(-1, 1, -1).normalize().multiplyScalar(1.6),
+          new THREE.Vector3(-1, -1, 1).normalize().multiplyScalar(1.6)
+        ];
+        const points = [v[0], v[1], v[2], v[0], v[3], v[1], v[3], v[2]];
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+      } else if (stateKey === 'sp3d') {
+        const axialTop = new THREE.Vector3(0, 0, 1.6);
+        const axialBottom = new THREE.Vector3(0, 0, -1.6);
+        const eq = [
+          new THREE.Vector3(1.4, 0, 0),
+          new THREE.Vector3(-0.7, 1.21, 0),
+          new THREE.Vector3(-0.7, -1.21, 0)
+        ];
+        const points = [
+          eq[0], eq[1], eq[2], eq[0],
+          axialTop, eq[1], axialTop, eq[2], axialTop, eq[0],
+          axialBottom, eq[1], axialBottom, eq[2], axialBottom, eq[0]
+        ];
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+      } else if (stateKey === 'sp3d2') {
+        const axialTop = new THREE.Vector3(0, 0, 1.6);
+        const axialBottom = new THREE.Vector3(0, 0, -1.6);
+        const eq = [
+          new THREE.Vector3(1.4, 0, 0),
+          new THREE.Vector3(0, 1.4, 0),
+          new THREE.Vector3(-1.4, 0, 0),
+          new THREE.Vector3(0, -1.4, 0)
+        ];
+        const points = [
+          eq[0], eq[1], eq[2], eq[3], eq[0],
+          axialTop, eq[1], axialTop, eq[2], axialTop, eq[3], axialTop, eq[0],
+          axialBottom, eq[1], axialBottom, eq[2], axialBottom, eq[3], axialBottom, eq[0]
+        ];
+        geometry = new THREE.BufferGeometry().setFromPoints(points);
+      }
+      if (!geometry) return null;
+      const material = new THREE.LineBasicMaterial({
+        color: 0x64748b, // slate-500
+        transparent: true,
+        opacity: 0.55
+      });
+      return new THREE.Line(geometry, material);
+    }
+
+    // Reconstruct WebGL elements
+    function rebuild3DModel() {
+      if (!orbitalGroup) return;
+
+      // Clear children
+      while(orbitalGroup.children.length > 0) {
+        orbitalGroup.remove(orbitalGroup.children[0]);
+      }
+
+      const config = StateConfigs[appState.activeStateKey];
+      const scale = appState.scale;
+      const opacity = appState.opacity;
+
+      // 1. Draw central atom nucleus
+      const nucleusGeo = new THREE.SphereGeometry(0.24 * scale, 32, 32);
+      const nucleusMat = new THREE.MeshPhongMaterial({
+        color: 0xe2e8f0,
+        shininess: 90
+      });
+      const nucleusMesh = new THREE.Mesh(nucleusGeo, nucleusMat);
+      orbitalGroup.add(nucleusMesh);
+
+      // 2. Draw Hybrid Orbitals (σ major and minor lobes)
+      if (appState.showHybrid) {
+        config.lobes.forEach(lobe => {
+          const lobeGroup = new THREE.Group();
+
+          // Major Lobe (Positive Wave Phase -> Vibrant Purple)
+          const majorGeo = new THREE.SphereGeometry(0.5, 32, 32);
+          majorGeo.scale(1.9 * scale, 1.1 * scale, 1.1 * scale);
+          const majorMat = new THREE.MeshPhongMaterial({
+            color: 0xa855f7, // Purple
+            transparent: true,
+            opacity: opacity,
+            shininess: 60,
+            side: THREE.DoubleSide
+          });
+          const majorMesh = new THREE.Mesh(majorGeo, majorMat);
+          majorMesh.position.set(0.68 * scale, 0, 0);
+          lobeGroup.add(majorMesh);
+
+          // Minor Lobe (Negative Wave Phase -> Rose Red)
+          const minorGeo = new THREE.SphereGeometry(0.28, 32, 32);
+          minorGeo.scale(1.2 * scale, 0.9 * scale, 0.9 * scale);
+          const minorMat = new THREE.MeshPhongMaterial({
+            color: 0xf43f5e, // Rose
+            transparent: true,
+            opacity: opacity * 0.8,
+            shininess: 60,
+            side: THREE.DoubleSide
+          });
+          const minorMesh = new THREE.Mesh(minorGeo, minorMat);
+          minorMesh.position.set(-0.25 * scale, 0, 0);
+          lobeGroup.add(minorMesh);
+
+          const alignAxis = new THREE.Vector3(1, 0, 0);
+          lobeGroup.quaternion.setFromUnitVectors(alignAxis, lobe.dir);
+          orbitalGroup.add(lobeGroup);
+        });
+      }
+
+      // 3. Draw Unhybridized p-Orbitals
+      if (appState.showUnhybridized && (appState.activeStateKey === 'sp' || appState.activeStateKey === 'sp2')) {
+        config.unhybridized.forEach(p => {
+          const dumbbellGroup = new THREE.Group();
+          const lobeGeo = new THREE.SphereGeometry(0.42, 32, 32);
+          lobeGeo.scale(1.0 * scale, 1.7 * scale, 1.0 * scale);
+
+          // Positive phase (+)
+          const posMat = new THREE.MeshPhongMaterial({
+            color: 0x3b82f6, // Blue
+            transparent: true,
+            opacity: opacity * 0.6,
+            shininess: 80
+          });
+          const posMesh = new THREE.Mesh(lobeGeo, posMat);
+          posMesh.position.set(0, 0.55 * scale, 0);
+          dumbbellGroup.add(posMesh);
+
+          // Negative phase (-)
+          const negMat = new THREE.MeshPhongMaterial({
+            color: 0xf43f5e, // Rose
+            transparent: true,
+            opacity: opacity * 0.6,
+            shininess: 80
+          });
+          const negMesh = new THREE.Mesh(lobeGeo, negMat);
+          negMesh.position.set(0, -0.55 * scale, 0);
+          dumbbellGroup.add(negMesh);
+
+          if (p.axis === 'x') {
+            dumbbellGroup.rotateZ(-Math.PI / 2);
+          } else if (p.axis === 'z') {
+            dumbbellGroup.rotateX(Math.PI / 2);
+          }
+          orbitalGroup.add(dumbbellGroup);
+        });
+      }
+
+      // 4. Draw Geometry Guide lines
+      if (appState.showGuide) {
+        const guideMesh = createGeometryGuideLines(appState.activeStateKey);
+        if (guideMesh) {
+          guideMesh.scale.set(scale, scale, scale);
+          orbitalGroup.add(guideMesh);
+        }
+      }
+    }
+
+    // Bidirectional parameters synchronizers
+    function updateOpacity(val) {
+      val = Math.max(0.20, Math.min(1.00, parseFloat(val) || 0.80));
+      appState.opacity = val;
+      sliderOpacity.value = val;
+      numOpacity.value = val.toFixed(2);
+      rebuild3DModel();
+    }
+    
+    function updateRotateSpeed(val) {
+      val = Math.max(0.0, Math.min(3.0, parseFloat(val) || 1.0));
+      appState.rotationSpeed = val;
+      sliderRotateSpeed.value = val;
+      numRotateSpeed.value = val.toFixed(1);
+      if (controls) {
+        controls.autoRotateSpeed = val * 1.5;
+      }
+    }
+
+    function updateScale(val) {
+      val = Math.max(0.50, Math.min(1.50, parseFloat(val) || 1.00));
+      appState.scale = val;
+      sliderScale.value = val;
+      numScale.value = val.toFixed(2);
+      rebuild3DModel();
+    }
+
+    // Presets click handles
+    function selectHybridState(stateKey) {
+      appState.activeStateKey = stateKey;
+
+      // Update button classes
+      Object.keys(stateButtons).forEach(key => {
+        const btn = stateButtons[key];
+        if (key === stateKey) {
+          btn.classList.add('bg-indigo-600', 'border-indigo-600', 'text-white');
+          btn.classList.remove('bg-white', 'border-slate-200', 'text-slate-700', 'hover:bg-slate-100');
+        } else {
+          btn.classList.remove('bg-indigo-600', 'border-indigo-600', 'text-white');
+          btn.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'hover:bg-slate-100');
+        }
+      });
+
+      // Show/Hide unhybridized p-orbitals control based on relevance
+      if (stateKey === 'sp' || stateKey === 'sp2') {
+        lblUnhybridized.classList.remove('opacity-40', 'pointer-events-none');
+        chkUnhybridized.disabled = false;
+      } else {
+        lblUnhybridized.classList.add('opacity-40', 'pointer-events-none');
+        chkUnhybridized.disabled = true;
+      }
+
+      const config = StateConfigs[stateKey];
+
+      // Telemetry update
+      telGeometry.textContent = config.geometry;
+      telAngle.textContent = config.angle;
+      telSChar.textContent = config.sChar;
+      telPDChar.textContent = `${config.pChar} p / ${config.dChar} d`;
+      telExample.innerHTML = config.example;
+
+      // Gauges update
+      gaugeSText.textContent = config.sChar;
+      gaugeSBar.style.width = `${config.sNum}%`;
+      gaugePText.textContent = config.pChar;
+      gaugePBar.style.width = `${config.pNum}%`;
+      gaugeDText.textContent = config.dChar;
+      gaugeDBar.style.width = `${config.dNum}%`;
+
+      // Equation formula card updates
+      equationDisplay.innerHTML = config.equation;
+
+      // Recompile formulas
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([equationDisplay, telExample, viewAnalogies]);
+      }
+
+      // Rebuild 3D Meshes
+      rebuild3DModel();
+    }
+
+    // Event Bindings
+    sliderOpacity.addEventListener('input', (e) => updateOpacity(e.target.value));
+    numOpacity.addEventListener('change', (e) => updateOpacity(e.target.value));
+
+    sliderRotateSpeed.addEventListener('input', (e) => updateRotateSpeed(e.target.value));
+    numRotateSpeed.addEventListener('change', (e) => updateRotateSpeed(e.target.value));
+
+    sliderScale.addEventListener('input', (e) => updateScale(e.target.value));
+    numScale.addEventListener('change', (e) => updateScale(e.target.value));
+
+    Object.keys(stateButtons).forEach(key => {
+      stateButtons[key].addEventListener('click', () => selectHybridState(key));
+    });
+
+    chkHybrid.addEventListener('change', (e) => {
+      appState.showHybrid = e.target.checked;
+      rebuild3DModel();
+    });
+    chkUnhybridized.addEventListener('change', (e) => {
+      appState.showUnhybridized = e.target.checked;
+      rebuild3DModel();
+    });
+    chkGuide.addEventListener('change', (e) => {
+      appState.showGuide = e.target.checked;
+      rebuild3DModel();
+    });
+
+    // Auto rotate trigger
+    btnRotateToggle.addEventListener('click', () => {
+      appState.isAutoRotating = !appState.isAutoRotating;
+      if (appState.isAutoRotating) {
+        btnRotateToggle.innerHTML = '<span>⏸</span> Pause Auto-Rotation';
+        btnRotateToggle.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+        btnRotateToggle.classList.remove('bg-slate-200', 'hover:bg-slate-300', 'text-slate-700');
+      } else {
+        btnRotateToggle.innerHTML = '<span>▶</span> Auto-Rotate View';
+        btnRotateToggle.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+        btnRotateToggle.classList.add('bg-slate-200', 'hover:bg-slate-300', 'text-slate-700');
+      }
+      if (controls) {
+        controls.autoRotate = appState.isAutoRotating;
+      }
+    });
+
+    btnRecenter.addEventListener('click', () => {
+      if (camera && controls) {
+        camera.position.set(4, 3, 5);
+        controls.target.set(0, 0, 0);
+      }
+    });
+
+    // Tab management
+    tabSimulation.addEventListener('click', () => {
+      appState.currentTab = 'simulation';
+      tabSimulation.classList.add('bg-white', 'text-indigo-600', 'shadow-xs');
+      tabSimulation.classList.remove('text-slate-600', 'hover:text-slate-950');
+      tabAnalogies.classList.remove('bg-white', 'text-indigo-600', 'shadow-xs');
+      tabAnalogies.classList.add('text-slate-600', 'hover:text-slate-950');
+
+      viewSimulation.classList.remove('hidden');
+      viewAnalogies.classList.add('hidden');
+      
+      // Auto-trigger resize for WebGL canvas refitting
+      setTimeout(handleThreeResize, 20);
+    });
+
+    tabAnalogies.addEventListener('click', () => {
+      appState.currentTab = 'analogies';
+      tabAnalogies.classList.add('bg-white', 'text-indigo-600', 'shadow-xs');
+      tabAnalogies.classList.remove('text-slate-600', 'hover:text-slate-950');
+      tabSimulation.classList.remove('bg-white', 'text-indigo-600', 'shadow-xs');
+      tabSimulation.classList.add('text-slate-600', 'hover:text-slate-950');
+
+      viewSimulation.classList.add('hidden');
+      viewAnalogies.classList.remove('hidden');
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([viewAnalogies]);
+      }
+    });
+
+    // Reset Sandbox variables
+    btnReset.addEventListener('click', () => {
+      updateOpacity(0.80);
+      updateRotateSpeed(1.0);
+      updateScale(1.00);
+      
+      chkHybrid.checked = true;
+      chkUnhybridized.checked = true;
+      chkGuide.checked = true;
+      appState.showHybrid = true;
+      appState.showUnhybridized = true;
+      appState.showGuide = true;
+
+      appState.isAutoRotating = true;
+      btnRotateToggle.innerHTML = '<span>⏸</span> Pause Auto-Rotation';
+      btnRotateToggle.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+      btnRotateToggle.classList.remove('bg-slate-200', 'hover:bg-slate-300', 'text-slate-700');
+      if (controls) {
+        controls.autoRotate = true;
+      }
+
+      // Reset score and choices
+      appState.vivaScore = 0;
+      labelVivaScore.textContent = `Score: 0 / 4`;
+      appState.answers = { q1: null, q2: null, q3: null, q4: null };
+
+      // Rebuild questions buttons and clean feedbacks
+      renderQuestions();
+
+      if (camera && controls) {
+        camera.position.set(4, 3, 5);
+        controls.target.set(0, 0, 0);
+      }
+
+      selectHybridState('sp');
+    });
+
+    // Guide popup operations
+    btnOpenGuide.addEventListener('click', () => {
+      userGuideModal.classList.remove('hidden');
+    });
+
+    const closeGuideModal = () => {
+      userGuideModal.classList.add('hidden');
+    };
+    btnCloseGuide.addEventListener('click', closeGuideModal);
+    btnCloseGuideConfirm.addEventListener('click', closeGuideModal);
+    userGuideModal.addEventListener('click', (e) => {
+      if (e.target === userGuideModal) closeGuideModal();
+    });
+
+    // Collapsible Mathematical Toggles
+    window.toggleVerification = function(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.classList.add('rotate-180');
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          MathJax.typesetPromise([panel]);
+        }
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.classList.remove('rotate-180');
+      }
+    };
+
+    // Viva voea assessments data dictionary
+    const vivaData = {
+      q1: {
+        label: 'Q1. HYBRIDIZATION IN ALKYNES',
+        question: 'What is the orbital hybridization of the central carbon atoms in Acetylene ($H-C\\equiv C-H$)?',
+        options: [
+          { text: "sp hybridization", isCorrect: true, exp: "Correct! In Acetylene, each Carbon forms one single (sigma) bond with hydrogen and one triple bond with the other carbon. A triple bond consists of one sigma bond and two pi bonds, requiring only sp hybridization." },
+          { text: "sp² hybridization", isCorrect: false, exp: "Incorrect. sp² hybridization is characteristic of double bonds, not triple bonds." },
+          { text: "sp³ hybridization", isCorrect: false, exp: "Incorrect. sp³ hybridization leads to tetrahedral single bonds with no unhybridized p-orbitals left for pi bonding." },
+          { text: "sp³d hybridization", isCorrect: false, exp: "Incorrect. Carbon cannot form sp³d hybrid states due to the absence of low-energy d-orbitals." }
+        ]
+      },
+      q2: {
+        label: 'Q2. COORDINATION GEOMETRY',
+        question: 'Which of the following molecular geometries corresponds to $sp^3d^2$ hybridization of the central atom?',
+        options: [
+          { text: "Trigonal Planar", isCorrect: false, exp: "Incorrect. Trigonal Planar corresponds to sp² hybridization." },
+          { text: "Tetrahedral", isCorrect: false, exp: "Incorrect. Tetrahedral corresponds to sp³ hybridization." },
+          { text: "Trigonal Bipyramidal", isCorrect: false, exp: "Incorrect. Trigonal Bipyramidal corresponds to sp³d hybridization." },
+          { text: "Octahedral", isCorrect: true, exp: "Correct! sp³d² hybridization mixes one s, three p, and two d orbitals to produce six equivalent hybrid orbitals pointing along octahedral vertices at 90° bond angles." }
+        ]
+      },
+      q3: {
+        label: 'Q3. THEORETICAL BOND ANGLES',
+        question: 'What is the theoretical bond angle of methane ($CH_4$), which exhibits $sp^3$ hybridization?',
+        options: [
+          { text: "180°", isCorrect: false, exp: "Incorrect. 180° corresponds to linear geometries." },
+          { text: "120°", isCorrect: false, exp: "Incorrect. 120° corresponds to trigonal planar geometries." },
+          { text: "109.5°", isCorrect: true, exp: "Correct! Four equivalent sp³ hybrid lobes repel each other equally in 3D space. The geometry that minimizes electrostatic repulsion is a regular tetrahedron, yielding ideal bond angles of exactly 109.5°." },
+          { text: "90°", isCorrect: false, exp: "Incorrect. 90° is typical of octahedral or square planar structures." }
+        ]
+      },
+      q4: {
+        label: 'Q4. PI BONDING MECHANICS',
+        question: 'How are Pi ($\\pi$) bonds formed in a double or triple bond?',
+        options: [
+          { text: "Head-on overlap along the internuclear axis", isCorrect: false, exp: "Incorrect. Head-on overlap forms Sigma (σ) bonds, not Pi bonds." },
+          { text: "Sideways (lateral) overlap of unhybridized p-orbitals", isCorrect: true, exp: "Correct! Sigma (σ) bonds form by head-on overlapping of orbitals along the line between nuclei. Pi (π) bonds form by parallel, lateral (sideways) overlapping of unhybridized p-orbitals." },
+          { text: "Blending d-orbitals with s-orbitals", isCorrect: false, exp: "Incorrect. Blending d-orbitals with s-orbitals does not explain pi bonds." },
+          { text: "Electrostatic attraction of ions", isCorrect: false, exp: "Incorrect. Covalent bonding is defined by orbital overlap, not ionic attraction." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        feedbackContainer.classList.add('hidden');
+        feedbackContainer.textContent = '';
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full";
+          btn.innerHTML = `<span class="font-bold">${idx === 0 ? 'A' : idx === 1 ? 'B' : idx === 2 ? 'C' : idx === 3 ? 'D' : ''}) </span>${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return;
+            
+            appState.answers[qKey] = idx;
+            
+            // Increment score
+            if (opt.isCorrect) {
+              appState.vivaScore++;
+              labelVivaScore.textContent = `Score: ${appState.vivaScore} / 4`;
+            }
+            
+            // Re-render buttons for selection colors
+            updateQuestionUI(qKey);
+          });
+          
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    function updateQuestionUI(qKey) {
+      const data = vivaData[qKey];
+      const selectedIdx = appState.answers[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      const buttons = optionsContainer.querySelectorAll('button');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+        btn.classList.add('cursor-not-allowed');
+        
+        const opt = data.options[idx];
+        if (selectedIdx === idx) {
+          if (opt.isCorrect) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-800');
+          } else {
+            btn.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-800');
+          }
+        } else if (opt.isCorrect) {
+          // Highlight correct answer opacity-70
+          btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+        } else {
+          btn.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'opacity-40');
+        }
+      });
+      
+      // Render feedback
+      const chosenOpt = data.options[selectedIdx];
+      feedbackContainer.textContent = chosenOpt.exp;
+      feedbackContainer.classList.remove('hidden');
+    }
+
+    // App Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      initThree();
+      renderQuestions();
+      selectHybridState('sp');
+    });
+  </script>
+</body>
+</html>

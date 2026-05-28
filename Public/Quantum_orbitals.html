@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Quantum Number Orbital Visualizer</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <svg class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">2D Quantum Orbital Visualizer</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Atomic Structure &amp; 2D Probability Density Maps</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Schrödinger Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Slicing Plane:</span>
+        <select id="select-plane" class="bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer">
+          <option value="XY">XY Plane (Z = 0)</option>
+          <option value="XZ">XZ Plane (Y = 0)</option>
+          <option value="YZ">YZ Plane (X = 0)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Spatial Grid</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+            
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> Principal ($n$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-n" step="1" min="1" max="4" value="2" class="w-12 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                </div>
+              </div>
+              <input type="range" id="slider-n" min="1" max="4" step="1" value="2" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span>1 (K shell)</span>
+                <span>4 (N shell)</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Azimuthal ($l$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-l" step="1" min="0" max="1" value="1" class="w-12 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                </div>
+              </div>
+              <input type="range" id="slider-l" min="0" max="1" step="1" value="1" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span id="label-l-min">0 (s)</span>
+                <span id="label-l-max">1 (p)</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-fuchsia-500 block"></span> Magnetic ($m_l$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-ml" step="1" min="-1" max="1" value="0" class="w-12 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                </div>
+              </div>
+              <input type="range" id="slider-ml" min="-1" max="1" step="1" value="0" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span id="label-ml-min">-1</span>
+                <span id="label-ml-max">+1</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Visual Contrast Boost</span>
+              </div>
+              <input type="range" id="slider-contrast" min="0.2" max="1.0" step="0.1" value="0.6" class="w-full">
+              <div class="text-[9px] text-slate-400 mt-1 italic leading-tight">
+                Lowering this value enhances the visibility of faint outer probability lobes (radial nodes).
+              </div>
+            </div>
+            
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Hydrogen Wavefunction</span>
+              <div class="text-[11px] font-mono text-center py-2">
+                $$\psi(r,\theta,\phi) = R_{n,l}(r) Y_{l}^{m_l}(\theta,\phi)$$
+                $$P = |\psi|^2$$
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Orbital Characteristics</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Orbital Designation</div>
+                <div id="telemetryName" class="text-sm font-bold text-white font-mono">2p_z</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Radial Nodes</div>
+                <div id="telemetryRadial" class="text-sm font-bold text-amber-400 font-mono mt-0.5">0</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Angular Nodes</div>
+                <div id="telemetryAngular" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5">1</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          
+          <div class="relative w-full aspect-square max-w-[600px] mx-auto border border-slate-800 shadow-2xl">
+            <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+            
+            <div id="label-axis-v" class="absolute top-2 left-1/2 transform -translate-x-1/2 text-[10px] font-mono font-bold text-slate-400">Y</div>
+            <div id="label-axis-h" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-[10px] font-mono font-bold text-slate-400">X</div>
+          </div>
+          
+          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm text-[9px] font-bold text-slate-300 space-y-1">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#38bdf8] block"></span> Positive Wave Phase ($+$)</div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#f43f5e] block"></span> Negative Wave Phase ($-$)</div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do we see alternating red and blue rings in higher $s$ orbitals (like $3s$ or $4s$)?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                These represent <strong>Radial Nodes</strong>. A radial node occurs when the radial component of the wavefunction $R_{n,l}(r)$ passes through zero and changes mathematical sign (phase). The dark black gaps in the canvas are the exact nodes where probability is zero.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does the $p_z$ ($l=1, m_l=0$) orbital appear completely empty when viewing the XY plane?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                The $p_z$ orbital is aligned strictly along the Z-axis. The entire XY plane ($z=0$) acts as an <strong>Angular Node</strong> for this orbital. Therefore, taking a 2D slice directly through the XY plane yields zero probability density. Switch to the XZ plane to see its lobes!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What dictates the spatial orientation of an orbital?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                The Magnetic Quantum Number ($m_l$). It determines the projection of angular momentum along a specified axis, essentially splitting a subshell (like $p$ or $d$) into specifically oriented individual orbitals. It ranges from $-l$ to $+l$.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> 2D ORBITAL PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600">
+        <p>Welcome to the <strong>2D Quantum Number Virtual Laboratory</strong>! Explore the probability densities of atomic orbitals precisely mapped onto 2D slicing planes.</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Principal (n)</strong>: Defines the energy shell (Size).</li>
+          <li><strong>Azimuthal (l)</strong>: Defines the subshell shape (s, p, d, f). Note that $l$ is strictly capped at $n-1$.</li>
+          <li><strong>Magnetic (m_l)</strong>: Defines orientation. Restricted from $-l$ to $+l$.</li>
+          <li><strong>Slicing Plane</strong>: If an orbital appears completely dark, you are likely viewing it cross-sectioned through one of its angular nodes! Change the Slicing Plane to reveal the lobes.</li>
+        </ul>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- UI Logic & Parameter Syncing ---
+    let q_n = 2;
+    let q_l = 1;
+    let q_ml = 0;
+    let contrastGamma = 0.6; // Higher makes outer lobes fainter, lower brightens them
+
+    const el_n_slider = document.getElementById('slider-n');
+    const el_n_num = document.getElementById('num-n');
+    const el_l_slider = document.getElementById('slider-l');
+    const el_l_num = document.getElementById('num-l');
+    const el_ml_slider = document.getElementById('slider-ml');
+    const el_ml_num = document.getElementById('num-ml');
+    const select_plane = document.getElementById('select-plane');
+    const chk_grid = document.getElementById('chk-grid');
+    
+    function syncConstraints() {
+      // Constrain l max based on n
+      let l_max = q_n - 1;
+      el_l_slider.max = l_max;
+      el_l_num.max = l_max;
+      document.getElementById('label-l-max').innerText = l_max + (l_max===0?' (s)':l_max===1?' (p)':l_max===2?' (d)':' (f)');
+      
+      if (q_l > l_max) {
+        q_l = l_max;
+        el_l_slider.value = q_l;
+        el_l_num.value = q_l;
+      }
+      
+      // Constrain ml based on l
+      el_ml_slider.min = -q_l;
+      el_ml_slider.max = q_l;
+      el_ml_num.min = -q_l;
+      el_ml_num.max = q_l;
+      document.getElementById('label-ml-min').innerText = -q_l;
+      document.getElementById('label-ml-max').innerText = "+" + q_l;
+
+      if (q_ml > q_l) { q_ml = q_l; }
+      if (q_ml < -q_l) { q_ml = -q_l; }
+      el_ml_slider.value = q_ml;
+      el_ml_num.value = q_ml;
+
+      updateTelemetry();
+      autoSelectBestPlane();
+      renderHeatmap();
+    }
+
+    function autoSelectBestPlane() {
+      // Automatically choose the best slicing plane so the user isn't stuck looking at a dark node
+      if (q_l === 0) { select_plane.value = "XY"; }
+      else if (q_l === 1) {
+        if (q_ml === 0) select_plane.value = "XZ"; // p_z
+        else select_plane.value = "XY";            // p_x, p_y
+      } else if (q_l === 2) {
+        if (q_ml === 0) select_plane.value = "XZ"; // d_z2
+        else if (Math.abs(q_ml) === 1) select_plane.value = "XZ"; // d_xz, d_yz
+        else select_plane.value = "XY";            // d_xy, d_x2-y2
+      } else if (q_l === 3) {
+        if (q_ml === 0) select_plane.value = "XZ"; 
+        else select_plane.value = "XY";
+      }
+      updateAxisLabels();
+    }
+
+    function updateAxisLabels() {
+      const p = select_plane.value;
+      if (p === "XY") {
+        document.getElementById('label-axis-h').innerText = "X";
+        document.getElementById('label-axis-v').innerText = "Y";
+      } else if (p === "XZ") {
+        document.getElementById('label-axis-h').innerText = "X";
+        document.getElementById('label-axis-v').innerText = "Z";
+      } else if (p === "YZ") {
+        document.getElementById('label-axis-h').innerText = "Y";
+        document.getElementById('label-axis-v').innerText = "Z";
+      }
+    }
+
+    function updateN(val) {
+      q_n = parseInt(val) || 1;
+      el_n_slider.value = q_n;
+      el_n_num.value = q_n;
+      syncConstraints();
+    }
+    el_n_slider.addEventListener('input', e => updateN(e.target.value));
+    el_n_num.addEventListener('change', e => updateN(e.target.value));
+
+    function updateL(val) {
+      q_l = parseInt(val) || 0;
+      el_l_slider.value = q_l;
+      el_l_num.value = q_l;
+      syncConstraints();
+    }
+    el_l_slider.addEventListener('input', e => updateL(e.target.value));
+    el_l_num.addEventListener('change', e => updateL(e.target.value));
+
+    function updateML(val) {
+      q_ml = parseInt(val) || 0;
+      el_ml_slider.value = q_ml;
+      el_ml_num.value = q_ml;
+      updateTelemetry();
+      autoSelectBestPlane();
+      renderHeatmap();
+    }
+    el_ml_slider.addEventListener('input', e => updateML(e.target.value));
+    el_ml_num.addEventListener('change', e => updateML(e.target.value));
+
+    document.getElementById('slider-contrast').addEventListener('input', e => {
+      contrastGamma = parseFloat(e.target.value);
+      renderHeatmap();
+    });
+
+    select_plane.addEventListener('change', () => {
+      updateAxisLabels();
+      renderHeatmap();
+    });
+
+    chk_grid.addEventListener('change', renderHeatmap);
+
+    // --- Telemetry Formatter ---
+    function updateTelemetry() {
+      let letter = q_l === 0 ? 's' : q_l === 1 ? 'p' : q_l === 2 ? 'd' : 'f';
+      let sub = '';
+      
+      if (q_l === 1) {
+        if (q_ml === 0) sub = 'z';
+        if (q_ml === 1) sub = 'x';
+        if (q_ml === -1) sub = 'y';
+      } else if (q_l === 2) {
+        if (q_ml === 0) sub = 'z²';
+        if (q_ml === 1) sub = 'xz';
+        if (q_ml === -1) sub = 'yz';
+        if (q_ml === 2) sub = 'x²-y²';
+        if (q_ml === -2) sub = 'xy';
+      } else if (q_l === 3) {
+        sub = `(${q_ml})`;
+      }
+
+      document.getElementById('telemetryName').innerText = `${q_n}${letter}${sub ? '_' + sub : ''}`;
+      document.getElementById('telemetryRadial').innerText = (q_n - q_l - 1);
+      document.getElementById('telemetryAngular').innerText = q_l;
+    }
+
+
+    // --- Mathematical Engine (Heatmap Generation) ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Internal logical resolution (fast compute, scaled up via CSS)
+    const RES = 300; 
+    canvas.width = RES;
+    canvas.height = RES;
+
+    function getHydrogenicWavefunction(x, y, z, n, l, m) {
+      let r = Math.sqrt(x*x + y*y + z*z);
+      if (r < 0.0001) r = 0.0001;
+      
+      let theta = Math.acos(z / r);
+      let phi = Math.atan2(y, x);
+      
+      // Scale radius based on n to keep it visible in canvas
+      let rho = 2 * r / (n * 1.5); 
+      
+      // Radial component approximation (Laguerre polynomials)
+      let L_poly = 1.0;
+      let radialNodes = n - l - 1;
+      
+      if (radialNodes === 1) L_poly = (1 - rho/2);
+      else if (radialNodes === 2) L_poly = (1 - rho + (rho*rho)/6); 
+      else if (radialNodes === 3) L_poly = (1 - rho + (rho*rho)/4 - (rho*rho*rho)/20);
+
+      let R = Math.pow(rho, l) * L_poly * Math.exp(-rho/2);
+
+      // Angular component (Spherical Harmonics - Real Basis)
+      let Y = 1.0;
+      if (l === 1) {
+        if (m === 0) Y = Math.cos(theta); 
+        else if (m === 1) Y = Math.sin(theta) * Math.cos(phi); 
+        else if (m === -1) Y = Math.sin(theta) * Math.sin(phi); 
+      } else if (l === 2) {
+        if (m === 0) Y = 3 * Math.pow(Math.cos(theta), 2) - 1; 
+        else if (m === 1) Y = Math.sin(theta) * Math.cos(theta) * Math.cos(phi); 
+        else if (m === -1) Y = Math.sin(theta) * Math.cos(theta) * Math.sin(phi); 
+        else if (m === 2) Y = Math.pow(Math.sin(theta), 2) * Math.cos(2*phi); 
+        else if (m === -2) Y = Math.pow(Math.sin(theta), 2) * Math.sin(2*phi); 
+      } else if (l === 3) {
+        if (m === 0) Y = Math.cos(theta) * (5*Math.pow(Math.cos(theta),2) - 3);
+        else if (m === 1) Y = Math.sin(theta) * (5*Math.pow(Math.cos(theta),2) - 1) * Math.cos(phi);
+        else if (m === -1) Y = Math.sin(theta) * (5*Math.pow(Math.cos(theta),2) - 1) * Math.sin(phi);
+        else if (m === 2) Y = Math.pow(Math.sin(theta),2) * Math.cos(theta) * Math.cos(2*phi);
+        else if (m === -2) Y = Math.pow(Math.sin(theta),2) * Math.cos(theta) * Math.sin(2*phi);
+        else if (m === 3) Y = Math.pow(Math.sin(theta),3) * Math.cos(3*phi);
+        else if (m === -3) Y = Math.pow(Math.sin(theta),3) * Math.sin(3*phi);
+      }
+
+      let psi = R * Y;
+      return psi;
+    }
+
+    function renderHeatmap() {
+      const imgData = ctx.createImageData(RES, RES);
+      const data = imgData.data;
+      
+      const plane = select_plane.value;
+      const bound = q_n * 6; // Spatial bounds scale with principal quantum number
+      
+      // Step 1: Compute raw Psi values and find maximum for auto-normalization
+      const rawValues = new Float32Array(RES * RES);
+      let maxAbsPsi = 0.00001;
+
+      for (let py = 0; py < RES; py++) {
+        for (let px = 0; px < RES; px++) {
+          // Map canvas pixel [0, RES] to physical coords [-bound, +bound]
+          let u = ((px / RES) - 0.5) * 2 * bound;
+          // Canvas Y is down, standard math Y is up, so invert
+          let v = -((py / RES) - 0.5) * 2 * bound;
+          
+          let x=0, y=0, z=0;
+          if (plane === "XY") { x = u; y = v; z = 0; }
+          else if (plane === "XZ") { x = u; y = 0; z = v; }
+          else if (plane === "YZ") { x = 0; y = u; z = v; }
+
+          let psi = getHydrogenicWavefunction(x, y, z, q_n, q_l, q_ml);
+          rawValues[py * RES + px] = psi;
+          
+          if (Math.abs(psi) > maxAbsPsi) maxAbsPsi = Math.abs(psi);
+        }
+      }
+
+      // Step 2: Map normalized values to colors
+      for (let i = 0; i < rawValues.length; i++) {
+        let psi = rawValues[i];
+        let normalized = Math.abs(psi) / maxAbsPsi;
+        
+        // Gamma correction to boost faint outer lobes
+        let intensity = Math.pow(normalized, contrastGamma);
+        
+        // Base dark slate background
+        let r = 11, g = 15, b = 25; 
+
+        if (intensity > 0.02) {
+          if (psi > 0) {
+            // Blend with Positive Blue (#38bdf8 -> 56, 189, 248)
+            r = Math.floor(11 * (1 - intensity) + 56 * intensity);
+            g = Math.floor(15 * (1 - intensity) + 189 * intensity);
+            b = Math.floor(25 * (1 - intensity) + 248 * intensity);
+          } else {
+            // Blend with Negative Red (#f43f5e -> 244, 63, 94)
+            r = Math.floor(11 * (1 - intensity) + 244 * intensity);
+            g = Math.floor(15 * (1 - intensity) + 63 * intensity);
+            b = Math.floor(25 * (1 - intensity) + 94 * intensity);
+          }
+        }
+
+        let idx = i * 4;
+        data[idx]     = r;
+        data[idx + 1] = g;
+        data[idx + 2] = b;
+        data[idx + 3] = 255; // Alpha
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      // Draw Grid Overlays
+      if (chk_grid.checked) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        
+        // Vertical center line
+        ctx.beginPath();
+        ctx.moveTo(RES/2, 0);
+        ctx.lineTo(RES/2, RES);
+        ctx.stroke();
+        
+        // Horizontal center line
+        ctx.beginPath();
+        ctx.moveTo(0, RES/2);
+        ctx.lineTo(RES, RES/2);
+        ctx.stroke();
+        
+        ctx.setLineDash([]);
+        
+        // Origin dot
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.arc(RES/2, RES/2, 3, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // Viva Voce Logic
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // Modal Guide
+    document.getElementById('btn-open-guide').addEventListener('click', () => {
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+    });
+    const closeGuide = () => document.getElementById('user-guide-modal').classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initial setup
+    window.addEventListener('load', () => {
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+      updateAxisLabels();
+      syncConstraints(); // kicks off rendering
+    });
+
+  </script>
+</body>
+</html>

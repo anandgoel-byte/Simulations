@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Molarity & Solution Concentration Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'">
+          <svg class="h-8 w-8 text-indigo-500 hidden" id="fallback-logo" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Molarity &amp; Solution Concentration</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Aqueous Chemistry &amp; Saturation Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Sensor Array Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>▶</span> Evaporate
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>⏸</span> Pause
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-values" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Exact Solution Values</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Solute Compound</span>
+              <select id="select-solute" class="w-full bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
+                <option value="drinkMix">Drink Mix (Red)</option>
+                <option value="cobaltNitrate">Cobalt (II) Nitrate</option>
+                <option value="copperSulfate">Copper (II) Sulfate</option>
+                <option value="potassiumPermanganate">Potassium Permanganate</option>
+                <option value="nickelChloride">Nickel (II) Chloride</option>
+              </select>
+            </div>
+            
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> Solute Amount ($n$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-moles" step="0.05" min="0" max="2.0" value="0.5" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">mol</span>
+                </div>
+              </div>
+              <input type="range" id="slider-moles" min="0" max="2.0" step="0.05" value="0.5" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span>0.0 mol</span>
+                <span>2.0 mol</span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> Solution Volume ($V$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-volume" step="0.05" min="0.1" max="1.0" value="0.5" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">L</span>
+                </div>
+              </div>
+              <input type="range" id="slider-volume" min="0.1" max="1.0" step="0.05" value="0.5" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span>0.10 L</span>
+                <span>1.00 L</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Concentration Formula</span>
+              <div class="text-[11px] font-mono text-center py-2 space-y-1.5">
+                $$M = \frac{n}{V}$$
+                <div class="text-[9px] text-slate-400 font-sans mt-2">Where M is Molarity (mol/L), n is moles of solute, and V is Liters of solution.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Spectrometer Dashboard</span>
+            <div class="grid grid-cols-1 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex justify-between px-4 items-center">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Solution State</div>
+                <div id="telemetryState" class="text-sm font-bold text-emerald-400 font-mono mt-0.5">UNSATURATED</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex justify-between px-4 items-center">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Current Molarity</div>
+                <div id="telemetryMolarity" class="text-sm font-bold text-white font-mono mt-0.5">1.000 M</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex justify-between px-4 items-center">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Saturation Limit</div>
+                <div id="telemetrySatLimit" class="text-sm font-bold text-rose-400 font-mono mt-0.5">-- M</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-9 relative bg-white overflow-hidden flex flex-col justify-center min-h-[500px] border-8 border-slate-50">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+            <span id="simStatusText" class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">Standing By</span>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If you double the volume of the solution by adding water, what happens to the Molarity?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Molarity is inversely proportional to volume ($M = n/V$). If volume is doubled ($2V$) while moles ($n$) remain constant, the new concentration becomes exactly half of the original. This is the principle of dilution.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What physically happens in the beaker when the solution reaches "Saturation"?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Saturation is the maximum concentration limit for a specific solute in a solvent at a given temperature. Once reached, adding more solute will not increase the molarity; the excess solute will simply precipitate and pile up as a solid at the bottom of the beaker.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                During evaporation, why does the color of the solution become darker?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                Evaporation removes the solvent (water, decreasing $V$) but leaves the solute particles ($n$) behind. As $V$ decreases, the ratio $n/V$ increases, resulting in a higher molarity. Higher concentration absorbs more light, making the solution visually darker or more opaque.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Write the Dilution Equation and explain its components.
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                $$M_1 V_1 = M_2 V_2$$
+                Because moles of solute remain constant during dilution ($n = M \cdot V$), the initial molarity times initial volume must equal the final molarity times final volume.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Color intensity mapped linearly to molarity concentration ratios.</span>
+      <span>Constants: Assuming Standard Temp & Pressure (STP)</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> MOLARITY PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Molarity &amp; Concentration Virtual Laboratory</strong>! Explore the relationship between solute, solvent, and saturation limits.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Select Solute</strong>: Choose different chemical compounds to see their unique colors and specific saturation points.</li>
+            <li><strong>Adjust Parameters</strong>: Use the sliders to change the moles of solute added and the total volume of water.</li>
+            <li><strong>Evaporation Engine</strong>: Click <strong>▶ Evaporate</strong> to actively boil away the water. Watch how the volume drops, driving up the concentration until it hits the saturation ceiling!</li>
+            <li><strong>Saturation Indicator</strong>: If you add too much solute or evaporate too much water, the excess solute will precipitate at the bottom of the beaker.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Database of solutes and their properties
+    const SOLUTES = {
+      drinkMix: { name: "Drink Mix", r: 239, g: 68, b: 68, saturation: 4.0 },             // Red
+      cobaltNitrate: { name: "Cobalt (II) Nitrate", r: 225, g: 29, b: 72, saturation: 5.0 }, // Crimson/Pink
+      copperSulfate: { name: "Copper (II) Sulfate", r: 59, g: 130, b: 246, saturation: 1.4 },// Blue
+      potassiumPermanganate: { name: "Potassium Permanganate", r: 168, g: 85, b: 247, saturation: 0.5 }, // Purple
+      nickelChloride: { name: "Nickel (II) Chloride", r: 34, g: 197, b: 94, saturation: 5.0 } // Green
+    };
+
+    // Application State
+    let isEvaporating = false;
+    let currentSoluteKey = 'drinkMix';
+    let moles = 0.5;   // mol
+    let volume = 0.5;  // L
+    let currentMolarity = 1.0; // mol/L
+
+    // UI Elements
+    const selectSolute = document.getElementById('select-solute');
+    const sliderMoles = document.getElementById('slider-moles');
+    const numMoles = document.getElementById('num-moles');
+    const sliderVolume = document.getElementById('slider-volume');
+    const numVolume = document.getElementById('num-volume');
+    
+    const chkValues = document.getElementById('chk-values');
+    
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+    
+    const simCanvas = document.getElementById('simCanvas');
+    const ctx = simCanvas.getContext('2d');
+    
+    const telState = document.getElementById('telemetryState');
+    const telMolarity = document.getElementById('telemetryMolarity');
+    const telSatLimit = document.getElementById('telemetrySatLimit');
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    // Guide Handlers
+    document.getElementById('btn-open-guide').addEventListener('click', () => {
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+    });
+    const closeGuide = () => document.getElementById('user-guide-modal').classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Sync Input Functions
+    function updateMoles(val) {
+      val = Math.max(0, Math.min(2.0, parseFloat(val) || 0.5));
+      moles = val;
+      sliderMoles.value = val;
+      numMoles.value = val.toFixed(2);
+      calculateState();
+    }
+    sliderMoles.addEventListener('input', e => { updateMoles(e.target.value); stopEvaporation(); });
+    numMoles.addEventListener('change', e => { updateMoles(e.target.value); stopEvaporation(); });
+
+    function updateVolume(val) {
+      val = Math.max(0.1, Math.min(1.0, parseFloat(val) || 0.5));
+      volume = val;
+      sliderVolume.value = val;
+      numVolume.value = val.toFixed(2);
+      calculateState();
+    }
+    sliderVolume.addEventListener('input', e => { updateVolume(e.target.value); stopEvaporation(); });
+    numVolume.addEventListener('change', e => { updateVolume(e.target.value); stopEvaporation(); });
+
+    selectSolute.addEventListener('change', e => {
+      currentSoluteKey = e.target.value;
+      calculateState();
+    });
+
+    chkValues.addEventListener('change', calculateState);
+
+    // Toolbar logic
+    function startEvaporation() {
+      if(volume <= 0.1) return; // Already at minimum
+      isEvaporating = true;
+      btnRun.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      btnPause.classList.remove('bg-indigo-600', 'text-white');
+      statusText.innerText = "Evaporation Active";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse";
+    }
+
+    function stopEvaporation() {
+      isEvaporating = false;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      statusText.innerText = "Standing By";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+    }
+
+    btnRun.addEventListener('click', startEvaporation);
+    btnPause.addEventListener('click', stopEvaporation);
+
+    btnReset.addEventListener('click', () => {
+      stopEvaporation();
+      selectSolute.value = 'drinkMix';
+      currentSoluteKey = 'drinkMix';
+      updateMoles(0.5);
+      updateVolume(0.5);
+    });
+
+    // Core Logic
+    function calculateState() {
+      let solute = SOLUTES[currentSoluteKey];
+      telSatLimit.innerText = solute.saturation.toFixed(1) + " M";
+      
+      currentMolarity = moles / volume;
+      
+      let displayMolarity = currentMolarity;
+      let isSaturated = false;
+
+      if (currentMolarity >= solute.saturation) {
+        displayMolarity = solute.saturation;
+        isSaturated = true;
+        telState.innerText = "SATURATED";
+        telState.className = "text-sm font-bold text-rose-500 font-mono mt-0.5 animate-pulse";
+      } else {
+        telState.innerText = "UNSATURATED";
+        telState.className = "text-sm font-bold text-emerald-400 font-mono mt-0.5";
+      }
+
+      telMolarity.innerText = displayMolarity.toFixed(3) + " M";
+    }
+
+    // Canvas Render Engine
+    function resizeCanvas() {
+      const container = simCanvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      simCanvas.width = container.clientWidth * dpr;
+      simCanvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let lastTime = performance.now();
+
+    function renderLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      // Handle Evaporation
+      if (isEvaporating) {
+        let newVol = volume - (0.05 * dt); // Evaporate 0.05L per second
+        if (newVol <= 0.1) {
+          newVol = 0.1;
+          stopEvaporation();
+        }
+        updateVolume(newVol);
+      }
+
+      const W = simCanvas.width / window.devicePixelRatio;
+      const H = simCanvas.height / window.devicePixelRatio;
+
+      ctx.clearRect(0, 0, W, H);
+
+      const solute = SOLUTES[currentSoluteKey];
+      const maxVolPx = 300;
+      const beakerWidth = 240;
+      const beakerHeight = 350;
+      const cX = W / 2 - 80; // Offset slightly to left to leave room for meter
+      const cY = H / 2 + 30; // Center Y baseline
+
+      // Liquid parameters
+      const liquidHeight = (volume / 1.0) * maxVolPx;
+      const effectiveMolarity = Math.min(currentMolarity, solute.saturation);
+      
+      // Calculate opacity based on concentration relative to saturation (min 0.05 so water is visible)
+      const opacity = Math.max(0.05, 0.9 * (effectiveMolarity / solute.saturation));
+      
+      const liqColor = `rgba(${solute.r}, ${solute.g}, ${solute.b}, ${opacity})`;
+      const liqTopColor = `rgba(${solute.r}, ${solute.g}, ${solute.b}, ${Math.min(1, opacity + 0.1)})`;
+
+      // 1. Draw Back rim of Beaker
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.ellipse(cX, cY - beakerHeight, beakerWidth/2, 20, 0, Math.PI, Math.PI*2);
+      ctx.stroke();
+
+      // 2. Draw Liquid Body
+      ctx.fillStyle = liqColor;
+      ctx.beginPath();
+      ctx.moveTo(cX - beakerWidth/2, cY);
+      ctx.lineTo(cX - beakerWidth/2, cY - liquidHeight);
+      // Top ellipse of liquid
+      ctx.ellipse(cX, cY - liquidHeight, beakerWidth/2, 20, 0, Math.PI, Math.PI*2, true);
+      ctx.lineTo(cX + beakerWidth/2, cY);
+      // Bottom ellipse of liquid
+      ctx.ellipse(cX, cY, beakerWidth/2, 20, 0, 0, Math.PI);
+      ctx.fill();
+
+      // Draw Liquid Top Surface
+      ctx.fillStyle = liqTopColor;
+      ctx.beginPath();
+      ctx.ellipse(cX, cY - liquidHeight, beakerWidth/2, 20, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      // 3. Draw Precipitate (if saturated)
+      if (currentMolarity > solute.saturation) {
+        const excessMoles = moles - (solute.saturation * volume);
+        // Visual pile size based on excess
+        const pileHeight = Math.min(40, 10 + (excessMoles * 20));
+        
+        ctx.fillStyle = `rgb(${solute.r}, ${solute.g}, ${solute.b})`;
+        ctx.beginPath();
+        ctx.ellipse(cX, cY + 5, beakerWidth/2.5, 12, 0, 0, Math.PI*2);
+        ctx.fill();
+        
+        // Jagged pile on top
+        ctx.beginPath();
+        ctx.moveTo(cX - beakerWidth/3, cY);
+        ctx.lineTo(cX - 20, cY - pileHeight);
+        ctx.lineTo(cX + 10, cY - pileHeight * 0.8);
+        ctx.lineTo(cX + beakerWidth/3, cY);
+        ctx.fill();
+      }
+
+      // 4. Draw Beaker Front Glass
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.6)';
+      ctx.lineWidth = 4;
+      
+      // Left edge
+      ctx.beginPath();
+      ctx.moveTo(cX - beakerWidth/2, cY - beakerHeight);
+      ctx.lineTo(cX - beakerWidth/2, cY);
+      ctx.stroke();
+      
+      // Right edge
+      ctx.beginPath();
+      ctx.moveTo(cX + beakerWidth/2, cY - beakerHeight);
+      ctx.lineTo(cX + beakerWidth/2, cY);
+      ctx.stroke();
+
+      // Bottom curve
+      ctx.beginPath();
+      ctx.ellipse(cX, cY, beakerWidth/2, 20, 0, 0, Math.PI);
+      ctx.stroke();
+
+      // Front rim
+      ctx.beginPath();
+      ctx.ellipse(cX, cY - beakerHeight, beakerWidth/2, 20, 0, 0, Math.PI);
+      ctx.stroke();
+
+      // Pouring Lip
+      ctx.beginPath();
+      ctx.moveTo(cX - beakerWidth/2, cY - beakerHeight);
+      ctx.quadraticCurveTo(cX - beakerWidth/2 - 30, cY - beakerHeight - 10, cX - beakerWidth/2 - 40, cY - beakerHeight - 30);
+      ctx.quadraticCurveTo(cX - beakerWidth/2 - 10, cY - beakerHeight + 5, cX - beakerWidth/2 + 20, cY - beakerHeight + 17);
+      ctx.stroke();
+
+      // Glass Glare
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(cX + beakerWidth/2 - 30, cY - beakerHeight + 10);
+      ctx.lineTo(cX + beakerWidth/2 - 15, cY - beakerHeight + 10);
+      ctx.lineTo(cX + beakerWidth/2 - 15, cY - 10);
+      ctx.lineTo(cX + beakerWidth/2 - 30, cY - 10);
+      ctx.fill();
+
+      // Beaker Tick Marks (Volume)
+      ctx.fillStyle = 'rgba(71, 85, 105, 0.6)';
+      ctx.textAlign = 'right';
+      ctx.font = 'bold 12px sans-serif';
+      for(let i=0.2; i<=1.0; i+=0.2) {
+        const tickY = cY - (i * maxVolPx);
+        ctx.fillRect(cX - beakerWidth/2, tickY, 15, 3);
+        if(chkValues.checked) {
+          ctx.fillText(`${i.toFixed(1)}L`, cX - beakerWidth/2 - 8, tickY + 4);
+        }
+      }
+
+      // Solute Name Label on Beaker
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.fillRect(cX - 70, cY - beakerHeight/2 - 20, 140, 40);
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(cX - 70, cY - beakerHeight/2 - 20, 140, 40);
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(solute.name, cX, cY - beakerHeight/2 + 5);
+
+
+      // 5. Draw Concentration Meter (Right side)
+      const meterX = cX + beakerWidth/2 + 100;
+      const meterY = cY - beakerHeight;
+      const meterW = 40;
+      const meterH = beakerHeight + 20;
+
+      // Gradient background
+      const grad = ctx.createLinearGradient(0, meterY + meterH, 0, meterY);
+      grad.addColorStop(0, 'rgba(255,255,255,0.1)'); // zero
+      grad.addColorStop(1, `rgb(${solute.r}, ${solute.g}, ${solute.b})`); // saturation
+      
+      ctx.fillStyle = grad;
+      ctx.fillRect(meterX, meterY, meterW, meterH);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(meterX, meterY, meterW, meterH);
+
+      // Meter Labels
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText("Solution", meterX + meterW/2, meterY - 45);
+      ctx.fillText("Concentration", meterX + meterW/2, meterY - 25);
+      ctx.font = '12px sans-serif';
+      ctx.fillText("(Molarity)", meterX + meterW/2, meterY - 8);
+
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText("High", meterX + meterW/2, meterY + 15);
+      ctx.fillText("Zero", meterX + meterW/2, meterY + meterH + 20);
+
+      // Indicator Arrow
+      const arrowPct = effectiveMolarity / solute.saturation;
+      const arrowY = meterY + meterH - (arrowPct * meterH);
+
+      ctx.fillStyle = '#f87171'; // Red arrow
+      ctx.strokeStyle = '#7f1d1d';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(meterX + meterW + 20, arrowY - 10);
+      ctx.lineTo(meterX + meterW + 5, arrowY);
+      ctx.lineTo(meterX + meterW + 20, arrowY + 10);
+      ctx.lineTo(meterX + meterW + 20, arrowY + 4);
+      ctx.lineTo(meterX + meterW + 40, arrowY + 4);
+      ctx.lineTo(meterX + meterW + 40, arrowY - 4);
+      ctx.lineTo(meterX + meterW + 20, arrowY - 4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      if(chkValues.checked) {
+        ctx.fillStyle = '#dc2626';
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText(`${effectiveMolarity.toFixed(3)} M`, meterX + meterW + 45, arrowY + 5);
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      calculateState();
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

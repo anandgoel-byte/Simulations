@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React and ReactDOM CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  
+  <!-- Babel for Inline JSX Parsing -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(0.98); }
+    }
+    .pulse-glow { animation: pulse-slow 3s infinite ease-in-out; }
+    body { background: linear-gradient(180deg, #f8fafc 0%, #ffffff 160px); }
+    
+    /* Custom range slider styling */
+    input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; }
+    input[type="range"]::-webkit-slider-runnable-track { background: #e2e8f0; border-radius: 9999px; height: 6px; }
+    input[type="range"]::-webkit-slider-thumb { 
+      -webkit-appearance: none; 
+      appearance: none; 
+      margin-top: -5px; 
+      background-color: #6366f1; 
+      border-radius: 9999px; 
+      height: 16px; 
+      width: 16px; 
+      box-shadow: 0 0 6px rgba(99,102,241,0.5); 
+      transition: transform 0.15s; 
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen select-none font-sans">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const VIVA_QUESTIONS = {{VIVA_QUESTIONS_JSON}};
+
+    function App() {
+      // Sliders state
+      {{REACT_STATE_DECLARATIONS}}
+
+      // Telemetry calculated values
+      {{TELEMETRY_DECLARATIONS}}
+
+      const [isPlaying, setIsPlaying] = useState(true);
+      const [isGuideOpen, setIsGuideOpen] = useState(false);
+      const [vivaScore, setVivaScore] = useState(0);
+      const [answers, setAnswers] = useState({ q1: null, q2: null, q3: null, q4: null, q5: null });
+      const [feedback, setFeedback] = useState({ q1: '', q2: '', q3: '', q4: '', q5: '' });
+
+      const canvasRef = useRef(null);
+      const animationFrameId = useRef(null);
+
+      // Canvas Render Logic
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let lastTime = performance.now();
+
+        function renderLoop(time) {
+          if (!isPlaying) {
+            animationFrameId.current = requestAnimationFrame(renderLoop);
+            return;
+          }
+          const dt = Math.min((time - lastTime) / 16.66, 2.0);
+          lastTime = time;
+
+          // Clear Canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Draw grid helper
+          ctx.fillStyle = 'rgba(241, 245, 249, 0.5)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = 'rgba(203, 213, 225, 0.25)';
+          for (let i = 0; i < canvas.width; i += 20) {
+            for (let j = 0; j < canvas.height; j += 20) {
+              ctx.beginPath();
+              ctx.arc(i, j, 1, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          // Custom Canvas Drawing Code
+          {{CANVAS_LOGIC}}
+
+          animationFrameId.current = requestAnimationFrame(renderLoop);
+        }
+
+        animationFrameId.current = requestAnimationFrame(renderLoop);
+        return () => cancelAnimationFrame(animationFrameId.current);
+      }, [isPlaying, {{CANVAS_EFFECT_DEPENDENCIES}}]);
+
+      const handleReset = () => {
+        {{RESET_HANDLERS}}
+        setAnswers({ q1: null, q2: null, q3: null, q4: null, q5: null });
+        setFeedback({ q1: '', q2: '', q3: '', q4: '', q5: '' });
+        setVivaScore(0);
+      };
+
+      const handleAnswerSelect = (questionKey, selectedIdx, isCorrect, explanation) => {
+        setAnswers(prev => ({ ...prev, [questionKey]: selectedIdx }));
+        setFeedback(prev => ({ ...prev, [questionKey]: explanation }));
+        if (isCorrect) {
+          setVivaScore(prev => prev + 1);
+        }
+      };
+
+      return (
+        <div className="flex flex-col min-h-screen">
+          {/* Header */}
+          <header className="border-b border-slate-200 bg-white shadow-sm sticky top-0 z-30 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="bg-black rounded-2xl px-4 py-3 shadow-lg border border-slate-800 flex items-center justify-center">
+                <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" className="h-10 object-contain" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold tracking-tight text-slate-900">{{BRANDING_TITLE}}</h1>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">{{LAB_SECTION}}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={() => setIsGuideOpen(true)} className="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-md">
+                📖 User Guide & Operational Manual
+              </button>
+              <button onClick={handleReset} className="flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition border border-slate-200 shadow-sm">
+                🔄 Reset Workspace
+              </button>
+            </div>
+          </header>
+
+          {/* User Guide Modal */}
+          {isGuideOpen && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+              <div className="bg-white rounded-3xl border border-slate-200 max-w-2xl w-full p-6 shadow-2xl relative">
+                <button onClick={() => setIsGuideOpen(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold text-lg">✕</button>
+                <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">📖 LABORATORY OPERATIONAL MANUAL</h2>
+                <div className="text-xs text-slate-600 space-y-4 leading-relaxed max-h-[360px] overflow-y-auto pr-2">
+                  <p className="font-semibold text-slate-800">Welcome to the {{BRANDING_TITLE}}. Follow these guidelines to interact with the experimental system:</p>
+                  
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-indigo-700 uppercase tracking-wide mb-1">1. Variable Customization</h3>
+                    <p>Adjust the variable sliders and controls located under the apparatus panel. The virtual canvas will immediately adapt and redraw to reflect your parameters in real time.</p>
+                  </div>
+                  
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-indigo-700 uppercase tracking-wide mb-1">2. Real-Time Telemetry Tracking</h3>
+                    <p>Observe the digital analytics dashboard. Computed physics or chemistry equations update constantly as you vary the input parameters, establishing the direct relation between variables.</p>
+                  </div>
+
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <h3 className="font-bold text-indigo-700 uppercase tracking-wide mb-1">3. Classroom Assessment</h3>
+                    <p>Scroll down to the Classroom Viva Assessment. Test your conceptual comprehension by answering standard laboratory viva questions, receiving immediate scientific explanations for all your choices.</p>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-200 flex justify-end">
+                  <button onClick={() => setIsGuideOpen(false)} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition">Initialize Apparatus</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Lab Layout */}
+          <main className="flex-grow p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-50/50">
+            {/* Left Column: Visualizer Canvas + Sliders Panel */}
+            <div className="lg:col-span-7 flex flex-col gap-6">
+              
+              {/* Simulation Stage */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-5 relative overflow-hidden flex flex-col shadow-sm" style={{ minHeight: '440px' }}>
+                <div className="flex justify-between items-center z-10 border-b border-slate-100 pb-3">
+                  <span className="text-xs font-bold tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100 shadow-xs">
+                    🔬 DYNAMIC VISUALIZATION CHAMBER
+                  </span>
+                  <button onClick={() => setIsPlaying(p => !p)} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition border border-slate-200">
+                    {isPlaying ? '⏸️ Pause Sim' : '▶️ Resume Sim'}
+                  </button>
+                </div>
+                <div className="flex-grow flex items-center justify-center py-4">
+                  <canvas ref={canvasRef} width="640" height="320" className="rounded-2xl w-full border border-slate-200 bg-slate-100 shadow-inner" style={{ maxHeight: '320px', objectFit: 'contain' }} />
+                </div>
+              </div>
+
+              {/* Controls Dashboard */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">⚙️ EXPERIMENTAL CONTROLS</h3>
+                <div className="space-y-4">
+                  {{SLIDERS_RENDER_JSX}}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Telemetry + Viva Quiz */}
+            <div className="lg:col-span-5 flex flex-col gap-6">
+              
+              {/* Telemetry Indicator Board */}
+              <div className="bg-indigo-50/60 border border-indigo-100 rounded-3xl p-5 flex flex-col gap-4 shadow-xs">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-1.5">⚡ REAL-TIME SYSTEM TELEMETRY</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {{TELEMETRY_RENDER_JSX}}
+                </div>
+              </div>
+
+              {/* Viva Assessment */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-5 flex flex-col gap-4 shadow-sm overflow-hidden flex-grow">
+                <div className="flex justify-between items-center border-b border-slate-200 pb-3 flex-shrink-0">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">📖 CLASSROOM VIVA ASSESSMENT</h3>
+                  <div className="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 border border-indigo-150 px-3 py-1.5 rounded-xl shadow-xs">SCORE: {vivaScore} / {VIVA_QUESTIONS.length}</div>
+                </div>
+
+                <div className="flex flex-col gap-4 overflow-y-auto flex-1 pr-1 pb-2 max-h-[460px]">
+                  {VIVA_QUESTIONS.map((q, qIdx) => {
+                    const qKey = `q${qIdx + 1}`;
+                    const selectedIdx = answers[qKey];
+                    return (
+                      <div key={qIdx} className="bg-slate-50/60 p-4 rounded-2xl border border-slate-100 flex-shrink-0">
+                        <span className="text-[10px] font-black text-indigo-600 block mb-1">QUESTION 0{qIdx + 1}</span>
+                        <p className="text-xs text-slate-700 mb-3 font-semibold">{q.question}</p>
+                        <div className="flex flex-col gap-2">
+                          {q.options.map((opt, idx) => (
+                            <button
+                              key={idx}
+                              disabled={selectedIdx !== null}
+                              onClick={() => handleAnswerSelect(qKey, idx, opt.isCorrect, q.explanation)}
+                              className={`text-left p-3 rounded-xl text-xs transition border ${
+                                selectedIdx === idx
+                                  ? opt.isCorrect
+                                    ? 'bg-emerald-50 border-emerald-300 text-emerald-800 font-medium'
+                                    : 'bg-rose-50 border-rose-300 text-rose-800 font-medium'
+                                  : selectedIdx !== null && opt.isCorrect
+                                  ? 'bg-emerald-50/80 border-emerald-200 text-emerald-700 opacity-80'
+                                  : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-800'
+                              } ${selectedIdx !== null ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                            >
+                              <span className="font-bold">{idx === 0 ? 'A' : 'B'}) </span>{opt.text}
+                            </button>
+                          ))}
+                        </div>
+                        {feedback[qKey] && (
+                          <div className={`mt-3 p-3 rounded-xl text-[10px] leading-relaxed border ${answers[qKey] !== null && q.options[selectedIdx]?.isCorrect ? 'bg-emerald-50/30 border-emerald-100 text-emerald-800' : 'bg-slate-100 border-slate-200 text-slate-600'}`}>
+                            <span className="font-bold block uppercase text-[9px] mb-0.5">{answers[qKey] !== null && q.options[selectedIdx]?.isCorrect ? '✨ Correct' : '💡 Explanation'}</span>
+                            <p className="italic font-medium">{feedback[qKey]}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </main>
+
+          {/* Footer */}
+          <footer className="border-t border-slate-200 bg-white py-4 px-6 text-center text-xs text-slate-400 font-medium">
+            <p>© 2026 Sparkl Science Virtual Lab Modules. All rights reserved.</p>
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Body Radiation & Planck's Law Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #ec4899;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(236, 72, 153, 0.6);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #db2777;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Black Body Radiation &amp; Planck's Law</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Quantum Thermodynamics &amp; Radiative Systems Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Planckian Locus Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Run, Pause, Reset, Show Grid, Zoom) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Primary Tab Controls -->
+      <div class="flex items-center space-x-2">
+        <button id="tab-simulation" onclick="switchTab('simulation')" class="px-5 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-sm transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-area"></i> Radiation Spectrum
+        </button>
+        <button id="tab-experiments" onclick="switchTab('experiments')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-list-check"></i> Guided Tasks
+        </button>
+        <button id="tab-theory" onclick="switchTab('theory')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-book-open"></i> Theoretical Core
+        </button>
+      </div>
+
+      <!-- Graph Scaling Selector -->
+      <div class="flex items-center space-x-2" id="toolbar-graph-scaling">
+        <span class="text-xs font-bold text-slate-500 uppercase">Y-Axis Scale:</span>
+        <button id="scale-auto" onclick="setScalingMode('auto')" class="px-3 py-1 bg-pink-50 text-pink-700 font-extrabold border border-pink-200 rounded text-xs transition-all">Auto Scaling</button>
+        <button id="scale-fixed" onclick="setScalingMode('fixed')" class="px-3 py-1 bg-white text-slate-600 font-semibold border border-slate-200 hover:bg-slate-50 rounded text-xs transition-all">Fixed (15,000K Max)</button>
+      </div>
+
+    </div>
+
+    <!-- Master Layout Split: Left (Simulation & Lab Panel), Right (Viva & Telemetry Sidebar) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[620px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation Panels (9 Columns) -->
+      <section class="lg:col-span-9 flex flex-col divide-y divide-slate-200" id="workbench-container">
+        
+        <!-- SECTION 1: MAIN SIMULATOR VIEW (Grid splits controls and graphs) -->
+        <div id="panel-simulation" class="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 flex-1">
+          
+          <!-- Interactive Controls (4 Columns of 9) -->
+          <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+            <div class="space-y-6">
+              
+              <!-- Slider 1: Black Body Temperature -->
+              <div>
+                <div class="flex justify-between items-center text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  <span>Temperature ($T$) in Kelvin</span>
+                  <input type="number" id="num-temp" step="50" min="300" max="15000" value="5800" class="w-20 px-1.5 py-0.5 text-center font-mono font-bold text-pink-600 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-pink-500 focus:outline-none text-[11px]">
+                </div>
+                <input type="range" id="slider-temp" min="300" max="15000" step="50" value="5800" class="w-full">
+                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                  <span>300 K</span>
+                  <span>15,000 K</span>
+                </div>
+              </div>
+
+              <!-- Slider 2: Monochromatic Probe -->
+              <div>
+                <div class="flex justify-between items-center text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  <span>Wavelength Probe ($\lambda$)</span>
+                  <input type="number" id="num-probe" step="10" min="50" max="4000" value="500" class="w-20 px-1.5 py-0.5 text-center font-mono font-bold text-amber-600 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-pink-500 focus:outline-none text-[11px]">
+                </div>
+                <input type="range" id="slider-probe" min="50" max="4000" step="10" value="500" class="w-full">
+                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                  <span>50 nm</span>
+                  <span>4,000 nm</span>
+                </div>
+              </div>
+
+              <!-- Telemetry Probe Radiance Readout -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2">
+                <div class="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase">
+                  <span>Probe Radiance:</span>
+                </div>
+                <div id="val-probe-radiance" class="text-sm font-extrabold text-amber-600 font-mono">-- W/m³</div>
+              </div>
+
+              <!-- Preset Benchmarks -->
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Cosmic &amp; Physics Benchmarks</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="setTemperaturePreset(300)" class="px-2.5 py-1.5 text-[10px] font-bold bg-white text-slate-700 border border-slate-200 rounded hover:bg-slate-100 transition-all">Earth/Room (300 K)</button>
+                  <button onclick="setTemperaturePreset(3000)" class="px-2.5 py-1.5 text-[10px] font-bold bg-white text-slate-700 border border-slate-200 rounded hover:bg-slate-100 transition-all">Halogen (3,000 K)</button>
+                  <button onclick="setTemperaturePreset(5778)" class="px-2.5 py-1.5 text-[10px] font-bold bg-indigo-550 border border-indigo-500 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100 transition-all">Sun Surface (5,778 K)</button>
+                  <button onclick="setTemperaturePreset(9940)" class="px-2.5 py-1.5 text-[10px] font-bold bg-white text-slate-700 border border-slate-200 rounded hover:bg-slate-100 transition-all">Sirius (9,940 K)</button>
+                  <button onclick="setTemperaturePreset(15000)" class="px-2.5 py-1.5 text-[10px] font-bold bg-white text-slate-700 border border-slate-200 rounded hover:bg-slate-100 transition-all">Blue Star (15k K)</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Derived Core Telemetry Cards inside sidebar controls -->
+            <div class="bg-indigo-900 text-white rounded-2xl p-4 shadow-md space-y-3">
+              <div class="flex items-center gap-1.5 border-b border-indigo-800 pb-2">
+                <i class="fa-solid fa-calculator text-pink-400"></i>
+                <span class="text-[10px] font-bold uppercase tracking-wider">Derived Quantities</span>
+              </div>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between font-mono">
+                  <span class="text-indigo-200 font-semibold">Peak λ:</span>
+                  <span id="lbl-peak-wl" class="font-bold text-white">-- nm</span>
+                </div>
+                <div class="flex justify-between font-mono">
+                  <span class="text-indigo-200 font-semibold">Peak Band:</span>
+                  <span id="lbl-peak-band" class="font-bold text-pink-400">--</span>
+                </div>
+                <div class="flex justify-between font-mono">
+                  <span class="text-indigo-200 font-semibold">Total P/A:</span>
+                  <span id="lbl-power-density" class="font-bold text-white">-- W/m²</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Visualization Panels (8 Columns of 9) -->
+          <div class="md:col-span-8 flex flex-col divide-y divide-slate-200">
+            
+            <!-- Canvas 1: Planck's Spectral Intensity Graph (Dark) -->
+            <div class="relative bg-slate-950 flex-1 min-h-[380px] flex items-center justify-center">
+              <canvas id="planckCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+            </div>
+
+            <!-- Canvas 2: Live Glow Visualizer Chamber (Side-by-side style lower layout) -->
+            <div class="bg-slate-900 p-4 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-slate-800">
+              <div class="flex flex-col text-slate-300 max-w-sm">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
+                  Physical Glow Chamber
+                </span>
+                <p class="text-[11px] text-slate-400 mt-1">
+                  Approximate glowing color temperature based on Planckian Locus coordinates. Notice how heating metal or star shifts light from dull red to brilliant blue-white.
+                </p>
+              </div>
+              <div class="relative bg-slate-950 rounded-xl overflow-hidden p-3 border border-slate-800 flex items-center justify-center w-36 h-36">
+                <canvas id="glowCanvas" class="w-full h-full rounded-full block"></canvas>
+                <div id="glowChamberBackground" class="absolute inset-0 opacity-10 transition-colors duration-300"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- SECTION 2: GUIDED LABORATORY TASKS (Hidden by default) -->
+        <div id="panel-experiments" class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar">
+          <div class="max-w-4xl mx-auto space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-pink-600"></i> Guided Black Body Radiation Lab Tasks
+              </h2>
+              <p class="text-xs text-slate-500 mb-6">
+                Follow these precise thermodynamic virtual experiments to mathematically confirm key physical concepts.
+              </p>
+              
+              <div class="space-y-4">
+                
+                <!-- Experiment 1 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition">
+                  <div class="flex justify-between items-start gap-4 flex-wrap">
+                    <div>
+                      <span class="text-[9px] uppercase font-bold text-pink-700 tracking-widest bg-pink-50 border border-pink-100 px-2 py-0.5 rounded-md">Experiment 1</span>
+                      <h3 class="text-xs font-bold text-slate-800 mt-2">Validate Wien's Displacement Law</h3>
+                    </div>
+                    <button onclick="loadExperimentPreset(3000)" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded text-[10px] transition">
+                      Prepare Lab Bench
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-slate-600 mt-2">
+                    <strong>Background:</strong> Peak emission wavelength ($\lambda_{\text{max}}$) is inversely proportional to temperature ($T$): $\lambda_{\text{max}} = b/T$, where $b \approx 2.898 \times 10^6\text{ nm}\cdot\text{K}$.
+                  </p>
+                  <div class="mt-4 bg-white p-3 rounded border border-slate-200 text-[11px] text-slate-700 leading-relaxed font-mono">
+                    <ol class="list-decimal list-inside space-y-1.5">
+                      <li>Set temperature to <strong class="text-pink-600">3,000 K</strong>. Note calculated peak wavelength ($\lambda_{\text{max}} \approx 966\text{ nm}$).</li>
+                      <li>Double the temperature to <strong class="text-pink-600">6,000 K</strong>.</li>
+                      <li>Observe that peak wavelength halves to <strong class="text-pink-600">483 nm</strong>. This mathematically proves the inverse proportionality!</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <!-- Experiment 2 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition">
+                  <div class="flex justify-between items-start gap-4 flex-wrap">
+                    <div>
+                      <span class="text-[9px] uppercase font-bold text-indigo-700 tracking-widest bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-md">Experiment 2</span>
+                      <h3 class="text-xs font-bold text-slate-800 mt-2">Verify the Stefan-Boltzmann ($T^4$) Relationship</h3>
+                    </div>
+                    <button onclick="loadExperimentPreset(5000)" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded text-[10px] transition">
+                      Prepare Lab Bench
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-slate-600 mt-2">
+                    <strong>Background:</strong> The total energy density emitted across all wavelengths increases dramatically with absolute temperature: $P/A = \sigma T^4$.
+                  </p>
+                  <div class="mt-4 bg-white p-3 rounded border border-slate-200 text-[11px] text-slate-700 leading-relaxed font-mono">
+                    <ol class="list-decimal list-inside space-y-1.5">
+                      <li>Set the temperature to <strong class="text-indigo-600">5,000 K</strong>. Observe Radiated Power Density ($P/A \approx 3.54 \times 10^7\text{ W/m}^2$).</li>
+                      <li>Increase the temperature to <strong class="text-indigo-600">10,000 K</strong> (exactly double).</li>
+                      <li>Look closely at the updated Power Density readout. It has shifted to $\approx 5.67 \times 10^8\text{ W/m}^2$, which is exactly **16 times** larger ($2^4 = 16$).</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <!-- Experiment 3 -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition">
+                  <div class="flex justify-between items-start gap-4 flex-wrap">
+                    <div>
+                      <span class="text-[9px] uppercase font-bold text-amber-700 tracking-widest bg-amber-50 border border-amber-100 px-2 py-0.5 rounded-md">Experiment 3</span>
+                      <h3 class="text-xs font-bold text-slate-800 mt-2">Observe Resolution of the UV Catastrophe</h3>
+                    </div>
+                    <button onclick="loadExperimentPreset(6500)" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded text-[10px] transition">
+                      Prepare Lab Bench
+                    </button>
+                  </div>
+                  <p class="text-[11px] text-slate-600 mt-2">
+                    <strong>Background:</strong> Classical physics (Rayleigh-Jeans Law) predicted infinite spectral energy at short wavelengths (diverging to infinity). Planck's quantized energy solved this physical paradox.
+                  </p>
+                  <div class="mt-4 bg-white p-3 rounded border border-slate-200 text-[11px] text-slate-700 leading-relaxed font-mono">
+                    <ol class="list-decimal list-inside space-y-1.5">
+                      <li>Set temperature to <strong class="text-amber-600">6,500 K</strong>.</li>
+                      <li>Inspect the peak of the curve. Notice how it curves safely downwards to zero at low wavelengths (UV/X-ray region) rather than continuing upward to infinity.</li>
+                    </ol>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: THEORETICAL CORE (Hidden by default) -->
+        <div id="panel-theory" class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar">
+          <div class="max-w-4xl mx-auto space-y-6">
+            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm prose prose-slate">
+              <h2 class="text-xl font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
+                <i class="fa-solid fa-microscope text-indigo-600"></i> Black Body Radiation Physics
+              </h2>
+              
+              <div class="text-xs text-slate-600 space-y-4 leading-relaxed font-medium">
+                <p>
+                  An idealized physical body that absorbs all incident electromagnetic radiation is termed a **Black Body**. 
+                  When a black body is at a uniform temperature, it emits thermal electromagnetic radiation known as Black Body Radiation.
+                </p>
+
+                <h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">1. Planck's Law of Radiation</h3>
+                <p>
+                  To solve the classical ultraviolet catastrophe, Max Planck proposed that energy is exchanged in discrete packets called quanta ($E = hf$). 
+                  The spectral radiance of a black body at absolute temperature $T$ is given by:
+                </p>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-600 font-mono text-xs">
+                  $$I(\lambda, T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^{\frac{hc}{\lambda k_B T}} - 1}$$
+                </div>
+                <p class="font-bold text-slate-700">Where fundamental parameters are defined as:</p>
+                <ul class="list-disc list-inside space-y-1 ml-4 font-mono">
+                  <li>$h = 6.626 \times 10^{-34} \text{ J}\cdot\text{s}$ (Planck's Constant)</li>
+                  <li>$c \approx 3 \times 10^8 \text{ m/s}$ (Speed of light)</li>
+                  <li>$k_B = 1.380 \times 10^{-23} \text{ J/K}$ (Boltzmann's Constant)</li>
+                  <li>$\lambda$ is wavelength in meters</li>
+                  <li>$T$ is absolute temperature in Kelvin</li>
+                </ul>
+
+                <h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">2. Wien's Displacement Law</h3>
+                <p>
+                  The peak wavelength ($\lambda_{\text{max}}$) where the spectral radiance reaches its absolute maximum shifts inversely with temperature:
+                </p>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-600 font-mono text-xs">
+                  $$\lambda_{\text{max}} \cdot T = b \approx 2.8977 \times 10^{-3} \text{ m}\cdot\text{K}$$
+                </div>
+
+                <h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">3. The Stefan-Boltzmann Law</h3>
+                <p>
+                  Integrating Planck's law across all wavelengths yields the total power density:
+                </p>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-600 font-mono text-xs">
+                  $$P/A = \sigma T^4$$
+                </div>
+                <p>
+                  Where $\sigma \approx 5.670 \times 10^{-8} \text{ W}\cdot\text{m}^{-2}\cdot\text{K}^{-4}$ is the Stefan-Boltzmann constant.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar" id="sidebar-viva">
+        
+        <!-- Sidebar Brand Banner -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <!-- viva voce cards -->
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What was the "Ultraviolet Catastrophe" in classical physics, and how did Max Planck resolve it?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-pink-500">
+                Classical physics predicted energy density:
+                $$u(\lambda, T) = \frac{8\pi k_B T}{\lambda^4}$$
+                diverging to infinity at low $\lambda$. Planck resolved this by quantizing energy:
+                $$E = nhf = n\frac{hc}{\lambda}$$
+                which correctly dampens short-wavelength emission as shown in this simulator.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Explain Wien's Displacement Law and how color shifts as temperature is increased.
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Peak wavelength $\lambda_{\text{max}}$ is inversely proportional to $T$:
+                $$\lambda_{\text{max}} = \frac{b}{T}$$
+                with $b \approx 2.898 \times 10^{-3}\text{ m K}$. Heating shift colors: Red $\to$ Orange $\to$ White $\to$ Blue.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Derive the Stefan-Boltzmann Law by integrating Planck's spectral radiance.
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Total power density is the integral over the full spectrum:
+                $$P/A = \int_{0}^{\infty} I(\lambda, T) d\lambda = \sigma T^4$$
+                where the constant is:
+                $$\sigma = \frac{2\pi^5 k_B^4}{15c^2h^3} \approx 5.670 \times 10^{-8} \text{ W/m}^2\text{K}^4$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the cosmological significance of the Cosmic Microwave Background (CMB) thermal spectrum?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                The CMB is a near-perfect black body spectrum at $T \approx 2.725\text{ K}$, peaking at $\lambda \approx 1.06\text{ mm}$ (microwave). It represents the cooled thermal remnant of the early hot Big Bang universe.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-slate-50 px-6 py-4 mt-auto text-xs text-slate-500">
+      <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p>© 2026 Sparkl Virtual Simulations. Precision Thermodynamics Research Suite.</p>
+        <p class="font-medium text-slate-400">Apparatus Block: SP-PLANCK-8049</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Simulation Application Logic Script -->
+  <script>
+    // --- PHYSICS CONSTANTS ---
+    const h = 6.62607015e-34;       // Planck's constant (J s)
+    const c = 299792458;            // Speed of light (m/s)
+    const kb = 1.380649e-23;        // Boltzmann's constant (J/K)
+    const sigma = 5.670374e-8;      // Stefan-Boltzmann constant (W/m^2/K^4)
+    const b_wien = 2.8977719e-3;    // Wien's displacement constant (m K)
+    
+    // --- APP STATE ---
+    let currentTemp = 5800;         // Temperature in Kelvin
+    let currentProbe = 500;         // Probe wavelength in nm
+    let scalingMode = 'auto';       // 'auto' or 'fixed'
+    
+    // Canvas & dimensions
+    let dpi = window.devicePixelRatio || 1;
+    let planckCanvas, planckCtx;
+    let glowCanvas, glowCtx;
+    
+    window.addEventListener('load', () => {
+      initApp();
+      window.addEventListener('resize', handleResize);
+    });
+    
+    function initApp() {
+      // Setup elements
+      planckCanvas = document.getElementById('planckCanvas');
+      planckCtx = planckCanvas.getContext('2d');
+      
+      glowCanvas = document.getElementById('glowCanvas');
+      glowCtx = glowCanvas.getContext('2d');
+      
+      // Sync numerical inputs with sliders
+      const sliderTemp = document.getElementById('slider-temp');
+      const numTemp = document.getElementById('num-temp');
+      const sliderProbe = document.getElementById('slider-probe');
+      const numProbe = document.getElementById('num-probe');
+
+      // Bidirectional Temperature binding
+      sliderTemp.addEventListener('input', (e) => {
+        currentTemp = parseInt(e.target.value);
+        numTemp.value = currentTemp;
+        updateUI();
+      });
+      numTemp.addEventListener('change', (e) => {
+        let val = parseInt(e.target.value);
+        if (isNaN(val)) val = 5800;
+        val = Math.max(300, Math.min(15000, val));
+        currentTemp = val;
+        sliderTemp.value = val;
+        numTemp.value = val;
+        updateUI();
+      });
+
+      // Bidirectional Probe Wavelength binding
+      sliderProbe.addEventListener('input', (e) => {
+        currentProbe = parseInt(e.target.value);
+        numProbe.value = currentProbe;
+        updateUI();
+      });
+      numProbe.addEventListener('change', (e) => {
+        let val = parseInt(e.target.value);
+        if (isNaN(val)) val = 500;
+        val = Math.max(50, Math.min(4000, val));
+        currentProbe = val;
+        sliderProbe.value = val;
+        numProbe.value = val;
+        updateUI();
+      });
+      
+      handleResize();
+      updateUI();
+    }
+    
+    function handleResize() {
+      fitCanvasToContainer(planckCanvas);
+      fitCanvasToContainer(glowCanvas);
+      updateUI();
+    }
+    
+    function fitCanvasToContainer(canvas) {
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+    }
+    
+    // Switch between simulation workspace tabs
+    function switchTab(tabId) {
+      const tabs = ['simulation', 'experiments', 'theory'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const panel = document.getElementById(`panel-${t}`);
+        if (t === tabId) {
+          btn.className = "px-5 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-sm transition-all flex items-center gap-1.5";
+          panel.classList.remove('hidden');
+        } else {
+          btn.className = "px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5";
+          panel.classList.add('hidden');
+        }
+      });
+      
+      const toolbarScaling = document.getElementById('toolbar-graph-scaling');
+      if (tabId === 'simulation') {
+        toolbarScaling.classList.remove('hidden');
+        setTimeout(handleResize, 50);
+      } else {
+        toolbarScaling.classList.add('hidden');
+      }
+
+      // Re-trigger MathJax to process formulas inside newly revealed tabs
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      }
+    }
+    
+    // Preset configurations helper
+    function setTemperaturePreset(temp) {
+      currentTemp = temp;
+      document.getElementById('slider-temp').value = temp;
+      document.getElementById('num-temp').value = temp;
+      updateUI();
+    }
+    
+    // Set auto vs fixed scaling
+    function setScalingMode(mode) {
+      scalingMode = mode;
+      
+      const autoBtn = document.getElementById('scale-auto');
+      const fixedBtn = document.getElementById('scale-fixed');
+      
+      if (mode === 'auto') {
+        autoBtn.className = "px-3 py-1 bg-pink-50 text-pink-700 font-extrabold border border-pink-200 rounded text-xs transition-all";
+        fixedBtn.className = "px-3 py-1 bg-white text-slate-600 font-semibold border border-slate-200 hover:bg-slate-50 rounded text-xs transition-all";
+      } else {
+        fixedBtn.className = "px-3 py-1 bg-pink-50 text-pink-700 font-extrabold border border-pink-200 rounded text-xs transition-all";
+        autoBtn.className = "px-3 py-1 bg-white text-slate-600 font-semibold border border-slate-200 hover:bg-slate-50 rounded text-xs transition-all";
+      }
+      
+      updateUI();
+    }
+    
+    function loadExperimentPreset(temp) {
+      setTemperaturePreset(temp);
+      switchTab('simulation');
+    }
+    
+    // --- CORE MATH: PLANCK'S EQUATION ---
+    function planckRadiance(lambda_nm, temp_k) {
+      const lambda = lambda_nm * 1e-9;
+      const term1 = 2 * h * c * c;
+      const term2 = Math.pow(lambda, 5);
+      const exponent = (h * c) / (lambda * kb * temp_k);
+      
+      if (exponent > 150) return 0;
+      return term1 / (term2 * (Math.exp(exponent) - 1));
+    }
+    
+    // Accurate apparent color conversion based on Planckian Locus coordinates
+    function kelvinToRGB(temp) {
+      let t = temp / 100;
+      let r, g, b;
+      
+      if (t <= 66) {
+        r = 255;
+        g = t;
+        g = 99.4708025861 * Math.log(g) - 161.1195681661;
+        if (t <= 19) {
+          b = 0;
+        } else {
+          b = t - 10;
+          b = 138.5177312231 * Math.log(b) - 305.0447927307;
+        }
+      } else {
+        r = t - 60;
+        r = 329.698727446 * Math.pow(r, -0.1332047592);
+        g = t - 60;
+        g = 288.1221695283 * Math.pow(g, -0.0755148492);
+        b = 255;
+      }
+      
+      return {
+        r: Math.min(255, Math.max(0, Math.round(r))),
+        g: Math.min(255, Math.max(0, Math.round(g))),
+        b: Math.min(255, Math.max(0, Math.round(b)))
+      };
+    }
+    
+    // --- SPECTRAL RANGE COLOR DECODING ---
+    function wavelengthToColor(wl) {
+      if (wl < 380) return 'rgba(124, 58, 237, 0.15)'; 
+      if (wl > 750) return 'rgba(239, 68, 68, 0.1)';   
+      
+      let r, g, b;
+      if (wl >= 380 && wl < 440) {
+        r = -((wl - 440) / (440 - 380)); g = 0; b = 1;
+      } else if (wl >= 440 && wl < 490) {
+        r = 0; g = (wl - 440) / (490 - 440); b = 1;
+      } else if (wl >= 490 && wl < 510) {
+        r = 0; g = 1; b = -((wl - 510) / (510 - 490));
+      } else if (wl >= 510 && wl < 580) {
+        r = (wl - 510) / (580 - 510); g = 1; b = 0;
+      } else if (wl >= 580 && wl < 640) {
+        r = 1; g = -((wl - 640) / (640 - 580)); b = 0;
+      } else if (wl >= 640 && wl <= 750) {
+        r = 1; g = 0; b = 0;
+      }
+      return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
+    }
+    
+    // --- MAIN UPDATE CHANNELS ---
+    function updateUI() {
+      const peakWavelengthM = b_wien / currentTemp;
+      const peakWavelengthNm = peakWavelengthM * 1e9;
+      const powerDensity = sigma * Math.pow(currentTemp, 4);
+      const probeRadiance = planckRadiance(currentProbe, currentTemp);
+      
+      let peakCategory = "Infrared (IR)";
+      if (peakWavelengthNm < 380) {
+        peakCategory = "Ultraviolet (UV)";
+      } else if (peakWavelengthNm >= 380 && peakWavelengthNm <= 750) {
+        peakCategory = "Visible Light";
+      }
+      
+      // Update telemetry readouts
+      document.getElementById('lbl-peak-wl').textContent = `${peakWavelengthNm.toFixed(1)} nm`;
+      document.getElementById('lbl-peak-band').textContent = peakCategory;
+      document.getElementById('lbl-power-density').textContent = powerDensity.toExponential(3);
+      document.getElementById('val-probe-radiance').textContent = probeRadiance.toExponential(3) + " W/m³";
+      
+      drawGraphs();
+      drawGlowChamber();
+    }
+    
+    function drawGraphs() {
+      const width = planckCanvas.width;
+      const height = planckCanvas.height;
+      planckCtx.clearRect(0, 0, width, height);
+      
+      const padLeft = 65 * dpi;
+      const padRight = 30 * dpi;
+      const padTop = 40 * dpi;
+      const padBottom = 45 * dpi;
+      
+      const plotWidth = width - padLeft - padRight;
+      const plotHeight = height - padTop - padBottom;
+      
+      // Base background
+      planckCtx.fillStyle = '#020617';
+      planckCtx.fillRect(0, 0, width, height);
+      
+      // Coordinate parameters
+      const xMinWl = 100;  
+      const xMaxWl = 3000; 
+      
+      // Peak radiance calculation to handle auto-scaling y-limits
+      let maxRadiance = 0;
+      if (scalingMode === 'auto') {
+        const step = (xMaxWl - xMinWl) / 200;
+        for (let wl = xMinWl; wl <= xMaxWl; wl += step) {
+          const r = planckRadiance(wl, currentTemp);
+          if (r > maxRadiance) maxRadiance = r;
+        }
+        maxRadiance = maxRadiance > 0 ? maxRadiance * 1.15 : 1e12;
+      } else {
+        maxRadiance = 1.2e14;
+      }
+      
+      // UV: 100 to 380
+      const uvStartX = padLeft + ((100 - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+      const uvEndX = padLeft + ((380 - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+      planckCtx.fillStyle = 'rgba(139, 92, 246, 0.08)'; 
+      planckCtx.fillRect(uvStartX, padTop, uvEndX - uvStartX, plotHeight);
+      
+      // Infrared: 750 to 3000
+      const irStartX = padLeft + ((750 - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+      const irEndX = padLeft + ((3000 - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+      planckCtx.fillStyle = 'rgba(239, 68, 68, 0.05)'; 
+      planckCtx.fillRect(irStartX, padTop, irEndX - irStartX, plotHeight);
+      
+      // Visible spectrum rainbow bar
+      const visibleMin = 380;
+      const visibleMax = 750;
+      for (let px = 0; px < plotWidth; px++) {
+        const wl = xMinWl + (px / plotWidth) * (xMaxWl - xMinWl);
+        if (wl >= visibleMin && wl <= visibleMax) {
+          planckCtx.fillStyle = wavelengthToColor(wl);
+          planckCtx.globalAlpha = 0.25;
+          planckCtx.fillRect(padLeft + px, padTop, 1, plotHeight);
+          planckCtx.globalAlpha = 1.0;
+        }
+      }
+      
+      // Draw gridlines
+      planckCtx.strokeStyle = 'rgba(51, 65, 85, 0.35)';
+      planckCtx.lineWidth = 1 * dpi;
+      
+      // X-Ticks grid
+      for (let wl = 500; wl <= xMaxWl; wl += 500) {
+        const x = padLeft + ((wl - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+        planckCtx.beginPath();
+        planckCtx.moveTo(x, padTop);
+        planckCtx.lineTo(x, padTop + plotHeight);
+        planckCtx.stroke();
+      }
+      
+      // Y-Ticks grid
+      for (let j = 1; j <= 5; j++) {
+        const y = padTop + plotHeight - (j / 5) * plotHeight;
+        planckCtx.beginPath();
+        planckCtx.moveTo(padLeft, y);
+        planckCtx.lineTo(padLeft + plotWidth, y);
+        planckCtx.stroke();
+      }
+      
+      // Draw Planck curve line
+      planckCtx.strokeStyle = '#ec4899'; 
+      planckCtx.lineWidth = 3.5 * dpi;
+      planckCtx.beginPath();
+      
+      let started = false;
+      for (let px = 0; px <= plotWidth; px++) {
+        const wl = xMinWl + (px / plotWidth) * (xMaxWl - xMinWl);
+        const radiance = planckRadiance(wl, currentTemp);
+        const py = padTop + plotHeight - (radiance / maxRadiance) * plotHeight;
+        
+        if (py >= padTop && py <= padTop + plotHeight) {
+          if (!started) {
+            planckCtx.moveTo(padLeft + px, py);
+            started = true;
+          } else {
+            planckCtx.lineTo(padLeft + px, py);
+          }
+        }
+      }
+      planckCtx.stroke();
+      
+      // Peak wavelength indicator
+      const peakWavelengthNm = (b_wien / currentTemp) * 1e9;
+      if (peakWavelengthNm >= xMinWl && peakWavelengthNm <= xMaxWl) {
+        const peakRad = planckRadiance(peakWavelengthNm, currentTemp);
+        const xPeak = padLeft + ((peakWavelengthNm - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+        const yPeak = padTop + plotHeight - (peakRad / maxRadiance) * plotHeight;
+        
+        planckCtx.strokeStyle = '#fbbf24'; 
+        planckCtx.lineWidth = 1 * dpi;
+        planckCtx.setLineDash([4 * dpi, 4 * dpi]);
+        
+        planckCtx.beginPath();
+        planckCtx.moveTo(xPeak, yPeak);
+        planckCtx.lineTo(xPeak, padTop + plotHeight);
+        planckCtx.stroke();
+        
+        planckCtx.beginPath();
+        planckCtx.moveTo(xPeak, yPeak);
+        planckCtx.lineTo(padLeft, yPeak);
+        planckCtx.stroke();
+        
+        planckCtx.setLineDash([]); 
+        
+        planckCtx.fillStyle = '#fbbf24';
+        planckCtx.beginPath();
+        planckCtx.arc(xPeak, yPeak, 5 * dpi, 0, Math.PI * 2);
+        planckCtx.fill();
+        
+        planckCtx.fillStyle = '#fbbf24';
+        planckCtx.font = `bold ${9 * dpi}px sans-serif`;
+        planckCtx.textAlign = 'center';
+        planckCtx.fillText(`λ_max = ${Math.round(peakWavelengthNm)}nm`, xPeak, yPeak - 10 * dpi);
+      }
+      
+      // Custom Probe indicator overlay
+      if (currentProbe >= xMinWl && currentProbe <= xMaxWl) {
+        const probeRad = planckRadiance(currentProbe, currentTemp);
+        const xProbe = padLeft + ((currentProbe - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+        const yProbe = padTop + plotHeight - (probeRad / maxRadiance) * plotHeight;
+        
+        planckCtx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+        planckCtx.lineWidth = 1 * dpi;
+        planckCtx.beginPath();
+        planckCtx.moveTo(xProbe, padTop);
+        planckCtx.lineTo(xProbe, padTop + plotHeight);
+        planckCtx.stroke();
+        
+        planckCtx.fillStyle = '#f59e0b';
+        planckCtx.beginPath();
+        planckCtx.arc(xProbe, yProbe, 6 * dpi, 0, Math.PI * 2);
+        planckCtx.fill();
+      }
+      
+      // X-Ticks Labels
+      planckCtx.fillStyle = '#94a3b8';
+      planckCtx.font = `${9 * dpi}px monospace`;
+      planckCtx.textAlign = 'center';
+      for (let wl = 500; wl <= xMaxWl; wl += 500) {
+        const x = padLeft + ((wl - xMinWl) / (xMaxWl - xMinWl)) * plotWidth;
+        planckCtx.fillText(`${wl}`, x, padTop + plotHeight + 15 * dpi);
+      }
+      
+      planckCtx.fillStyle = '#cbd5e1';
+      planckCtx.font = `bold ${10 * dpi}px sans-serif`;
+      planckCtx.fillText("Wavelength λ (nm)", padLeft + plotWidth / 2, padTop + plotHeight + 32 * dpi);
+      
+      // Y-axis ticks labels (exponential notation)
+      planckCtx.fillStyle = '#94a3b8';
+      planckCtx.font = `${8 * dpi}px monospace`;
+      planckCtx.textAlign = 'right';
+      for (let j = 1; j <= 5; j++) {
+        const val = (j / 5) * maxRadiance;
+        const y = padTop + plotHeight - (j / 5) * plotHeight;
+        planckCtx.fillText(val.toExponential(1), padLeft - 8 * dpi, y + 3 * dpi);
+      }
+      
+      // Graph Title
+      planckCtx.fillStyle = '#ffffff';
+      planckCtx.font = `bold ${11 * dpi}px sans-serif`;
+      planckCtx.textAlign = 'center';
+      planckCtx.fillText(`Planck Spectral Radiance Distribution (T = ${currentTemp} K)`, width / 2, 22 * dpi);
+
+      // Y-Axis Label Rotated
+      planckCtx.save();
+      planckCtx.translate(18 * dpi, padTop + plotHeight / 2);
+      planckCtx.rotate(-Math.PI / 2);
+      planckCtx.fillStyle = '#cbd5e1';
+      planckCtx.font = `bold ${9 * dpi}px sans-serif`;
+      planckCtx.textAlign = 'center';
+      planckCtx.fillText("Spectral Radiance I(λ, T) (W / m³)", 0, 0);
+      planckCtx.restore();
+    }
+    
+    function drawGlowChamber() {
+      const width = glowCanvas.width;
+      const height = glowCanvas.height;
+      glowCtx.clearRect(0, 0, width, height);
+      
+      const cX = width / 2;
+      const cY = height / 2;
+      const radius = Math.min(width, height) * 0.35;
+      
+      glowCtx.fillStyle = '#090d16';
+      glowCtx.fillRect(0, 0, width, height);
+      
+      const rgb = kelvinToRGB(currentTemp);
+      const hexColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+      
+      let auraGrad = glowCtx.createRadialGradient(cX, cY, radius * 0.8, cX, cY, radius * 1.5);
+      auraGrad.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.8)`);
+      auraGrad.addColorStop(0.3, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.35)`);
+      auraGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      
+      glowCtx.fillStyle = auraGrad;
+      glowCtx.beginPath();
+      glowCtx.arc(cX, cY, radius * 1.6, 0, Math.PI * 2);
+      glowCtx.fill();
+      
+      let radialGrad = glowCtx.createRadialGradient(cX - radius*0.3, cY - radius*0.3, radius * 0.1, cX, cY, radius);
+      radialGrad.addColorStop(0, '#ffffff'); 
+      radialGrad.addColorStop(0.2, `rgb(${Math.min(255, rgb.r + 40)}, ${Math.min(255, rgb.g + 40)}, ${Math.min(255, rgb.b + 40)})`);
+      radialGrad.addColorStop(0.8, hexColor);
+      radialGrad.addColorStop(1, `rgb(${Math.max(0, rgb.r - 40)}, ${Math.max(0, rgb.g - 40)}, ${Math.max(0, rgb.b - 40)})`);
+      
+      glowCtx.fillStyle = radialGrad;
+      glowCtx.beginPath();
+      glowCtx.arc(cX, cY, radius, 0, Math.PI * 2);
+      glowCtx.fill();
+      
+      document.getElementById('glowChamberBackground').style.backgroundColor = hexColor;
+    }
+
+    // Toggle collapsible scientific verifications
+    function toggleVerification(qid) {
+      const panel = document.getElementById(`viva-panel-${qid}`);
+      const btnText = document.getElementById(`btn-text-${qid}`);
+      const btnArrow = document.getElementById(`btn-arrow-${qid}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([panel]);
+        }
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+  </script>
+</body>
+</html>

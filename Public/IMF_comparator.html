@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intermolecular Force Comparator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <svg class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Intermolecular Force Comparator</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Thermodynamics &amp; Phase Change Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Molecular Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>▶</span> Run
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>⏸</span> Pause
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-bonds" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show IMF Interactions (Bonds)</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+            
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Target Substance</span>
+              <select id="select-substance" class="w-full bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+                <option value="neon">Neon (Ne) - London Dispersion Only</option>
+                <option value="hcl">Hydrogen Chloride (HCl) - Dipole-Dipole</option>
+                <option value="water">Water (H₂O) - Hydrogen Bonding</option>
+              </select>
+            </div>
+
+            <div id="imf-card" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm space-y-2 transition-all">
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-500 uppercase">Primary Force</span>
+                 <span id="label-force-type" class="text-indigo-600 font-mono">London Dispersion</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-500 uppercase">Interaction Energy</span>
+                 <span id="label-force-strength" class="text-emerald-600 font-mono">~2 kJ/mol</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-500 uppercase">Boiling Point (1 atm)</span>
+                 <span id="label-bp" class="text-rose-500 font-mono">27 K (-246 °C)</span>
+               </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-temperature-half text-rose-500"></i> System Temperature ($T$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-temp" step="10" min="0" max="600" value="10" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">K</span>
+                </div>
+              </div>
+              <input type="range" id="slider-temp" min="0" max="600" step="1" value="10" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span>0 K</span>
+                <span>600 K</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5">Number of Molecules</span>
+                <div class="flex items-center space-x-1">
+                  <span id="num-count" class="font-mono font-bold text-slate-800 text-[11px]">100</span>
+                </div>
+              </div>
+              <input type="range" id="slider-count" min="20" max="250" step="10" value="100" class="w-full">
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Phase Change Condition</span>
+              <div class="text-[11px] font-mono text-center py-2 space-y-1.5">
+                <div class="text-[9px] text-slate-400 font-sans mb-1 text-left">Molecules condense when Intermolecular Energy exceeds Thermal Kinetic Energy:</div>
+                $$E_{imf} > E_{kinetic}$$
+                $$E_{kinetic} \approx \frac{3}{2} k_B T$$
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Thermodynamic State</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Macroscopic Phase</div>
+                <div id="telemetryPhase" class="text-sm font-bold text-indigo-400 font-mono mt-0.5 tracking-widest">SOLID</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Thermal KE</div>
+                <div id="telemetryKE" class="text-sm font-bold text-rose-400 font-mono mt-0.5">Low</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Active Bonds</div>
+                <div id="telemetryBonds" class="text-sm font-bold text-emerald-400 font-mono mt-0.5">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="simStatusText" class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider">Simulation Active</span>
+          </div>
+
+          <div class="absolute right-6 top-1/2 transform -translate-y-1/2 w-8 h-48 bg-slate-900/80 backdrop-blur-sm rounded-full border border-slate-700 p-1 flex flex-col justify-end pb-3 items-center z-10 pointer-events-none shadow-lg">
+             <div class="w-2 h-[120px] bg-slate-800 rounded-full relative overflow-hidden mb-1">
+                <div id="thermometer-fill" class="absolute bottom-0 w-full bg-rose-500 transition-all duration-300" style="height: 5%;"></div>
+             </div>
+             <div class="w-5 h-5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does Water ($H_2O$) have a much higher boiling point than Neon, despite being similar in size?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Water molecules experience <strong>Hydrogen Bonding</strong>, an exceptionally strong dipole-dipole interaction occurring when Hydrogen is covalently bonded to highly electronegative Oxygen. Neon only experiences weak, temporary <strong>London Dispersion Forces</strong>. It takes significantly more thermal energy ($T$) to break Hydrogen bonds.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What physically causes London Dispersion Forces in non-polar molecules like Neon?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                They are caused by random, instantaneous fluctuations in the electron cloud distribution. When electrons momentarily gather on one side, it creates a temporary dipole ($\delta^-$ and $\delta^+$), which induces a complementary dipole in a neighboring molecule, causing weak attraction.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                At a microscopic level, what is the difference between a Solid, Liquid, and Gas?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                <strong>Solid:</strong> $E_{IMF} \gg E_{Kinetic}$. Molecules are locked in a rigid lattice by unbroken bonds.<br>
+                <strong>Liquid:</strong> $E_{IMF} \approx E_{Kinetic}$. Bonds break and reform rapidly; molecules stay clumped but slide past each other.<br>
+                <strong>Gas:</strong> $E_{Kinetic} > E_{IMF}$. Thermal energy dominates, bonds are broken, and molecules fly freely apart.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Rank the three Intermolecular Forces simulated here from weakest to strongest.
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                1. <strong>London Dispersion Forces</strong> (Weakest, ~2 kJ/mol)<br>
+                2. <strong>Dipole-Dipole Interactions</strong> (Medium, ~5-20 kJ/mol)<br>
+                3. <strong>Hydrogen Bonding</strong> (Strongest, ~20-50 kJ/mol)
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Physics driven by soft-core Lennard-Jones interaction potentials and Langevin thermostat.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> IMF COMPARATOR PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Intermolecular Force Comparator</strong>! Explore how physical states (Solid, Liquid, Gas) emerge from the microscopic battle between attractive forces and thermal energy.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Target Substance</strong>: Switch between Neon, HCl, and Water. Notice how their boiling points and interaction strengths differ drastically!</li>
+            <li><strong>System Temperature (T)</strong>: Drag the slider to add heat. Watch the particles vibrate faster until their kinetic energy breaks the intermolecular bonds.</li>
+            <li><strong>Macroscopic Phase</strong>: The telemetry panel automatically calculates whether the system is acting as a Solid, Liquid, or Gas based on the density of active bonds.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Substance Database
+    const SUBSTANCES = {
+      neon: {
+        id: 'neon',
+        name: 'Neon (Ne)',
+        forceName: 'London Dispersion',
+        forceColor: '#94a3b8',
+        strengthStr: '~2 kJ/mol',
+        bpStr: '27 K (-246 °C)',
+        epsilon: 0.8, // Attraction strength parameter
+        radius: 12,
+        colorBody: '#334155',
+        colorEdge: '#38bdf8',
+        isPolar: false
+      },
+      hcl: {
+        id: 'hcl',
+        name: 'Hydrogen Chloride (HCl)',
+        forceName: 'Dipole-Dipole',
+        forceColor: '#10b981',
+        strengthStr: '~16 kJ/mol',
+        bpStr: '188 K (-85 °C)',
+        epsilon: 3.5,
+        radius: 14,
+        colorBody: '#0f766e',
+        colorEdge: '#34d399',
+        isPolar: true
+      },
+      water: {
+        id: 'water',
+        name: 'Water (H₂O)',
+        forceName: 'Hydrogen Bonding',
+        forceColor: '#3b82f6',
+        strengthStr: '~21 kJ/mol (Network)',
+        bpStr: '373 K (100 °C)',
+        epsilon: 8.0,
+        radius: 12,
+        colorBody: '#991b1b',
+        colorEdge: '#f87171',
+        isPolar: true
+      }
+    };
+
+    // Application State
+    let isRunning = true;
+    let currentSubstance = SUBSTANCES.neon;
+    let T = 10; // Kelvin
+    let targetParticleCount = 100;
+    
+    let particles = [];
+    let totalBonds = 0;
+
+    // DOM Elements
+    const selectSubstance = document.getElementById('select-substance');
+    const sliderTemp = document.getElementById('slider-temp');
+    const numTemp = document.getElementById('num-temp');
+    const sliderCount = document.getElementById('slider-count');
+    const numCount = document.getElementById('num-count');
+    const chkBonds = document.getElementById('chk-bonds');
+
+    const lblForceType = document.getElementById('label-force-type');
+    const lblForceStrength = document.getElementById('label-force-strength');
+    const lblBp = document.getElementById('label-bp');
+    
+    const telPhase = document.getElementById('telemetryPhase');
+    const telKE = document.getElementById('telemetryKE');
+    const telBonds = document.getElementById('telemetryBonds');
+    
+    const thermoFill = document.getElementById('thermometer-fill');
+
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+
+    const simCanvas = document.getElementById('simCanvas');
+    const ctx = simCanvas.getContext('2d');
+
+    // Guide Handlers
+    document.getElementById('btn-open-guide').addEventListener('click', () => {
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+    });
+    const closeGuide = () => document.getElementById('user-guide-modal').classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initializer
+    function initParticles() {
+      particles = [];
+      const W = simCanvas.width / window.devicePixelRatio || 600;
+      const H = simCanvas.height / window.devicePixelRatio || 500;
+      
+      for (let i = 0; i < targetParticleCount; i++) {
+        particles.push({
+          x: W/2 + (Math.random() - 0.5) * 150,
+          y: H/2 + (Math.random() - 0.5) * 150,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          angle: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    // Handlers
+    selectSubstance.addEventListener('change', (e) => {
+      currentSubstance = SUBSTANCES[e.target.value];
+      lblForceType.innerText = currentSubstance.forceName;
+      lblForceStrength.innerText = currentSubstance.strengthStr;
+      lblBp.innerText = currentSubstance.bpStr;
+      
+      // Auto-adjust temperature to show solid state initially for new substance
+      let optimalStartT = 10;
+      if (currentSubstance.id === 'hcl') optimalStartT = 50;
+      if (currentSubstance.id === 'water') optimalStartT = 150;
+      updateTemp(optimalStartT);
+      
+      initParticles(); // Re-pack them
+    });
+
+    function updateTemp(val) {
+      val = Math.max(0, Math.min(600, parseInt(val) || 10));
+      T = val;
+      sliderTemp.value = val;
+      numTemp.value = val;
+      
+      // Update Thermometer Graphic
+      const pct = Math.max(5, (T / 600) * 100);
+      thermoFill.style.height = `${pct}%`;
+      
+      let keStr = "Low";
+      if(T > 150) keStr = "Medium";
+      if(T > 350) keStr = "High";
+      if(T > 500) keStr = "Very High";
+      telKE.innerText = keStr;
+    }
+    sliderTemp.addEventListener('input', e => updateTemp(e.target.value));
+    numTemp.addEventListener('change', e => updateTemp(e.target.value));
+
+    sliderCount.addEventListener('input', (e) => {
+      targetParticleCount = parseInt(e.target.value);
+      numCount.innerText = targetParticleCount;
+      // Dynamically add/remove particles
+      while(particles.length < targetParticleCount) {
+         particles.push({
+            x: simCanvas.width / window.devicePixelRatio / 2 + (Math.random()-0.5)*200,
+            y: simCanvas.height / window.devicePixelRatio / 2 + (Math.random()-0.5)*200,
+            vx: 0, vy: 0, angle: Math.random() * Math.PI * 2
+         });
+      }
+      while(particles.length > targetParticleCount) {
+         particles.pop();
+      }
+    });
+
+    btnRun.addEventListener('click', () => {
+      isRunning = true;
+      btnRun.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      btnPause.classList.remove('bg-indigo-600', 'text-white');
+      document.getElementById('status-dot').className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+      document.getElementById('simStatusText').innerText = "Simulation Active";
+    });
+
+    btnPause.addEventListener('click', () => {
+      isRunning = false;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      document.getElementById('status-dot').className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+      document.getElementById('simStatusText').innerText = "Simulation Paused";
+    });
+
+    btnReset.addEventListener('click', () => {
+      selectSubstance.value = 'neon';
+      selectSubstance.dispatchEvent(new Event('change'));
+      updateTemp(10);
+      targetParticleCount = 100;
+      sliderCount.value = 100;
+      numCount.innerText = "100";
+      initParticles();
+      if(!isRunning) btnRun.click();
+    });
+
+    // Canvas Resize
+    function resizeCanvas() {
+      const container = simCanvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      simCanvas.width = container.clientWidth * dpr;
+      simCanvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Physics Engine
+    let lastTime = performance.now();
+
+    function physicsLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05); // Cap at 50ms
+      lastTime = timestamp;
+
+      const W = simCanvas.width / window.devicePixelRatio;
+      const H = simCanvas.height / window.devicePixelRatio;
+
+      // Soft-core Potential parameters
+      const r_min = currentSubstance.radius * 2; 
+      const r_max = r_min * 2.5; // Attraction range
+      const epsilon = currentSubstance.epsilon; 
+      
+      // Thermostat parameters
+      const damping = 0.96; // Friction to prevent explosion
+      const thermalJitter = Math.sqrt(T) * 0.05; // Random kinetic energy
+
+      totalBonds = 0;
+
+      ctx.clearRect(0, 0, W, H);
+      
+      // Draw Gravity well (pulls them slightly down so they pool at the bottom)
+      const gForce = 0.15;
+
+      if (isRunning) {
+        // 1. Update Positions and Thermostat
+        for (let p of particles) {
+          // Langevin thermostat: damping + random thermal noise
+          p.vx = p.vx * damping + (Math.random() - 0.5) * thermalJitter;
+          p.vy = p.vy * damping + (Math.random() - 0.5) * thermalJitter + gForce;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Box Constraints
+          const pad = currentSubstance.radius;
+          if (p.x < pad) { p.x = pad; p.vx *= -1; }
+          if (p.x > W - pad) { p.x = W - pad; p.vx *= -1; }
+          if (p.y < pad) { p.y = pad; p.vy *= -1; }
+          if (p.y > H - pad) { p.y = H - pad; p.vy *= -0.5; } // bottom floor is sticky
+          
+          // Randomly rotate visually
+          p.angle += (Math.random() - 0.5) * 0.2;
+        }
+
+        // 2. Pairwise Intermolecular Forces (Soft Potential)
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            let pi = particles[i];
+            let pj = particles[j];
+
+            let dx = pj.x - pi.x;
+            let dy = pj.y - pi.y;
+            let distSq = dx*dx + dy*dy;
+
+            if (distSq < r_max * r_max) {
+              let dist = Math.sqrt(distSq);
+              if (dist < 0.1) dist = 0.1; // avoid /0
+
+              let force = 0;
+
+              if (dist < r_min) {
+                // Linear strong soft repulsion
+                force = -1.5 * (r_min - dist); 
+              } else {
+                // Smooth attraction well
+                let attrFactor = Math.sin(Math.PI * (dist - r_min) / (r_max - r_min));
+                force = epsilon * attrFactor * 0.1;
+                totalBonds++; // Count as bonded if in attraction well
+              }
+
+              let fx = (dx / dist) * force;
+              let fy = (dy / dist) * force;
+
+              pi.vx += fx;
+              pi.vy += fy;
+              pj.vx -= fx;
+              pj.vy -= fy;
+
+              // Draw Bond
+              if (chkBonds.checked && force > 0) {
+                 // Opacity based on force strength relative to max epsilon
+                 let bondOpacity = Math.min(0.6, force / (epsilon * 0.1));
+                 ctx.beginPath();
+                 ctx.moveTo(pi.x, pi.y);
+                 ctx.lineTo(pj.x, pj.y);
+                 ctx.strokeStyle = `${currentSubstance.forceColor}${Math.floor(bondOpacity*255).toString(16).padStart(2, '0')}`;
+                 ctx.lineWidth = 2;
+                 ctx.stroke();
+              }
+            }
+          }
+        }
+      }
+
+      // Render Molecules
+      const isLDF = currentSubstance.id === 'neon';
+      const isPolar = currentSubstance.isPolar;
+
+      for (let p of particles) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+
+        // Base particle
+        ctx.beginPath();
+        ctx.arc(0, 0, currentSubstance.radius, 0, Math.PI * 2);
+        ctx.fillStyle = currentSubstance.colorBody;
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = currentSubstance.colorEdge;
+        ctx.stroke();
+
+        // Specific Visual Decals
+        if (currentSubstance.id === 'water') {
+           // Two hydrogen ears
+           ctx.fillStyle = '#ffffff';
+           ctx.beginPath(); ctx.arc(-8, -6, 5, 0, Math.PI*2); ctx.fill();
+           ctx.beginPath(); ctx.arc(8, -6, 5, 0, Math.PI*2); ctx.fill();
+           // Dipole markers
+           ctx.fillStyle = 'rgba(255,255,255,0.7)';
+           ctx.font = '8px sans-serif'; ctx.textAlign='center';
+           ctx.fillText('δ-', 0, 4);
+        } else if (currentSubstance.id === 'hcl') {
+           // One hydrogen side
+           ctx.fillStyle = '#ffffff';
+           ctx.beginPath(); ctx.arc(10, 0, 6, 0, Math.PI*2); ctx.fill();
+           ctx.fillStyle = 'rgba(255,255,255,0.7)';
+           ctx.font = '8px sans-serif'; ctx.textAlign='center';
+           ctx.fillText('δ-', -3, 3);
+        } else if (isLDF) {
+           // Random flickering temporary dipoles
+           if (Math.random() > 0.95) {
+             ctx.fillStyle = 'rgba(255,255,255,0.5)';
+             ctx.font = '6px sans-serif'; ctx.textAlign='center';
+             ctx.fillText('δ-', -4, 2);
+             ctx.fillText('δ+', 4, 2);
+           }
+        }
+
+        ctx.restore();
+      }
+
+      // Update Phase Telemetry
+      if (isRunning) {
+         telBonds.innerText = totalBonds;
+         
+         // Avg bonds per particle determines phase heuristically
+         let avgBonds = totalBonds / targetParticleCount;
+         let phaseStr = "GAS";
+         let phaseColor = "text-rose-400";
+         
+         if (avgBonds > 2.5) {
+            phaseStr = "SOLID";
+            phaseColor = "text-indigo-400";
+         } else if (avgBonds > 0.8) {
+            phaseStr = "LIQUID";
+            phaseColor = "text-emerald-400";
+         }
+
+         telPhase.innerText = phaseStr;
+         telPhase.className = `text-sm font-bold font-mono mt-0.5 tracking-widest ${phaseColor}`;
+      }
+
+      requestAnimationFrame(physicsLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      selectSubstance.dispatchEvent(new Event('change')); // Trigger setup
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+      requestAnimationFrame(physicsLoop);
+    });
+  </script>
+</body>
+</html>

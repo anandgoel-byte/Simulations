@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hess's Law Energy Diagram Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <svg class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Hess's Law &amp; Enthalpy Pathways</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Thermodynamics &amp; State Function Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Energy Matrix Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>▶</span> Trace Path
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>⏸</span> Pause
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-direct" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Direct Path ($\Delta H_{rxn}$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Energy Grid</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Preset Reaction Pathways</span>
+              <div class="grid grid-cols-1 gap-2">
+                <button onclick="applyPreset(-110, -283, 'CO Formation')" class="text-left px-3 py-2 text-[10px] font-bold bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-all">
+                  🔥 Carbon to CO₂ (Exothermic)
+                </button>
+                <button onclick="applyPreset(180, -90, 'NO Formation')" class="text-left px-3 py-2 text-[10px] font-bold bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-all">
+                  ❄️ Nitrogen to NO₂ (Mixed)
+                </button>
+                <button onclick="applyPreset(200, 150, 'Generic Endothermic')" class="text-left px-3 py-2 text-[10px] font-bold bg-white border border-slate-200 rounded-lg hover:bg-slate-100 transition-all">
+                  📈 Generic Endothermic
+                </button>
+              </div>
+            </div>
+            
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> Step 1 ($\Delta H_1$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-dh1" step="10" min="-500" max="500" value="-110" class="w-16 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">kJ</span>
+                </div>
+              </div>
+              <input type="range" id="slider-dh1" min="-500" max="500" step="10" value="-110" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span>-500 kJ</span>
+                <span>+500 kJ</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Step 2 ($\Delta H_2$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-dh2" step="10" min="-500" max="500" value="-283" class="w-16 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">kJ</span>
+                </div>
+              </div>
+              <input type="range" id="slider-dh2" min="-500" max="500" step="10" value="-283" class="w-full">
+              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+                <span>-500 kJ</span>
+                <span>+500 kJ</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Hess's Law of Constant Heat Summation</span>
+              <div class="text-[11px] font-mono text-center py-2 space-y-1.5">
+                $$\Delta H_{rxn} = \sum \Delta H_{steps}$$
+                $$\Delta H_{rxn} = \Delta H_1 + \Delta H_2$$
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Live Enthalpy Dashboard</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Overall Net Enthalpy ($\Delta H_{rxn}$)</div>
+                <div id="telemetryNet" class="text-lg font-bold text-fuchsia-400 font-mono mt-0.5">-393 kJ</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Reaction Type</div>
+                <div id="telemetryType" class="text-sm font-bold text-emerald-400 font-mono mt-0.5 tracking-widest">EXOTHERMIC</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 relative bg-white overflow-hidden flex flex-col justify-center border-8 border-slate-100 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+            <span id="simStatusText" class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">Standing By</span>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does Hess's Law mathematically work?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Enthalpy ($H$) is a <strong>State Function</strong>. This means the change in enthalpy ($\Delta H$) depends strictly on the initial and final states of the system, completely independent of the physical pathway taken to get there.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If Step 1 is highly endothermic (+200 kJ) and Step 2 is highly exothermic (-300 kJ), what is the overall reaction type?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                You simply add them: $+200 \text{ kJ} + (-300 \text{ kJ}) = -100 \text{ kJ}$. Since the net enthalpy change is negative, the overall reaction is <strong>Exothermic</strong>. It releases more energy forming the final products than it absorbed to form the intermediates.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What happens to $\Delta H$ if a specific reaction step is written in reverse?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                The magnitude of $\Delta H$ remains exactly the same, but the <strong>sign is flipped</strong>. If it cost energy to break bonds in the forward direction (+), that exact same amount of energy will be released (-) when those bonds reform in the reverse direction.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the stoichiometric coefficients of a step are multiplied by a factor of 2, how is $\Delta H$ affected?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                Enthalpy is an <strong>Extensive Property</strong>. If you double the amount of matter reacting (multiplying coefficients by 2), you generate or absorb exactly twice as much heat. Therefore, $\Delta H$ must also be multiplied by 2.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Y-Axis Enthalpy scales automatically. Relative energy states are preserved accurately.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> HESS'S LAW PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Hess's Law Energy Diagram</strong>! Explore the principle of state functions and path independence in thermodynamics.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Step 1 &amp; 2 Sliders</strong>: Adjust the individual enthalpy changes for the intermediate reactions. Watch the energy levels dynamically shift.</li>
+            <li><strong>Trace Path</strong>: Click <strong>▶ Trace Path</strong> to watch a theoretical particle travel from Reactants $\to$ Intermediates $\to$ Products, proving the net energy change is identical to the direct path.</li>
+            <li><strong>Direct Path Toggle</strong>: Turn the overall $\Delta H_{rxn}$ arrow on or off to focus on the individual steps.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Application State
+    let dH1 = -110;
+    let dH2 = -283;
+    let netDH = 0;
+    
+    let isTracing = false;
+    let traceProgress = 0; // 0 to 1
+
+    // UI Elements
+    const sliderDh1 = document.getElementById('slider-dh1');
+    const numDh1 = document.getElementById('num-dh1');
+    const sliderDh2 = document.getElementById('slider-dh2');
+    const numDh2 = document.getElementById('num-dh2');
+    
+    const chkDirect = document.getElementById('chk-direct');
+    const chkGrid = document.getElementById('chk-grid');
+
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telNet = document.getElementById('telemetryNet');
+    const telType = document.getElementById('telemetryType');
+
+    const simCanvas = document.getElementById('simCanvas');
+    const ctx = simCanvas.getContext('2d');
+
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    // Guide Handlers
+    document.getElementById('btn-open-guide').addEventListener('click', () => {
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+    });
+    const closeGuide = () => document.getElementById('user-guide-modal').classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Sync Input Functions
+    function updateState() {
+      netDH = dH1 + dH2;
+      
+      telNet.innerText = (netDH > 0 ? "+" : "") + netDH + " kJ";
+      
+      if (netDH > 0) {
+        telType.innerText = "ENDOTHERMIC";
+        telType.className = "text-sm font-bold text-rose-500 font-mono mt-0.5 tracking-widest";
+        telNet.className = "text-lg font-bold text-rose-500 font-mono mt-0.5";
+      } else if (netDH < 0) {
+        telType.innerText = "EXOTHERMIC";
+        telType.className = "text-sm font-bold text-blue-500 font-mono mt-0.5 tracking-widest";
+        telNet.className = "text-lg font-bold text-blue-500 font-mono mt-0.5";
+      } else {
+        telType.innerText = "ISOTHERMIC";
+        telType.className = "text-sm font-bold text-slate-500 font-mono mt-0.5 tracking-widest";
+        telNet.className = "text-lg font-bold text-slate-500 font-mono mt-0.5";
+      }
+    }
+
+    function syncDh1(val) {
+      val = Math.max(-500, Math.min(500, parseInt(val) || 0));
+      dH1 = val;
+      sliderDh1.value = val;
+      numDh1.value = val;
+      updateState();
+    }
+    sliderDh1.addEventListener('input', e => { syncDh1(e.target.value); isTracing = false; });
+    numDh1.addEventListener('change', e => { syncDh1(e.target.value); isTracing = false; });
+
+    function syncDh2(val) {
+      val = Math.max(-500, Math.min(500, parseInt(val) || 0));
+      dH2 = val;
+      sliderDh2.value = val;
+      numDh2.value = val;
+      updateState();
+    }
+    sliderDh2.addEventListener('input', e => { syncDh2(e.target.value); isTracing = false; });
+    numDh2.addEventListener('change', e => { syncDh2(e.target.value); isTracing = false; });
+
+    function applyPreset(val1, val2, name) {
+      syncDh1(val1);
+      syncDh2(val2);
+      isTracing = false;
+      traceProgress = 0;
+      statusText.innerText = "Loaded: " + name;
+    }
+
+    // Animation Controls
+    btnRun.addEventListener('click', () => {
+      isTracing = true;
+      traceProgress = 0;
+      btnRun.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      btnPause.classList.remove('bg-indigo-600', 'text-white');
+      statusText.innerText = "Tracing Pathways...";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+    });
+
+    btnPause.addEventListener('click', () => {
+      isTracing = false;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      statusText.innerText = "Trace Paused";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-400";
+    });
+
+    btnReset.addEventListener('click', () => {
+      isTracing = false;
+      traceProgress = 0;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      statusText.innerText = "Standing By";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+      applyPreset(-110, -283, 'CO Formation');
+    });
+
+    // Canvas Rendering
+    function resizeCanvas() {
+      const container = simCanvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      simCanvas.width = container.clientWidth * dpr;
+      simCanvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawArrow(x1, y1, x2, y2, color, thickness=3) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = thickness;
+      
+      // Calculate length to avoid drawing arrow head if too short
+      const dist = Math.hypot(x2-x1, y2-y1);
+      if(dist < 5) { ctx.restore(); return; }
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      const headLength = 12;
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - headLength * Math.cos(angle - Math.PI / 6), y2 - headLength * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(x2 - headLength * Math.cos(angle + Math.PI / 6), y2 - headLength * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    let lastTime = performance.now();
+
+    function renderLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      if (isTracing) {
+        traceProgress += dt * 0.4; // 2.5 seconds to complete trace
+        if (traceProgress > 1) {
+          traceProgress = 1;
+          isTracing = false;
+          btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+          statusText.innerText = "Trace Complete";
+          statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+        }
+      }
+
+      const W = simCanvas.width / window.devicePixelRatio;
+      const H = simCanvas.height / window.devicePixelRatio;
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Auto-scaling Y Axis logic
+      // Find min and max energy states
+      let states = [0, dH1, dH1 + dH2];
+      let eMin = Math.min(...states);
+      let eMax = Math.max(...states);
+      
+      // Ensure minimum scale bounds
+      if (eMax - eMin < 200) {
+         eMax += 100;
+         eMin -= 100;
+      }
+
+      const paddingY = 80;
+      const usableHeight = H - 2 * paddingY;
+      
+      // Map energy to Y pixel (higher energy = lower Y pixel)
+      function getPy(energy) {
+        let normalized = (energy - eMin) / (eMax - eMin); // 0 to 1
+        return paddingY + usableHeight * (1 - normalized);
+      }
+
+      const pyA = getPy(0);
+      const pyB = getPy(dH1);
+      const pyC = getPy(dH1 + dH2);
+
+      // Horizontal Layout
+      const colW = W / 4;
+      const xA = colW * 1;
+      const xB = colW * 2;
+      const xC = colW * 3;
+
+      // Draw Grid
+      if (chkGrid.checked) {
+        ctx.strokeStyle = '#f1f5f9';
+        ctx.lineWidth = 1;
+        ctx.font = '10px monospace';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'left';
+        
+        let gridStep = 100;
+        if ((eMax - eMin) > 800) gridStep = 200;
+        
+        let startGrid = Math.floor(eMin / gridStep) * gridStep;
+        for(let eg = startGrid; eg <= eMax; eg += gridStep) {
+           let gy = getPy(eg);
+           ctx.beginPath();
+           ctx.moveTo(40, gy);
+           ctx.lineTo(W - 40, gy);
+           ctx.stroke();
+           ctx.fillText(eg + " kJ", 10, gy + 3);
+        }
+
+        // Draw Y Axis Line
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.moveTo(50, 20);
+        ctx.lineTo(50, H - 20);
+        ctx.stroke();
+        ctx.save();
+        ctx.translate(35, H/2 + 30);
+        ctx.rotate(-Math.PI/2);
+        ctx.fillStyle = '#64748b';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText("Enthalpy (H)", 0, 0);
+        ctx.restore();
+      }
+
+      // Helper for drawing State Platforms
+      function drawStatePlatform(xCenter, yPos, label, color) {
+         ctx.strokeStyle = color;
+         ctx.lineWidth = 4;
+         ctx.beginPath();
+         ctx.moveTo(xCenter - 50, yPos);
+         ctx.lineTo(xCenter + 50, yPos);
+         ctx.stroke();
+
+         ctx.fillStyle = '#1e293b';
+         ctx.font = 'bold 13px sans-serif';
+         ctx.textAlign = 'center';
+         ctx.fillText(label, xCenter, yPos - 12);
+      }
+
+      // Draw Platforms
+      drawStatePlatform(xA, pyA, "Reactants (A)", "#64748b");
+      drawStatePlatform(xB, pyB, "Intermediates (B)", "#3b82f6");
+      drawStatePlatform(xC, pyC, "Products (C)", "#64748b");
+
+      // Draw Step 1 Arrow (A -> B)
+      const color1 = dH1 > 0 ? '#f43f5e' : '#3b82f6'; // red if endo, blue if exo
+      drawArrow(xA + 25, pyA, xB - 25, pyB, color1, 2.5);
+      ctx.fillStyle = color1;
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(`ΔH₁ = ${dH1 > 0 ? '+'+dH1 : dH1} kJ`, (xA+xB)/2, (pyA+pyB)/2 - 10);
+
+      // Draw Step 2 Arrow (B -> C)
+      const color2 = dH2 > 0 ? '#f43f5e' : '#3b82f6';
+      drawArrow(xB + 25, pyB, xC - 25, pyC, color2, 2.5);
+      ctx.fillStyle = color2;
+      ctx.fillText(`ΔH₂ = ${dH2 > 0 ? '+'+dH2 : dH2} kJ`, (xB+xC)/2, (pyB+pyC)/2 - 10);
+
+      // Draw Net Direct Arrow (A -> C)
+      if (chkDirect.checked) {
+        const colorNet = netDH > 0 ? '#f43f5e' : '#3b82f6';
+        
+        ctx.save();
+        ctx.setLineDash([8, 6]);
+        drawArrow(xA, pyA + 15, xC, pyC + 15, colorNet, 3.5);
+        ctx.restore();
+        
+        ctx.fillStyle = colorNet;
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText(`ΔH_rxn = ${netDH > 0 ? '+'+netDH : netDH} kJ`, (xA+xC)/2, (pyA+pyC)/2 + 35);
+      }
+
+      // Trace Animation Dot
+      if (traceProgress > 0) {
+         let tx, ty;
+         
+         if (traceProgress < 0.5) {
+            // Animating A -> B
+            let subP = traceProgress * 2; // 0 to 1
+            tx = xA + 25 + (xB - 25 - (xA + 25)) * subP;
+            ty = pyA + (pyB - pyA) * subP;
+         } else {
+            // Animating B -> C
+            let subP = (traceProgress - 0.5) * 2; // 0 to 1
+            tx = xB + 25 + (xC - 25 - (xB + 25)) * subP;
+            ty = pyB + (pyC - pyB) * subP;
+         }
+
+         ctx.fillStyle = '#facc15';
+         ctx.shadowColor = 'rgba(250, 204, 21, 0.8)';
+         ctx.shadowBlur = 10;
+         ctx.beginPath();
+         ctx.arc(tx, ty, 6, 0, Math.PI * 2);
+         ctx.fill();
+         ctx.shadowBlur = 0; // reset
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      updateState();
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

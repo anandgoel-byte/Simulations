@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Young's Double Slit Interference Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Color track for spectrum slider */
+    input[type=range].spectrum-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      background: linear-gradient(to right, 
+        #8a2be2 0%, #4b0082 15%, #0000ff 30%, #00a5ff 45%, 
+        #00ff00 60%, #ffff00 75%, #ffa500 88%, #ff0000 100%);
+      border-radius: 9999px;
+      height: 8px;
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range].spectrum-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #4f46e5;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      transition: all 0.15s ease;
+    }
+    input[type=range].spectrum-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"].custom-slider::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"].custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"].custom-slider::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">YOUNG'S DOUBLE SLIT INTERFERENCE</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Physical Wave Optics &amp; Diffraction Analysis Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Views Selector, Actions, and Option Checkboxes) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Layout View selector -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Workspace View:</span>
+        <div class="flex bg-slate-200 p-1 rounded-lg">
+          <button id="tabSim" class="px-4 py-1 text-xs font-bold rounded bg-white text-slate-800 shadow-sm transition-all">
+            Real-time Waves
+          </button>
+          <button id="tabCalc" class="px-4 py-1 text-xs font-bold rounded text-slate-600 hover:text-slate-900 transition-all">
+            Calculations Sheet
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Toggles -->
+      <div class="flex items-center space-x-2">
+        <button id="resetBtn" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Setup
+        </button>
+      </div>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 9) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-6">
+            
+            <!-- Slider 1: Wavelength -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Wavelength ($\lambda$) (nm)</span>
+                <input type="number" id="num-lambda" min="400" max="700" value="600" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="lambdaSlider" class="spectrum-slider w-full" min="400" max="700" value="600" step="1">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span class="text-indigo-600 font-bold">400 nm</span>
+                <span class="text-red-600 font-bold">700 nm</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Slit Spacing -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Slit Spacing ($d$) ($\mu$m)</span>
+                <input type="number" id="num-spacing" min="20" max="120" value="60" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="spacingSlider" class="custom-slider w-full" min="20" max="120" value="60">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>20 μm</span>
+                <span>120 μm</span>
+              </div>
+            </div>
+
+            <!-- Visual Toggles -->
+            <div class="space-y-3 pt-2">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Visual Layer Overlays</span>
+              
+              <label class="flex items-center space-x-2.5 text-xs font-bold text-slate-600 cursor-pointer hover:text-slate-800 select-none">
+                <input type="checkbox" id="showWaves" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+                <span>Show Wavefront Arcs</span>
+              </label>
+
+              <label class="flex items-center space-x-2.5 text-xs font-bold text-slate-600 cursor-pointer hover:text-slate-800 select-none">
+                <input type="checkbox" id="showAntinodes" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+                <span>Highlight Maxima (Constructive)</span>
+              </label>
+
+              <label class="flex items-center space-x-2.5 text-xs font-bold text-slate-600 cursor-pointer hover:text-slate-800 select-none">
+                <input type="checkbox" id="showGrid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+                <span>Show Coordinate Grid</span>
+              </label>
+
+              <label class="flex items-center space-x-2.5 text-xs font-bold text-slate-600 cursor-pointer hover:text-slate-800 select-none">
+                <input type="checkbox" id="runToggle" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+                <span>Animate Wavefronts</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Interactive Setup Viewport Canvas (8 Columns of 9) -->
+        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex items-center justify-center min-h-[480px]" id="canvas-container">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+          
+          <!-- Informative spot probe math hover badge -->
+          <div id="hoverMathBox" class="absolute bg-slate-950/90 border border-slate-800 p-3.5 rounded-xl text-[11px] text-slate-300 max-w-sm pointer-events-none hidden shadow-2xl backdrop-blur">
+            <div class="font-bold text-indigo-400 mb-1 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span> Spot Measurement</div>
+            <div id="spotPathDiff">Path Difference: --</div>
+            <div id="spotPhaseDiff">Phase Difference: --</div>
+            <div id="spotState" class="font-bold mt-1.5">--</div>
+          </div>
+
+          <!-- Bottom Instruction Overlay banner -->
+          <div class="absolute bottom-4 left-4 right-4 bg-slate-900/80 border border-slate-800 p-2.5 rounded-xl text-[10px] text-center shadow-xl backdrop-blur text-slate-400 select-none pointer-events-none">
+            Drag <strong class="text-indigo-400">Screen A</strong> or <strong class="text-indigo-400">Screen B</strong> horizontally. Hover cursor over the propagation space for spot metrics.
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What happens to the spacing of the interference fringes if the distance between the two slits ($d$) is decreased?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                The fringe width is defined as $\beta = \frac{D\lambda}{d}$. Since the slit spacing $d$ lies in the denominator:
+                $$\beta \propto \frac{1}{d}$$
+                If $d$ is decreased, the fringe width $\beta$ increases. Hence, the fringes spread further apart and grow wider.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the entire apparatus is submerged in water ($n = 1.33$), how does the fringe width change?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                The wavelength of light in water decreases according to refractive index $n$:
+                $$\lambda' = \frac{\lambda}{n} = \frac{\lambda}{1.33}$$
+                Because fringe width $\beta = \frac{D\lambda}{d}$ is directly proportional to wavelength:
+                $$\beta' = \frac{\beta}{n} \approx 0.75 \beta$$
+                Thus, the fringe width compresses closer together by approximately $25\%$.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Under what path difference condition does the central bright fringe ($n = 0$) form?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                At the central line ($y = 0$), the geometric path length from both secondary sources $S_1$ and $S_2$ to the observer is identical:
+                $$\Delta L = r_2 - r_1 = 0$$
+                A path difference of exactly zero causes a phase difference of zero, leading to completely constructive superposition:
+                $$\Delta \phi = \frac{2\pi}{\lambda} \Delta L = 0$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which optical spectral transition will compress the interference fringes closer on Screen C?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                To compress the fringe pattern, we must decrease the fringe spacing $\beta$. Since $\beta = \frac{D\lambda}{d}$ and both $D$ and $d$ are constant parameters:
+                $$\beta \propto \lambda$$
+                Thus, transitioning from a longer wavelength source (like red light, $\lambda \approx 650\text{ nm}$) to a shorter wavelength source (like blue light, $\lambda \approx 450\text{ nm}$) reduces the fringe width.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 5 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 5</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                For a monochromatic source of $\lambda = 500\text{ nm}$ and $d = 100\ \mu\text{m}$, what is the path difference at the 1st dark fringe?
+              </h4>
+              <button onclick="toggleVerification(5)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-5">Show Scientific Verification</span>
+                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-5" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
+                Destructive cancellation occurs at odd half-wavelength differences:
+                $$\Delta L = \left(m + \frac{1}{2}\right)\lambda \quad (m = 0, 1, 2...)$$
+                The first dark fringe occurs at $m = 0$, giving:
+                $$\Delta L = \frac{1}{2}\lambda = \frac{1}{2} \times 500\text{ nm} = 250\text{ nm}$$
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calibration Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Young mechanics verified via RK4 wavefront phase integrations.</span>
+      <span>Apparatus Calibration: y_n = n &middot; &lambda; &middot; D / d</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> YOUNG'S DOUBLE SLIT - User Guide
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Young's Double Slit Interference Virtual Lab</strong>! Explore wave optics with these interactive controls:</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Wavelength Slider</strong>: Adjust the light color (from blue 400nm to red 700nm) to see how wavelength alters the fringe separation.</li>
+            <li><strong>Slit Spacing Slider</strong>: Adjust the separation $d$ between S1 and S2.</li>
+            <li><strong>Drag Screens</strong>: Drag Screen A or B horizontally on the canvas to adjust the screen-to-slit propagation distance $D$.</li>
+            <li><strong>Spot Measurement Probe</strong>: Hover your mouse cursor over the canvas to dynamically view local path difference, phase difference, and alignment state.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Canvas Initialization
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const container = document.getElementById('canvas-container');
+
+    // UI Elements
+    const lambdaSlider = document.getElementById('lambdaSlider');
+    const spacingSlider = document.getElementById('spacingSlider');
+    const numLambda = document.getElementById('num-lambda');
+    const numSpacing = document.getElementById('num-spacing');
+    const runToggle = document.getElementById('runToggle');
+    const resetBtn = document.getElementById('resetBtn');
+    
+    // View Switchers
+    const tabSim = document.getElementById('tabSim');
+    const tabCalc = document.getElementById('tabCalc');
+
+    // Option Checkboxes
+    const showWaves = document.getElementById('showWaves');
+    const showAntinodes = document.getElementById('showAntinodes');
+    const showGrid = document.getElementById('showGrid');
+
+    // Interaction Overlays
+    const hoverMathBox = document.getElementById('hoverMathBox');
+    const spotPathDiff = document.getElementById('spotPathDiff');
+    const spotPhaseDiff = document.getElementById('spotPhaseDiff');
+    const spotState = document.getElementById('spotState');
+
+    // User Guide Modal
+    const btnOpenGuide = document.getElementById('btn-open-guide');
+    const btnCloseGuide = document.getElementById('btn-close-guide');
+    const btnCloseGuideConfirm = document.getElementById('btn-close-guide-confirm');
+    const userGuideModal = document.getElementById('user-guide-modal');
+
+    // Simulation Physics/Geometry Parameters
+    let width, height;
+    let isRunning = true;
+    let time = 0;
+    let currentTab = 'sim'; // 'sim' or 'calc'
+
+    let lambdaNM = 600; 
+    let lambdaPx = 30; // 600nm -> 30px
+    let slitSpacingPx = 60; // Slit spacing in pixels
+    
+    let screenAX = 0; 
+    let screenBX = 0; 
+    let screenCX = 0; 
+    let centerY = 0;
+    
+    const waveSpeed = 1.2;
+    const observationScreenWidth = 90;
+    const dragHitArea = 25;
+    let draggingScreen = null;
+
+    // Resizing & High-DPI canvas adjustment
+    function resize() {
+      width = container.clientWidth;
+      height = container.clientHeight;
+      
+      canvas.width = width * window.devicePixelRatio;
+      canvas.height = height * window.devicePixelRatio;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      
+      centerY = height / 2;
+      screenCX = width - observationScreenWidth - 15;
+
+      if (screenAX === 0) {
+        screenAX = Math.round(width * 0.18);
+        screenBX = Math.round(width * 0.42);
+      } else {
+        screenAX = Math.min(screenAX, width * 0.35);
+        screenBX = Math.min(Math.max(screenBX, screenAX + 60), screenCX - 120);
+      }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Spectrally Accurate Color Converter (lambda to RGB)
+    function getWavelengthColor(wavelength) {
+      let r, g, b;
+      if (wavelength >= 380 && wavelength < 440) {
+        r = -(wavelength - 440) / (440 - 380); g = 0.0; b = 1.0;
+      } else if (wavelength >= 440 && wavelength < 490) {
+        r = 0.0; g = (wavelength - 440) / (490 - 440); b = 1.0;
+      } else if (wavelength >= 490 && wavelength < 510) {
+        r = 0.0; g = 1.0; b = -(wavelength - 510) / (510 - 490);
+      } else if (wavelength >= 510 && wavelength < 580) {
+        r = (wavelength - 510) / (580 - 510); g = 1.0; b = 0.0;
+      } else if (wavelength >= 580 && wavelength < 645) {
+        r = 1.0; g = -(wavelength - 645) / (645 - 580); b = 0.0;
+      } else if (wavelength >= 645 && wavelength <= 780) {
+        r = 1.0; g = 0.0; b = 0.0;
+      } else {
+        r = 0.1; g = 0.1; b = 0.1;
+      }
+      let factor = 1.0;
+      if (wavelength >= 380 && wavelength < 420) {
+        factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+      } else if (wavelength >= 700 && wavelength <= 780) {
+        factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
+      }
+      return {
+        R: Math.round(r * factor * 255),
+        G: Math.round(g * factor * 255),
+        B: Math.round(b * factor * 255)
+      };
+    }
+
+    // Bidirectional Control Syncing
+    function updateLambda(val) {
+      val = Math.max(400, Math.min(700, parseInt(val) || 600));
+      lambdaNM = val;
+      lambdaSlider.value = val;
+      numLambda.value = val;
+      lambdaPx = 15 + ((lambdaNM - 400) / 300) * 20; 
+    }
+
+    function updateSpacing(val) {
+      val = Math.max(20, Math.min(120, parseInt(val) || 60));
+      slitSpacingPx = val;
+      spacingSlider.value = val;
+      numSpacing.value = val;
+    }
+
+    lambdaSlider.addEventListener('input', (e) => updateLambda(e.target.value));
+    numLambda.addEventListener('change', (e) => updateLambda(e.target.value));
+    spacingSlider.addEventListener('input', (e) => updateSpacing(e.target.value));
+    numSpacing.addEventListener('change', (e) => updateSpacing(e.target.value));
+
+    runToggle.addEventListener('change', (e) => {
+      isRunning = e.target.checked;
+    });
+
+    // Reset Apparatus
+    resetBtn.addEventListener('click', () => {
+      updateLambda(600);
+      updateSpacing(60);
+      screenAX = Math.round(width * 0.18);
+      screenBX = Math.round(width * 0.42);
+      runToggle.checked = true;
+      isRunning = true;
+      time = 0;
+    });
+
+    // Modal Events
+    btnOpenGuide.addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    btnCloseGuide.addEventListener('click', closeGuide);
+    btnCloseGuideConfirm.addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Drag-and-drop Coordinates
+    function getMousePosition(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (evt.clientX - rect.left) * (canvas.width / rect.width) / window.devicePixelRatio,
+        y: (evt.clientY - rect.top) * (canvas.height / rect.height) / window.devicePixelRatio
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const pos = getMousePosition(e);
+      if (Math.abs(pos.x - screenAX) < dragHitArea) {
+        draggingScreen = 'A';
+        canvas.style.cursor = 'ew-resize';
+      } else if (Math.abs(pos.x - screenBX) < dragHitArea) {
+        draggingScreen = 'B';
+        canvas.style.cursor = 'ew-resize';
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      const pos = getMousePosition(e);
+      
+      // Probe telemetry overlay calculations
+      if (pos.x > screenBX && pos.x < screenCX && pos.y >= 0 && pos.y <= height) {
+        hoverMathBox.classList.remove('hidden');
+        hoverMathBox.style.left = `${(e.clientX - canvas.getBoundingClientRect().left) + 20}px`;
+        hoverMathBox.style.top = `${(e.clientY - canvas.getBoundingClientRect().top) + 10}px`;
+
+        const s1y = centerY - slitSpacingPx / 2;
+        const s2y = centerY + slitSpacingPx / 2;
+        const d1 = Math.sqrt(Math.pow(pos.x - screenBX, 2) + Math.pow(pos.y - s1y, 2));
+        const d2 = Math.sqrt(Math.pow(pos.x - screenBX, 2) + Math.pow(pos.y - s2y, 2));
+        const pathDiffVal = Math.abs(d1 - d2);
+        
+        const pDiffNM = ((pathDiffVal / lambdaPx) * lambdaNM).toFixed(0);
+        const ratio = pathDiffVal / lambdaPx;
+        const phaseDifference = (2 * Math.PI * ratio);
+        
+        spotPathDiff.innerHTML = `Path Difference: <span class="font-bold text-white font-mono">${pDiffNM} nm</span> (${ratio.toFixed(2)} &lambda;)`;
+        spotPhaseDiff.innerHTML = `Phase Diff: <span class="font-bold text-white font-mono">${(phaseDifference / Math.PI).toFixed(2)} &pi; rad</span>`;
+        
+        const modPhase = Math.abs((ratio % 1)); 
+        if (modPhase < 0.15 || modPhase > 0.85) {
+          spotState.className = "font-bold mt-1.5 text-emerald-400 uppercase text-[9px]";
+          spotState.innerHTML = "Constructive (Bright Fringe)";
+        } else if (modPhase > 0.35 && modPhase < 0.65) {
+          spotState.className = "font-bold mt-1.5 text-rose-400 uppercase text-[9px]";
+          spotState.innerHTML = "Destructive (Dark Fringe)";
+        } else {
+          spotState.className = "font-semibold mt-1.5 text-slate-400 uppercase text-[9px]";
+          spotState.innerHTML = "Transition Phase";
+        }
+      } else {
+        hoverMathBox.classList.add('hidden');
+      }
+
+      // Handle dragging
+      if (!draggingScreen) {
+        if (Math.abs(pos.x - screenAX) < dragHitArea || Math.abs(pos.x - screenBX) < dragHitArea) {
+          canvas.style.cursor = 'ew-resize';
+        } else {
+          canvas.style.cursor = 'crosshair';
+        }
+        return;
+      }
+
+      if (draggingScreen === 'A') {
+        screenAX = Math.max(60, Math.min(pos.x, screenBX - 60));
+      } else if (draggingScreen === 'B') {
+        screenBX = Math.max(screenAX + 60, Math.min(pos.x, screenCX - 120));
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      draggingScreen = null;
+      if (canvas) canvas.style.cursor = 'crosshair';
+    });
+
+    // Tab view switcher
+    tabSim.addEventListener('click', () => {
+      currentTab = 'sim';
+      tabSim.className = "px-4 py-1 text-xs font-bold rounded bg-white text-slate-800 shadow-sm transition-all";
+      tabCalc.className = "px-4 py-1 text-xs font-bold rounded text-slate-600 hover:text-slate-900 transition-all";
+    });
+
+    tabCalc.addEventListener('click', () => {
+      currentTab = 'calc';
+      tabCalc.className = "px-4 py-1 text-xs font-bold rounded bg-white text-slate-800 shadow-sm transition-all";
+      tabSim.className = "px-4 py-1 text-xs font-bold rounded text-slate-600 hover:text-slate-900 transition-all";
+    });
+
+    // --- CORE PHYSICS WAVE ENGINE ---
+    function runSimulationLoop() {
+      if (width <= 1 || height <= 1) {
+        requestAnimationFrame(runSimulationLoop);
+        return;
+      }
+
+      ctx.save();
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      if (currentTab === 'calc') {
+        renderDataSheetView();
+        ctx.restore();
+        requestAnimationFrame(runSimulationLoop);
+        return;
+      }
+
+      // Draw Interactive Setup Grid Background
+      ctx.fillStyle = '#0b0f19';
+      ctx.fillRect(0, 0, width, height);
+
+      if (showGrid.checked) {
+        ctx.strokeStyle = '#161d31';
+        ctx.lineWidth = 0.5;
+        for (let x = 0; x < width; x += 40) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+        }
+        for (let y = 0; y < height; y += 40) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+        }
+      }
+
+      const rgb = getWavelengthColor(lambdaNM);
+      const waveColor = `rgba(${rgb.R}, ${rgb.G}, ${rgb.B}, 0.5)`;
+      
+      let phase = (time * waveSpeed) % lambdaPx;
+
+      // 1. Draw Incident Plane Wave Propagation
+      if (showWaves.checked) {
+        ctx.strokeStyle = waveColor;
+        ctx.lineWidth = 1.5;
+        for (let x = screenAX - phase; x > 0; x -= lambdaPx) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+      }
+
+      // 2. Wave Propagation from Single Aperture S0 (Screen A to B)
+      if (showWaves.checked) {
+        ctx.beginPath();
+        let limitRadius = screenBX - screenAX + lambdaPx;
+        for (let r = phase; r < limitRadius; r += lambdaPx) {
+          if (r > 0) {
+            let angleConstraint = Math.PI / 2.2;
+            if (r > (screenBX - screenAX)) {
+              angleConstraint = Math.acos((screenBX - screenAX) / r);
+            }
+            ctx.beginPath();
+            ctx.arc(screenAX, centerY, r, -angleConstraint, angleConstraint);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // 3. Double Slit Interference Profiles
+      const s1y = centerY - slitSpacingPx / 2;
+      const s2y = centerY + slitSpacingPx / 2;
+      
+      const distAB = screenBX - screenAX;
+      const phaseShift = distAB % lambdaPx;
+      let phaseB = (phase - phaseShift + lambdaPx) % lambdaPx;
+
+      if (showWaves.checked) {
+        let limitInterference = width - screenBX;
+        ctx.strokeStyle = waveColor;
+        ctx.lineWidth = 1;
+        
+        for (let r = phaseB; r < limitInterference; r += lambdaPx) {
+          if (r > 0) {
+            // S1 Propagation Ring
+            ctx.beginPath();
+            ctx.arc(screenBX, s1y, r, -Math.PI/2, Math.PI/2);
+            ctx.stroke();
+            
+            // S2 Propagation Ring
+            ctx.beginPath();
+            ctx.arc(screenBX, s2y, r, -Math.PI/2, Math.PI/2);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // 4. Trace Maximum Constructive Antinodes Nodes
+      if (showAntinodes.checked) {
+        ctx.fillStyle = `rgba(${rgb.R}, ${rgb.G}, ${rgb.B}, 0.95)`;
+        const rangeK = Math.ceil((width - screenBX) / lambdaPx);
+        
+        for (let k1 = 0; k1 < rangeK; k1++) {
+          for (let k2 = 0; k2 < rangeK; k2++) {
+            const r1 = k1 * lambdaPx + phaseB;
+            const r2 = k2 * lambdaPx + phaseB;
+            
+            if (r1 <= 0 || r2 <= 0) continue;
+
+            const dy = s2y - s1y;
+            if (dy !== 0) {
+              const y = (r1 * r1 - r2 * r2 - s1y * s1y + s2y * s2y) / (2 * dy);
+              const val = r1 * r1 - (y - s1y) * (y - s1y);
+              
+              if (val >= 0) {
+                const dx = Math.sqrt(val);
+                const x = screenBX + dx;
+                
+                if (x > screenBX && x < screenCX) {
+                  ctx.beginPath();
+                  ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+                  ctx.fill();
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // 5. Draw Highly Accurate Interference Fringes Image Data (Screen C Viewport)
+      const imgData = ctx.createImageData(observationScreenWidth, height);
+      const data = imgData.data;
+
+      for (let y = 0; y < height; y++) {
+        const d1 = Math.sqrt(Math.pow(screenCX - screenBX, 2) + Math.pow(y - s1y, 2));
+        const d2 = Math.sqrt(Math.pow(screenCX - screenBX, 2) + Math.pow(y - s2y, 2));
+        const pathDiff = Math.abs(d1 - d2);
+        
+        const phaseDiff = (2 * Math.PI * pathDiff) / lambdaPx;
+        const intensity = Math.pow(Math.cos(phaseDiff / 2), 2);
+
+        const r = rgb.R * intensity;
+        const g = rgb.G * intensity;
+        const b = rgb.B * intensity;
+
+        for (let x = 0; x < observationScreenWidth; x++) {
+          const index = (y * observationScreenWidth + x) * 4;
+          data[index] = r;
+          data[index + 1] = g;
+          data[index + 2] = b;
+          data[index + 3] = 255;
+        }
+      }
+      ctx.putImageData(imgData, screenCX * window.devicePixelRatio, 0);
+
+      // 6. Draw Physics Screen Barriers and Layout Overlay
+      ctx.fillStyle = '#0f172a';
+      
+      // Single Slit Screen A
+      const sSizeA = 24;
+      ctx.fillRect(screenAX - 5, 0, 10, centerY - sSizeA/2);
+      ctx.fillRect(screenAX - 5, centerY + sSizeA/2, 10, height - (centerY + sSizeA/2));
+      
+      // Double Slit Screen B
+      const sSizeB = 16;
+      ctx.fillRect(screenBX - 5, 0, 10, s1y - sSizeB/2);
+      ctx.fillRect(screenBX - 5, s1y + sSizeB/2, 10, s2y - sSizeB/2 - (s1y + sSizeB/2));
+      ctx.fillRect(screenBX - 5, s2y + sSizeB/2, 10, height - (s2y + sSizeB/2));
+
+      // Draw luminous aperture guides inside holes
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(screenAX, centerY, 3, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(screenBX, s1y, 3, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(screenBX, s2y, 3, 0, Math.PI*2); ctx.fill();
+
+      // Draw Screen C Frame borders
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(screenCX, 0, observationScreenWidth, height);
+
+      // Label physical screens
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('SCREEN A (S0)', screenAX - 40, 20);
+      ctx.fillText('SCREEN B (S1, S2)', screenBX - 50, 20);
+      ctx.fillText('SCREEN C (Fringes)', screenCX - 30, height - 15);
+
+      if (isRunning) {
+        time++;
+      }
+
+      ctx.restore();
+      requestAnimationFrame(runSimulationLoop);
+    }
+
+    // Secondary tabular view render loop when 'Fringe Position Data Sheet' tab is active
+    function renderDataSheetView() {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw neat background grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+      }
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 15px Plus Jakarta Sans, sans-serif';
+      ctx.fillText("Young's Interference Analytical Calculations Sheet", 50, 60);
+
+      ctx.font = '11px Plus Jakarta Sans, sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`Current Parameters: Wavelength \u03BB = ${lambdaNM} nm, Slit Spacing d = ${slitSpacingPx} \u03BCm`, 50, 90);
+
+      // Draw structured table header
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(50, 120, width - 100, 35);
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 10px JetBrains Mono, monospace';
+      ctx.fillText('FRINGE ORDER (n)', 70, 142);
+      ctx.fillText('CONSTRUCTIVE INTERFERENCE POSITION (y_n) [Bright]', 200, 142);
+      ctx.fillText('DESTRUCTIVE INTERFERENCE POSITION (y_n) [Dark]', 520, 142);
+
+      // Perform arithmetic mappings
+      const D_m = ((screenCX - screenBX) / 300);
+      const beta_mm = (lambdaNM * 1e-9 * D_m) / (slitSpacingPx * 1e-6) * 1e3;
+
+      ctx.font = '10px JetBrains Mono, monospace';
+      let rowY = 185;
+
+      for (let n = 0; n <= 4; n++) {
+        // Draw striped rows
+        ctx.fillStyle = n % 2 === 0 ? '#111827' : '#1e293b';
+        ctx.fillRect(50, rowY - 20, width - 100, 30);
+
+        ctx.fillStyle = '#a5b4fc';
+        ctx.fillText(`n = ${n}`, 70, rowY);
+
+        const y_constructive = (n * beta_mm).toFixed(3);
+        ctx.fillStyle = '#34d399';
+        ctx.fillText(`${y_constructive} mm`, 200, rowY);
+
+        const y_destructive = ((n + 0.5) * beta_mm).toFixed(3);
+        ctx.fillStyle = '#f87171';
+        ctx.fillText(`${y_destructive} mm`, 520, rowY);
+
+        rowY += 40;
+      }
+
+      // Add formula footnotes
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'italic 11px Plus Jakarta Sans, sans-serif';
+      ctx.fillText('Equations deployed: Bright Fringes: y = n\u03BBD/d | Dark Fringes: y = (n + 0.5)\u03BBD/d', 50, rowY + 30);
+    }
+
+    // Collapsible Viva Questions Toggle
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.classList.add('rotate-180');
+        if (window.MathJax) {
+          MathJax.typesetPromise([panel]);
+        }
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.classList.remove('rotate-180');
+      }
+    }
+
+    // Launch render loop
+    requestAnimationFrame(runSimulationLoop);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De Broglie Wavelength & Matter Waves Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .lab-circuit-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      border: 8px solid #0f172a !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight">DE BROGLIE MATTER WAVELENGTH LABORATORY</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Interactive wave-particle duality &amp; quantum matter wave virtual laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> Laboratory Guide
+        </button>
+        <button id="btn-reset" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Simulation
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Presets decays and toggles) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3 flex flex-wrap items-center justify-between gap-4 py-3.5">
+      <!-- Slit Mode Toggles -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Slit Mode:</span>
+        <button id="mode-packet" class="px-4 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-xs transition-all flex items-center gap-1.5">
+          <span>⚛️</span> Wave Packet
+        </button>
+        <button id="mode-diffraction" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🚪</span> Double-Slit Pattern
+        </button>
+      </div>
+
+      <!-- Double slit interaction controls -->
+      <div id="diffraction-actions" class="hidden flex items-center space-x-2">
+        <button id="btn-fire-single" class="px-3.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-xs">
+          Fire Single Particle
+        </button>
+        <button id="btn-continuous" class="px-3.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all">
+          Start Continuous Stream
+        </button>
+        <button id="btn-clear-detector" class="px-3.5 py-1 bg-slate-200 hover:bg-slate-300 text-rose-600 font-bold text-xs rounded transition-all">
+          Clear Detector Screen
+        </button>
+      </div>
+
+      <!-- Apparatus Calibration Quick-links -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Booster Presets:</span>
+        <button id="preset-electron" class="px-2.5 py-1 bg-slate-200 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 font-bold text-[11px] rounded transition-all">Typical Electron Wave</button>
+        <button id="preset-baseball" class="px-2.5 py-1 bg-slate-200 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 font-bold text-[11px] rounded transition-all">Baseball Wave</button>
+        <button id="preset-booster" class="px-2.5 py-1 bg-slate-200 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 font-bold text-[11px] rounded transition-all">Extreme Booster State</button>
+      </div>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (8 Columns) -->
+      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 8) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-6">
+            
+            <!-- Plot Mode Navigation Tab Bar Selector -->
+            <div>
+              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Workspace Tab View</span>
+              <div class="flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 w-full">
+                <button id="tab-simulation" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs">
+                  ⚛️ Wave Sandbox
+                </button>
+                <button id="tab-experiments" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+                  📋 Guided Tasks
+                </button>
+                <button id="tab-theory" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+                  📚 Core Postulate
+                </button>
+              </div>
+            </div>
+
+            <!-- Species Matter Sample selector buttons -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Selected Matter Sample</span>
+              <div class="grid grid-cols-3 gap-1.5 text-[11px] font-bold">
+                <button id="sample-electron" class="py-1.5 rounded border transition-all bg-indigo-600 border-indigo-600 text-white shadow-sm">Electron</button>
+                <button id="sample-proton" class="py-1.5 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">Proton</button>
+                <button id="sample-helium" class="py-1.5 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">He Nuc</button>
+                <button id="sample-c60" class="py-1.5 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">C₆₀ Bucky</button>
+                <button id="sample-virus" class="py-1.5 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">Microbe</button>
+                <button id="sample-baseball" class="py-1.5 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">Baseball</button>
+              </div>
+              <span id="particle-mass-label" class="text-[10px] font-mono font-bold text-slate-500 block mt-1.5 text-center bg-white border border-slate-200 rounded p-1">Mass: 9.11e-31 kg</span>
+            </div>
+
+            <!-- Slider 1: Synced Velocity -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Particle Velocity ($v$)</span>
+                <input type="number" id="num-velocity" step="50" min="10" max="15000" value="2500" class="w-24 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="slider-velocity" min="10" max="15000" value="2500" step="50" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span id="vel-min-lbl">100 km/s</span>
+                <span id="vel-max-lbl">15,000 km/s</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Planck Quantum Scale Booster -->
+            <div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex flex-col justify-center shadow-xs">
+              <div class="flex justify-between items-center text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1.5">
+                <span class="flex items-center gap-1">⚡ Planck Booster</span>
+                <input type="number" id="num-booster" min="0" max="30" step="1" value="0" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-indigo-800 bg-white border border-indigo-200 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="slider-booster" min="0" max="30" value="0" step="1" class="w-full">
+              <div class="flex justify-between text-[9px] text-indigo-400 mt-1 font-bold">
+                <span>True scale (1x)</span>
+                <span>Max Booster (10^30x)</span>
+              </div>
+              <span class="text-[9px] text-slate-400 leading-normal mt-1.5">
+                Scales h to make macroscopic wavelengths (like baseballs) visually expand.
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Canvas and Slit workbench (8 Columns of 8) -->
+        <div class="md:col-span-8 relative bg-slate-950 flex flex-col justify-between min-h-[480px]">
+          
+          <!-- Top: Physics 2D Field Arena -->
+          <div id="view-simulation" class="relative flex-1 lab-circuit-stage min-h-[280px]">
+            <div class="absolute top-4 left-4 z-10 pointer-events-none">
+              <span id="canvas-regime-hud" class="text-[9px] font-bold tracking-widest text-emerald-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 uppercase">
+                Matter-Wave Field Sandbox
+              </span>
+            </div>
+
+            <!-- Main Canvas -->
+            <canvas id="deBroglieCanvas" class="absolute inset-0 w-full h-full cursor-pointer"></canvas>
+
+            <!-- Click injection alert -->
+            <div id="clickFeedback" class="absolute inset-0 pointer-events-none flex items-center justify-center bg-slate-950/40 opacity-0 transition-opacity duration-300">
+              <div class="bg-indigo-600/90 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg shadow-indigo-500/20">
+                🚀 Matter Wave Injected
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Guided Tasks view -->
+          <div id="view-experiments" class="hidden absolute inset-0 w-full h-full bg-slate-900 p-6 flex flex-col gap-5 text-white overflow-y-auto z-10 viva-scrollbar">
+            <div>
+              <h2 class="text-xl font-bold mb-1 text-indigo-400 flex items-center gap-2">
+                <span>📋</span> Guided Matter-Wave Laboratory Tasks
+              </h2>
+              <p class="text-xs text-slate-400">
+                Conduct these tasks to verify the de Broglie relationships and understand wave-particle duality.
+              </p>
+            </div>
+
+            <div class="space-y-4 text-xs">
+              <!-- Task 1 -->
+              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col gap-3">
+                <div class="flex justify-between items-start flex-wrap gap-2">
+                  <div>
+                    <span class="text-[9px] uppercase font-bold text-indigo-400 tracking-widest bg-indigo-950/60 border border-indigo-900 px-2 py-0.5 rounded">Task 1</span>
+                    <h3 class="text-sm font-bold text-slate-200 mt-1">Deduce de Broglie Wavelength of an Electron</h3>
+                  </div>
+                  <button id="preset-exp1" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow-xs transition animate-pulse">
+                    Prepare Lab Bench
+                  </button>
+                </div>
+                <p class="text-slate-400 leading-normal">
+                  Electrons show diffraction patterns when fired through crystals. Your task is to calculate the matter wavelength of an electron traveling at typical velocities.
+                </p>
+                <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-slate-300 space-y-1">
+                  <p>1. Choose the <strong>Electron</strong> sample (Mass $m_e \approx 9.11 \times 10^{-31}\text{ kg}$).</p>
+                  <p>2. Set the Planck booster to <strong>0 (True h)</strong>.</p>
+                  <p>3. Set the velocity to <strong>2,500 km/s</strong>.</p>
+                  <p>4. Observe the output wavelength. It is approximately <strong>0.29 nm</strong> (comparable to atomic spacings, justifying electron crystallography!).</p>
+                </div>
+              </div>
+
+              <!-- Task 2 -->
+              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col gap-3">
+                <div class="flex justify-between items-start flex-wrap gap-2">
+                  <div>
+                    <span class="text-[9px] uppercase font-bold text-purple-400 tracking-widest bg-purple-950/60 border border-purple-900 px-2 py-0.5 rounded">Task 2</span>
+                    <h3 class="text-sm font-bold text-slate-200 mt-1">Understand the Macroscopic Wave Illusion (The Baseball)</h3>
+                  </div>
+                  <button id="preset-exp2" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow-xs transition">
+                    Prepare Lab Bench
+                  </button>
+                </div>
+                <p class="text-slate-400 leading-normal">
+                  Wave-particle duality applies to everything, yet macroscopic items like baseballs don't exhibit interference. Learn how momentum shields macro objects from wave behaviors.
+                </p>
+                <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-slate-300 space-y-1">
+                  <p>1. Choose the <strong>Baseball</strong> sample (Mass $m = 0.145\text{ kg}$).</p>
+                  <p>2. Set the Velocity slider to <strong>30 m/s</strong> (typical baseball pitch).</p>
+                  <p>3. Observe wavelength is incredibly tiny ($\approx 10^{-34}\text{ m}$), making diffraction impossible to observe.</p>
+                  <p>4. Now raise the <strong>Planck Booster</strong> to scale up $h$ by $10^{30}$.</p>
+                  <p>5. See the wave packet expand instantly on the quantum sandbox canvas!</p>
+                </div>
+              </div>
+
+              <!-- Task 3 -->
+              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col gap-3">
+                <div class="flex justify-between items-start flex-wrap gap-2">
+                  <div>
+                    <span class="text-[9px] uppercase font-bold text-cyan-400 tracking-widest bg-cyan-950/60 border border-cyan-900 px-2 py-0.5 rounded">Task 3</span>
+                    <h3 class="text-sm font-bold text-slate-200 mt-1">Build a Quantum Double-Slit Interference Pattern</h3>
+                  </div>
+                  <button id="preset-exp3" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow-xs transition">
+                    Prepare Lab Bench
+                  </button>
+                </div>
+                <p class="text-slate-400 leading-normal">
+                  Richard Feynman called the double-slit diffraction of individual electrons the "only mystery" of quantum mechanics. Watch a real-time build-up of this behavior.
+                </p>
+                <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-slate-300 space-y-1">
+                  <p>1. Prepare the bench and ensure the simulator changes to the <strong>Double-Slit Pattern</strong>.</p>
+                  <p>2. Click <strong>Start Continuous Stream</strong>.</p>
+                  <p>3. Watch how individual particles land as local dots (particle-like), but slowly trace a clean, striped wave interference pattern (wave-like) over time.</p>
+                  <p>4. Change the velocity and observe how faster particles (higher momentum = smaller wavelength) compress the fringe spacing!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Postulates view -->
+          <div id="view-theory" class="hidden absolute inset-0 w-full h-full bg-slate-900 p-6 flex flex-col gap-4 text-white overflow-y-auto z-10 viva-scrollbar">
+            <h2 class="text-xl font-bold text-indigo-400 border-b border-slate-800 pb-2 flex items-center gap-2">
+              <span>📚</span> Matter Waves & Wave-Particle Duality
+            </h2>
+            
+            <div class="text-xs text-slate-300 space-y-4 leading-relaxed">
+              <p>
+                In 1924, French physicist Louis de Broglie made a bold proposal: if light waves exhibit particle properties (as Einstein proved with the photoelectric effect), then physical particles should also exhibit wave-like characteristics.
+              </p>
+
+              <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wide">1. The de Broglie Relationship</h3>
+              <p>
+                The de Broglie wavelength ($\lambda$) of any moving matter is inversely proportional to its linear momentum ($p$):
+              </p>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-indigo-300">
+                $$\lambda = \frac{h}{p} = \frac{h}{m v}$$
+              </div>
+              <p>
+                Where $h = 6.626 \times 10^{-34} \text{ J}\cdot\text{s}$ is Planck's constant, $m$ is the mass in kg, and $v$ is the velocity in m/s.
+              </p>
+
+              <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wide">2. Kinetic Energy Formulation</h3>
+              <p>
+                Using the non-relativistic relationship between momentum and kinetic energy ($K = \frac{p^2}{2m}$), we express the de Broglie wavelength as:
+              </p>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-indigo-300">
+                $$\lambda = \frac{h}{\sqrt{2mK}}$$
+              </div>
+
+              <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wide">3. Quantum Double-Slit Diffraction</h3>
+              <p>
+                When a beam of matter waves hits two narrow slits separated by a distance $d$, waves diffracting from both slits interfere constructively or destructively on a detector screen. 
+                The distance between consecutive bright fringes ($\Delta y$) on a screen at distance $L$ is given by:
+              </p>
+              <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center text-indigo-300">
+                $$\Delta y = \frac{\lambda L}{d}$$
+              </div>
+              <p>
+                This confirms that a **smaller wavelength** (resulting from higher mass or velocity) yields **tighter, closely spaced interference fringes**.
+              </p>
+            </div>
+          </div>
+
+          <!-- Bottom: Graph (Wavelength vs velocity) -->
+          <div class="h-[170px] bg-slate-950 border-t border-slate-900 p-2 flex flex-col justify-between">
+            <span class="text-[9px] font-bold tracking-wider text-slate-400 uppercase">
+              Diagram I: Wavelength ($\lambda$) vs. Velocity ($v$) Hyperbolic decay
+            </span>
+            <div class="flex-1 min-h-[110px] relative">
+              <canvas id="lvGraphCanvas" class="absolute inset-0 w-full h-full"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Diagnostics & Viva Workspace (4 Columns) -->
+      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <!-- Live physics variables telemetry dashboard -->
+        <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+          <h3 class="text-[11px] font-bold uppercase tracking-widest text-indigo-800 flex items-center gap-1.5">⚡ QUANTUM FIELD TELEMETRY</h3>
+          <div class="grid grid-cols-2 gap-3 font-medium">
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Momentum ($p$)</span>
+              <span id="valMomentum" class="text-[11px] font-mono font-bold text-purple-600 leading-tight block">-- kg·m/s</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Kinetic Energy ($K_e$)</span>
+              <span id="valKinetic" class="text-[11px] font-mono font-bold text-emerald-600 leading-tight block">-- eV</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">De Broglie ($\lambda$)</span>
+              <span id="valWavelength" class="text-xs font-mono font-extrabold text-amber-600 leading-tight block">-- m</span>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Physical Regime</span>
+              <span id="valRegime" class="text-xs font-bold text-indigo-600 leading-tight block">Quantum</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Viva Voce Lab Desk Banner -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Under what condition does a baseball exhibit matter wave properties according to de Broglie?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+              
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
+                The matter wavelength is given by $\lambda = \frac{h}{p}$. For macroscopic baseballs ($m = 0.145\text{ kg}$), momentum is huge relative to $h \approx 6.63 \times 10^{-34}\text{ J}\cdot\text{s}$, yielding $\lambda \approx 10^{-34}\text{ m}$. Wave properties only become observable if Planck's constant ($h$) is scaled up by a massive factor ($10^{30}$), or if momentum is infinitely small.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What occurs to the spacing of the double-slit diffraction fringes if the velocity of a particle increases?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500 leading-relaxed">
+                The double-slit fringe spacing $\Delta y$ is directly proportional to wavelength:
+                $$\Delta y = \frac{\lambda L}{d}$$
+                Since wavelength is inversely proportional to velocity ($\lambda = \frac{h}{m v}$), increasing velocity decreases wavelength:
+                $$\Delta y \propto \frac{1}{v}$$
+                Thus, faster-moving matter waves yield tighter, closely spaced diffraction peaks.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which historic experiment first directly confirmed the wavelike diffraction of moving electrons?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500 leading-relaxed">
+                In 1927, Davisson and Germer fired slow-moving electrons at a crystalline Nickel target. The scattered electrons exhibited angular intensity peaks matching Bragg's diffraction law:
+                $$n\lambda = 2d \sin\theta$$
+                This provided the first direct, empirical validation of de Broglie's matter wave hypothesis.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does Zeilinger's Buckyball ($C_{60}$) diffraction experiment illustrate the limits of wave-particle duality?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500 leading-relaxed">
+                Zeilinger's team successfully diffracted $C_{60}$ fullerenes (comprising 60 carbon atoms with massive molecular weight $720$ amu). Despite their complexity and internal degrees of freedom, the coherent propagation of the Buckyball's center-of-mass wavefunction yielded clear quantum interference, verifying that wave-particle duality extends into the molecular boundary.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calibration Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* de Broglie wavelike equations solved in non-relativistic limits.</span>
+      <span>Planck Calibration: h = 6.62607015 &times; 10^-34 J&middot;s</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> APPARATUS CALIBRATION PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>De Broglie Wavelength &amp; Matter Waves virtual lab</strong>! Use this workspace to explore physical wave-particle duality:</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Functions</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Sample Selection</strong>: Choose different matter species (Electrons, Protons, Helium, Buckyballs, Microbes, or Baseballs) to observe mass-wavelength ratios.</li>
+            <li><strong>Synced Velocity &amp; Booster</strong>: Finely adjust the velocity and the quantum scale booster (which scales Planck's constant h to make macroscopic waves visible). Inputs update slider and numeric boxes bidirectionally.</li>
+            <li><strong>Double-Slit Pattern Mode</strong>: Fire matter particles singly or continuously to watch individual dots build up a wave-like striped interference pattern over time!</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 Canvas Indicators</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Wave Packet Envelope</strong>: View the electron's carrier waves propagating inside a smooth Gaussian envelope limit.</li>
+            <li><strong>Diagram I (λ vs. v)</strong>: Features a real-time hyperbolic decay plot with an active green cursor tracking your current velocity parameter.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Initialize Experiments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real-time Interactive Physics Solver & Renderer -->
+  <script>
+    // --- PHYSICS CONSTANTS ---
+    const h_true = 6.62607015e-34;  // J s
+    const e_charge = 1.60217663e-19; // Coulombs
+    
+    const Samples = {
+      electron: { name: 'Electron', mass: 9.10938356e-31, color: '#38bdf8' },
+      proton: { name: 'Proton', mass: 1.6726219e-27, color: '#a78bfa' },
+      helium: { name: 'He Nucleus', mass: 6.6464764e-27, color: '#34d399' },
+      c60: { name: 'C₆₀ Molecule', mass: 1.196e-24, color: '#fb7185' },
+      virus: { name: 'Microbe', mass: 1.0e-18, color: '#facc15' },
+      baseball: { name: 'Baseball', mass: 0.145, color: '#f8fafc' }
+    };
+
+    // --- APP STATE ---
+    let appState = {
+      currentTab: 'simulation', // 'simulation', 'experiments', 'theory'
+      currentSampleKey: 'electron',
+      currentVelocity: 2500000,  // m/s
+      planckPowerBoost: 0,       // h = h0 * 10^boost
+      simMode: 'packet',        // 'packet' or 'diffraction'
+      speed: 'normal',
+      
+      // continuous fire
+      isContinuousFiring: false,
+      
+      // visual elements
+      animationTimer: 0,
+      particleX: 0,
+      
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    // Particle arrays
+    let screenHits = [];
+    let incomingWavelets = [];
+    let continuousFireTimer = null;
+
+    // DOM selectors
+    const btnOpenGuide = document.getElementById('btn-open-guide');
+    const btnCloseGuide = document.getElementById('btn-close-guide');
+    const btnCloseGuideConfirm = document.getElementById('btn-close-guide-confirm');
+    const userGuideModal = document.getElementById('user-guide-modal');
+    const btnReset = document.getElementById('btn-reset');
+
+    const modePacket = document.getElementById('mode-packet');
+    const modeDiffraction = document.getElementById('mode-diffraction');
+    const diffractionActions = document.getElementById('diffraction-actions');
+
+    const btnFireSingle = document.getElementById('btn-fire-single');
+    const btnContinuous = document.getElementById('btn-continuous');
+    const btnClearDetector = document.getElementById('btn-clear-detector');
+
+    const presetElectron = document.getElementById('preset-electron');
+    const presetBaseball = document.getElementById('preset-baseball');
+    const presetBooster = document.getElementById('preset-booster');
+
+    const tabSimulation = document.getElementById('tab-simulation');
+    const tabExperiments = document.getElementById('tab-experiments');
+    const tabTheory = document.getElementById('tab-theory');
+
+    const viewSimulation = document.getElementById('view-simulation');
+    const viewExperiments = document.getElementById('view-experiments');
+    const viewTheory = document.getElementById('view-theory');
+
+    const particleMassLabel = document.getElementById('particle-mass-label');
+
+    const sliderVelocity = document.getElementById('slider-velocity');
+    const numVelocity = document.getElementById('num-velocity');
+    const sliderBooster = document.getElementById('slider-booster');
+    const numBooster = document.getElementById('num-booster');
+
+    const velMinLbl = document.getElementById('vel-min-lbl');
+    const velMaxLbl = document.getElementById('vel-max-lbl');
+
+    const speedSlow = document.getElementById('speed-slow');
+    const speedNormal = document.getElementById('speed-normal');
+    const speedFast = document.getElementById('speed-fast');
+
+    const valMomentum = document.getElementById('valMomentum');
+    const valKinetic = document.getElementById('valKinetic');
+    const valWavelength = document.getElementById('valWavelength');
+    const valRegime = document.getElementById('valRegime');
+    const labelVivaScore = document.getElementById('viva-score');
+
+    const sampleButtons = {
+      electron: document.getElementById('sample-electron'),
+      proton: document.getElementById('sample-proton'),
+      helium: document.getElementById('sample-helium'),
+      c60: document.getElementById('sample-c60'),
+      virus: document.getElementById('sample-virus'),
+      baseball: document.getElementById('sample-baseball')
+    };
+
+    let deBroglieCanvas, ctx;
+    let lvCanvas, lvCtx;
+    let dpi = window.devicePixelRatio || 1;
+
+    // --- Wave Particle Constructor ---
+    class Photon {
+      constructor(x, y, wl, isOutgoing = false, angle = 0) {
+        this.x = x;
+        this.y = y;
+        this.wl = wl;
+        this.isOutgoing = isOutgoing;
+        this.angle = angle;
+        this.speed = isOutgoing ? 4 : 3;
+        this.color = Samples[appState.currentSampleKey].color;
+        this.pulsePhase = Math.random() * Math.PI * 2;
+        this.hasInteracted = false;
+      }
+      update(dt) {
+        const moveSpeed = this.speed * speedMultipliers[appState.speed] * dt;
+        if (!this.isOutgoing) {
+          this.x += moveSpeed;
+        } else {
+          this.x += Math.cos(this.angle) * moveSpeed;
+          this.y += Math.sin(this.angle) * moveSpeed;
+        }
+        this.pulsePhase += 0.25 * dt;
+      }
+      draw(cCtx) {
+        cCtx.save();
+        cCtx.shadowBlur = 10;
+        cCtx.shadowColor = this.color;
+        cCtx.beginPath();
+        cCtx.strokeStyle = this.color;
+        cCtx.lineWidth = 2 * dpi;
+        const waveLength = 20 * dpi;
+        const waveHeight = 6 * dpi * Math.sin(this.pulsePhase);
+        
+        if (!this.isOutgoing) {
+          cCtx.moveTo(this.x - waveLength/2, this.y);
+          for (let i = -waveLength/2; i <= waveLength/2; i++) {
+            const px = this.x + i;
+            const py = this.y + Math.sin((i / waveLength) * Math.PI * 4 + this.pulsePhase) * waveHeight * (1 - Math.abs(i) / (waveLength/2));
+            cCtx.lineTo(px, py);
+          }
+          cCtx.stroke();
+        } else {
+          cCtx.translate(this.x, this.y);
+          cCtx.rotate(this.angle);
+          cCtx.moveTo(-waveLength/2, 0);
+          for (let i = -waveLength/2; i <= waveLength/2; i++) {
+            const px = i;
+            const py = Math.sin((i / waveLength) * Math.PI * 4 + this.pulsePhase) * waveHeight * (1 - Math.abs(i) / (waveLength/2));
+            cCtx.lineTo(px, py);
+          }
+          cCtx.stroke();
+          cCtx.restore();
+          cCtx.save();
+        }
+        cCtx.beginPath();
+        cCtx.arc(this.x, this.y, 3 * dpi, 0, Math.PI * 2);
+        cCtx.fillStyle = "#ffffff";
+        cCtx.fill();
+        cCtx.restore();
+      }
+    }
+
+    const speedMultipliers = {
+      "slow": 0.4,
+      "normal": 1.0,
+      "fast": 2.2
+    };
+
+    // Init loops
+    function initApp() {
+      deBroglieCanvas = document.getElementById('deBroglieCanvas');
+      ctx = deBroglieCanvas.getContext('2d');
+      lvCanvas = document.getElementById('lvGraphCanvas');
+      lvCtx = lvCanvas.getContext('2d');
+
+      // Bind slider actions
+      sliderVelocity.addEventListener('input', (e) => updateVelocity(e.target.value));
+      numVelocity.addEventListener('change', (e) => updateVelocity(e.target.value));
+
+      sliderBooster.addEventListener('input', (e) => updateBooster(e.target.value));
+      numBooster.addEventListener('change', (e) => updateBooster(e.target.value));
+
+      // Speeds
+      speedSlow.addEventListener('click', () => setSpeed('slow'));
+      speedNormal.addEventListener('click', () => setSpeed('normal'));
+      speedFast.addEventListener('click', () => setSpeed('fast'));
+
+      // Sample selectors
+      Object.keys(sampleButtons).forEach(key => {
+        sampleButtons[key].addEventListener('click', () => selectSample(key));
+      });
+
+      // Modes
+      modePacket.addEventListener('click', () => setSimulationMode('packet'));
+      modeDiffraction.addEventListener('click', () => setSimulationMode('diffraction'));
+
+      // Slit buttons
+      btnFireSingle.addEventListener('click', injectDiffractionParticle);
+      btnContinuous.addEventListener('click', toggleContinuousFire);
+      btnClearDetector.addEventListener('click', clearDiffractionScreen);
+
+      // Presets
+      presetElectron.addEventListener('click', () => setApparatusPreset('quantum-electron'));
+      presetBaseball.addEventListener('click', () => setApparatusPreset('macro-duality'));
+      presetBooster.addEventListener('click', () => setApparatusPreset('de-broglie-booster'));
+
+      // Tabs
+      tabSimulation.addEventListener('click', () => switchTab('simulation'));
+      tabExperiments.addEventListener('click', () => switchTab('experiments'));
+      tabTheory.addEventListener('click', () => switchTab('theory'));
+
+      // Guided links
+      document.getElementById('preset-exp1').addEventListener('click', () => loadExperimentPreset('exp1'));
+      document.getElementById('preset-exp2').addEventListener('click', () => loadExperimentPreset('exp2'));
+      document.getElementById('preset-exp3').addEventListener('click', () => loadExperimentPreset('exp3'));
+
+      // Guides
+      btnOpenGuide.addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      btnCloseGuide.addEventListener('click', closeGuide);
+      btnCloseGuideConfirm.addEventListener('click', closeGuide);
+      userGuideModal.addEventListener('click', (e) => {
+        if (e.target === userGuideModal) closeGuide();
+      });
+
+      btnReset.addEventListener('click', handleReset);
+
+      selectSample('electron');
+      setSimulationMode('packet');
+      setSpeed('normal');
+
+      handleResize();
+      updateUI();
+      renderQuestions();
+
+      requestAnimationFrame(mainAnimationLoop);
+    }
+
+    function handleReset() {
+      selectSample('electron');
+      setSimulationMode('packet');
+      setSpeed('normal');
+      updateVelocity(2500);
+      updateBooster(0);
+      
+      clearDiffractionScreen();
+      if (isContinuousFiring) toggleContinuousFire();
+
+      appState.vivaScore = 0;
+      labelVivaScore.textContent = "Score: 0 / 4";
+      appState.answers = { q1: null, q2: null, q3: null, q4: null };
+      renderQuestions();
+
+      switchTab('simulation');
+    }
+
+    function handleResize() {
+      fitCanvasToContainer(deBroglieCanvas);
+      fitCanvasToContainer(lvCanvas);
+      updateUI();
+    }
+
+    function fitCanvasToContainer(canvas) {
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+    }
+
+    function updateVelocity(val) {
+      const sliderVal = parseFloat(val);
+      if (appState.currentSampleKey === 'baseball' || appState.currentSampleKey === 'virus') {
+        appState.currentVelocity = sliderVal; 
+        sliderVelocity.min = 1;
+        sliderVelocity.max = 100;
+        sliderVelocity.step = 1;
+        sliderVelocity.value = sliderVal;
+        numVelocity.value = sliderVal;
+        velMinLbl.textContent = "1 m/s";
+        velMaxLbl.textContent = "100 m/s";
+      } else {
+        appState.currentVelocity = sliderVal * 1000; // km/s
+        sliderVelocity.min = 100;
+        sliderVelocity.max = 15000;
+        sliderVelocity.step = 100;
+        sliderVelocity.value = sliderVal;
+        numVelocity.value = sliderVal;
+        velMinLbl.textContent = "100 km/s";
+        velMaxLbl.textContent = "15,000 km/s";
+      }
+      updateUI();
+    }
+
+    function updateBooster(val) {
+      val = Math.max(0, Math.min(30, parseInt(val) || 0));
+      appState.planckPowerBoost = val;
+      sliderBooster.value = val;
+      numBooster.value = val;
+      updateUI();
+    }
+
+    function setSpeed(spd) {
+      appState.speed = spd;
+      [speedSlow, speedNormal, speedFast].forEach(btn => {
+        btn.className = "px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all";
+      });
+      let activeBtn = speedNormal;
+      if (spd === 'slow') activeBtn = speedSlow;
+      if (spd === 'fast') activeBtn = speedFast;
+      activeBtn.className = "px-3 py-1 bg-indigo-600 text-white font-semibold text-xs rounded transition-all shadow-xs";
+    }
+
+    function selectSample(key) {
+      const prevKey = appState.currentSampleKey;
+      sampleButtons[prevKey].className = "py-1.5 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100";
+      
+      appState.currentSampleKey = key;
+      sampleButtons[key].className = "py-1.5 rounded border transition-all bg-indigo-600 border-indigo-600 text-white shadow-sm";
+      
+      const m = Samples[key].mass;
+      particleMassLabel.textContent = `Mass: ${m.toExponential(2)} kg`;
+      
+      // Configure slider
+      if (key === 'baseball' || key === 'virus') {
+        sliderVelocity.min = 1;
+        sliderVelocity.max = 100;
+        sliderVelocity.step = 1;
+        sliderVelocity.value = 30;
+        updateVelocity(30);
+      } else {
+        sliderVelocity.min = 100;
+        sliderVelocity.max = 15000;
+        sliderVelocity.step = 100;
+        sliderVelocity.value = 2500;
+        updateVelocity(2500);
+      }
+
+      // configure standard booster values
+      if (key === 'baseball') {
+        updateBooster(30);
+      } else if (key === 'virus') {
+        updateBooster(16);
+      } else if (key === 'c60') {
+        updateBooster(6);
+      } else {
+        updateBooster(0);
+      }
+
+      clearDiffractionScreen();
+      updateUI();
+    }
+
+    function setSimulationMode(mode) {
+      appState.simMode = mode;
+      if (mode === 'packet') {
+        modePacket.className = "px-4 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-xs transition-all flex items-center gap-1.5";
+        modeDiffraction.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5";
+        diffractionActions.classList.add('hidden');
+      } else {
+        modeDiffraction.className = "px-4 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-xs transition-all flex items-center gap-1.5";
+        modePacket.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5";
+        diffractionActions.classList.remove('hidden');
+        clearDiffractionScreen();
+      }
+      updateUI();
+    }
+
+    function setApparatusPreset(preset) {
+      if (preset === 'quantum-electron') {
+        selectSample('electron');
+        setSimulationMode('packet');
+        updateBooster(0);
+      } else if (preset === 'macro-duality') {
+        selectSample('baseball');
+        setSimulationMode('packet');
+        updateBooster(30);
+      } else if (preset === 'de-broglie-booster') {
+        selectSample('proton');
+        setSimulationMode('packet');
+        updateBooster(10);
+      }
+    }
+
+    function loadExperimentPreset(exp) {
+      if (exp === 'exp1') {
+        selectSample('electron');
+        setSimulationMode('packet');
+      } else if (exp === 'exp2') {
+        selectSample('baseball');
+        setSimulationMode('packet');
+      } else if (exp === 'exp3') {
+        selectSample('electron');
+        setSimulationMode('diffraction');
+      }
+      switchTab('simulation');
+    }
+
+    function switchTab(tabId) {
+      appState.currentTab = tabId;
+      const tabs = ['simulation', 'experiments', 'theory'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const panel = document.getElementById(`view-${t}`);
+        if (t === tabId) {
+          btn.className = "flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs";
+          panel.classList.remove('hidden');
+        } else {
+          btn.className = "flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950";
+          panel.classList.add('hidden');
+        }
+      });
+      if (tabId === 'simulation') {
+        setTimeout(handleResize, 30);
+      }
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([viewExperiments, viewTheory]);
+      }
+    }
+
+    function getPlanckConstant() {
+      return h_true * Math.pow(10, appState.planckPowerBoost);
+    }
+
+    function calculatePhysics() {
+      const sample = Samples[appState.currentSampleKey];
+      const m = sample.mass;
+      const v = appState.currentVelocity;
+      const h_effective = getPlanckConstant();
+      
+      const momentum = m * v;
+      const lambda = h_effective / momentum;
+      const ke_joules = 0.5 * m * v * v;
+      const ke_ev = ke_joules / e_charge;
+      
+      return {
+        momentum,
+        lambda,
+        ke_ev
+      };
+    }
+
+    function updateUI() {
+      const pData = calculatePhysics();
+      
+      valMomentum.textContent = pData.momentum.toExponential(3) + " kg·m/s";
+      valKinetic.textContent = pData.ke_ev > 1e6 
+        ? (pData.ke_ev / 1e6).toFixed(2) + " MeV" 
+        : pData.ke_ev.toExponential(2) + " eV";
+      
+      let wlStr = "";
+      if (pData.lambda < 1e-12) {
+        wlStr = pData.lambda.toExponential(3) + " m";
+      } else if (pData.lambda < 1e-9) {
+        wlStr = (pData.lambda * 1e12).toFixed(3) + " pm";
+      } else if (pData.lambda < 1e-6) {
+        wlStr = (pData.lambda * 1e9).toFixed(3) + " nm";
+      } else {
+        wlStr = pData.lambda.toFixed(6) + " m";
+      }
+      valWavelength.textContent = wlStr;
+      
+      if (pData.lambda > 1e-12) {
+        valRegime.textContent = "Wave Quantum";
+        valRegime.className = "text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 border border-emerald-100 rounded-full font-mono text-center";
+      } else {
+        valRegime.textContent = "Classical Limit";
+        valRegime.className = "text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 border border-slate-200 rounded-full font-mono text-center";
+      }
+
+      drawGraphs();
+    }
+
+    function injectDiffractionParticle() {
+      const cue = document.getElementById('clickFeedback');
+      cue.style.opacity = '1';
+      setTimeout(() => cue.style.opacity = '0', 600);
+      
+      incomingWavelets.push({
+        x: 0.1,
+        progress: 0.0,
+        speed: 0.005 + Math.random() * 0.003
+      });
+    }
+
+    function toggleContinuousFire() {
+      if (appState.isContinuousFiring) {
+        appState.isContinuousFiring = false;
+        clearInterval(continuousFireTimer);
+        btnContinuous.innerHTML = `Start Continuous Stream`;
+        btnContinuous.className = "px-3.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all";
+      } else {
+        appState.isContinuousFiring = true;
+        btnContinuous.innerHTML = `Pause Matter Stream`;
+        btnContinuous.className = "px-3.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-xs";
+        
+        continuousFireTimer = setInterval(() => {
+          injectDiffractionParticle();
+        }, 120);
+      }
+    }
+
+    function clearDiffractionScreen() {
+      screenHits = [];
+    }
+
+    function mainAnimationLoop(timestamp) {
+      appState.animationTimer += 0.03;
+      appState.particleX += 0.003 * dpi;
+      if (appState.particleX > 1.0) appState.particleX = 0;
+      
+      updateDiffractionAnimation();
+      drawPhysics();
+      requestAnimationFrame(mainAnimationLoop);
+    }
+
+    function updateDiffractionAnimation() {
+      const pData = calculatePhysics();
+      
+      for (let i = incomingWavelets.length - 1; i >= 0; i--) {
+        let w = incomingWavelets[i];
+        w.progress += w.speed;
+        
+        if (w.progress >= 0.8) {
+          const targetYFraction = sampleDoubleSlitPattern(pData.lambda);
+          screenHits.push({
+            y: targetYFraction,
+            time: Date.now()
+          });
+          incomingWavelets.splice(i, 1);
+        }
+      }
+    }
+
+    function sampleDoubleSlitPattern(lambda) {
+      const fringeSpacingCoeff = Math.max(0.01, Math.min(0.2, lambda * 4e9)); 
+      let found = false;
+      let y = 0.5;
+      
+      while (!found) {
+        y = 0.15 + Math.random() * 0.7;
+        const deltaY = y - 0.5;
+        const theta = deltaY / 0.45; 
+        
+        const argInterference = (Math.PI * theta) / fringeSpacingCoeff;
+        const termInterference = Math.pow(Math.cos(argInterference), 2);
+        
+        const argEnvelope = (Math.PI * theta) / (fringeSpacingCoeff * 4);
+        const termEnvelope = argEnvelope === 0 ? 1.0 : Math.pow(Math.sin(argEnvelope) / argEnvelope, 2);
+        
+        const probability = termInterference * termEnvelope;
+        if (Math.random() < probability) {
+          found = true;
+        }
+      }
+      return y;
+    }
+
+    function drawPhysics() {
+      if (!deBroglieCanvas) return;
+      const width = deBroglieCanvas.width;
+      const height = deBroglieCanvas.height;
+      ctx.clearRect(0, 0, width, height);
+      
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, width, height);
+      
+      const sample = Samples[appState.currentSampleKey];
+      const pData = calculatePhysics();
+      
+      if (appState.simMode === 'packet') {
+        drawWavePacketMode(width, height, sample, pData);
+      } else {
+        drawDoubleSlitMode(width, height, sample, pData);
+      }
+    }
+
+    function drawWavePacketMode(width, height, sample, pData) {
+      const cY = height / 2;
+      const scaleX = width;
+      
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.15)';
+      ctx.lineWidth = 1 * dpi;
+      for (let x = 0; x < width; x += 40 * dpi) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += 40 * dpi) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+      
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+      ctx.lineWidth = 2.2 * dpi;
+      
+      let visualWavelength = Math.max(15, Math.min(120, pData.lambda * 3e10)) * dpi;
+      
+      ctx.beginPath();
+      let started = false;
+      const packetCenter = appState.particleX * scaleX;
+      const packetWidth = 120 * dpi; 
+      
+      for (let px = 0; px < scaleX; px++) {
+        const deltaX = px - packetCenter;
+        const envelopeValue = Math.exp(-Math.pow(deltaX, 2) / (2 * Math.pow(packetWidth, 2)));
+        const carrierPhase = (deltaX / visualWavelength) * Math.PI * 2 - (appState.animationTimer * 10);
+        const carrier = Math.cos(carrierPhase);
+        
+        const py = cY + envelopeValue * carrier * 60 * dpi;
+        
+        if (!started) {
+          ctx.moveTo(px, py);
+          started = true;
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+      
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.2)';
+      ctx.lineWidth = 1 * dpi;
+      ctx.setLineDash([4 * dpi, 4 * dpi]);
+      
+      ctx.beginPath();
+      for (let px = 0; px < scaleX; px++) {
+        const deltaX = px - packetCenter;
+        const env = Math.exp(-Math.pow(deltaX, 2) / (2 * Math.pow(packetWidth, 2))) * 60 * dpi;
+        ctx.lineTo(px, cY - env);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      for (let px = 0; px < scaleX; px++) {
+        const deltaX = px - packetCenter;
+        const env = Math.exp(-Math.pow(deltaX, 2) / (2 * Math.pow(packetWidth, 2))) * 60 * dpi;
+        ctx.lineTo(px, cY + env);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      ctx.fillStyle = sample.color;
+      ctx.shadowColor = sample.color;
+      ctx.shadowBlur = 12 * dpi;
+      ctx.beginPath();
+      ctx.arc(packetCenter, cY, 11 * dpi, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `bold ${10 * dpi}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(`Matter Wave Packet Envelope`, packetCenter, cY - 70 * dpi);
+    }
+
+    function drawDoubleSlitMode(width, height, sample, pData) {
+      const emitterX = 0.1 * width;
+      const slitsX = 0.45 * width;
+      const screenX = 0.78 * width;
+      
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 2 * dpi;
+      ctx.fillRect(screenX, 0.1 * height, 0.12 * width, 0.8 * height);
+      ctx.strokeRect(screenX, 0.1 * height, 0.12 * width, 0.8 * height);
+      
+      ctx.fillStyle = '#64748b';
+      ctx.font = `bold ${8 * dpi}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText("DETECTOR SCREEN", screenX + 0.06 * width, 0.08 * height);
+      
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(slitsX, 0, 7 * dpi, height);
+      
+      const slitWidth = 14 * dpi;
+      const slitOffset = 45 * dpi;
+      
+      ctx.clearRect(slitsX - 1 * dpi, height / 2 - slitOffset - slitWidth / 2, 9 * dpi, slitWidth);
+      ctx.clearRect(slitsX - 1 * dpi, height / 2 + slitOffset - slitWidth / 2, 9 * dpi, slitWidth);
+      
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `${8 * dpi}px monospace`;
+      ctx.fillText("Slit 1", slitsX - 25 * dpi, height / 2 - slitOffset);
+      ctx.fillText("Slit 2", slitsX - 25 * dpi, height / 2 + slitOffset);
+      
+      incomingWavelets.forEach(w => {
+        const x = w.progress * width;
+        const cY = height / 2;
+        
+        if (x < slitsX) {
+          ctx.strokeStyle = 'rgba(99, 102, 241, 0.5)';
+          ctx.lineWidth = 2.5 * dpi;
+          ctx.beginPath();
+          ctx.moveTo(x, cY - 40 * dpi);
+          ctx.lineTo(x, cY + 40 * dpi);
+          ctx.stroke();
+          
+          ctx.fillStyle = sample.color;
+          ctx.beginPath();
+          ctx.arc(x, cY, 3.5 * dpi, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          const radius = x - slitsX;
+          ctx.strokeStyle = 'rgba(6, 182, 212, 0.35)';
+          ctx.lineWidth = 1.5 * dpi;
+          
+          ctx.beginPath();
+          ctx.arc(slitsX, cY - slitOffset, radius, -Math.PI/3, Math.PI/3);
+          ctx.stroke();
+          
+          ctx.beginPath();
+          ctx.arc(slitsX, cY + slitOffset, radius, -Math.PI/3, Math.PI/3);
+          ctx.stroke();
+        }
+      });
+      
+      screenHits.forEach(hit => {
+        const hitY = hit.y * height;
+        ctx.fillStyle = sample.color;
+        ctx.shadowColor = sample.color;
+        ctx.shadowBlur = 4 * dpi;
+        ctx.beginPath();
+        ctx.arc(screenX, hitY, 3 * dpi, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      
+      if (screenHits.length > 5) {
+        const binCount = 35;
+        let bins = new Array(binCount).fill(0);
+        
+        screenHits.forEach(hit => {
+          const binIndex = Math.floor((hit.y - 0.15) / 0.7 * binCount);
+          if (binIndex >= 0 && binIndex < binCount) {
+            bins[binIndex]++;
+          }
+        });
+        
+        const maxBinVal = Math.max(...bins) || 1;
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.3)'; 
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1 * dpi;
+        
+        for (let b = 0; b < binCount; b++) {
+          const binY = 0.15 * height + (b / binCount) * (0.7 * height);
+          const barHeight = (0.7 * height) / binCount;
+          const barWidth = (bins[b] / maxBinVal) * 50 * dpi;
+          
+          ctx.fillRect(screenX + 0.12 * width, binY, barWidth, barHeight - 1 * dpi);
+          ctx.strokeRect(screenX + 0.12 * width, binY, barWidth, barHeight - 1 * dpi);
+        }
+        
+        ctx.fillStyle = '#10b981';
+        ctx.font = `bold ${8 * dpi}px monospace`;
+        ctx.fillText(`HITS TALLY: ${screenHits.length}`, screenX + 0.06 * width, 0.93 * height);
+      }
+    }
+
+    function drawGraphs() {
+      if (!lvCanvas) return;
+      const width = lvCanvas.width;
+      const height = lvCanvas.height;
+      lvCtx.clearRect(0, 0, width, height);
+      
+      const padLeft = 55 * dpi;
+      const padRight = 20 * dpi;
+      const padTop = 12 * dpi;
+      const padBottom = 30 * dpi;
+      
+      const plotWidth = width - padLeft - padRight;
+      const plotHeight = height - padTop - padBottom;
+      
+      lvCtx.fillStyle = 'rgba(15, 23, 42, 0.05)';
+      lvCtx.fillRect(padLeft, padTop, plotWidth, plotHeight);
+      
+      const vMin = 100;    
+      const vMax = 15000;  
+      
+      lvCtx.strokeStyle = 'rgba(51, 65, 85, 0.15)';
+      lvCtx.lineWidth = 1 * dpi;
+      for (let v = 3000; v <= vMax; v += 3000) {
+        const x = padLeft + ((v - vMin) / (vMax - vMin)) * plotWidth;
+        lvCtx.beginPath();
+        lvCtx.moveTo(x, padTop);
+        lvCtx.lineTo(x, padTop + plotHeight);
+        lvCtx.stroke();
+      }
+      for (let j = 1; j <= 4; j++) {
+        const y = padTop + (j / 5) * plotHeight;
+        lvCtx.beginPath();
+        lvCtx.moveTo(padLeft, y);
+        lvCtx.lineTo(padLeft + plotWidth, y);
+        lvCtx.stroke();
+      }
+      
+      lvCtx.strokeStyle = '#475569';
+      lvCtx.lineWidth = 1.5 * dpi;
+      lvCtx.beginPath();
+      lvCtx.moveTo(padLeft, padTop);
+      lvCtx.lineTo(padLeft, padTop + plotHeight);
+      lvCtx.lineTo(padLeft + plotWidth, padTop + plotHeight);
+      lvCtx.stroke();
+      
+      const sample = Samples[appState.currentSampleKey];
+      const m = sample.mass;
+      const h_effective = getPlanckConstant();
+      
+      const lowestV = vMin * 1000; 
+      const maxPlotWavelength = h_effective / (m * lowestV);
+      
+      lvCtx.strokeStyle = '#6366f1'; 
+      lvCtx.lineWidth = 2.5 * dpi;
+      lvCtx.beginPath();
+      
+      let started = false;
+      for (let px = 0; px <= plotWidth; px++) {
+        const vVal = vMin + (px / plotWidth) * (vMax - vMin);
+        const lambda = h_effective / (m * (vVal * 1000));
+        const py = padTop + plotHeight - (lambda / maxPlotWavelength) * plotHeight;
+        
+        if (py >= padTop && py <= padTop + plotHeight) {
+          if (!started) {
+            lvCtx.moveTo(padLeft + px, py);
+            started = true;
+          } else {
+            lvCtx.lineTo(padLeft + px, py);
+          }
+        }
+      }
+      lvCtx.stroke();
+      
+      const activeV_kms = appState.currentSampleKey === 'baseball' || appState.currentSampleKey === 'virus' 
+        ? appState.currentVelocity 
+        : appState.currentVelocity / 1000;
+        
+      const cursorX = padLeft + ((activeV_kms - vMin) / (vMax - vMin)) * plotWidth;
+      const activeWavelength = h_effective / (m * appState.currentVelocity);
+      const cursorY = padTop + plotHeight - (activeWavelength / maxPlotWavelength) * plotHeight;
+      
+      if (cursorX >= padLeft && cursorX <= padLeft + plotWidth && cursorY >= padTop && cursorY <= padTop + plotHeight) {
+        lvCtx.fillStyle = '#10b981'; 
+        lvCtx.beginPath();
+        lvCtx.arc(cursorX, cursorY, 5 * dpi, 0, Math.PI * 2);
+        lvCtx.fill();
+        
+        lvCtx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+        lvCtx.lineWidth = 1 * dpi;
+        lvCtx.beginPath();
+        const rPulse = 5 * dpi + 2 * Math.sin(Date.now() / 150) * dpi;
+        lvCtx.arc(cursorX, cursorY, rPulse, 0, Math.PI * 2);
+        lvCtx.stroke();
+      }
+      
+      lvCtx.fillStyle = '#94a3b8';
+      lvCtx.font = `bold ${8.5 * dpi}px sans-serif`;
+      lvCtx.textAlign = 'center';
+      
+      const xLabelStr = appState.currentSampleKey === 'baseball' || appState.currentSampleKey === 'virus' 
+        ? "Particle Velocity v (m/s)" 
+        : "Particle Velocity v (km/s)";
+      lvCtx.fillText(xLabelStr, padLeft + plotWidth / 2, height - 4 * dpi);
+      
+      lvCtx.save();
+      lvCtx.translate(14 * dpi, padTop + plotHeight / 2);
+      lvCtx.rotate(-Math.PI / 2);
+      lvCtx.fillText("Matter Wavelength λ (m)", 0, 0);
+      lvCtx.restore();
+      
+      lvCtx.fillStyle = '#64748b';
+      lvCtx.font = `${8 * dpi}px monospace`;
+      lvCtx.textAlign = 'center';
+      for (let v = 3000; v <= vMax; v += 3000) {
+        const x = padLeft + ((v - vMin) / (vMax - vMin)) * plotWidth;
+        lvCtx.fillText(v.toLocaleString(), x, padTop + plotHeight + 11 * dpi);
+      }
+      
+      lvCtx.textAlign = 'right';
+      for (let j = 1; j <= 5; j++) {
+        const val = (j / 5) * maxPlotWavelength;
+        const y = padTop + plotHeight - (j / 5) * plotHeight;
+        lvCtx.fillText(val.toExponential(1), padLeft - 6 * dpi, y + 2.5 * dpi);
+      }
+    }
+
+    // --- VIVA MCQS DECK ---
+    const vivaData = {
+      q1: {
+        label: "Q1. STANDING MATTER WAVES",
+        question: "How does de Broglie's standing matter wave hypothesis explain quantized Bohr orbits?",
+        options: [
+          { text: "The orbit circumference must accommodate an integer number of electron wavelengths ($2\\pi r = n\\lambda$).", isCorrect: true, exp: "Correct! Standing waves require constructive phase loop reinforcement around circular tracks, implying 2πr = nλ. This solves directly to Bohr's angular momentum." },
+          { text: "Matter waves must travel at speed of light to prevent decay.", isCorrect: false, exp: "Incorrect. Electron velocity is non-relativistic and substantially slower than c." },
+          { text: "Electrons exist purely as point particles locked by nuclear forces.", isCorrect: false, exp: "Incorrect. This completely ignores the wave-like probability character of matter waves." },
+          { text: "Matter wave interference cancels out central Coulomb attractions.", isCorrect: false, exp: "Incorrect. Coulomb forces remain fully active for orbital bindings." }
+        ]
+      },
+      q2: {
+        label: "Q2. SCHRÖDINGER ATOMIC CLOUD",
+        question: "What does the Schrödinger probability cloud model represent that Bohr's circular model fails to address?",
+        options: [
+          { text: "Continuous classical paths inside coordinates.", isCorrect: false, exp: "Incorrect. Classical paths are rejected in quantum wave mechanics." },
+          { text: "Spatial probability density distributions of electron locations ($|\\psi|^2$).", isCorrect: true, exp: "Correct! The wave equation provides 3D spatial probability clouds. Bohr's model wrongly models localized particle trajectories." },
+          { text: "The strict boundary of nuclear diameters.", isCorrect: false, exp: "Incorrect. Wavefunctions extend far beyond nuclear radii." },
+          { text: "Relativistic gravitational attraction balancing.", isCorrect: false, exp: "Incorrect. Gravitational attraction is physically negligible in atomic scales." }
+        ]
+      },
+      q3: {
+        label: "Q3. STATE SPACE ENERGY CONVERGENCE",
+        question: "What occurs to the spacing of the double-slit diffraction fringes if the velocity of a particle increases?",
+        options: [
+          { text: "Fringes spread further apart.", isCorrect: false, exp: "Incorrect. Spacing is directly proportional to wavelength, which decreases with velocity." },
+          { text: "Fringes compress closer together.", isCorrect: true, exp: "Correct! The fringe spacing is Δy = λL/d. As velocity increases, wavelength λ = h/p decreases, which pushes the interference fringe patterns tightly closer together." },
+          { text: "Spacing remains completely unchanged.", isCorrect: false, exp: "Incorrect. Spacing is highly velocity-sensitive." },
+          { text: "Fringes disappear entirely into uniform grey.", isCorrect: false, exp: "Incorrect. Perfect diffraction peaks remain fully observable." }
+        ]
+      },
+      q4: {
+        label: "Q4. VISIBILITY TRANSITION THRESHOLD",
+        question: "Why don't everyday macroscopic objects like thrown baseballs reveal wavelike diffraction in daily life?",
+        options: [
+          { text: "Macroscopic objects possess massive momenta, shrinking de Broglie wavelengths to completely undetectable sizes.", isCorrect: true, exp: "Correct! Because of a baseball's massive physical weight (0.145kg) relative to tiny Planck's constant, its wavelength scales to 10^-34 meters, which is infinitely smaller than any subatomic slit barrier." },
+          { text: "Macroscopic bodies don't consist of wave particles.", isCorrect: false, exp: "Incorrect. Mass-matter duality applies universally to all physical entities." },
+          { text: "Air resistance dampens quantum probabilities.", isCorrect: false, exp: "Incorrect. The wave equations hold perfectly in vacuum." },
+          { text: "Gravity cancels out matter wave carrier waves.", isCorrect: false, exp: "Incorrect. Gravitational acceleration doesn't break matter wavefunction dynamics." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        feedbackContainer.classList.add('hidden');
+        feedbackContainer.textContent = '';
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full";
+          btn.innerHTML = `<span class="font-bold">${idx === 0 ? 'A' : idx === 1 ? 'B' : idx === 2 ? 'C' : idx === 3 ? 'D' : ''}) </span>${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return;
+            
+            appState.answers[qKey] = idx;
+            
+            if (opt.isCorrect) {
+              appState.vivaScore++;
+              labelVivaScore.textContent = `Score: ${appState.vivaScore} / 4`;
+            }
+            
+            updateQuestionUI(qKey);
+          });
+          
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    function updateQuestionUI(qKey) {
+      const data = vivaData[qKey];
+      const selectedIdx = appState.answers[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      const buttons = optionsContainer.querySelectorAll('button');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+        btn.classList.add('cursor-not-allowed');
+        
+        const opt = data.options[idx];
+        if (selectedIdx === idx) {
+          if (opt.isCorrect) {
+            btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-800');
+          } else {
+            btn.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-800');
+          }
+        } else if (opt.isCorrect) {
+          btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+        } else {
+          btn.classList.add('bg-white', 'border-slate-200', 'text-slate-700', 'opacity-45');
+        }
+      });
+      
+      const chosenOpt = data.options[selectedIdx];
+      feedbackContainer.textContent = chosenOpt.exp;
+      feedbackContainer.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

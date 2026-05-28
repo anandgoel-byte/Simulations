@@ -1,0 +1,741 @@
+{
+
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "title": "Sparkl Virtual Laboratory Simulation Schema",
+
+  "type": "object",
+
+  "required": [
+
+    "meta",
+
+    "branding",
+
+    "simulation",
+
+    "controls",
+
+    "telemetry",
+
+    "viva_questions",
+
+    "guide",
+
+    "tabs"
+
+  ],
+
+  "properties": {
+
+    "meta": {
+
+      "type": "object",
+
+      "required": [
+
+        "subject",
+
+        "topic",
+
+        "title",
+
+        "subtitle",
+
+        "difficulty",
+
+        "version"
+
+      ],
+
+      "properties": {
+
+        "subject": {
+
+          "type": "string"
+
+        },
+
+        "topic": {
+
+          "type": "string"
+
+        },
+
+        "title": {
+
+          "type": "string"
+
+        },
+
+        "subtitle": {
+
+          "type": "string"
+
+        },
+
+        "difficulty": {
+
+          "type": "string",
+
+          "enum": [
+
+            "Beginner",
+
+            "Intermediate",
+
+            "Advanced"
+
+          ]
+
+        },
+
+        "version": {
+
+          "type": "string"
+
+        },
+
+        "estimated_duration_minutes": {
+
+          "type": "number"
+
+        },
+
+        "tags": {
+
+          "type": "array",
+
+          "items": {
+
+            "type": "string"
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "branding": {
+
+      "type": "object",
+
+      "required": [
+
+        "organization",
+
+        "logo_url",
+
+        "footer_text"
+
+      ],
+
+      "properties": {
+
+        "organization": {
+
+          "type": "string"
+
+        },
+
+        "logo_url": {
+
+          "type": "string"
+
+        },
+
+        "footer_text": {
+
+          "type": "string"
+
+        }
+
+      }
+
+    },
+
+
+
+    "simulation": {
+
+      "type": "object",
+
+      "required": [
+
+        "engine",
+
+        "canvas_type",
+
+        "description",
+
+        "default_state",
+
+        "simulation_logic_file"
+
+      ],
+
+      "properties": {
+
+        "engine": {
+
+          "type": "string",
+
+          "enum": [
+
+            "threejs",
+
+            "canvas2d",
+
+            "svg",
+
+            "p5js",
+
+            "chartjs"
+
+          ]
+
+        },
+
+        "canvas_type": {
+
+          "type": "string",
+
+          "enum": [
+
+            "2d",
+
+            "3d"
+
+          ]
+
+        },
+
+        "description": {
+
+          "type": "string"
+
+        },
+
+        "default_state": {
+
+          "type": "object"
+
+        },
+
+        "simulation_logic_file": {
+
+          "type": "string"
+
+        },
+
+        "background_theme": {
+
+          "type": "string"
+
+        },
+
+        "camera_enabled": {
+
+          "type": "boolean"
+
+        },
+
+        "auto_rotation": {
+
+          "type": "boolean"
+
+        }
+
+      }
+
+    },
+
+
+
+    "controls": {
+
+      "type": "array",
+
+      "items": {
+
+        "type": "object",
+
+        "required": [
+
+          "id",
+
+          "type",
+
+          "label"
+
+        ],
+
+        "properties": {
+
+          "id": {
+
+            "type": "string"
+
+          },
+
+          "type": {
+
+            "type": "string",
+
+            "enum": [
+
+              "slider",
+
+              "toggle",
+
+              "dropdown",
+
+              "button",
+
+              "number_input",
+
+              "radio_group"
+
+            ]
+
+          },
+
+          "label": {
+
+            "type": "string"
+
+          },
+
+          "min": {
+
+            "type": "number"
+
+          },
+
+          "max": {
+
+            "type": "number"
+
+          },
+
+          "step": {
+
+            "type": "number"
+
+          },
+
+          "default": {},
+
+          "options": {
+
+            "type": "array",
+
+            "items": {
+
+              "type": "string"
+
+            }
+
+          },
+
+          "unit": {
+
+            "type": "string"
+
+          },
+
+          "description": {
+
+            "type": "string"
+
+          },
+
+          "affects": {
+
+            "type": "array",
+
+            "items": {
+
+              "type": "string"
+
+            }
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "telemetry": {
+
+      "type": "array",
+
+      "items": {
+
+        "type": "object",
+
+        "required": [
+
+          "id",
+
+          "title",
+
+          "value"
+
+        ],
+
+        "properties": {
+
+          "id": {
+
+            "type": "string"
+
+          },
+
+          "title": {
+
+            "type": "string"
+
+          },
+
+          "value": {
+
+            "type": "string"
+
+          },
+
+          "color_theme": {
+
+            "type": "string"
+
+          },
+
+          "dynamic": {
+
+            "type": "boolean"
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "tabs": {
+
+      "type": "array",
+
+      "items": {
+
+        "type": "object",
+
+        "required": [
+
+          "id",
+
+          "title",
+
+          "content_type"
+
+        ],
+
+        "properties": {
+
+          "id": {
+
+            "type": "string"
+
+          },
+
+          "title": {
+
+            "type": "string"
+
+          },
+
+          "content_type": {
+
+            "type": "string",
+
+            "enum": [
+
+              "simulation",
+
+              "theory",
+
+              "analogy",
+
+              "graph",
+
+              "experiment"
+
+            ]
+
+          },
+
+          "content": {
+
+            "type": "string"
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "guide": {
+
+      "type": "object",
+
+      "required": [
+
+        "title",
+
+        "sections"
+
+      ],
+
+      "properties": {
+
+        "title": {
+
+          "type": "string"
+
+        },
+
+        "sections": {
+
+          "type": "array",
+
+          "items": {
+
+            "type": "object",
+
+            "required": [
+
+              "heading",
+
+              "content"
+
+            ],
+
+            "properties": {
+
+              "heading": {
+
+                "type": "string"
+
+              },
+
+              "content": {
+
+                "type": "string"
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "viva_questions": {
+
+      "type": "array",
+
+      "minItems": 5,
+
+      "maxItems": 5,
+
+      "items": {
+
+        "type": "object",
+
+        "required": [
+
+          "question",
+
+          "options",
+
+          "correct_answer",
+
+          "explanation"
+
+        ],
+
+        "properties": {
+
+          "question": {
+
+            "type": "string"
+
+          },
+
+          "options": {
+
+            "type": "array",
+
+            "minItems": 4,
+
+            "maxItems": 4,
+
+            "items": {
+
+              "type": "string"
+
+            }
+
+          },
+
+          "correct_answer": {
+
+            "type": "integer",
+
+            "minimum": 0,
+
+            "maximum": 3
+
+          },
+
+          "explanation": {
+
+            "type": "string"
+
+          },
+
+          "verification_formula": {
+
+            "type": "string"
+
+          },
+
+          "difficulty": {
+
+            "type": "string",
+
+            "enum": [
+
+              "easy",
+
+              "medium",
+
+              "hard"
+
+            ]
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "assets": {
+
+      "type": "object",
+
+      "properties": {
+
+        "images": {
+
+          "type": "array",
+
+          "items": {
+
+            "type": "string"
+
+          }
+
+        },
+
+        "audio": {
+
+          "type": "array",
+
+          "items": {
+
+            "type": "string"
+
+          }
+
+        },
+
+        "external_scripts": {
+
+          "type": "array",
+
+          "items": {
+
+            "type": "string"
+
+          }
+
+        }
+
+      }
+
+    },
+
+
+
+    "theme": {
+
+      "type": "object",
+
+      "properties": {
+
+        "primary_color": {
+
+          "type": "string"
+
+        },
+
+        "secondary_color": {
+
+          "type": "string"
+
+        },
+
+        "accent_color": {
+
+          "type": "string"
+
+        },
+
+        "background_color": {
+
+          "type": "string"
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

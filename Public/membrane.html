@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membrane Transport &amp; Cellular Flow Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #e11d48;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #be123c;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">MEMBRANE TRANSPORT &amp; CELLULAR FLOW</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Interactive Biophysics Sandbox — Simple Diffusion, Facilitated &amp; Active Transport</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <button id="btn-reset" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Workspace
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Navigation Tabs) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Tabs Navigation -->
+      <div class="flex bg-slate-200 p-1 rounded-xl border border-slate-350 w-fit">
+        <button id="tab-simple" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-rose-650 shadow-sm">
+          Simple Diffusion
+        </button>
+        <button id="tab-facilitated" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+          Facilitated
+        </button>
+        <button id="tab-active" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+          Active Transport
+        </button>
+        <button id="tab-playground" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+          Playground
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-2 text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+        <span>Active Mode:</span>
+        <span id="mode-badge" class="px-3 py-1 bg-rose-50 text-rose-700 rounded-full border border-rose-100 uppercase tracking-wide">Simple Diffusion</span>
+      </div>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 9) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-6">
+            
+            <!-- Temperature slider (kinetic energy indicator) -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Temperature (Kinetic Speed)</span>
+                <div class="flex items-center space-x-1 font-mono text-[11px]">
+                  <input type="number" id="num-temp" step="0.1" min="0.4" max="2.0" value="1.0" class="w-14 px-1.5 py-0.5 text-center font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-xs focus:outline-none">
+                  <span class="text-slate-400 font-bold">x</span>
+                </div>
+              </div>
+              <input type="range" id="slider-temp" min="0.4" max="2.0" step="0.1" value="1.0" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+                <span>Cold</span>
+                <span>Body Temp</span>
+                <span>Hot</span>
+              </div>
+            </div>
+
+            <!-- Add Solutes panel (Simple & Playground modes) -->
+            <div id="add-solutes-container" class="space-y-3.5 border-t border-slate-200 pt-4">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Add Solutes</span>
+              
+              <div class="grid grid-cols-2 gap-2">
+                <button id="btn-add-o2-in" class="py-2 px-1.5 bg-white hover:bg-slate-100 border border-slate-250 rounded text-[11px] font-bold text-slate-700 transition shadow-xs">
+                  + O₂ Inside
+                </button>
+                <button id="btn-add-o2-out" class="py-2 px-1.5 bg-white hover:bg-slate-100 border border-slate-250 rounded text-[11px] font-bold text-slate-700 transition shadow-xs">
+                  + O₂ Outside
+                </button>
+                <button id="btn-add-co2-in" class="py-2 px-1.5 bg-white hover:bg-slate-100 border border-slate-250 rounded text-[11px] font-bold text-slate-700 transition shadow-xs">
+                  + CO₂ Inside
+                </button>
+                <button id="btn-add-glucose-in" class="py-2 px-1.5 bg-white hover:bg-slate-100 border border-slate-250 rounded text-[11px] font-bold text-slate-700 transition shadow-xs">
+                  + Glucose Inside
+                </button>
+              </div>
+            </div>
+
+            <!-- Channel protein controls (Facilitated & Playground modes) -->
+            <div id="channel-controls-container" class="space-y-3 border-t border-slate-200 pt-4 hidden">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Carrier Proteins</span>
+              <label class="flex items-center space-x-2.5 cursor-pointer bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+                <input type="checkbox" id="chk-channel" checked class="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-4.5 w-4.5">
+                <span class="text-xs font-extrabold text-slate-750">Glucose Channel Open</span>
+              </label>
+            </div>
+
+            <!-- Active Pump Controls (Active & Playground modes) -->
+            <div id="pump-controls-container" class="space-y-3.5 border-t border-slate-200 pt-4 hidden">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Active Transport (Na⁺/K⁺)</span>
+              
+              <label class="flex items-center space-x-2.5 cursor-pointer bg-white p-3 rounded-xl border border-slate-200 shadow-xs mb-2">
+                <input type="checkbox" id="chk-pump" checked class="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-4.5 w-4.5">
+                <span class="text-xs font-extrabold text-slate-750">Sodium-Potassium Pump Active</span>
+              </label>
+
+              <div>
+                <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  <span>ATP Available</span>
+                  <span id="label-atp" class="font-mono text-xs font-extrabold text-rose-600 px-2 py-0.5 bg-rose-50 rounded">5</span>
+                </div>
+                <input type="range" id="slider-atp" min="0" max="10" step="1" value="5" class="w-full">
+              </div>
+            </div>
+
+            <!-- Solute counts dashboard -->
+            <div class="bg-slate-100 rounded-2xl p-4 border border-slate-200 space-y-3 shadow-xs">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">Solute Concentrations</span>
+              <div id="concentration-dashboard" class="space-y-2">
+                <!-- Loaded dynamically by JS -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2D Canvas Cell cross-section (8 Columns of 9) -->
+        <div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[480px]">
+          <!-- Grid lines background -->
+          <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-40"></div>
+          
+          <div class="absolute top-4 left-4 z-10">
+            <span class="text-[10px] font-extrabold tracking-wider text-cyan-300 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full uppercase">
+              INSIDE (Cytoplasm)
+            </span>
+          </div>
+
+          <div class="absolute top-4 right-4 z-10">
+            <span class="text-[10px] font-extrabold tracking-wider text-amber-300 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full uppercase">
+              OUTSIDE (Interstitial)
+            </span>
+          </div>
+
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute bottom-4 left-4 right-4 bg-slate-900/90 border border-slate-800 p-3 rounded-xl text-xs flex justify-between shadow-xl backdrop-blur-sm pointer-events-none z-10">
+            <span class="text-slate-400 font-medium" id="txt-tab-desc">Small nonpolar molecules (O₂, CO₂) cross the lipid bilayer down their concentration gradient.</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does Fick's First Law mathematically govern simple diffusion across cellular membranes?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-rose-600 hover:text-rose-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Fick's First Law defines molecular solute flux ($J$) proportional to the concentration gradient:
+                $$J = -P (C_{\text{in}} - C_{\text{out}})$$
+                Where $P$ is the membrane permeability coefficient:
+                $$P = \frac{K_p D}{x}$$
+                ($K_p$: partition coefficient, $D$: diffusion constant, $x$: bilayer thickness). Nonpolar gases hold huge $K_p$, yielding swift spontaneous diffusion.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What are the kinetic differences between simple diffusion and channel-facilitated transport?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-rose-600 hover:text-rose-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Simple diffusion is non-saturable, showing a linear flux increase as concentration rises. Facilitated transport relies on channel saturation, conforming to Michaelis-Menten kinetics:
+                $$J = \frac{J_{\text{max}} [S]}{K_M + [S]}$$
+                When solute concentration $[S] \gg K_M$, carrier bindings are completely saturated, reaching the asymptotic flux limit $J_{\text{max}}$.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the stoichiometric ratio of ion exchange in active Sodium-Potassium pumps?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-rose-600 hover:text-rose-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                The $\text{Na}^+/\text{K}^+$-ATPase pump operates electogenically. Per single ATP hydrolyzed cycle, it pumps:
+                $$\text{Stoichiometry: } 3\text{Na}^+ \text{ (outward)} : 2\text{K}^+ \text{ (inward)}$$
+                This active transport creates a net positive charge export, establishing cellular resting membrane potential ($\Delta\Psi \approx -70\text{ mV}$).
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does the Nernst Equation compute the equilibrium potential for ionic species?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-rose-600 hover:text-rose-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                For a given ion of valence $z$, equilibrium potential ($E_{\text{eq}}$) balances the thermodynamic chemical gradient with electrical attraction:
+                $$E_{\text{eq}} = \frac{RT}{zF} \ln \frac{[C]_{\text{outside}}}{[C]_{\text{inside}}}$$
+                At $37^\circ\text{C}$, the simplified coefficient for monovalent cations ($z = +1$) is:
+                $$E_{\text{eq}} = 61.5 \log_{10} \frac{[C]_{\text{out}}}{[C]_{\text{in}}} \text{ mV}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 5 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 5</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does the hydrophobic lipid core restrict polar solutes while permitting nonpolar ones?
+              </h4>
+              <button onclick="toggleVerification(5)" class="w-full text-left text-[11px] font-bold text-rose-600 hover:text-rose-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-5">Show Scientific Verification</span>
+                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-5" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
+                The interior of the bilayer consists of fatty acid hydrocarbon tails. Spontaneous crossing requires solutes to shed their hydration shell:
+                $$\Delta G_{\text{hydration}} \gg 0$$
+                Charged ions ($Na^+$) or highly polar molecules ($Glu$) face a massive thermodynamic barrier to desolvate and dissolve in the nonpolar core, requiring specialized hydrophilic protein conduits.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calibration Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Biological simulations calibrated via standard mammalian intracellular indices.</span>
+      <span>ATP Hydrolysis: &Delta;G&deg;' = -30.5 kJ/mol</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> CELLULAR MEMBRANE TRANSPORT - User Guide
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Membrane Transport Virtual Lab</strong>! Analyze how molecules and ions traverse the selectively permeable cellular lipid bilayer.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Simulation Modes</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Simple Diffusion</strong>: Focuses on spontaneous crossing of small, nonpolar molecules ($O_2, CO_2$) down concentration gradients without protein assistance.</li>
+            <li><strong>Facilitated</strong>: Solutes require specific channel proteins. Toggle the Glucose channel Open or Closed to analyze saturable carrier transport.</li>
+            <li><strong>Active Transport</strong>: Uses metabolic energy (ATP) to pump ions ($Na^+, K^+$) against concentration gradients via electogenic cycles.</li>
+            <li><strong>Playground Sandbox</strong>: Combines all mechanics. Experiment freely by adding solute species or modifying thermal levels.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 Operational Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Temperature Slider</strong>: Syncs with system kinetic energy to control particle velocities.</li>
+            <li><strong>Concentration Dashboard</strong>: Provides a live count of particles Inside vs Outside the cytoplasm.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC -->
+  <script>
+    // --- DATABASE ---
+    const PARTICLE_DEFS = {
+      o2: { label: 'O₂', color: '#38bdf8', r: 7, simple: true, channel: false, charge: 0 },
+      co2: { label: 'CO₂', color: '#94a3b8', r: 8, simple: true, channel: false, charge: 0 },
+      glucose: { label: 'Glu', color: '#fbbf24', r: 11, simple: false, channel: true, charge: 0 },
+      na: { label: 'Na⁺', color: '#f87171', r: 9, simple: false, channel: false, charge: 1, pumpable: 'out' },
+      k: { label: 'K⁺', color: '#a78bfa', r: 10, simple: false, channel: false, charge: -1, pumpable: 'in' }
+    };
+
+    const SCREEN_COPY = {
+      simple: 'Small nonpolar molecules (O₂, CO₂) cross the lipid bilayer down their concentration gradient.',
+      facilitated: 'Large polar solutes need channel proteins. Open the glucose channel to allow facilitated diffusion.',
+      active: 'The Na⁺/K⁺ pump uses ATP to move ions against their gradients (3 Na⁺ out, 2 K⁺ in per cycle).',
+      playground: 'Combine diffusion, channels, and active transport. Experiment freely.'
+    };
+
+    // --- STATE VARIABLES ---
+    let activeTab = 'simple';
+    let temp = 1.0;
+    let channelOpen = false;
+    let pumpOn = false;
+    let atp = 5;
+
+    let particles = [];
+    let membraneX = 0;
+    let pumpTimer = 0;
+    let lastTs = 0;
+
+    // Canvas refs
+    let canvas, ctx;
+    const dpi = window.devicePixelRatio || 1;
+
+    // --- DOM ELEMENT CACHE ---
+    const tabSimple = document.getElementById('tab-simple');
+    const tabFacilitated = document.getElementById('tab-facilitated');
+    const tabActive = document.getElementById('tab-active');
+    const tabPlayground = document.getElementById('tab-playground');
+    
+    const modeBadge = document.getElementById('mode-badge');
+    const sliderTemp = document.getElementById('slider-temp');
+    const numTemp = document.getElementById('num-temp');
+    const txtTabDesc = document.getElementById('txt-tab-desc');
+
+    const addSolutesContainer = document.getElementById('add-solutes-container');
+    const channelControlsContainer = document.getElementById('channel-controls-container');
+    const pumpControlsContainer = document.getElementById('pump-controls-container');
+
+    const chkChannel = document.getElementById('chk-channel');
+    const chkPump = document.getElementById('chk-pump');
+    const sliderAtp = document.getElementById('slider-atp');
+    const labelAtp = document.getElementById('label-atp');
+    const concDashboard = document.getElementById('concentration-dashboard');
+
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+      canvas = document.getElementById('simCanvas');
+      ctx = canvas.getContext('2d');
+
+      setupListeners();
+      handleResize();
+      setScreenTab('simple');
+
+      // Launch Animation loop
+      requestAnimationFrame(renderTick);
+    });
+
+    function setupListeners() {
+      // Screen switches
+      tabSimple.addEventListener('click', () => setScreenTab('simple'));
+      tabFacilitated.addEventListener('click', () => setScreenTab('facilitated'));
+      tabActive.addEventListener('click', () => setScreenTab('active'));
+      tabPlayground.addEventListener('click', () => setScreenTab('playground'));
+
+      // Temperature sync
+      sliderTemp.addEventListener('input', (e) => {
+        temp = parseFloat(e.target.value);
+        numTemp.value = temp.toFixed(1);
+      });
+      numTemp.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value);
+        if (isNaN(val)) val = 1.0;
+        val = Math.min(2.0, Math.max(0.4, val));
+        temp = val;
+        sliderTemp.value = val;
+      });
+
+      // Solutes click triggers
+      document.getElementById('btn-add-o2-in').addEventListener('click', () => spawnSolute('o2', 'in'));
+      document.getElementById('btn-add-o2-out').addEventListener('click', () => spawnSolute('o2', 'out'));
+      document.getElementById('btn-add-co2-in').addEventListener('click', () => spawnSolute('co2', 'in'));
+      document.getElementById('btn-add-glucose-in').addEventListener('click', () => spawnSolute('glucose', 'in'));
+
+      // Toggles
+      chkChannel.addEventListener('change', (e) => {
+        channelOpen = e.target.checked;
+      });
+      chkPump.addEventListener('change', (e) => {
+        pumpOn = e.target.checked;
+      });
+      sliderAtp.addEventListener('input', (e) => {
+        atp = parseInt(e.target.value);
+        labelAtp.textContent = atp;
+      });
+
+      // Window resize
+      window.addEventListener('resize', handleResize);
+
+      // Reset
+      document.getElementById('btn-reset').addEventListener('click', handleResetWorkspace);
+
+      // User guide modal
+      const guideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => {
+        guideModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-guide').addEventListener('click', () => {
+        guideModal.classList.add('hidden');
+      });
+      guideModal.addEventListener('click', (e) => {
+        if (e.target === guideModal) guideModal.classList.add('hidden');
+      });
+    }
+
+    function handleResize() {
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      membraneX = rect.width / 2;
+    }
+
+    function setScreenTab(tab) {
+      activeTab = tab;
+
+      // Update button highlights
+      const tabs = [tabSimple, tabFacilitated, tabActive, tabPlayground];
+      tabs.forEach(t => t.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950");
+
+      let activeBtn;
+      if (tab === 'simple') activeBtn = tabSimple;
+      else if (tab === 'facilitated') activeBtn = tabFacilitated;
+      else if (tab === 'active') activeBtn = tabActive;
+      else activeBtn = tabPlayground;
+
+      activeBtn.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-rose-650 shadow-sm";
+      modeBadge.textContent = SCREEN_COPY[tab].split('.')[0];
+      txtTabDesc.textContent = SCREEN_COPY[tab];
+
+      // Reset visibilities based on tab
+      addSolutesContainer.classList.add('hidden');
+      channelControlsContainer.classList.add('hidden');
+      pumpControlsContainer.classList.add('hidden');
+
+      if (tab === 'simple') {
+        addSolutesContainer.classList.remove('hidden');
+        channelOpen = false;
+        pumpOn = false;
+      } else if (tab === 'facilitated') {
+        channelControlsContainer.classList.remove('hidden');
+        channelOpen = true;
+        pumpOn = false;
+      } else if (tab === 'active') {
+        pumpControlsContainer.classList.remove('hidden');
+        channelOpen = false;
+        pumpOn = true;
+      } else {
+        addSolutesContainer.classList.remove('hidden');
+        channelControlsContainer.classList.remove('hidden');
+        pumpControlsContainer.classList.remove('hidden');
+        channelOpen = true;
+        pumpOn = false;
+      }
+
+      chkChannel.checked = channelOpen;
+      chkPump.checked = pumpOn;
+
+      seedParticles();
+      updateDashboard();
+    }
+
+    function handleResetWorkspace() {
+      temp = 1.0;
+      sliderTemp.value = 1.0;
+      numTemp.value = "1.0";
+      atp = 5;
+      sliderAtp.value = 5;
+      labelAtp.textContent = 5;
+      setScreenTab('simple');
+    }
+
+    // --- SOLUTE POPULATOR ENGINE ---
+    function seedParticles() {
+      particles = [];
+      const add = (type, side, n) => {
+        for (let i = 0; i < n; i++) spawnSolute(type, side, true);
+      };
+
+      if (activeTab === 'simple') {
+        add('o2', 'in', 18); add('o2', 'out', 8);
+        add('co2', 'in', 6); add('co2', 'out', 14);
+        add('glucose', 'in', 10); add('glucose', 'out', 4);
+      } else if (activeTab === 'facilitated') {
+        add('glucose', 'in', 22); add('glucose', 'out', 6);
+      } else if (activeTab === 'active') {
+        add('na', 'in', 24); add('na', 'out', 6);
+        add('k', 'in', 5); add('k', 'out', 20);
+      } else {
+        add('o2', 'in', 12); add('o2', 'out', 10);
+        add('glucose', 'in', 15); add('glucose', 'out', 8);
+        add('na', 'in', 18); add('na', 'out', 8);
+        add('k', 'in', 6); add('k', 'out', 16);
+      }
+    }
+
+    function spawnSolute(type, side, quiet = false) {
+      const def = PARTICLE_DEFS[type];
+      if (!def) return;
+      const w = canvas.width / dpi;
+      const h = canvas.height / dpi;
+      const pad = 28;
+      const mx = membraneX || w / 2;
+      const inside = side === 'in';
+      const x = inside
+        ? pad + Math.random() * Math.max(40, mx - pad - 24)
+        : mx + 24 + Math.random() * Math.max(40, w - mx - pad - 24);
+      const y = pad + Math.random() * (h - pad * 2);
+      
+      particles.push({
+        type: type,
+        side: inside ? 'in' : 'out',
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2,
+        cooldown: 0
+      });
+
+      if (!quiet) updateDashboard();
+    }
+
+    function countBySpecies(type, side) {
+      return particles.filter(p => p.type === type && p.side === side).length;
+    }
+
+    function updateDashboard() {
+      const types = activeTab === 'facilitated' ? ['glucose']
+        : activeTab === 'active' ? ['na', 'k']
+        : activeTab === 'simple' ? ['o2', 'co2', 'glucose']
+        : ['o2', 'glucose', 'na', 'k'];
+
+      concDashboard.innerHTML = types.map(t => {
+        const def = PARTICLE_DEFS[t];
+        return `
+          <div class="bg-white border border-slate-200 rounded-xl p-2.5 flex items-center justify-between shadow-xs">
+            <span class="font-extrabold" style="color: ${def.color}">${def.label}</span>
+            <div class="text-[11px] font-bold font-mono text-slate-700">
+              Inside: <span class="text-indigo-650">${countBySpecies(t, 'in')}</span> · 
+              Outside: <span class="text-rose-650">${countBySpecies(t, 'out')}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- MEMBRANE CROSS SOLVING MECHANICS ---
+    function canCrossMembrane(p) {
+      const def = PARTICLE_DEFS[p.type];
+      const mx = membraneX;
+      const approaching = (p.side === 'in' && p.x > mx - 18) || (p.side === 'out' && p.x < mx + 18);
+      if (!approaching || p.cooldown > 0) return false;
+
+      if (def.simple && (activeTab === 'simple' || activeTab === 'playground')) {
+        return Math.random() < 0.04 * temp;
+      }
+      if (def.channel && channelOpen && (activeTab === 'facilitated' || activeTab === 'playground')) {
+        const highInside = countBySpecies('glucose', 'in') > countBySpecies('glucose', 'out');
+        if (p.side === 'in' && highInside) return Math.random() < 0.06 * temp;
+        if (p.side === 'out' && !highInside) return Math.random() < 0.03 * temp;
+      }
+      return false;
+    }
+
+    function tryCrossMembrane(p) {
+      if (!canCrossMembrane(p)) return;
+      p.side = p.side === 'in' ? 'out' : 'in';
+      p.x = p.side === 'in' ? membraneX - 30 - Math.random() * 20 : membraneX + 30 + Math.random() * 20;
+      p.cooldown = 40;
+      updateDashboard();
+    }
+
+    function runPumpMechanics(dt) {
+      if (!pumpOn || atp <= 0) return;
+      if (activeTab !== 'active' && activeTab !== 'playground') return;
+      
+      pumpTimer += dt;
+      if (pumpTimer < 1.8) return;
+      pumpTimer = 0;
+
+      const naIn = particles.filter(p => p.type === 'na' && p.side === 'in');
+      const kOut = particles.filter(p => p.type === 'k' && p.side === 'out');
+      if (naIn.length < 3 || kOut.length < 2) return;
+
+      // Consume 1 ATP
+      atp = Math.max(0, atp - 1);
+      labelAtp.textContent = atp;
+      sliderAtp.value = atp;
+
+      // Pump 3 Na+ out
+      for (let i = 0; i < 3 && naIn[i]; i++) {
+        naIn[i].side = 'out';
+        naIn[i].x = membraneX + 35 + Math.random() * 30;
+        naIn[i].cooldown = 50;
+      }
+
+      // Pump 2 K+ in
+      for (let i = 0; i < 2 && kOut[i]; i++) {
+        kOut[i].side = 'in';
+        kOut[i].x = membraneX - 35 - Math.random() * 30;
+        kOut[i].cooldown = 50;
+      }
+
+      updateDashboard();
+    }
+
+    // --- ANIMATION ENGINE LOOP ---
+    function renderTick(ts) {
+      const w = canvas.width / dpi;
+      const h = canvas.height / dpi;
+
+      const dt = Math.min(0.05, (ts - lastTs) / 1000 || 0.016);
+      lastTs = ts;
+      const speed = 55 * temp;
+
+      runPumpMechanics(dt);
+
+      // Integrate particles
+      particles.forEach(p => {
+        p.vx += (Math.random() - 0.5) * 0.15 * temp;
+        p.vy += (Math.random() - 0.5) * 0.15 * temp;
+        const mag = Math.hypot(p.vx, p.vy) || 1;
+        const cap = 1.8 * temp;
+        if (mag > cap) { p.vx = (p.vx / mag) * cap; p.vy = (p.vy / mag) * cap; }
+        
+        p.x += p.vx * speed * dt;
+        p.y += p.vy * speed * dt;
+        if (p.cooldown > 0) p.cooldown--;
+
+        const pad = 16;
+        if (p.y < pad) { p.y = pad; p.vy = Math.abs(p.vy); }
+        if (p.y > h - pad) { p.y = h - pad; p.vy = -Math.abs(p.vy); }
+
+        if (p.side === 'in') {
+          if (p.x < pad) { p.x = pad; p.vx = Math.abs(p.vx); }
+          if (p.x > membraneX - 14) tryCrossMembrane(p);
+          if (p.x > membraneX - 12) { p.x = membraneX - 14; p.vx = -Math.abs(p.vx) * 0.5; }
+        } else {
+          if (p.x > w - pad) { p.x = w - pad; p.vx = -Math.abs(p.vx); }
+          if (p.x < membraneX + 14) tryCrossMembrane(p);
+          if (p.x < membraneX + 12) { p.x = membraneX + 14; p.vx = Math.abs(p.vx) * 0.5; }
+        }
+      });
+
+      // Clear
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      ctx.scale(dpi, dpi);
+
+      // Draw bilayer membrane representation
+      drawBilayerMembrane(w, h);
+
+      // Draw all species
+      particles.forEach(p => {
+        const def = PARTICLE_DEFS[p.type];
+        ctx.beginPath();
+        ctx.fillStyle = def.color;
+        ctx.arc(p.x, p.y, def.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = `bold ${def.r > 9 ? 8 : 7}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        // replace ionic symbols cleanly
+        const label = def.label.replace('⁺', '+').replace('₂', '2');
+        ctx.fillText(label, p.x, p.y);
+      });
+
+      ctx.restore();
+      requestAnimationFrame(renderTick);
+    }
+
+    function drawBilayerMembrane(w, h) {
+      const top = 20, bot = h - 20;
+
+      // Shaded inside vs outside spaces
+      ctx.fillStyle = 'rgba(6, 182, 212, 0.05)';
+      ctx.fillRect(0, top, membraneX - 14, bot - top);
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.05)';
+      ctx.fillRect(membraneX + 14, top, w - membraneX - 14, bot - top);
+
+      // Lipids draw loops
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let y = top; y <= bot; y += 6) {
+        const wobble = Math.sin(y * 0.08) * 3;
+        const x1 = membraneX - 10 + wobble;
+        const x2 = membraneX + 10 + wobble;
+        if (y === top) {
+          ctx.moveTo(x1, y); ctx.moveTo(x2, y);
+        } else {
+          ctx.lineTo(x1, y); ctx.lineTo(x2, y);
+        }
+      }
+      ctx.stroke();
+
+      // Render glucose protein channel
+      if (channelOpen && (activeTab === 'facilitated' || activeTab === 'playground')) {
+        const cy = h * 0.40;
+        ctx.fillStyle = '#22d3ee';
+        ctx.beginPath();
+        ctx.roundRect(membraneX - 8, cy - 22, 16, 44, 4);
+        ctx.fill();
+
+        ctx.strokeStyle = '#0891b2';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#22d3ee';
+        ctx.font = 'bold 8px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Channel', membraneX, cy + 32);
+      }
+
+      // Render Na/K ATPase pump
+      if (pumpOn && (activeTab === 'active' || activeTab === 'playground')) {
+        const cy = h * 0.65;
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.roundRect(membraneX - 14, cy - 28, 28, 56, 6);
+        ctx.fill();
+
+        ctx.strokeStyle = '#e11d48';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 8px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Na⁺/K⁺', membraneX, cy - 6);
+        ctx.fillText('Pump', membraneX, cy + 6);
+
+        if (atp > 0) {
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.arc(membraneX + 22, cy - 18, 8, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.fillStyle = '#000000';
+          ctx.font = 'bold 7px sans-serif';
+          ctx.fillText('ATP', membraneX + 22, cy - 18);
+        }
+      }
+    }
+
+    // --- ACCORDION CONTROLS (VIVA DESK) ---
+    window.toggleVerification = function(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const arrow = document.getElementById(`btn-arrow-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      
+      const isHidden = panel.classList.contains('hidden');
+      
+      // Close all panels first to keep clean UI
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById(`viva-panel-${i}`).classList.add('hidden');
+        document.getElementById(`btn-arrow-${i}`).classList.remove('rotate-180');
+        document.getElementById(`btn-text-${i}`).textContent = "Show Scientific Verification";
+      }
+
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+        btnText.textContent = "Hide Scientific Verification";
+        // Trigger MathJax typeset to render LaTeX formulas cleanly
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetPromise();
+        }
+      }
+    };
+  </script>
+</body>
+</html>

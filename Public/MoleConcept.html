@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Mole Concept &amp; Quantum Scaling Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">THE MOLE CONCEPT &amp; QUANTUM SCALING</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Molecular Counting, Avogadro Scaling &amp; Stoichiometry Sandbox</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <button id="btn-reset" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Workspace
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Navigation Tabs) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Tabs Navigation -->
+      <div class="flex bg-slate-200 p-1 rounded-xl border border-slate-350 w-fit">
+        <button id="tab-simulation" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm">
+          <i class="fa-solid fa-eye mr-1.5"></i> Visual Sandbox
+        </button>
+        <button id="tab-analogy" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+          <i class="fa-solid fa-scale-balanced mr-1.5"></i> The Dozen Analogy
+        </button>
+        <button id="tab-quiz" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+          <i class="fa-solid fa-graduation-cap mr-1.5"></i> Practice Quiz
+        </button>
+      </div>
+
+      <!-- Quick Zoom Mode Toggles -->
+      <div id="zoom-selector-container" class="flex items-center space-x-2">
+        <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Observation Zoom:</span>
+        <div class="flex bg-slate-250 p-0.5 rounded-lg border border-slate-300">
+          <button id="zoom-macro" class="px-3 py-1 bg-white shadow-xs rounded text-[11px] font-bold text-indigo-600">Macro (Beaker)</button>
+          <button id="zoom-molecular" class="px-3 py-1 rounded text-[11px] font-bold text-slate-600 hover:text-slate-950">Molecular</button>
+          <button id="zoom-atomic" class="px-3 py-1 rounded text-[11px] font-bold text-slate-600 hover:text-slate-950">Atomic</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 9) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          
+          <!-- TAB 1: SIMULATION CONTROLS -->
+          <div id="panel-simulation-controls" class="space-y-6">
+            <!-- Chemical Substance Selector -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2.5">1. Select Substance</span>
+              <div id="substance-selector" class="grid grid-cols-2 gap-2">
+                <!-- Dynamically generated buttons -->
+              </div>
+            </div>
+
+            <!-- Slider: Mass -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>2. Adjust Sample Mass ($m$)</span>
+                <div class="flex items-center space-x-1 font-mono text-[11px]">
+                  <input type="number" id="num-mass" step="0.1" min="0.1" max="500.0" value="18.0" class="w-16 px-1.5 py-0.5 text-center font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                  <span class="text-slate-400 font-bold">g</span>
+                </div>
+              </div>
+              <input type="range" id="slider-mass" min="0.1" max="500.0" step="0.1" value="18.0" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+                <span>0.1 g</span>
+                <span>500.0 g</span>
+              </div>
+            </div>
+
+            <!-- Derived Math calculation equations (collapsible style/ MathJax block) -->
+            <div class="space-y-3.5 border-t border-slate-200 pt-4">
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Theoretical Calculations</span>
+              
+              <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-3 text-[11px]">
+                <div class="space-y-1">
+                  <span class="font-bold text-indigo-600 block">Step 1: Moles ($n = \frac{m}{M}$)</span>
+                  <div id="step1-formula" class="font-mono text-slate-700 bg-slate-50 p-2 rounded border border-slate-100">
+                    <!-- Loaded dynamically -->
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <span class="font-bold text-emerald-600 block">Step 2: Particles ($N = n \times N_A$)</span>
+                  <div id="step2-formula" class="font-mono text-slate-700 bg-slate-50 p-2 rounded border border-slate-100">
+                    <!-- Loaded dynamically -->
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <span class="font-bold text-cyan-600 block">Step 3: Total Atoms</span>
+                  <div id="step3-formula" class="font-mono text-slate-700 bg-slate-50 p-2 rounded border border-slate-100">
+                    <!-- Loaded dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: ANALOGY CONTROLS (Static Info Card in Sidebar) -->
+          <div id="panel-analogy-controls" class="space-y-5 hidden">
+            <div class="bg-indigo-50 border border-indigo-150 rounded-2xl p-4 space-y-3">
+              <span class="text-xs font-bold text-indigo-700 uppercase block tracking-wider"><i class="fa-solid fa-scale-balanced"></i> Scaling Metrics</span>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                Just as we group everyday small items (like eggs or donuts) by the <strong>dozen (12)</strong>, chemists bundle extremely microscopic particles by the <strong>mole ($6.022 \times 10^{23}$)</strong> to enable macroscopic physical scale operations.
+              </p>
+            </div>
+            <div class="space-y-2.5 text-xs">
+              <div class="bg-white p-3 rounded-xl border border-slate-200">
+                <span class="font-bold text-slate-700 block mb-1">Dozen Eggs (12 items)</span>
+                <span class="text-slate-500 text-[11px]">Weight varies depending on chicken size, but count is always 12.</span>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-slate-200">
+                <span class="font-bold text-slate-700 block mb-1">Mole atoms ($6.022 \times 10^{23}$)</span>
+                <span class="text-slate-500 text-[11px]">Weight varies by element molar mass ($M$), but particle count is always $N_A$.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: QUIZ CONTROLS -->
+          <div id="panel-quiz-controls" class="space-y-5 hidden">
+            <div class="bg-emerald-50 border border-emerald-150 rounded-2xl p-4 text-xs space-y-2">
+              <span class="font-bold text-emerald-700 uppercase tracking-wider block"><i class="fa-solid fa-graduation-cap"></i> Concept Quiz Bench</span>
+              <p class="text-slate-600 text-[11px] leading-relaxed">
+                Answer five progressive stoichiometric questions to validate your scaling proficiency.
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+              <div class="text-xs">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Progress Tracker</span>
+                <span id="quiz-progress-text" class="text-sm font-extrabold text-indigo-600 font-mono">Question 1 / 5</span>
+              </div>
+              <button id="btn-restart-quiz" class="mt-4 w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg border border-slate-200 transition">
+                Restart Practice Quiz
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Visualizer Arena & Outputs Grid (8 Columns of 9) -->
+        <div class="md:col-span-8 flex flex-col justify-between h-full bg-slate-900 p-4 space-y-4">
+          
+          <!-- TAB 1 & 2 CONTENT PANEL: Interactive Canvas -->
+          <div id="canvas-main-panel" class="relative bg-slate-950 rounded-xl overflow-hidden aspect-[16/10] border border-slate-800 flex items-center justify-center flex-grow">
+            <!-- Canvas Grid Overlay -->
+            <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1.5px,transparent_1.5px)] [background-size:24px_24px] pointer-events-none opacity-40"></div>
+            
+            <canvas id="moleCanvas" class="absolute inset-0 w-full h-full block cursor-pointer"></canvas>
+            
+            <!-- Contextual overlay description -->
+            <div class="absolute bottom-4 left-4 right-4 bg-slate-900/90 border border-slate-850 p-3 rounded-xl text-xs flex justify-between shadow-xl backdrop-blur-sm pointer-events-none">
+              <span id="txt-overlay-desc" class="text-slate-300">Rendering H₂O sample beaker.</span>
+              <span id="txt-overlay-dynamic" class="font-extrabold text-indigo-400">18.0g of H₂O</span>
+            </div>
+          </div>
+
+          <!-- TAB 3 CONTENT PANEL: Quiz Arena -->
+          <div id="quiz-main-panel" class="bg-slate-950 rounded-xl border border-slate-850 p-6 flex flex-col justify-between flex-grow hidden">
+            <div class="space-y-5">
+              <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <span id="quiz-question-category" class="text-[9px] uppercase font-extrabold tracking-widest text-indigo-400 bg-indigo-950/60 border border-indigo-900 px-2 py-0.5 rounded">Conceptual</span>
+                <div class="text-xs font-mono font-bold text-emerald-400" id="quiz-score-badge">Score: 0 / 0</div>
+              </div>
+
+              <div class="space-y-4">
+                <h3 id="quiz-question-text" class="text-sm font-bold text-slate-200 leading-relaxed">
+                  Loading stoichiometry question...
+                </h3>
+                <div id="quiz-choices" class="grid grid-cols-1 gap-2.5">
+                  <!-- Choices populated dynamically -->
+                </div>
+              </div>
+
+              <div id="quiz-feedback" class="hidden p-3.5 rounded-xl border text-xs leading-relaxed animate-in fade-in duration-200">
+                <h4 id="quiz-feedback-title" class="font-bold text-sm">Correct Answer</h4>
+                <p id="quiz-feedback-text" class="text-slate-400 mt-1"></p>
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-4 border-t border-slate-850">
+              <button id="btn-next-question" class="hidden px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs transition shadow-lg shadow-indigo-950/45">
+                Next Question <i class="fa-solid fa-arrow-right ml-1"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 2 SUPPLEMENT: Dozen Comparison Cards -->
+          <div id="analogy-supplement-panel" class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-white hidden">
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-sm">
+              <h4 class="text-indigo-400 font-bold text-sm mb-1.5">Soda Cans Scale</h4>
+              <p class="text-slate-400 leading-relaxed text-[11px]">If you possessed one mole of soda cans, they would blanket the entire surface of Earth to a height of 200 miles!</p>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-sm">
+              <h4 class="text-emerald-400 font-bold text-sm mb-1.5">Sand Grains Scale</h4>
+              <p class="text-slate-400 leading-relaxed text-[11px]">A single mole of fine sand grains exceeds the total count of sand grains on all the beaches across our entire planet.</p>
+            </div>
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-sm">
+              <h4 class="text-cyan-400 font-bold text-sm mb-1.5">Paper Stack Scale</h4>
+              <p class="text-slate-400 leading-relaxed text-[11px]">A mole of typical sheets of paper stacked together would traverse the distance from Earth to the Moon and back 80 billion times!</p>
+            </div>
+          </div>
+
+          <!-- Calculated Quantum Dashboard (Grid Outputs) -->
+          <div class="bg-slate-950 rounded-xl border border-slate-850 p-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+              <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                <span class="text-slate-400 block mb-0.5">Molar Mass ($M$)</span>
+                <span id="out-molar-mass" class="text-sm font-extrabold text-slate-100 font-mono">18.015 g/mol</span>
+              </div>
+              <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                <span class="text-slate-400 block mb-0.5">Moles ($n$)</span>
+                <span id="out-moles" class="text-sm font-extrabold text-indigo-400 font-mono">1.000 mol</span>
+              </div>
+              <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                <span class="text-slate-400 block mb-0.5">Molecules ($N$)</span>
+                <span id="out-molecules" class="text-sm font-extrabold text-emerald-400 font-mono">6.022 × 10²³</span>
+              </div>
+              <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                <span class="text-slate-400 block mb-0.5">Total Atoms</span>
+                <span id="out-atoms" class="text-sm font-extrabold text-cyan-400 font-mono">1.807 × 10²⁴</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How is Avogadro's number ($N_A$) defined and how does it relate to Carbon-12?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Avogadro's number corresponds to the total atoms inside exactly $12\text{ grams}$ of pure Carbon-12 ($^{12}\text{C}$):
+                $$N_A = 6.02214 \times 10^{23} \text{ mol}^{-1}$$
+                Mass spectrometry places single atom Carbon-12 at:
+                $$m_C = 1.99265 \times 10^{-23} \text{ g}$$
+                $$\text{Count} = \frac{12\text{ g}}{m_C} = 6.022 \times 10^{23}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the mathematical scale difference between Molar Mass ($g/mol$) and molecular mass ($amu$)?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                By atomic scaling limits, $1\text{ amu} = \frac{1}{N_A}\text{ grams}$. Hence, for a molecule of mass $A\text{ amu}$:
+                $$\text{Mass of } 1\text{ mole} = A\text{ amu} \times N_A = A\text{ g}$$
+                This yields identical numerical values but distinct physical scales (macroscopic vs microscopic).
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does one mole of any ideal gas occupy exactly $22.71 \text{ L}$ at STP ($10^5 \text{ Pa}$)?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                Under Avogadro's hypothesis and Ideal Gas formulas:
+                $$V_m = \frac{RT}{P} = \frac{(8.314)(273.15)}{10^5} \approx 22.71\text{ L/mol}$$
+                Because the equation includes no mass or composition parameters, the volume is identical for all ideal gases.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why is the mole unit critical in laboratory chemistry instead of atomic mass units?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                Individual atoms are too small to isolate (mass of H $\approx 1.67 \times 10^{-24}\text{ g}$). Moles act as a mathematical bridge linking mass directly to stoichiometric ratios:
+                $$\text{Moles } (n) = \frac{\text{Mass } (m)}{\text{Molar Mass } (M)}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 5 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 5</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How do we calculate the total atoms in $9.0\text{ grams}$ of liquid water ($H_2O$)?
+              </h4>
+              <button onclick="toggleVerification(5)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-5">Show Scientific Verification</span>
+                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-5" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
+                First, calculate the moles of $H_2O$ molecules:
+                $$n = \frac{9.0\text{ g}}{18.0\text{ g/mol}} = 0.5\text{ moles}$$
+                Molecules count: $N = 0.5 \times N_A = 3.011 \times 10^{23}$.
+                Since water holds 3 atoms per molecule, total atoms is:
+                $$\text{Atoms} = 3 \times N = 9.033 \times 10^{23}$$
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calibration Footer -->
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Stoichiometric equations calibrated via standard IUPAC atomic weight charts.</span>
+      <span>Avogadro Constant: N_A = 6.02214076 &times; 10^23 mol^-1</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> THE MOLE CONCEPT - User Guide
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Mole Concept &amp; Quantum Scaling Virtual Lab</strong>! Use this simulation to master the calculations bridging microscopic molecules and macroscopic masses.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Panels</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Visual Sandbox</strong>: Adjust the sample mass of various chemicals ($H_2O$, $CO_2$, $NaCl$, $O_2$, $H_2$) and swap zoom perspectives between macroscopic beaker views, floating molecular meshes, and single atomic shell grids.</li>
+            <li><strong>The Dozen Analogy</strong>: Highlights equivalent scaling comparisons explaining Avogadro's massive numerical constant through sand grains, paper stacks, and cans.</li>
+            <li><strong>Practice Quiz</strong>: Evaluates your calculation skills via five progressive stoichiometric challenges.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 Interactive Parameters</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Mass Slider &amp; Number Inputs</strong>: Modifying either control immediately updates the other, triggering immediate updates across all calculation cards.</li>
+            <li><strong>Interactive Colliders</strong>: When zooming into the Molecular tier, drag your mouse inside the viewport canvas to trigger custom momentum impacts on floating molecule models!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION LOGIC -->
+  <script>
+    // --- DATABASE ---
+    const Substances = {
+      H2O: {
+        name: 'Water (H₂O)',
+        formula: 'H_2O',
+        molarMass: 18.015,
+        type: 'liquid',
+        color: 'rgba(56, 189, 248, 0.85)',
+        composition: { H: 2, O: 1 },
+        atomsPerMolecule: 3,
+        macroDesc: 'Beaker filled with liquid water. Water molecules form a continuous polar network.',
+        molecularDesc: 'Floating water molecules are bent shaped (approx. 104.5° bond angle).',
+        atomicDesc: 'Zoomed into an H₂O molecule: 1 Oxygen atom bound to 2 Hydrogen atoms.'
+      },
+      CO2: {
+        name: 'Carbon Dioxide (CO₂)',
+        formula: 'CO_2',
+        molarMass: 44.01,
+        type: 'gas',
+        color: 'rgba(148, 163, 184, 0.7)',
+        composition: { C: 1, O: 2 },
+        atomsPerMolecule: 3,
+        macroDesc: 'Flask containing Carbon Dioxide gas. Gas particles expand to fill the entire volume.',
+        molecularDesc: 'Floating CO₂ molecules are completely linear (180° double bonds).',
+        atomicDesc: 'Zoomed into a CO₂ molecule: 1 Central Carbon atom double-bonded to 2 Oxygen atoms.'
+      },
+      NaCl: {
+        name: 'Salt (NaCl)',
+        formula: 'NaCl',
+        molarMass: 58.44,
+        type: 'crystal',
+        color: 'rgba(241, 245, 249, 0.9)',
+        composition: { Na: 1, Cl: 1 },
+        atomsPerMolecule: 2,
+        macroDesc: 'Pile of Sodium Chloride salt crystal. Ions are arranged in a rigid repeating grid.',
+        molecularDesc: 'Floating formula units of NaCl. Strong ionic bonds hold Na⁺ and Cl⁻ together.',
+        atomicDesc: 'Zoomed into NaCl: Alternating Na⁺ (Sodium cations) and Cl⁻ (Chlorine anions).'
+      },
+      O2: {
+        name: 'Oxygen Gas (O₂)',
+        formula: 'O_2',
+        molarMass: 32.00,
+        type: 'gas',
+        color: 'rgba(52, 211, 153, 0.7)',
+        composition: { O: 2 },
+        atomsPerMolecule: 2,
+        macroDesc: 'Cylinder containing pure Oxygen gas. Gas molecules are widely separated.',
+        molecularDesc: 'Floating diatomic Oxygen (O₂) molecules. Two identical oxygen atoms bound together.',
+        atomicDesc: 'Zoomed into an O₂ molecule: Two Oxygen atoms sharing electrons in a double covalent bond.'
+      },
+      H2: {
+        name: 'Hydrogen Gas (H₂)',
+        formula: 'H_2',
+        molarMass: 2.016,
+        type: 'gas',
+        color: 'rgba(167, 139, 250, 0.7)',
+        composition: { H: 2 },
+        atomsPerMolecule: 2,
+        macroDesc: 'Glass discharge tube containing pure Hydrogen gas, light and highly diffusing.',
+        molecularDesc: 'Floating diatomic Hydrogen (H₂) molecules. Two tiny hydrogen atoms bound together.',
+        atomicDesc: 'Zoomed into an H₂ molecule: Two Hydrogen atoms sharing their single electron.'
+      }
+    };
+
+    const QuizQuestions = [
+      {
+        text: "What does one 'mole' of water represent in chemistry?",
+        choices: [
+          "Exactly 18 grams of water molecules",
+          "Exactly 6.022 × 10²³ individual water molecules",
+          "A dozen water molecules",
+          "Both A and B are correct"
+        ],
+        answerIndex: 3,
+        category: "Conceptual",
+        explanation: "One mole of any substance contains exactly Avogadro's number (6.022 × 10²³) of particles. Since the molar mass of H₂O is 18.015 g/mol, 1 mole of water weighs ~18 grams AND contains 6.022 × 10²³ molecules."
+      },
+      {
+        text: "If you have 36 grams of Water (H₂O), how many moles do you have? (Molar mass of H₂O ≈ 18 g/mol)",
+        choices: [
+          "0.5 moles",
+          "1.0 mole",
+          "2.0 moles",
+          "3.0 moles"
+        ],
+        answerIndex: 2,
+        category: "Numerical",
+        explanation: "Using the formula n = m / M: Moles = 36g / 18g/mol = 2.0 moles."
+      },
+      {
+        text: "Why does 1 mole of CO₂ (44g) weigh more than 1 mole of H₂ (2g) even though both have the same number of molecules?",
+        choices: [
+          "CO₂ molecules are larger and have more protons and neutrons",
+          "CO₂ gas is more compressed than H₂ gas",
+          "Avogadro's number changes depending on the gas",
+          "Carbon atoms are radioactive"
+        ],
+        answerIndex: 0,
+        category: "Conceptual",
+        explanation: "Just like a dozen watermelons weighs much more than a dozen grapes, a mole of CO₂ molecules weighs more than a mole of H₂ because individual CO₂ molecules have higher atomic masses (more protons and neutrons)."
+      },
+      {
+        text: "How many total atoms are present in exactly 1.0 mole of Oxygen gas (O₂)?",
+        choices: [
+          "6.022 × 10²³ atoms",
+          "1.204 × 10²⁴ atoms",
+          "3.011 × 10²³ atoms",
+          "2.0 atoms"
+        ],
+        answerIndex: 1,
+        category: "Numerical",
+        explanation: "Each Oxygen molecule (O₂) contains 2 oxygen atoms. Therefore, 1 mole of O₂ molecules contains 1.0 × 2 = 2.0 moles of atoms, which equals 2 × (6.022 × 10²³) = 1.204 × 10²⁴ atoms."
+      },
+      {
+        text: "Which of the following has the highest number of molecules?",
+        choices: [
+          "10 grams of H₂ (Molar mass = 2 g/mol)",
+          "50 grams of H₂O (Molar mass = 18 g/mol)",
+          "100 grams of CO₂ (Molar mass = 44 g/mol)",
+          "They all contain the exact same number of molecules"
+        ],
+        answerIndex: 0,
+        category: "Numerical",
+        explanation: "Moles calculations: 10g of H₂ = 5 moles. 50g of H₂O ≈ 2.78 moles. 100g of CO₂ ≈ 2.27 moles. Since 10g of H₂ has the highest number of moles, it contains the highest number of molecules!"
+      }
+    ];
+
+    // --- STATE VARIABLES ---
+    let currentSubstanceKey = 'H2O';
+    let currentMass = 18.0;      // grams
+    let currentZoomLevel = 'macro'; // 'macro', 'molecular', 'atomic'
+    let currentTab = 'simulation'; // 'simulation', 'analogy', 'quiz'
+
+    // Interactive coordinate floaters for molecular mode
+    let floatingMolecules = [];
+    
+    // Quiz state
+    let activeQuizIndex = 0;
+    let totalQuestionsAnswered = 0;
+    let totalCorrectAnswers = 0;
+    let hasAnsweredCurrentQuestion = false;
+
+    // Canvas settings
+    let canvas, ctx;
+    const dpi = window.devicePixelRatio || 1;
+
+    // --- DOM ELEMENT CACHE ---
+    const tabSim = document.getElementById('tab-simulation');
+    const tabAnalogy = document.getElementById('tab-analogy');
+    const tabQuiz = document.getElementById('tab-quiz');
+
+    const panelSimControls = document.getElementById('panel-simulation-controls');
+    const panelAnalogyControls = document.getElementById('panel-analogy-controls');
+    const panelQuizControls = document.getElementById('panel-quiz-controls');
+
+    const canvasMainPanel = document.getElementById('canvas-main-panel');
+    const quizMainPanel = document.getElementById('quiz-main-panel');
+    const analogySupplementPanel = document.getElementById('analogy-supplement-panel');
+    const zoomSelectorContainer = document.getElementById('zoom-selector-container');
+
+    const subSelector = document.getElementById('substance-selector');
+    const sliderMass = document.getElementById('slider-mass');
+    const numMass = document.getElementById('num-mass');
+
+    const step1Formula = document.getElementById('step1-formula');
+    const step2Formula = document.getElementById('step2-formula');
+    const step3Formula = document.getElementById('step3-formula');
+
+    const outMolarMass = document.getElementById('out-molar-mass');
+    const outMoles = document.getElementById('out-moles');
+    const outMolecules = document.getElementById('out-molecules');
+    const outAtoms = document.getElementById('out-atoms');
+
+    const txtOverlayDesc = document.getElementById('txt-overlay-desc');
+    const txtOverlayDynamic = document.getElementById('txt-overlay-dynamic');
+
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+      canvas = document.getElementById('moleCanvas');
+      ctx = canvas.getContext('2d');
+
+      // Populate Substance Select buttons
+      subSelector.innerHTML = Object.keys(Substances).map(key => {
+        const sub = Substances[key];
+        const activeClass = key === currentSubstanceKey 
+          ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' 
+          : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700';
+        return `
+          <button id="sub-btn-${key}" class="px-3 py-2.5 text-xs font-bold rounded-lg border transition-all text-center flex flex-col justify-center items-center ${activeClass}" onclick="selectSubstance('${key}')">
+            <span class="text-sm font-black">${key}</span>
+            <span class="text-[9px] text-slate-400 font-bold uppercase truncate max-w-full">${sub.name.split(' ')[0]}</span>
+          </button>
+        `;
+      }).join('');
+
+      setupListeners();
+      handleResize();
+      updateDashboard();
+      initFloatingMolecules();
+
+      // Launch Canvas Animation Loop
+      requestAnimationFrame(canvasRenderLoop);
+    });
+
+    function setupListeners() {
+      // Tabs
+      tabSim.addEventListener('click', () => setTab('simulation'));
+      tabAnalogy.addEventListener('click', () => setTab('analogy'));
+      tabQuiz.addEventListener('click', () => setTab('quiz'));
+
+      // Zoom level buttons
+      const zoomMacro = document.getElementById('zoom-macro');
+      const zoomMolecular = document.getElementById('zoom-molecular');
+      const zoomAtomic = document.getElementById('zoom-atomic');
+
+      zoomMacro.addEventListener('click', () => setZoom('macro'));
+      zoomMolecular.addEventListener('click', () => setZoom('molecular'));
+      zoomAtomic.addEventListener('click', () => setZoom('atomic'));
+
+      // Slider and numeric input synchronization
+      sliderMass.addEventListener('input', (e) => {
+        currentMass = parseFloat(e.target.value);
+        numMass.value = currentMass.toFixed(1);
+        updateDashboard();
+      });
+
+      numMass.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value);
+        if (isNaN(val)) val = 0.1;
+        if (val < 0.1) val = 0.1;
+        if (val > 500) val = 500;
+        currentMass = val;
+        sliderMass.value = currentMass;
+        updateDashboard();
+      });
+
+      // Canvas resizing
+      window.addEventListener('resize', handleResize);
+
+      // Quiz event listeners
+      document.getElementById('btn-restart-quiz').addEventListener('click', resetQuiz);
+      document.getElementById('btn-next-question').addEventListener('click', nextQuizQuestion);
+
+      // Guide Modal
+      const guideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => {
+        guideModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-guide').addEventListener('click', () => {
+        guideModal.classList.add('hidden');
+      });
+      guideModal.addEventListener('click', (e) => {
+        if (e.target === guideModal) guideModal.classList.add('hidden');
+      });
+
+      // Reset workspace
+      document.getElementById('btn-reset').addEventListener('click', handleResetWorkspace);
+
+      // Canvas click mouse collision trigger
+      canvas.addEventListener('click', (e) => {
+        if (currentZoomLevel !== 'molecular') return;
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        // Apply custom momentum velocity to any floater within 40px radius
+        floatingMolecules.forEach(m => {
+          const dx = m.x - mx;
+          const dy = m.y - my;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 40) {
+            m.vx += (dx / (dist || 1)) * 4;
+            m.vy += (dy / (dist || 1)) * 4;
+          }
+        });
+      });
+    }
+
+    function handleResize() {
+      if (!canvas) return;
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width * dpi;
+      canvas.height = rect.height * dpi;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+    }
+
+    function setTab(tab) {
+      currentTab = tab;
+
+      // Reset Tab Styles
+      const tabs = [tabSim, tabAnalogy, tabQuiz];
+      tabs.forEach(t => t.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950");
+
+      panelSimControls.classList.add('hidden');
+      panelAnalogyControls.classList.add('hidden');
+      panelQuizControls.classList.add('hidden');
+
+      canvasMainPanel.classList.add('hidden');
+      quizMainPanel.classList.add('hidden');
+      analogySupplementPanel.classList.add('hidden');
+      zoomSelectorContainer.classList.add('hidden');
+
+      if (tab === 'simulation') {
+        tabSim.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm";
+        panelSimControls.classList.remove('hidden');
+        canvasMainPanel.classList.remove('hidden');
+        zoomSelectorContainer.classList.remove('hidden');
+        setTimeout(handleResize, 50);
+      } else if (tab === 'analogy') {
+        tabAnalogy.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm";
+        panelAnalogyControls.classList.remove('hidden');
+        canvasMainPanel.classList.remove('hidden');
+        analogySupplementPanel.classList.remove('hidden');
+        setTimeout(handleResize, 50);
+      } else {
+        tabQuiz.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm";
+        panelQuizControls.classList.remove('hidden');
+        quizMainPanel.classList.remove('hidden');
+        resetQuiz();
+      }
+    }
+
+    function setZoom(zoom) {
+      currentZoomLevel = zoom;
+
+      // Update button classes
+      const zoomMacro = document.getElementById('zoom-macro');
+      const zoomMolecular = document.getElementById('zoom-molecular');
+      const zoomAtomic = document.getElementById('zoom-atomic');
+
+      [zoomMacro, zoomMolecular, zoomAtomic].forEach(b => {
+        b.className = "px-3 py-1 rounded text-[11px] font-bold text-slate-600 hover:text-slate-950";
+      });
+
+      if (zoom === 'macro') {
+        zoomMacro.className = "px-3 py-1 bg-white shadow-xs rounded text-[11px] font-bold text-indigo-600";
+      } else if (zoom === 'molecular') {
+        zoomMolecular.className = "px-3 py-1 bg-white shadow-xs rounded text-[11px] font-bold text-indigo-600";
+        initFloatingMolecules();
+      } else {
+        zoomAtomic.className = "px-3 py-1 bg-white shadow-xs rounded text-[11px] font-bold text-indigo-600";
+      }
+
+      updateDashboard();
+    }
+
+    window.selectSubstance = function(key) {
+      // Toggle button classes
+      Object.keys(Substances).forEach(k => {
+        const btn = document.getElementById(`sub-btn-${k}`);
+        if (btn) {
+          btn.className = "px-3 py-2.5 text-xs font-bold rounded-lg border transition-all text-center flex flex-col justify-center items-center bg-white hover:bg-slate-100 border-slate-200 text-slate-700";
+        }
+      });
+
+      const activeBtn = document.getElementById(`sub-btn-${key}`);
+      if (activeBtn) {
+        activeBtn.className = "px-3 py-2.5 text-xs font-bold rounded-lg border transition-all text-center flex flex-col justify-center items-center bg-indigo-600 text-white border-indigo-600 shadow-sm";
+      }
+
+      currentSubstanceKey = key;
+
+      // Auto assign mass based on molar mass of element
+      currentMass = parseFloat(Substances[key].molarMass.toFixed(1));
+      sliderMass.value = currentMass;
+      numMass.value = currentMass;
+
+      updateDashboard();
+      initFloatingMolecules();
+    };
+
+    function handleResetWorkspace() {
+      currentSubstanceKey = 'H2O';
+      currentMass = 18.0;
+      sliderMass.value = 18.0;
+      numMass.value = 18.0;
+      setTab('simulation');
+      setZoom('macro');
+      
+      // Reset Substance buttons style manually
+      selectSubstance('H2O');
+      updateDashboard();
+      resetQuiz();
+    }
+
+    // --- CALCULATIONS ENGINE ---
+    function updateDashboard() {
+      const sub = Substances[currentSubstanceKey];
+      const M = sub.molarMass;
+      const n = currentMass / M;
+      const particles = n * 6.02214076e23;
+      const totalAtoms = particles * sub.atomsPerMolecule;
+
+      // Update calculations card results
+      outMolarMass.textContent = `${M.toFixed(3)} g/mol`;
+      outMoles.textContent = `${n.toFixed(3)} mol`;
+      outMolecules.textContent = particles.toExponential(3);
+      outAtoms.textContent = totalAtoms.toExponential(3);
+
+      // Formulas math updates
+      step1Formula.innerHTML = `$$n = \\frac{${currentMass.toFixed(1)}\\text{ g}}{${M.toFixed(3)}\\text{ g/mol}} = ${n.toFixed(3)}\\text{ moles}$$`;
+      step2Formula.innerHTML = `$$N = ${n.toFixed(3)}\\text{ mol} \\times N_A = ${particles.toExponential(3)}\\text{ particles}$$`;
+      step3Formula.innerHTML = `$$\\text{Atoms} = ${particles.toExponential(3)} \\times ${sub.atomsPerMolecule} = ${totalAtoms.toExponential(3)}$$`;
+
+      // Trigger MathJax re-render safely
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise();
+      }
+
+      // Overlay descriptors
+      if (currentZoomLevel === 'macro') {
+        txtOverlayDesc.textContent = sub.macroDesc;
+        txtOverlayDynamic.textContent = `${currentMass.toFixed(1)}g of ${currentSubstanceKey}`;
+      } else if (currentZoomLevel === 'molecular') {
+        txtOverlayDesc.textContent = sub.molecularDesc;
+        txtOverlayDynamic.textContent = `${n.toFixed(3)} Moles of Particles`;
+      } else {
+        txtOverlayDesc.textContent = sub.atomicDesc;
+        txtOverlayDynamic.textContent = `1 ${currentSubstanceKey} Molecule Structure`;
+      }
+    }
+
+    // --- CANVAS FLOATING MODELS PHYSICS ---
+    function initFloatingMolecules() {
+      floatingMolecules = [];
+      const sub = Substances[currentSubstanceKey];
+      const n = currentMass / sub.molarMass;
+      
+      // Determine physical floater counts constrained (6 to 80 limit)
+      const count = Math.max(6, Math.min(80, Math.round(n * 25)));
+
+      const w = canvas.width / dpi;
+      const h = canvas.height / dpi;
+
+      for (let i = 0; i < count; i++) {
+        floatingMolecules.push({
+          x: 40 + Math.random() * (w - 80),
+          y: 40 + Math.random() * (h - 80),
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          angle: Math.random() * Math.PI * 2,
+          omega: (Math.random() - 0.5) * 0.02
+        });
+      }
+    }
+
+    function canvasRenderLoop(timestamp) {
+      if (currentTab === 'simulation' || currentTab === 'analogy') {
+        const w = canvas.width / dpi;
+        const h = canvas.height / dpi;
+
+        if (currentZoomLevel === 'molecular') {
+          // Physics step for floating molecules
+          floatingMolecules.forEach(m => {
+            m.x += m.vx;
+            m.y += m.vy;
+            m.angle += m.omega;
+
+            // Boundary bounces
+            if (m.x < 30) { m.x = 30; m.vx = -m.vx; }
+            if (m.x > w - 30) { m.x = w - 30; m.vx = -m.vx; }
+            if (m.y < 30) { m.y = 30; m.vy = -m.vy; }
+            if (m.y > h - 30) { m.y = h - 30; m.vy = -m.vy; }
+          });
+        }
+
+        drawScene(w, h, timestamp);
+      }
+
+      requestAnimationFrame(canvasRenderLoop);
+    }
+
+    function drawScene(w, h, timestamp) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Deep dark arena background
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      ctx.scale(dpi, dpi);
+
+      const sub = Substances[currentSubstanceKey];
+
+      if (currentZoomLevel === 'macro') {
+        drawMacroLevel(w, h, sub);
+      } else if (currentZoomLevel === 'molecular') {
+        drawMolecularLevel(w, h, sub);
+      } else {
+        drawAtomicLevel(w, h, sub, timestamp);
+      }
+
+      ctx.restore();
+    }
+
+    // --- MACRO VIEW COMPILER ---
+    function drawMacroLevel(w, h, sub) {
+      const cX = w / 2;
+      const cY = h / 2 + 10;
+      
+      // Draw Beaker outline
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(cX - 80, cY - 100);
+      ctx.lineTo(cX - 80, cY + 80);
+      ctx.lineTo(cX + 80, cY + 80);
+      ctx.lineTo(cX + 80, cY - 100);
+      ctx.stroke();
+
+      // Draw Beaker graduate ticks
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let offset = -60; offset <= 60; offset += 30) {
+        ctx.moveTo(cX + 80, cY + offset);
+        ctx.lineTo(cX + 65, cY + offset);
+      }
+      ctx.stroke();
+
+      // Compute fill volume scaled with mass (relative to 500g max)
+      const fillPercent = Math.max(0.1, Math.min(1.0, currentMass / 500));
+      const maxFillHeight = 160;
+      const currentFillHeight = fillPercent * maxFillHeight;
+
+      if (sub.type === 'liquid') {
+        // Draw blue liquid inside beaker
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.fillRect(cX - 78, cY + 80 - currentFillHeight, 156, currentFillHeight);
+        
+        // liquid surface curve
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.6)';
+        ctx.beginPath();
+        ctx.ellipse(cX, cY + 80 - currentFillHeight, 78, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (sub.type === 'crystal') {
+        // Draw white salt crystals pile inside beaker
+        ctx.fillStyle = 'rgba(226, 232, 240, 0.85)';
+        ctx.beginPath();
+        ctx.moveTo(cX - 78, cY + 80);
+        ctx.quadraticCurveTo(cX, cY + 80 - currentFillHeight * 1.4, cX + 78, cY + 80);
+        ctx.closePath();
+        ctx.fill();
+      } else if (sub.type === 'gas') {
+        // Render bubbles/particles diffusing out of a gas container
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 4;
+        
+        // draw sealed flask neck
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+        ctx.beginPath();
+        ctx.rect(cX - 40, cY - 120, 80, 200);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = sub.color;
+        // density scales with mass
+        const gasDensity = Math.round(currentMass / 8) + 10;
+        for (let i = 0; i < gasDensity; i++) {
+          const randX = cX - 30 + (Math.sin(i * 123) * 0.5 + 0.5) * 60;
+          const randY = cY - 100 + (Math.cos(i * 456) * 0.5 + 0.5) * 160;
+          ctx.beginPath();
+          ctx.arc(randX, randY, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // --- MOLECULAR LEVEL (FLOATING COLLIDERS) ---
+    function drawMolecularLevel(w, h, sub) {
+      floatingMolecules.forEach(m => {
+        ctx.save();
+        ctx.translate(m.x, m.y);
+        ctx.rotate(m.angle);
+
+        if (currentSubstanceKey === 'H2O') {
+          drawWaterMolecule(0, 0, 14);
+        } else if (currentSubstanceKey === 'CO2') {
+          drawCO2Molecule(0, 0, 14);
+        } else if (currentSubstanceKey === 'NaCl') {
+          drawNaClFormulaUnit(0, 0, 16);
+        } else if (currentSubstanceKey === 'O2') {
+          drawO2Molecule(0, 0, 15);
+        } else if (currentSubstanceKey === 'H2') {
+          drawH2Molecule(0, 0, 11);
+        }
+
+        ctx.restore();
+      });
+    }
+
+    function drawWaterMolecule(x, y, r) {
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(x - r * 0.9, y + r * 0.6, r * 0.55, 0, Math.PI * 2);
+      ctx.arc(x + r * 0.9, y + r * 0.6, r * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawCO2Molecule(x, y, r) {
+      ctx.fillStyle = '#334155';
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(x - r * 1.3, y, r * 0.9, 0, Math.PI * 2);
+      ctx.arc(x + r * 1.3, y, r * 0.9, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawNaClFormulaUnit(x, y, r) {
+      ctx.fillStyle = '#a78bfa';
+      ctx.beginPath();
+      ctx.arc(x - r * 0.6, y, r * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(x + r * 0.6, y, r * 0.9, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawO2Molecule(x, y, r) {
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(x - r * 0.6, y, r * 0.9, 0, Math.PI * 2);
+      ctx.arc(x + r * 0.6, y, r * 0.9, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawH2Molecule(x, y, r) {
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(x - r * 0.55, y, r * 0.8, 0, Math.PI * 2);
+      ctx.arc(x + r * 0.55, y, r * 0.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // --- ATOMIC LEVEL (SINGLE DETAILED SPECIMEN) ---
+    function drawAtomicLevel(w, h, sub, timestamp) {
+      const cX = w / 2;
+      const cY = h / 2;
+
+      const pulse = Math.sin(timestamp * 0.002) * 5;
+
+      if (currentSubstanceKey === 'H2O') {
+        ctx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
+        ctx.lineWidth = 1.5;
+        
+        ctx.beginPath();
+        ctx.arc(cX, cY, 80 + pulse, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(cX, cY);
+        ctx.lineTo(cX - 110, cY + 80);
+        ctx.moveTo(cX, cY);
+        ctx.lineTo(cX + 110, cY + 80);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(cX, cY, 40, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("Oxygen (8p)", cX, cY + 4);
+
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.arc(cX - 110, cY + 80, 22, 0, Math.PI * 2);
+        ctx.arc(cX + 110, cY + 80, 22, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#0f172a';
+        ctx.fillText("H (1p)", cX - 110, cY + 84);
+        ctx.fillText("H (1p)", cX + 110, cY + 84);
+      } 
+      else if (currentSubstanceKey === 'CO2') {
+        ctx.strokeStyle = 'rgba(71, 85, 105, 0.4)';
+        ctx.lineWidth = 1.5;
+
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 10;
+        ctx.beginPath();
+        ctx.moveTo(cX - 140, cY);
+        ctx.lineTo(cX + 140, cY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.arc(cX, cY, 36, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("Carbon (6p)", cX, cY + 4);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(cX - 140, cY, 32, 0, Math.PI * 2);
+        ctx.arc(cX + 140, cY, 32, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText("O (8p)", cX - 140, cY + 4);
+        ctx.fillText("O (8p)", cX + 140, cY + 4);
+      } 
+      else if (currentSubstanceKey === 'NaCl') {
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1.5;
+        
+        const tX = cX - 70 + ((Math.sin(timestamp * 0.003) * 0.5 + 0.5) * 140);
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.arc(tX, cY, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#a78bfa';
+        ctx.beginPath();
+        ctx.arc(cX - 80, cY, 30, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("Na⁺ (11p)", cX - 80, cY + 4);
+
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(cX + 80, cY, 44, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText("Cl⁻ (17p)", cX + 80, cY + 4);
+      } 
+      else if (currentSubstanceKey === 'O2') {
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(cX - 60, cY);
+        ctx.lineTo(cX + 60, cY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(cX - 60, cY, 35, 0, Math.PI * 2);
+        ctx.arc(cX + 60, cY, 35, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("O (8p)", cX - 60, cY + 4);
+        ctx.fillText("O (8p)", cX + 60, cY + 4);
+      } 
+      else if (currentSubstanceKey === 'H2') {
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(cX - 45, cY);
+        ctx.lineTo(cX + 45, cY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.arc(cX - 45, cY, 22, 0, Math.PI * 2);
+        ctx.arc(cX + 45, cY, 22, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("H (1p)", cX - 45, cY + 4);
+        ctx.fillText("H (1p)", cX + 45, cY + 4);
+      }
+    }
+
+    // --- QUIZ APPLICATION LOGIC ---
+    function resetQuiz() {
+      activeQuizIndex = 0;
+      totalQuestionsAnswered = 0;
+      totalCorrectAnswers = 0;
+      hasAnsweredCurrentQuestion = false;
+
+      document.getElementById('quiz-score-badge').textContent = "Score: 0 / 0";
+      loadQuizQuestion();
+    }
+
+    function loadQuizQuestion() {
+      hasAnsweredCurrentQuestion = false;
+      document.getElementById('btn-next-question').classList.add('hidden');
+      document.getElementById('quiz-feedback').classList.add('hidden');
+
+      const q = QuizQuestions[activeQuizIndex];
+      document.getElementById('quiz-question-category').textContent = q.category;
+      document.getElementById('quiz-question-text').textContent = q.text;
+      document.getElementById('quiz-progress-text').textContent = `Question ${activeQuizIndex + 1} / ${QuizQuestions.length}`;
+
+      const choicesContainer = document.getElementById('quiz-choices');
+      choicesContainer.innerHTML = '';
+
+      q.choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full p-3 text-xs text-left font-semibold rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-slate-700 flex items-center justify-between shadow-xs";
+        btn.innerHTML = `<span>${choice}</span><i class="fa-regular fa-circle text-slate-300 text-sm"></i>`;
+        btn.onclick = () => submitQuizAnswer(index);
+        choicesContainer.appendChild(btn);
+      });
+    }
+
+    function submitQuizAnswer(selectedIndex) {
+      if (hasAnsweredCurrentQuestion) return;
+      hasAnsweredCurrentQuestion = true;
+
+      const q = QuizQuestions[activeQuizIndex];
+      const correct = selectedIndex === q.answerIndex;
+
+      totalQuestionsAnswered++;
+      if (correct) totalCorrectAnswers++;
+
+      // Update Score
+      document.getElementById('quiz-score-badge').textContent = `Score: ${totalCorrectAnswers} / ${totalQuestionsAnswered}`;
+
+      // Highlight Choices
+      const choicesContainer = document.getElementById('quiz-choices');
+      const buttons = choicesContainer.getElementsByTagName('button');
+
+      for (let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+        if (i === q.answerIndex) {
+          buttons[i].className = "w-full p-3 text-xs text-left font-bold rounded-xl border border-emerald-500 bg-emerald-50 text-emerald-800 transition-all flex items-center justify-between shadow-xs";
+          buttons[i].innerHTML = `<span>${q.choices[i]}</span><i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>`;
+        } else if (i === selectedIndex) {
+          buttons[i].className = "w-full p-3 text-xs text-left font-bold rounded-xl border border-rose-500 bg-rose-50 text-rose-800 transition-all flex items-center justify-between shadow-xs";
+          buttons[i].innerHTML = `<span>${q.choices[i]}</span><i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i>`;
+        } else {
+          buttons[i].className = "w-full p-3 text-xs text-left font-semibold rounded-xl border border-slate-100 bg-slate-50/40 text-slate-400 transition-all flex items-center justify-between shadow-xs";
+        }
+      }
+
+      // Feedback explanation box
+      const feedbackBox = document.getElementById('quiz-feedback');
+      const feedbackTitle = document.getElementById('quiz-feedback-title');
+      const feedbackText = document.getElementById('quiz-feedback-text');
+
+      feedbackBox.classList.remove('hidden');
+      if (correct) {
+        feedbackBox.className = "p-4 rounded-xl border border-emerald-500/20 bg-emerald-50 text-emerald-800 mt-4 text-xs";
+        feedbackTitle.textContent = "Correct Answer! Excellent Calculation.";
+      } else {
+        feedbackBox.className = "p-4 rounded-xl border border-rose-500/20 bg-rose-50 text-rose-800 mt-4 text-xs";
+        feedbackTitle.textContent = "Incorrect. Let's study the mechanics:";
+      }
+      feedbackText.textContent = q.explanation;
+
+      document.getElementById('btn-next-question').classList.remove('hidden');
+    }
+
+    function nextQuizQuestion() {
+      activeQuizIndex++;
+      if (activeQuizIndex >= QuizQuestions.length) {
+        activeQuizIndex = 0; // loop back
+      }
+      loadQuizQuestion();
+    }
+
+    // --- ACCORDION CONTROLS (VIVA DESK) ---
+    window.toggleVerification = function(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const arrow = document.getElementById(`btn-arrow-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      
+      const isHidden = panel.classList.contains('hidden');
+      
+      // Close all panels first to keep clean UI
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById(`viva-panel-${i}`).classList.add('hidden');
+        document.getElementById(`btn-arrow-${i}`).classList.remove('rotate-180');
+        document.getElementById(`btn-text-${i}`).textContent = "Show Scientific Verification";
+      }
+
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+        btnText.textContent = "Hide Scientific Verification";
+        // Trigger MathJax typeset to render LaTeX formulas cleanly
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetPromise();
+        }
+      }
+    };
+  </script>
+</body>
+</html>

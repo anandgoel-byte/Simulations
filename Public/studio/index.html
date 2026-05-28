@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sparkl Simulation Automation Studio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React and ReactDOM CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  
+  <!-- Babel for Inline JSX Parsing -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts Outfit -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;850;900&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.45);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+    .neon-border {
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
+      border-color: rgba(99, 102, 241, 0.6);
+    }
+    .neon-text {
+      text-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    }
+    /* Custom scrollbar for visual panels */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); }
+    ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.45); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.7); }
+  </style>
+</head>
+<body class="p-6">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function App() {
+      const [simulations, setSimulations] = useState([]);
+      const [activeTab, setActiveTab] = useState('library'); // 'library' | 'builder'
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedSim, setSelectedSim] = useState(null);
+      const [isLoading, setIsLoading] = useState(true);
+      const [errorMsg, setErrorMsg] = useState('');
+      const [notification, setNotification] = useState({ text: '', isError: false });
+
+      // Form state for creating a new simulation
+      const [newLab, setNewLab] = useState({
+        filename: 'ohms-law-lab.html',
+        title: "Ohm's Law & Circuit Principles Virtual Laboratory",
+        brandingTitle: "Ohm's Law & Circuit Principles Virtual Laboratory",
+        labSection: "ELECTRODYNAMICS",
+        sliders: [
+          { name: 'voltage', label: 'Source Voltage', min: 1, max: 15, step: 0.5, default: 5, unit: 'V' },
+          { name: 'resistance', label: 'Load Resistance', min: 10, max: 200, step: 10, default: 100, unit: 'Ω' }
+        ],
+        telemetry: [
+          { label: 'Simulated Current', variableName: 'current', formula: '(voltage / resistance).toFixed(3)', unit: 'A', color: 'text-indigo-600' },
+          { label: 'Power Consumption', variableName: 'power', formula: '(voltage * (voltage / resistance)).toFixed(2)', unit: 'W', color: 'text-emerald-600' }
+        ],
+        vivaQuestions: [
+          {
+            question: "According to Ohm's Law (V = IR), if you double the resistance of a circuit while keeping the voltage constant, what is the effect on current?",
+            options: [
+              { text: "The current is halved (1/2 of original).", isCorrect: true },
+              { text: "The current doubles.", isCorrect: false }
+            ],
+            explanation: "Current is inversely proportional to resistance. Doubling the resistance halves the electron flow."
+          },
+          {
+            question: "What physical property does a resistor oppose?",
+            options: [
+              { text: "The flow of electrical current.", isCorrect: true },
+              { text: "The electric potential difference.", isCorrect: false }
+            ],
+            explanation: "Resistance is a material's opposition to the free flow of charge carriers (electrons)."
+          }
+        ],
+        canvasPreset: 'physics', // 'physics' | 'chemistry' | 'custom'
+        customCanvasLogic: `// Draw custom graphics here\n// Access state values directly as normal JS variables!`
+      });
+
+      // Load simulations list on mount
+      useEffect(() => {
+        fetchSimulations();
+      }, []);
+
+      const fetchSimulations = async () => {
+        setIsLoading(true);
+        try {
+          const res = await fetch('/api/simulations');
+          const data = await res.json();
+          if (data.success) {
+            setSimulations(data.simulations);
+            if (data.simulations.length > 0 && !selectedSim) {
+              setSelectedSim(data.simulations[0]);
+            }
+          } else {
+            setErrorMsg(data.error || 'Failed to scan files.');
+          }
+        } catch (err) {
+          setErrorMsg('Backend server offline. Run Node server.js to operate.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      const showToast = (text, isError = false) => {
+        setNotification({ text, isError });
+        setTimeout(() => setNotification({ text: '', isError: false }), 4000);
+      };
+
+      // Handle custom slider additions in builder
+      const addSlider = () => {
+        setNewLab(prev => ({
+          ...prev,
+          sliders: [...prev.sliders, { name: 'variable_' + (prev.sliders.length + 1), label: 'New Variable Slider', min: 0, max: 100, step: 1, default: 50, unit: '' }]
+        }));
+      };
+
+      const removeSlider = (index) => {
+        setNewLab(prev => ({
+          ...prev,
+          sliders: prev.sliders.filter((_, idx) => idx !== index)
+        }));
+      };
+
+      const updateSliderField = (index, field, value) => {
+        setNewLab(prev => {
+          const updated = [...prev.sliders];
+          updated[index] = { ...updated[index], [field]: value };
+          return { ...prev, sliders: updated };
+        });
+      };
+
+      // Handle telemetry additions
+      const addTelemetry = () => {
+        setNewLab(prev => ({
+          ...prev,
+          telemetry: [...prev.telemetry, { label: 'New Metric', variableName: 'metric_' + (prev.telemetry.length + 1), formula: 'voltage * 2', unit: '', color: 'text-indigo-600' }]
+        }));
+      };
+
+      const removeTelemetry = (index) => {
+        setNewLab(prev => ({
+          ...prev,
+          telemetry: prev.telemetry.filter((_, idx) => idx !== index)
+        }));
+      };
+
+      const updateTelemetryField = (index, field, value) => {
+        setNewLab(prev => {
+          const updated = [...prev.telemetry];
+          updated[index] = { ...updated[index], [field]: value };
+          return { ...prev, telemetry: updated };
+        });
+      };
+
+      // Handle Viva Quiz additions
+      const addViva = () => {
+        setNewLab(prev => ({
+          ...prev,
+          vivaQuestions: [
+            ...prev.vivaQuestions,
+            {
+              question: 'New Classroom Viva Question?',
+              options: [
+                { text: 'Correct Answer Choice', isCorrect: true },
+                { text: 'Incorrect Distractor Option', isCorrect: false }
+              ],
+              explanation: 'Add scientific reasoning here.'
+            }
+          ]
+        }));
+      };
+
+      const removeViva = (index) => {
+        setNewLab(prev => ({
+          ...prev,
+          vivaQuestions: prev.vivaQuestions.filter((_, idx) => idx !== index)
+        }));
+      };
+
+      const updateVivaQuestion = (index, text) => {
+        setNewLab(prev => {
+          const updated = [...prev.vivaQuestions];
+          updated[index].question = text;
+          return { ...prev, vivaQuestions: updated };
+        });
+      };
+
+      const updateVivaExplanation = (index, text) => {
+        setNewLab(prev => {
+          const updated = [...prev.vivaQuestions];
+          updated[index].explanation = text;
+          return { ...prev, vivaQuestions: updated };
+        });
+      };
+
+      const updateVivaOption = (qIdx, optIdx, text) => {
+        setNewLab(prev => {
+          const updated = [...prev.vivaQuestions];
+          updated[qIdx].options[optIdx].text = text;
+          return { ...prev, vivaQuestions: updated };
+        });
+      };
+
+      // Compile & Spawn simulation
+      const handleGenerateSimulation = async () => {
+        try {
+          const res = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newLab)
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast(`✨ Generated ${data.filename} successfully!`);
+            fetchSimulations();
+            // Automatically select the new sim and open preview
+            setSelectedSim({ filename: data.filename, title: newLab.title });
+            setActiveTab('library');
+          } else {
+            showToast(`❌ Error: ${data.error}`, true);
+          }
+        } catch (err) {
+          showToast('❌ Express server offline. Cannot generate.', true);
+        }
+      };
+
+      const filteredSims = simulations.filter(s => 
+        s.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        s.filename.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      return (
+        <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 min-h-[90vh]">
+          {/* Header */}
+          <header className="flex justify-between items-center py-4 border-b border-slate-800 flex-shrink-0">
+            <div className="flex items-center gap-4">
+              <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 px-4 py-2.5 rounded-2xl text-white font-black text-center shadow-lg neon-border">
+                <span className="block text-md leading-none tracking-tight">Sparkl</span>
+                <span className="text-[9px] font-bold tracking-widest opacity-80 uppercase">Studio</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                  Simulation Automation Studio <span className="text-xs bg-indigo-900 border border-indigo-700 text-indigo-300 font-bold px-2 py-0.5 rounded-full neon-text animate-pulse">v1.0.0</span>
+                </h1>
+                <p className="text-xs font-semibold text-slate-400 mt-0.5">LOW-CODE WORKSPACE DEVELOPER DESK</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setActiveTab('library')} 
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'library' ? 'bg-indigo-600 text-white neon-border' : 'bg-slate-800 text-slate-400 hover:text-slate-200'}`}
+              >
+                ⚛️ Visual Labs Grid
+              </button>
+              <button 
+                onClick={() => setActiveTab('builder')} 
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'builder' ? 'bg-indigo-600 text-white neon-border' : 'bg-slate-800 text-slate-400 hover:text-slate-200'}`}
+              >
+                ⚙️ Sparkl Builder Wizard
+              </button>
+            </div>
+          </header>
+
+          {/* Toast Notification */}
+          {notification.text && (
+            <div className={`fixed bottom-6 right-6 px-5 py-3.5 rounded-2xl shadow-2xl border text-xs font-bold z-50 flex items-center gap-2 transition-all duration-300 ${notification.isError ? 'bg-rose-900/90 border-rose-600 text-rose-200' : 'bg-emerald-900/90 border-emerald-600 text-emerald-200'}`}>
+              {notification.isError ? '⚠️' : '✨'} {notification.text}
+            </div>
+          )}
+
+          {/* Error Message banner */}
+          {errorMsg && (
+            <div className="bg-rose-900/30 border border-rose-800 text-rose-300 p-4 rounded-2xl text-xs font-semibold flex items-center justify-between">
+              <span>⚠️ {errorMsg}</span>
+              <button onClick={() => setErrorMsg('')} className="font-bold hover:text-rose-100">✕</button>
+            </div>
+          )}
+
+          {/* Main workspace panels */}
+          <div className="grid grid-cols-12 gap-6 flex-grow items-stretch">
+            
+            {/* Left Library Column (4 spans) */}
+            <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+              <div className="glass-card rounded-3xl p-5 flex-grow flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
+                <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">📂 Workspace Simulations</h2>
+                  <button onClick={fetchSimulations} className="text-[10px] bg-slate-800 hover:bg-slate-700 font-bold px-2 py-1 rounded text-slate-300 transition">🔄 Refresh</button>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Search simulations..." 
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition shadow-inner"
+                  />
+                </div>
+
+                {/* Simulation lists */}
+                {isLoading ? (
+                  <div className="flex flex-col items-center justify-center py-10 gap-2">
+                    <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin"></div>
+                    <span className="text-xs text-slate-500">Scanning local directory...</span>
+                  </div>
+                ) : filteredSims.length === 0 ? (
+                  <div className="text-center py-12 bg-slate-900/30 rounded-2xl border border-slate-800/50">
+                    <span className="text-xs text-slate-500 italic block">No simulations found matching search.</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {filteredSims.map(sim => (
+                      <div 
+                        key={sim.filename}
+                        onClick={() => setSelectedSim(sim)}
+                        className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col gap-1.5 ${selectedSim?.filename === sim.filename ? 'bg-indigo-900/35 border-indigo-500/50 shadow-md' : 'bg-slate-900/40 border-slate-800 hover:border-slate-700'}`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <span className="text-xs font-bold text-white tracking-wide truncate max-w-[80%]">{sim.title}</span>
+                          <span className="text-[8px] font-black uppercase text-indigo-400 bg-indigo-950 px-2 py-0.5 rounded-full border border-indigo-900">{sim.labSection}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[10px] text-slate-500 font-mono mt-1 pt-1 border-t border-slate-800/40">
+                          <span>📁 {sim.filename}</span>
+                          <span>⚙️ {(sim.sizeBytes / 1024).toFixed(1)} KB</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Active Panel (8 spans) */}
+            <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
+              
+              {/* Tab: Library Sandbox Preview */}
+              {activeTab === 'library' && (
+                <div className="glass-card rounded-3xl p-5 flex flex-col gap-4 h-full min-h-[60vh] max-h-[80vh]">
+                  <div className="flex justify-between items-center pb-3 border-b border-slate-800 flex-shrink-0">
+                    <div className="flex items-center gap-3">
+                      <span className="text-indigo-400 text-sm">👁️</span>
+                      <div>
+                        <h2 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Simulation Sandbox Iframe</h2>
+                        <h3 className="text-md font-bold text-white tracking-tight">{selectedSim ? selectedSim.title : 'No Simulation Selected'}</h3>
+                      </div>
+                    </div>
+                    {selectedSim && (
+                      <a 
+                        href={`/${selectedSim.filename}`}
+                        target="_blank"
+                        className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-[10px] font-bold text-slate-200 transition border border-slate-700"
+                      >
+                        🚀 Open in New Tab
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="flex-grow bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden relative shadow-inner">
+                    {selectedSim ? (
+                      <iframe 
+                        src={`/${selectedSim.filename}`}
+                        className="w-full h-full border-none bg-white"
+                        title={selectedSim.title}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 gap-2">
+                        <span>Select a laboratory simulation from the list to preview and operate.</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Tab: Builder Wizard */}
+              {activeTab === 'builder' && (
+                <div className="glass-card rounded-3xl p-6 flex flex-col gap-6 max-h-[80vh] overflow-y-auto">
+                  
+                  {/* Step Header */}
+                  <div className="border-b border-slate-800 pb-4">
+                    <h2 className="text-md font-extrabold text-white tracking-tight flex items-center gap-2">
+                      ⚙️ Sparkl Virtual Lab Generator Wizard
+                    </h2>
+                    <p className="text-xs text-slate-400 mt-1">Configure layout, interactive sliders, telemetry variables, and viva quiz assessments to instantly compile a standalone, premium HTML lab file.</p>
+                  </div>
+
+                  {/* Wizard Fields Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    
+                    {/* General configurations */}
+                    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 space-y-4">
+                      <span className="text-xs font-bold uppercase text-indigo-400 tracking-wider block border-b border-slate-800 pb-1.5">1. General Laboratory Metadata</span>
+                      
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Target Output Filename</label>
+                        <input 
+                          type="text" 
+                          value={newLab.filename}
+                          onChange={e => setNewLab(prev => ({ ...prev, filename: e.target.value }))}
+                          placeholder="ohms-law-lab.html"
+                          className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 transition"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Branding Title (Header)</label>
+                        <input 
+                          type="text" 
+                          value={newLab.brandingTitle}
+                          onChange={e => setNewLab(prev => ({ ...prev, brandingTitle: e.target.value, title: e.target.value }))}
+                          placeholder="Ohm's Law Virtual Laboratory"
+                          className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 transition"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase">Lab Section Subheader</label>
+                        <input 
+                          type="text" 
+                          value={newLab.labSection}
+                          onChange={e => setNewLab(prev => ({ ...prev, labSection: e.target.value.toUpperCase() }))}
+                          placeholder="ELECTRODYNAMICS"
+                          className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500 transition"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Canvas Stage Configuration */}
+                    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                      <div className="space-y-4">
+                        <span className="text-xs font-bold uppercase text-indigo-400 tracking-wider block border-b border-slate-800 pb-1.5">2. Dynamics Visual Stage Canvas</span>
+                        
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold text-slate-400 uppercase">Canvas Engine Preset</label>
+                          <div className="grid grid-cols-3 gap-2 mt-1">
+                            {[
+                              { id: 'physics', label: '⚡ Ohm Circuit (Phys)' },
+                              { id: 'chemistry', label: '🧪 Beaker Titration (Chem)' },
+                              { id: 'custom', label: '🎨 Custom Low-Code' }
+                            ].map(preset => (
+                              <button 
+                                key={preset.id}
+                                onClick={() => setNewLab(prev => ({ ...prev, canvasPreset: preset.id }))}
+                                className={`py-2 px-1 text-[10px] font-bold rounded-xl border transition ${newLab.canvasPreset === preset.id ? 'bg-indigo-600 border-indigo-400 text-white neon-border' : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'}`}
+                              >
+                                {preset.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {newLab.canvasPreset === 'custom' && (
+                          <div className="flex flex-col gap-1 mt-2">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase">HTML5 Canvas Drawing Script (2D Context 'ctx')</label>
+                            <textarea
+                              value={newLab.customCanvasLogic}
+                              onChange={e => setNewLab(prev => ({ ...prev, customCanvasLogic: e.target.value }))}
+                              rows="4"
+                              placeholder="ctx.fillStyle = 'red';\nctx.fillRect(100, 100, 50, 50);"
+                              className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-[10px] font-mono text-emerald-400 outline-none focus:border-indigo-500 transition"
+                            />
+                          </div>
+                        )}
+                      </div>
+                      
+                      {newLab.canvasPreset !== 'custom' && (
+                        <div className="text-[10px] bg-slate-900 p-3 rounded-xl border border-slate-800 text-slate-400 italic leading-relaxed mt-4">
+                          Using high-fidelity pre-scaffolded visual simulation logic. Slider state variables are automatically wired directly into the vector drawing engine!
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Step 3: Interactive Variables Sliders */}
+                    <div className="col-span-1 md:col-span-2 bg-slate-900/40 p-5 rounded-2xl border border-slate-800 space-y-4">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                        <span className="text-xs font-bold uppercase text-indigo-400 tracking-wider">3. Variable Sliders Controllers</span>
+                        <button onClick={addSlider} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] px-3 py-1 rounded-lg transition shadow-md">➕ Add Slider</button>
+                      </div>
+
+                      <div className="space-y-3">
+                        {newLab.sliders.length === 0 && <span className="text-xs text-slate-500 italic block py-2">No custom sliders added. Connect at least one variables controller.</span>}
+                        {newLab.sliders.map((slider, idx) => (
+                          <div key={idx} className="bg-slate-950 p-4 rounded-xl border border-slate-800 grid grid-cols-7 gap-3 items-end">
+                            <div className="col-span-1.5 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Variable JS Name</label>
+                              <input 
+                                type="text" 
+                                value={slider.name}
+                                onChange={e => updateSliderField(idx, 'name', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                                placeholder="voltage"
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <div className="col-span-2 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Display Label</label>
+                              <input 
+                                type="text" 
+                                value={slider.label}
+                                onChange={e => updateSliderField(idx, 'label', e.target.value)}
+                                placeholder="Voltage Controller"
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <div className="col-span-0.8 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Min</label>
+                              <input 
+                                type="number" 
+                                value={slider.min}
+                                onChange={e => updateSliderField(idx, 'min', +e.target.value)}
+                                className="bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-white outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <div className="col-span-0.8 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Max</label>
+                              <input 
+                                type="number" 
+                                value={slider.max}
+                                onChange={e => updateSliderField(idx, 'max', +e.target.value)}
+                                className="bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-white outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <div className="col-span-0.8 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Step</label>
+                              <input 
+                                type="number" 
+                                value={slider.step}
+                                onChange={e => updateSliderField(idx, 'step', +e.target.value)}
+                                className="bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-white outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <div className="col-span-0.8 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Unit</label>
+                              <input 
+                                type="text" 
+                                value={slider.unit}
+                                onChange={e => updateSliderField(idx, 'unit', e.target.value)}
+                                placeholder="V"
+                                className="bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-white outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <button onClick={() => removeSlider(idx)} className="col-span-0.5 bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-300 font-bold px-2 py-1 rounded transition text-xs flex justify-center mb-0.5">🗑️</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Step 4: Telemetry output equations */}
+                    <div className="col-span-1 md:col-span-2 bg-slate-900/40 p-5 rounded-2xl border border-slate-800 space-y-4">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                        <span className="text-xs font-bold uppercase text-indigo-400 tracking-wider">4. Real-time calculated Telemetry Outputs</span>
+                        <button onClick={addTelemetry} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] px-3 py-1 rounded-lg transition shadow-md">➕ Add Metric</button>
+                      </div>
+
+                      <div className="space-y-3">
+                        {newLab.telemetry.length === 0 && <span className="text-xs text-slate-500 italic block py-2">No telemetry variables added. Configure outputs.</span>}
+                        {newLab.telemetry.map((t, idx) => (
+                          <div key={idx} className="bg-slate-950 p-4 rounded-xl border border-slate-800 grid grid-cols-7 gap-3 items-end">
+                            <div className="col-span-1.5 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Metric Display Label</label>
+                              <input 
+                                type="text" 
+                                value={t.label}
+                                onChange={e => updateTelemetryField(idx, 'label', e.target.value)}
+                                placeholder="Simulated Amps"
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none"
+                              />
+                            </div>
+                            <div className="col-span-1.2 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Variable JS Name</label>
+                              <input 
+                                type="text" 
+                                value={t.variableName}
+                                onChange={e => updateTelemetryField(idx, 'variableName', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                                placeholder="current"
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none"
+                              />
+                            </div>
+                            <div className="col-span-2.5 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Calculation Math Formula (JS)</label>
+                              <input 
+                                type="text" 
+                                value={t.formula}
+                                onChange={e => updateTelemetryField(idx, 'formula', e.target.value)}
+                                placeholder="(voltage / resistance).toFixed(3)"
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-[11px] font-mono text-emerald-400 outline-none"
+                              />
+                            </div>
+                            <div className="col-span-0.8 flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Unit</label>
+                              <input 
+                                type="text" 
+                                value={t.unit}
+                                onChange={e => updateTelemetryField(idx, 'unit', e.target.value)}
+                                placeholder="A"
+                                className="bg-slate-900 border border-slate-800 rounded px-1.5 py-1 text-xs text-white outline-none"
+                              />
+                            </div>
+                            <button onClick={() => removeTelemetry(idx)} className="col-span-0.5 bg-rose-950 hover:bg-rose-900 border border-rose-800 text-rose-300 font-bold px-2 py-1 rounded transition text-xs flex justify-center mb-0.5">🗑️</button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Step 5: Classroom Viva Assessment */}
+                    <div className="col-span-1 md:col-span-2 bg-slate-900/40 p-5 rounded-2xl border border-slate-800 space-y-4">
+                      <div className="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                        <span className="text-xs font-bold uppercase text-indigo-400 tracking-wider">5. Classroom Viva Assessment Quiz</span>
+                        <button onClick={addViva} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] px-3 py-1 rounded-lg transition shadow-md">➕ Add Question</button>
+                      </div>
+
+                      <div className="space-y-4">
+                        {newLab.vivaQuestions.map((q, idx) => (
+                          <div key={idx} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                            <div className="flex justify-between items-center border-b border-slate-900 pb-1.5">
+                              <span className="text-[10px] font-black text-indigo-400">VIVA QUESTION 0{idx + 1}</span>
+                              <button onClick={() => removeViva(idx)} className="text-[9px] text-rose-400 hover:text-rose-200 hover:bg-rose-950 border border-rose-900 px-2 py-0.5 rounded font-bold transition">🗑️ Remove</button>
+                            </div>
+                            
+                            <div className="flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Question Text</label>
+                              <input 
+                                type="text" 
+                                value={q.question}
+                                onChange={e => updateVivaQuestion(idx, e.target.value)}
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none"
+                              />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="flex flex-col gap-1">
+                                <label className="text-[8px] font-bold text-emerald-500 uppercase">Option A (CORRECT CHOICE)</label>
+                                <input 
+                                  type="text" 
+                                  value={q.options[0].text}
+                                  onChange={e => updateVivaOption(idx, 0, e.target.value)}
+                                  className="bg-slate-900 border border-slate-850 rounded px-2 py-1 text-xs text-white outline-none"
+                                />
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <label className="text-[8px] font-bold text-rose-500 uppercase">Option B (INCORRECT DISTRACTOR)</label>
+                                <input 
+                                  type="text" 
+                                  value={q.options[1].text}
+                                  onChange={e => updateVivaOption(idx, 1, e.target.value)}
+                                  className="bg-slate-900 border border-slate-850 rounded px-2 py-1 text-xs text-white outline-none"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">Scientific Reasoning / Explanation (Shown on select)</label>
+                              <input 
+                                type="text" 
+                                value={q.explanation}
+                                onChange={e => updateVivaExplanation(idx, e.target.value)}
+                                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-white outline-none"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Submission Glowing Action button */}
+                  <div className="pt-4 border-t border-slate-800 flex justify-end">
+                    <button 
+                      onClick={handleGenerateSimulation}
+                      className="bg-gradient-to-br from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-850 text-white font-extrabold px-8 py-4 rounded-2xl text-xs tracking-wider uppercase transition-all shadow-xl neon-border flex items-center gap-2 transform active:scale-95"
+                    >
+                      🚀 Compile & Spawn Standalone Virtual Lab
+                    </button>
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
+
+          {/* Footer */}
+          <footer className="border-t border-slate-800/80 py-4 text-center text-[10px] text-slate-600 font-medium flex-shrink-0">
+            <p>© 2026 Sparkl Science Lab Automation System. Powered by Antigravity Agent Core.</p>
+          </footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

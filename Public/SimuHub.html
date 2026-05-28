@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimuHub - Science Virtual Labs</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --secondary: #7c3aed;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --physics: #0ea5e9;
+      --chemistry: #22c55e;
+      --modern: #a855f7;
+      --biology: #f59e0b;
+      --math: #ec4899;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .06);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, .12);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden
+    }
+
+    .sidebar {
+      width: 100%;
+      height: 70px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      border-right: none;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+      overflow: visible;
+      box-shadow: var(--shadow);
+      z-index: 100
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      border-bottom: none
+    }
+
+    .sidebar-logo .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 17px
+    }
+
+    .sidebar-logo .name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .sidebar-logo .name span {
+      color: var(--primary)
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      gap: 16px
+    }
+
+    .nav-group {
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px
+    }
+
+    .nav-label {
+      display: none
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 600;
+      transition: all .2s;
+      margin-bottom: 0;
+      border: 1px solid transparent
+    }
+
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+      font-size: 14px
+    }
+
+    .nav-item:hover {
+      background: var(--bg);
+      color: var(--primary)
+    }
+
+    .nav-item.active {
+      background: rgba(37, 99, 235, .08);
+      color: var(--primary);
+      border-color: rgba(37, 99, 235, .2)
+    }
+
+    .sidebar-footer {
+      margin-top: 0;
+      padding: 0;
+      border-top: none
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 8px;
+      align-items: center
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 6px 12px;
+      border: 1px solid var(--border)
+    }
+
+    .stat-pill .num {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary)
+    }
+
+    .stat-pill .lbl {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: var(--shadow)
+    }
+
+    .topbar h1 {
+      font-size: 20px;
+      font-weight: 600
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 13px
+    }
+
+    .search-box input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 13px;
+      color: var(--text);
+      width: 180px
+    }
+
+    .search-box input::placeholder {
+      color: var(--muted)
+    }
+
+    .search-box i {
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer
+    }
+
+    .panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, .88);
+      z-index: 9000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .7s linear infinite
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .loading-overlay p {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500
+    }
+
+    .upload-card {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      max-width: 860px
+    }
+
+    .panel-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px
+    }
+
+    .panel-desc {
+      color: var(--muted);
+      font-size: 13.5px;
+      margin-bottom: 24px
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .form-group {
+      margin-bottom: 18px
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text)
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-family: inherit;
+      color: var(--text);
+      transition: all .2s;
+      background: var(--surface)
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .1)
+    }
+
+    .required {
+      color: var(--danger)
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: var(--bg)
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, .03)
+    }
+
+    .drop-zone i {
+      font-size: 36px;
+      color: var(--muted);
+      margin-bottom: 10px
+    }
+
+    .drop-zone h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px
+    }
+
+    .drop-zone p {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .file-chosen {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--success);
+      font-weight: 500
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg)
+    }
+
+    .btn-primary:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff
+    }
+
+    .btn-danger:hover {
+      background: #dc2626
+    }
+
+    .btn-ghost {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border)
+    }
+
+    .btn-ghost:hover {
+      background: var(--border)
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+      padding: 12px
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #1e293b;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 500;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all .3s
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1
+    }
+
+    .toast i {
+      color: var(--success)
+    }
+
+    .manage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px
+    }
+
+    .count-badge {
+      background: rgba(37, 99, 235, .08);
+      color: var(--primary);
+      border: 1px solid rgba(37, 99, 235, .2);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px
+    }
+
+    .filter-bar select {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 12.5px;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer
+    }
+
+    .table-wrap {
+      background: var(--surface);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    thead {
+      background: var(--bg)
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+      white-space: nowrap
+    }
+
+    td {
+      padding: 13px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 13.5px;
+      vertical-align: middle
+    }
+
+    tr:hover td {
+      background: rgba(241, 245, 249, .7)
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600
+    }
+
+    .badge-physics {
+      background: rgba(14, 165, 233, .1);
+      color: #0369a1
+    }
+
+    .badge-chemistry {
+      background: rgba(34, 197, 94, .1);
+      color: #15803d
+    }
+
+    .badge-modern {
+      background: rgba(168, 85, 247, .1);
+      color: #7e22ce
+    }
+
+    .badge-biology {
+      background: rgba(245, 158, 11, .1);
+      color: #92400e
+    }
+
+    .badge-math {
+      background: rgba(236, 72, 153, .1);
+      color: #9d174d
+    }
+
+    .badge-default {
+      background: rgba(100, 116, 139, .1);
+      color: #475569
+    }
+
+    .act-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 2px
+    }
+
+    .act-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary)
+    }
+
+    .act-btn.del:hover {
+      background: var(--danger);
+      border-color: var(--danger)
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      flex-wrap: wrap
+    }
+
+    .bc {
+      color: var(--muted);
+      cursor: pointer;
+      transition: color .15s
+    }
+
+    .bc:hover {
+      color: var(--primary)
+    }
+
+    .bc.cur {
+      color: var(--text);
+      font-weight: 600;
+      cursor: default
+    }
+
+    .bc-sep {
+      color: var(--border)
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px
+    }
+
+    .g-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all .25s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative
+    }
+
+    .g-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px)
+    }
+
+    .g-card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 2px
+    }
+
+    .g-card-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text)
+    }
+
+    .g-card-sub {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .g-card-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px
+    }
+
+    .sim-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all .2s;
+      cursor: pointer
+    }
+
+    .sim-item:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, .1);
+      transform: translateX(3px)
+    }
+
+    .sim-item-left {
+      flex: 1;
+      min-width: 0
+    }
+
+    .sim-item-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text)
+    }
+
+    .sim-item-meta {
+      font-size: 12.5px;
+      color: var(--muted);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap
+    }
+
+    .sim-item-meta i {
+      margin-right: 4px;
+      font-size: 11px
+    }
+
+    .sim-item-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.5
+    }
+
+    .viewer-bar {
+      background: var(--text);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0
+    }
+
+    .viewer-bar .title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .viewer-bar .title i {
+      opacity: .6;
+      font-size: 12px
+    }
+
+    .viewer-actions {
+      display: flex;
+      gap: 8px
+    }
+
+    .vbtn {
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .15);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit
+    }
+
+    .vbtn:hover {
+      background: rgba(255, 255, 255, .2)
+    }
+
+    .viewer-frame {
+      flex: 1;
+      border: none;
+      background: #fff;
+      width: 100%
+    }
+
+    .color-physics {
+      background: var(--physics)
+    }
+
+    .color-chemistry {
+      background: var(--chemistry)
+    }
+
+    .color-modern {
+      background: var(--modern)
+    }
+
+    .color-biology {
+      background: var(--biology)
+    }
+
+    .color-math {
+      background: var(--math)
+    }
+
+    .color-default {
+      background: var(--muted)
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: var(--shadow-lg)
+    }
+
+    .modal-box h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px
+    }
+
+    .modal-box p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 20px
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- TOP NAV HEADER -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="icon"><i class="fas fa-flask"></i></div>
+        <div class="name">Simu<span>Hub</span></div>
+      </div>
+      
+      <div class="nav-container">
+        <div class="nav-group">
+          <div class="nav-item active" id="nav-upload" onclick="showPanel('upload')"><i
+              class="fas fa-cloud-upload-alt"></i> Upload Simulation</div>
+          <div class="nav-item" id="nav-manage" onclick="showPanel('manage')"><i class="fas fa-table"></i> Manage
+            Simulations</div>
+          <div class="nav-item" id="nav-student" onclick="showPanel('student')"><i class="fas fa-graduation-cap"></i>
+            Browse Library</div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="stats-row">
+          <div class="stat-pill"><span class="num" id="stat-total">0</span><span class="lbl">Labs</span></div>
+          <div class="stat-pill"><span class="num" id="stat-subjects">0</span><span class="lbl">Subjects</span></div>
+          <div class="stat-pill"><span class="num" id="stat-grades">0</span><span class="lbl">Grades</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <h1 id="topbar-title">Upload Simulation</h1>
+        <div class="topbar-right">
+          <div class="search-box" id="globalSearchBox" style="display:none">
+            <i class="fas fa-search"></i>
+            <input type="text" id="globalSearch" placeholder="Search simulations..." oninput="handleGlobalSearch()">
+          </div>
+          <div class="avatar" title="Admin">A</div>
+        </div>
+      </div>
+
+      <!-- UPLOAD PANEL -->
+      <div class="panel" id="panel-upload">
+        <div class="upload-card">
+          <div class="panel-title">Upload New Simulation</div>
+          <div class="panel-desc">Fill in the details and upload an HTML simulation file. It will be saved to Firestore
+            and available to all users instantly.</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Grade Level <span class="required">*</span></label>
+              <select id="u-grade">
+                <option value="">Select Grade</option>
+                <option>Grade 9</option>
+                <option>Grade 10</option>
+                <option>Grade 11</option>
+                <option>Grade 12</option>
+                <option>JEE Prep</option>
+                <option>NEET Prep</option>
+                <option>General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Subject <span class="required">*</span></label>
+              <select id="u-subject">
+                <option value="">Select Subject</option>
+                <option>Physics</option>
+                <option>Chemistry</option>
+                <option>Biology</option>
+                <option>Mathematics</option>
+                <option>Modern Physics</option>
+                <option>Waves &amp; Optics</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Chapter / Unit <span class="required">*</span></label>
+              <input type="text" id="u-chapter" placeholder="e.g. Electrostatics, Mechanics">
+            </div>
+            <div class="form-group">
+              <label>Topic <span class="required">*</span></label>
+              <input type="text" id="u-topic" placeholder="e.g. Coulomb's Law, Newton's Laws">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Simulation Title <span class="required">*</span></label>
+            <input type="text" id="u-title" placeholder="e.g. Interactive Pendulum Simulation">
+          </div>
+          <div class="form-group">
+            <label>Description <small style="color:var(--muted);font-weight:400">(optional)</small></label>
+            <textarea id="u-desc" rows="3" placeholder="Brief description shown to students..."
+              style="resize:vertical"></textarea>
+          </div>
+          <div class="form-group">
+            <label>HTML Simulation File <span class="required">*</span></label>
+            <div class="drop-zone" id="dropZone">
+              <i class="fas fa-file-code"></i>
+              <h4>Drag &amp; drop your HTML file here</h4>
+              <p>or click to browse your files</p>
+              <input type="file" id="fileInput" accept=".html" style="display:none">
+            </div>
+            <div class="file-chosen hidden" id="fileChosen"><i class="fas fa-check-circle"></i> <span
+                id="fileChosenName"></span></div>
+          </div>
+          <button class="btn btn-primary btn-full" id="uploadBtn" onclick="handleUpload()">
+            <i class="fas fa-plus-circle"></i> Add Simulation to Library
+          </button>
+        </div>
+      </div>
+
+      <!-- MANAGE PANEL -->
+      <div class="panel hidden" id="panel-manage">
+        <div class="manage-header">
+          <div>
+            <div class="panel-title">Manage Simulations</div>
+            <div class="panel-desc" style="margin-bottom:0">View, search, preview or delete simulations.</div>
+          </div>
+          <span class="count-badge" id="manage-count">0 simulations</span>
+        </div>
+        <div class="filter-bar">
+          <select id="f-grade" onchange="renderTable()">
+            <option value="">All Grades</option>
+          </select>
+          <select id="f-subject" onchange="renderTable()">
+            <option value="">All Subjects</option>
+          </select>
+          <select id="f-chapter" onchange="renderTable()">
+            <option value="">All Chapters</option>
+          </select>
+          <input type="text" id="f-search" placeholder="Search..." oninput="renderTable()"
+            style="padding:7px 12px;border:1px solid var(--border);border-radius:7px;font-size:12.5px;font-family:inherit;min-width:160px">
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>Grade</th>
+                <th>Subject</th>
+                <th>Chapter</th>
+                <th>Topic</th>
+                <th>Source</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STUDENT PANEL -->
+      <div class="panel hidden" id="panel-student">
+        <div id="view-grade">
+          <div class="breadcrumb"><span class="bc cur">Library</span></div>
+          <div class="panel-title">Simulation Library</div>
+          <div class="panel-desc">Select your grade to explore simulations.</div>
+          <div class="grid" id="grade-grid"></div>
+        </div>
+        <div id="view-subject" class="hidden">
+          <div class="breadcrumb" id="bc-subject"></div>
+          <div class="panel-title" id="subject-heading"></div>
+          <div class="panel-desc">Choose a subject.</div>
+          <div class="grid" id="subject-grid"></div>
+        </div>
+        <div id="view-chapter" class="hidden">
+          <div class="breadcrumb" id="bc-chapter"></div>
+          <div class="panel-title" id="chapter-heading"></div>
+          <div class="panel-desc">Choose a chapter.</div>
+          <div class="grid" id="chapter-grid"></div>
+        </div>
+        <div id="view-sims" class="hidden">
+          <div class="breadcrumb" id="bc-sims"></div>
+          <div class="panel-title" id="sims-heading"></div>
+          <div class="panel-desc">Click any simulation to launch it.</div>
+          <div class="sim-list" id="sims-list"></div>
+        </div>
+        <div id="view-viewer" class="hidden" style="display:flex;flex-direction:column;height:100%">
+          <div class="viewer-bar">
+            <div class="title"><i class="fas fa-flask"></i> <span id="viewer-title">Simulation</span></div>
+            <div class="viewer-actions">
+              <button class="vbtn" onclick="exitViewer()"><i class="fas fa-arrow-left"></i> Back</button>
+              <button class="vbtn" onclick="reloadViewer()"><i class="fas fa-redo"></i> Reload</button>
+              <button class="vbtn" onclick="fullscreenViewer()"><i class="fas fa-expand"></i> Fullscreen</button>
+            </div>
+          </div>
+          <iframe class="viewer-frame" id="simFrame" title="Simulation"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM MODAL -->
+  <div class="modal-overlay hidden" id="confirmModal">
+    <div class="modal-box">
+      <h3>Delete Simulation</h3>
+      <p id="confirmMsg">Are you sure?</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-danger" id="confirmBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="spinner"></div>
+    <p id="loadingMsg">Loading...</p>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+  <!-- ══════════ FIREBASE MODULE ══════════ -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+    import {
+      getStorage,
+      ref,
+      uploadBytes,
+      getDownloadURL,
+      deleteObject
+    } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBB8g9E7eCp0SUbGsl1OwFwrg624x4xP74",
+      authDomain: "ptm-dashbaord.firebaseapp.com",
+      databaseURL: "https://ptm-dashbaord-default-rtdb.firebaseio.com",
+      projectId: "ptm-dashbaord",
+      storageBucket: "ptm-dashbaord.firebasestorage.app",
+      messagingSenderId: "906040868576",
+      appId: "1:906040868576:web:54bd638d4d9c1f9f7eda85"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+
+    window._db = getFirestore(app);
+    window._storage = storage;
+    window._fb = {
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc,
+      query,
+      orderBy,
+      ref,
+      uploadBytes,
+      getDownloadURL,
+      deleteObject
+    };
+    window.dispatchEvent(new Event("firebase-ready"));
+  </script>
+
+  <!-- ══════════ APP LOGIC ══════════ -->
+  <script>
+    // ── PRELOADED (built-in, served from same folder) ──
+    const PRELOADED = [
+      { id: 'pre-1', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Mechanics', topic: 'Buoyancy', title: 'Buoyancy', desc: "Explore Archimedes' principle, floating, and submerged objects.", file: 'Buoyancy.html' },
+      { id: 'pre-2', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Mechanics', topic: 'Pendulum', title: 'Pendulum & Mechanical Energy', desc: 'Study pendulum motion, period, and conservation of energy.', file: 'pendulum.html' },
+      { id: 'pre-3', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Mechanics', topic: 'Projectile Motion', title: 'Projectile Motion', desc: 'Launch projectiles and explore range, height, and drag effects.', file: 'Projectile.html' },
+      { id: 'pre-4', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Mechanics', topic: 'Orbital Motion', title: 'Elliptical Orbits', desc: "Simulate planetary motion and Kepler's laws.", file: 'Elliptical.html' },
+      { id: 'pre-5', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Electromagnetism', topic: 'EMI', title: 'Electromagnetic Induction', desc: "Visualize Faraday's law and induced EMF with moving magnets.", file: 'EMI.html' },
+      { id: 'pre-6', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Electromagnetism', topic: 'EM Waves', title: 'Electromagnetic Waves', desc: 'Observe E & B field oscillations and wave propagation.', file: 'EMW.html' },
+      { id: 'pre-7', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Electricity', topic: "Ohm's Law", title: "Ohm's Law (Extended)", desc: 'Investigate V, I, R and electronic transport.', file: 'ohmslaw.html' },
+      { id: 'pre-8', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Electricity', topic: "Ohm's Law", title: "Ohm's Law Lab", desc: 'Classic V=IR experiment with interactive circuit builder.', file: 'ohms-law-lab.html' },
+      { id: 'pre-9', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Electricity', topic: "Ohm's Law", title: "Ohm's Law (Compact)", desc: 'Streamlined resistance and voltage simulation.', file: 'Ohom_s.html' },
+      { id: 'pre-10', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Energy', topic: 'Energy Conversion', title: 'Energy Forms & Changes', desc: 'Convert between thermal, electrical, and mechanical energy.', file: 'Energy-forms-changes.html' },
+      { id: 'pre-11', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Optics', topic: 'Color Vision', title: 'Color Vision (Full)', desc: 'Explore how light wavelengths produce color perception.', file: 'Color_Vision_Virtual_Laboratory.html' },
+      { id: 'pre-12', src: 'preloaded', grade: 'General', subject: 'Physics', chapter: 'Optics', topic: 'Refraction', title: 'Prism Refraction', desc: 'Bend light through a prism and observe chromatic dispersion.', file: 'Refraction.html' },
+      { id: 'pre-13', src: 'preloaded', grade: 'General', subject: 'Waves & Optics', chapter: 'Wave Properties', topic: 'Interference', title: 'Wave Interference', desc: 'Observe constructive and destructive interference patterns.', file: 'Wave_Interference_Lab.html' },
+      { id: 'pre-14', src: 'preloaded', grade: 'General', subject: 'Waves & Optics', chapter: 'Wave Properties', topic: 'Double Slit', title: "Young's Double Slit", desc: "Classic experiment demonstrating light's wave nature.", file: 'Young_Double_Slit.html' },
+      { id: 'pre-15', src: 'preloaded', grade: 'General', subject: 'Waves & Optics', chapter: 'Vectors', topic: 'Vector Addition', title: 'Vector Addition', desc: 'Add vectors graphically and algebraically, explore resultant forces.', file: 'vector-addition-equations_all.html' },
+      { id: 'pre-16', src: 'preloaded', grade: 'General', subject: 'Chemistry', chapter: 'Quantum Chemistry', topic: 'Photoelectric', title: 'Photoelectric Effect', desc: 'Investigate photon energy and electron ejection from metal surfaces.', file: 'Chem_Photoelectric.html' },
+      { id: 'pre-17', src: 'preloaded', grade: 'General', subject: 'Chemistry', chapter: 'Gas Laws', topic: 'Kinetic Theory', title: 'Kinetic Molecular Theory', desc: 'Observe gas particle motion and explore P, V, T relationships.', file: 'kinetic-molecular-theory-lab.html' },
+      { id: 'pre-18', src: 'preloaded', grade: 'General', subject: 'Chemistry', chapter: 'Atomic Structure', topic: 'Isotopes', title: 'Isotopes', desc: 'Build atoms, vary neutrons, and explore isotope properties.', file: 'Isotope.html' },
+      { id: 'pre-19', src: 'preloaded', grade: 'General', subject: 'Chemistry', chapter: 'Stoichiometry', topic: 'The Mole', title: 'The Mole Concept', desc: "Explore Avogadro's number, molar mass, and quantum scaling.", file: 'MoleConcept.html' },
+      { id: 'pre-20', src: 'preloaded', grade: 'General', subject: 'Chemistry', chapter: 'Molecular Geometry', topic: 'VSEPR', title: 'Molecule Shapes (VSEPR)', desc: 'Build and rotate 3D molecular geometries using VSEPR theory.', file: 'Molecules.html' },
+      { id: 'pre-21', src: 'preloaded', grade: 'General', subject: 'Chemistry', chapter: 'Molecular Geometry', topic: 'VSEPR', title: 'Molecule Shapes v2', desc: 'Updated VSEPR simulation with enhanced 3D controls.', file: 'Molecules__2_.html' },
+      { id: 'pre-22', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Atomic Theory', topic: 'Atomic Models', title: 'Atomic Models', desc: 'Journey through Thomson, Rutherford, and quantum atomic models.', file: 'Automic.html' },
+      { id: 'pre-23', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Atomic Theory', topic: 'Bohr Model', title: 'Bohr Model', desc: 'Simulate electron transitions and spectral emission lines.', file: 'Bohr_Atom.html' },
+      { id: 'pre-24', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Quantum Mechanics', topic: 'Atomic Orbitals', title: '3D Atomic Orbitals', desc: 'Visualize s, p, d orbital shapes and probability densities in 3D.', file: '3d_Orbital.html' },
+      { id: 'pre-25', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Quantum Origins', topic: 'Black Body Radiation', title: 'Black Body Radiation', desc: "Explore Planck's law and UV catastrophe through spectral curves.", file: 'Black_Body_Radiation.html' },
+      { id: 'pre-26', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Quantum Origins', topic: 'Wave-Particle Duality', title: 'de Broglie Wavelength', desc: 'Discover the wave nature of matter and matter-wave duality.', file: 'Broglie.html' },
+      { id: 'pre-27', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Quantum Origins', topic: 'Photoelectric Effect', title: 'Photoelectric Effect (Full)', desc: 'Advanced simulation: photoelectric effect + wave-particle duality.', file: 'New-PHoto.html' },
+      { id: 'pre-28', src: 'preloaded', grade: 'General', subject: 'Modern Physics', chapter: 'Quantum Origins', topic: 'Photoelectric Effect', title: 'Photoelectric Effect (Classic)', desc: 'Standard photoelectric simulation with frequency controls.', file: 'nPhotoelectric.html' },
+      { id: 'pre-29', src: 'preloaded', grade: 'General', subject: 'Biology', chapter: 'Cell Biology', topic: 'Membrane Transport', title: 'Cell Membrane Transport', desc: 'Explore diffusion, osmosis, and active transport across membranes.', file: 'membrane.html' },
+      { id: 'pre-30', src: 'preloaded', grade: 'General', subject: 'Biology', chapter: 'Cell Biology', topic: 'Membrane Transport', title: 'Membrane (Compact)', desc: 'Streamlined membrane transport simulation.', file: 'memb.html' },
+      { id: 'pre-31', src: 'preloaded', grade: 'General', subject: 'Biology', chapter: 'Sensory Biology', topic: 'Color Vision', title: 'Color Vision (Compact)', desc: 'Investigate cone cells and how the eye perceives wavelengths.', file: 'color-vision-lab.html' },
+      { id: 'pre-32', src: 'preloaded', grade: 'General', subject: 'Mathematics', chapter: 'Set Theory', topic: 'Sets', title: 'Introduction to Sets', desc: 'Explore union, intersection, and subsets through interactive Venn diagrams.', file: 'sets.html' },
+    ];
+
+    // ── STATE ──
+    let firestoreSims = [];
+    let simulations = [...PRELOADED];
+    let pendingDelete = { id: null, fsDocId: null };
+    let currentGrade = null, currentSubject = null, currentChapter = null, currentSimId = null;
+    let uploadedFile = null;
+
+    // ── BOOT ──
+    document.addEventListener('DOMContentLoaded', () => {
+      updateStats(); populateFilters(); setupDropzone();
+    });
+    window.addEventListener('firebase-ready', async () => {
+      await loadFirestore();
+    });
+
+    // ── FIRESTORE: LOAD ──
+    async function loadFirestore() {
+      showLoading('Loading simulations from database...');
+      try {
+        const snap = await window._fb.getDocs(
+          window._fb.query(
+            window._fb.collection(window._db, 'simulations'),
+            window._fb.orderBy('createdAt', 'desc')
+          )
+        );
+        firestoreSims = snap.docs.map(d => ({
+          id: 'fs-' + d.id,
+          fsDocId: d.id,
+          src: 'firestore',
+          ...d.data()
+        }));
+        simulations = [...PRELOADED, ...firestoreSims];
+        updateStats();
+        populateFilters();
+        const active = document.querySelector('.nav-item.active');
+        if (active && active.id === 'nav-manage') renderTable();
+        if (active && active.id === 'nav-student') renderGradeGrid();
+      } catch (e) {
+        console.warn('Firestore load error:', e.message);
+        toast('Could not reach database — showing built-in labs only.', 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    // ── FIRESTORE: UPLOAD ──
+    async function handleUpload() {
+      const grade = document.getElementById('u-grade').value.trim();
+      const subject = document.getElementById('u-subject').value.trim();
+      const chapter = document.getElementById('u-chapter').value.trim();
+      const topic = document.getElementById('u-topic').value.trim();
+      const title = document.getElementById('u-title').value.trim();
+      const desc = document.getElementById('u-desc').value.trim();
+
+      if (!grade || !subject || !chapter || !topic || !title) {
+        toast('Please fill all required fields', 'error'); return;
+      }
+      if (!uploadedFile) {
+        toast('Please select an HTML file', 'error'); return;
+      }
+
+      const btn = document.getElementById('uploadBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to Firestore...';
+
+      try {
+        const safeName = Date.now() + "_" + uploadedFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const storagePath = `Simulations/${safeName}`;
+        const fileRef = window._fb.ref(window._storage, storagePath);
+        await window._fb.uploadBytes(fileRef, uploadedFile, {
+          contentType: "text/html"
+        });
+
+        const fileUrl = await window._fb.getDownloadURL(fileRef);
+
+        const ref = await window._fb.addDoc(
+          window._fb.collection(window._db, 'simulations'),
+          {
+            title,
+            grade,
+            subject,
+            chapter,
+            topic,
+            desc,
+            fileName: uploadedFile.name,
+            storagePath,
+            fileUrl,
+            createdAt: new Date().toISOString()
+          }
+        );
+
+        const newSim = {
+          id: 'fs-' + ref.id, fsDocId: ref.id, src: 'firestore',
+          title, grade, subject, chapter, topic, desc,
+          fileName: uploadedFile.name,
+          storagePath,
+          fileUrl,
+          createdAt: new Date().toISOString()
+        };
+        firestoreSims.unshift(newSim);
+        simulations = [...PRELOADED, ...firestoreSims];
+        updateStats(); populateFilters();
+
+        // Reset form
+        ['u-grade', 'u-subject', 'u-chapter', 'u-topic', 'u-title', 'u-desc'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+        document.getElementById('fileChosen').classList.add('hidden');
+        document.getElementById('fileChosenName').textContent = '';
+        uploadedFile = null;
+        toast('Simulation uploaded successfully!');
+      } catch (e) {
+        console.error(e);
+        toast('Upload failed: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Simulation to Library';
+      }
+    }
+
+    // ── FIRESTORE: DELETE ──
+    function confirmDelete(id) {
+      const s = simulations.find(x => x.id === id);
+      if (!s) return;
+      if (s.src === 'preloaded') { toast('Built-in simulations cannot be deleted.', 'error'); return; }
+      pendingDelete = { id, fsDocId: s.fsDocId };
+      document.getElementById('confirmMsg').textContent = 'Delete "' + s.title + '"? This cannot be undone.';
+      document.getElementById('confirmModal').classList.remove('hidden');
+      document.getElementById('confirmBtn').onclick = doDelete;
+    }
+    function closeModal() {
+      document.getElementById('confirmModal').classList.add('hidden');
+      pendingDelete = { id: null, fsDocId: null };
+    }
+    async function doDelete() {
+      const fsDocId = pendingDelete.fsDocId;
+      closeModal();
+      if (!fsDocId) return;
+
+      showLoading('Deleting...');
+
+      try {
+        const s = firestoreSims.find(x => x.fsDocId === fsDocId);
+
+        if (s && s.storagePath) {
+          const fileRef = window._fb.ref(window._storage, s.storagePath);
+          await window._fb.deleteObject(fileRef);
+        }
+
+        await window._fb.deleteDoc(
+          window._fb.doc(window._db, 'simulations', fsDocId)
+        );
+
+        firestoreSims = firestoreSims.filter(s => s.fsDocId !== fsDocId);
+        simulations = [...PRELOADED, ...firestoreSims];
+
+        updateStats();
+        populateFilters();
+        renderTable();
+
+        toast('Simulation deleted');
+      } catch (e) {
+        console.error(e);
+        toast('Delete failed: ' + e.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    // ── PANELS ──
+    const PANELS = ['upload', 'manage', 'student'];
+    const TITLES = { upload: 'Upload Simulation', manage: 'Manage Simulations', student: 'Simulation Library' };
+    function showPanel(n) {
+      PANELS.forEach(p => {
+        document.getElementById('panel-' + p).classList.toggle('hidden', p !== n);
+        document.getElementById('nav-' + p).classList.toggle('active', p === n);
+      });
+      document.getElementById('topbar-title').textContent = TITLES[n];
+      document.getElementById('globalSearchBox').style.display = n === 'manage' ? 'flex' : 'none';
+      if (n === 'manage') { populateFilters(); renderTable(); }
+      if (n === 'student') { resetStudent(); }
+      updateStats();
+    }
+
+    // ── STATS ──
+    function updateStats() {
+      document.getElementById('stat-total').textContent = simulations.length;
+      document.getElementById('stat-subjects').textContent = new Set(simulations.map(s => s.subject)).size;
+      document.getElementById('stat-grades').textContent = new Set(simulations.map(s => s.grade)).size;
+      const mc = document.getElementById('manage-count');
+      if (mc) mc.textContent = simulations.length + ' simulation' + (simulations.length !== 1 ? 's' : '');
+    }
+
+    // ── DROPZONE ──
+    function setupDropzone() {
+      const zone = document.getElementById('dropZone');
+      const fi = document.getElementById('fileInput');
+      zone.addEventListener('click', () => fi.click());
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault(); zone.classList.remove('drag-over');
+        if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+      });
+      fi.addEventListener('change', () => { if (fi.files[0]) setFile(fi.files[0]); });
+    }
+    function setFile(f) {
+      if (!f.name.endsWith('.html')) { toast('Please select an HTML file', 'error'); return; }
+      uploadedFile = f;
+      document.getElementById('fileChosenName').textContent = f.name;
+      document.getElementById('fileChosen').classList.remove('hidden');
+    }
+
+    // ── MANAGE TABLE ──
+    function populateFilters() {
+      fillSelect('f-grade', ['', ...new Set(simulations.map(s => s.grade))], 'All Grades');
+      fillSelect('f-subject', ['', ...new Set(simulations.map(s => s.subject))], 'All Subjects');
+      fillSelect('f-chapter', ['', ...new Set(simulations.map(s => s.chapter))], 'All Chapters');
+    }
+    function fillSelect(id, vals, ph) {
+      const el = document.getElementById(id); if (!el) return;
+      const cur = el.value;
+      el.innerHTML = vals.map((v, i) => '<option value="' + v + '">' + (i === 0 ? ph : v) + '</option>').join('');
+      if (vals.includes(cur)) el.value = cur;
+    }
+    function renderTable() {
+      const fg = document.getElementById('f-grade').value;
+      const fs = document.getElementById('f-subject').value;
+      const fc = document.getElementById('f-chapter').value;
+      const fq = (document.getElementById('f-search') || { value: '' }).value.toLowerCase();
+      const rows = simulations.filter(s =>
+        (!fg || s.grade === fg) && (!fs || s.subject === fs) && (!fc || s.chapter === fc) &&
+        (!fq || [s.title, s.subject, s.chapter, s.topic, s.grade].join(' ').toLowerCase().includes(fq))
+      );
+      const mc = document.getElementById('manage-count');
+      if (mc) mc.textContent = rows.length + ' simulation' + (rows.length !== 1 ? 's' : '');
+      const tb = document.getElementById('tableBody');
+      if (!rows.length) {
+        tb.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--muted)"><i class="fas fa-inbox" style="font-size:32px;opacity:.4;display:block;margin-bottom:12px"></i>No simulations found</td></tr>';
+        return;
+      }
+      tb.innerHTML = rows.map((s, i) =>
+        '<tr>' +
+        '<td style="color:var(--muted);font-size:12px">' + (i + 1) + '</td>' +
+        '<td><strong style="font-size:13.5px">' + s.title + '</strong></td>' +
+        '<td><span class="badge badge-default">' + s.grade + '</span></td>' +
+        '<td><span class="badge ' + subjectBadge(s.subject) + '">' + s.subject + '</span></td>' +
+        '<td style="color:var(--muted);font-size:13px">' + s.chapter + '</td>' +
+        '<td style="color:var(--muted);font-size:13px">' + s.topic + '</td>' +
+        '<td><span class="badge ' + (s.src === 'firestore' ? 'badge-modern' : 'badge-physics') + '">' + (s.src === 'firestore' ? 'Uploaded' : 'Built-in') + '</span></td>' +
+        '<td>' +
+        '<button class="act-btn" title="Preview" onclick="previewFromManage(\'' + s.id + '\')"><i class="fas fa-eye"></i></button>' +
+        (s.src === 'firestore'
+          ? '<button class="act-btn del" title="Delete" onclick="confirmDelete(\'' + s.id + '\')"><i class="fas fa-trash"></i></button>'
+          : '<button class="act-btn" title="Built-in - cannot delete" style="opacity:.35;cursor:not-allowed"><i class="fas fa-lock"></i></button>') +
+        '</td></tr>'
+      ).join('');
+    }
+    function handleGlobalSearch() {
+      document.getElementById('f-search').value = document.getElementById('globalSearch').value;
+      renderTable();
+    }
+    function subjectBadge(sub) {
+      const m = { 'Physics': 'badge-physics', 'Chemistry': 'badge-chemistry', 'Modern Physics': 'badge-modern', 'Biology': 'badge-biology', 'Mathematics': 'badge-math', 'Waves & Optics': 'badge-physics' };
+      return m[sub] || 'badge-default';
+    }
+    function previewFromManage(id) { showPanel('student'); setTimeout(() => openSim(id), 80); }
+
+    // ── STUDENT PORTAL ──
+    const SICONS = { 'Physics': 'atom', 'Chemistry': 'flask', 'Biology': 'dna', 'Mathematics': 'square-root-alt', 'Modern Physics': 'radiation', 'Waves & Optics': 'water' };
+    const SCOLORS = { 'Physics': 'color-physics', 'Chemistry': 'color-chemistry', 'Biology': 'color-biology', 'Mathematics': 'color-math', 'Modern Physics': 'color-modern', 'Waves & Optics': 'color-physics' };
+
+    function showView(n) {
+      ['grade', 'subject', 'chapter', 'sims', 'viewer'].forEach(v => {
+        const el = document.getElementById('view-' + v); if (!el) return;
+        el.classList.toggle('hidden', v !== n);
+        if (v === 'viewer') el.style.display = (v === n) ? 'flex' : '';
+      });
+    }
+    function resetStudent() { currentGrade = null; currentSubject = null; currentChapter = null; showView('grade'); renderGradeGrid(); }
+    function renderGradeGrid() {
+      const grades = [...new Set(simulations.map(s => s.grade))].sort();
+      const el = document.getElementById('grade-grid');
+      if (!grades.length) { el.innerHTML = '<p style="color:var(--muted)">No simulations yet.</p>'; return; }
+      el.innerHTML = grades.map(g => {
+        const cnt = simulations.filter(s => s.grade === g).length;
+        return '<div class="g-card" onclick="selectGrade(\'' + g + '\')"><div class="g-card-icon color-physics"><i class="fas fa-graduation-cap"></i></div><div class="g-card-title">' + g + '</div><div class="g-card-sub">' + cnt + ' simulation' + (cnt !== 1 ? 's' : '') + '</div></div>';
+      }).join('');
+    }
+    function selectGrade(g) {
+      currentGrade = g;
+      const subjects = [...new Set(simulations.filter(s => s.grade === g).map(s => s.subject))].sort();
+      document.getElementById('bc-subject').innerHTML = bc([{ label: 'Library', fn: 'resetStudent()' }, g]);
+      document.getElementById('subject-heading').textContent = g + ' - Subjects';
+      document.getElementById('subject-grid').innerHTML = subjects.map(sub => {
+        const cnt = simulations.filter(s => s.grade === g && s.subject === sub).length;
+        const icon = SICONS[sub] || 'book', col = SCOLORS[sub] || 'color-default';
+        return '<div class="g-card" onclick="selectSubject(\'' + esc(sub) + '\')"><div class="g-card-icon ' + col + '"><i class="fas fa-' + icon + '"></i></div><div class="g-card-title">' + sub + '</div><div class="g-card-sub">' + cnt + ' simulation' + (cnt !== 1 ? 's' : '') + '</div></div>';
+      }).join('');
+      showView('subject');
+    }
+    function selectSubject(sub) {
+      currentSubject = sub;
+      const chapters = [...new Set(simulations.filter(s => s.grade === currentGrade && s.subject === sub).map(s => s.chapter))].sort();
+      document.getElementById('bc-chapter').innerHTML = bc([{ label: 'Library', fn: 'resetStudent()' }, { label: currentGrade, fn: "selectGrade('" + currentGrade + "')" }, sub]);
+      document.getElementById('chapter-heading').textContent = sub + ' - Chapters';
+      const col = SCOLORS[sub] || 'color-default';
+      document.getElementById('chapter-grid').innerHTML = chapters.map(ch => {
+        const cnt = simulations.filter(s => s.grade === currentGrade && s.subject === sub && s.chapter === ch).length;
+        return '<div class="g-card" onclick="selectChapter(\'' + esc(ch) + '\')"><div class="g-card-icon ' + col + '"><i class="fas fa-folder-open"></i></div><div class="g-card-title">' + ch + '</div><div class="g-card-sub">' + cnt + ' simulation' + (cnt !== 1 ? 's' : '') + '</div><div class="g-card-badge">' + cnt + '</div></div>';
+      }).join('');
+      showView('chapter');
+    }
+    function selectChapter(ch) {
+      currentChapter = ch;
+      const sims = simulations.filter(s => s.grade === currentGrade && s.subject === currentSubject && s.chapter === ch);
+      document.getElementById('bc-sims').innerHTML = bc([
+        { label: 'Library', fn: 'resetStudent()' },
+        { label: currentGrade, fn: "selectGrade('" + currentGrade + "')" },
+        { label: currentSubject, fn: "selectSubject('" + esc(currentSubject) + "')" },
+        ch
+      ]);
+      document.getElementById('sims-heading').textContent = ch;
+      document.getElementById('sims-list').innerHTML = sims.map(s =>
+        '<div class="sim-item" onclick="openSim(\'' + s.id + '\')">' +
+        '<div class="sim-item-left">' +
+        '<div class="sim-item-title">' + s.title + '</div>' +
+        '<div class="sim-item-meta"><span><i class="fas fa-tag"></i>' + s.topic + '</span><span><i class="fas fa-book"></i>' + s.subject + '</span>' + (s.src === 'firestore' ? '<span><i class="fas fa-cloud"></i>Uploaded</span>' : '') + '</div>' +
+        (s.desc ? '<div class="sim-item-desc">' + s.desc + '</div>' : '') +
+        '</div>' +
+        '<button class="btn btn-primary btn-sm" style="margin-left:16px;flex-shrink:0" onclick="openSim(\'' + s.id + '\');event.stopPropagation()"><i class="fas fa-play"></i> Launch</button>' +
+        '</div>'
+      ).join('');
+      showView('sims');
+    }
+    function openSim(id) {
+      const s = simulations.find(x => x.id === id); if (!s) return;
+      currentSimId = id;
+      document.getElementById('viewer-title').textContent = s.title;
+      const frame = document.getElementById('simFrame');
+      frame.removeAttribute('src'); frame.removeAttribute('srcdoc');
+      if (s.fileUrl) frame.src = s.fileUrl;
+      else frame.src = s.file;
+      document.getElementById('view-viewer').style.display = 'flex';
+      showView('viewer');
+      document.getElementById('panel-student').style.overflow = 'hidden';
+      document.getElementById('panel-student').style.padding = '0';
+    }
+    function exitViewer() {
+      document.getElementById('panel-student').style.overflow = '';
+      document.getElementById('panel-student').style.padding = '';
+      document.getElementById('simFrame').srcdoc = '';
+      document.getElementById('simFrame').src = '';
+      if (currentChapter) showView('sims'); else resetStudent();
+    }
+    function reloadViewer() {
+      const frame = document.getElementById('simFrame');
+      const u = frame.src;
+      frame.src = '';
+      setTimeout(() => frame.src = u, 50);
+    }
+    function fullscreenViewer() { const f = document.getElementById('simFrame'); if (f.requestFullscreen) f.requestFullscreen(); }
+
+    // ── LOADING ──
+    function showLoading(msg) { document.getElementById('loadingMsg').textContent = msg || 'Loading...'; document.getElementById('loadingOverlay').classList.remove('hidden'); }
+    function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
+
+    // ── HELPERS ──
+    function bc(items) {
+      return items.map((item, i) => {
+        const isLast = i === items.length - 1;
+        if (typeof item === 'string' || isLast) return '<span class="bc cur">' + (typeof item === 'string' ? item : item.label) + '</span>';
+        return '<span class="bc" onclick="' + item.fn + '">' + item.label + '</span><span class="bc-sep">/</span>';
+      }).join('');
+    }
+    function esc(s) { return s.replace(/'/g, "\\'"); }
+    function toast(msg, type) {
+      const el = document.getElementById('toast'), icon = el.querySelector('i');
+      document.getElementById('toastMsg').textContent = msg;
+      icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+      icon.style.color = type === 'error' ? 'var(--danger)' : 'var(--success)';
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3500);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Photoelectric Effect Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <!-- Main Premium Dashboard Container -->
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Header & Brand -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">QUANTUM PHOTOELECTRIC EFFECT</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Interactive Particle-Wave Duality Sandbox &amp; Spectral Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <!-- Guided Tasks Trigger -->
+        <button id="btn-open-tasks" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg transition-all flex items-center gap-1.5">
+          <span>🔬</span> Guided Tasks
+        </button>
+        <!-- User Guide Trigger Button -->
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Simulation Toolbar Controls (Presets, Reset, and Calibration) -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <!-- Quick Apparatus presets -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Calibration Presets:</span>
+        <div class="flex gap-1.5">
+          <button onclick="setApparatusPreset('ultraviolet')" class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold rounded shadow-sm transition-all">Deep UV</button>
+          <button onclick="setApparatusPreset('threshold')" class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold rounded shadow-sm transition-all">Near Threshold</button>
+          <button onclick="setApparatusPreset('stopping')" class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold rounded shadow-sm transition-all">At Stopping</button>
+          <button onclick="setApparatusPreset('saturation')" class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold rounded shadow-sm transition-all">Saturation</button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+        <span>🔄</span> Reset Setup
+      </button>
+    </div>
+
+    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <!-- Interactive Controls (4 Columns of 9) -->
+        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
+          <div class="space-y-6">
+            
+            <!-- Target Cathode Metal Selector -->
+            <div>
+              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2" id="metalWorkFunction">Target Cathode Metal</span>
+              <div class="grid grid-cols-2 gap-2" id="metalSelector">
+                <!-- Selectors generated dynamically -->
+              </div>
+            </div>
+
+            <!-- Slider 1: Light Wavelength -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Wavelength ($\lambda$) (nm)</span>
+                <input type="number" id="num-wavelength" min="200" max="800" value="380" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="wavelengthSlider" min="200" max="800" step="1" value="380" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>200 nm (UV)</span>
+                <span>800 nm (IR)</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Light Intensity -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Intensity (Photon Flux)</span>
+                <input type="number" id="num-intensity" min="0" max="100" value="50" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="intensitySlider" min="0" max="100" step="1" value="50" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>0% (Off)</span>
+                <span>100% (Max)</span>
+              </div>
+            </div>
+
+            <!-- Slider 3: Plate Voltage -->
+            <div>
+              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span>Plate Voltage (V)</span>
+                <input type="number" id="num-voltage" step="0.05" min="-6.00" max="6.00" value="0.00" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+              </div>
+              <input type="range" id="voltageSlider" min="-6.0" max="6.0" step="0.05" value="0.00" class="w-full">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>-6.0 V (Retarding)</span>
+                <span>+6.0 V (Accelerating)</span>
+              </div>
+            </div>
+
+            <!-- Live Stats Readouts -->
+            <div class="bg-white rounded-xl p-4 border border-slate-200/80 shadow-sm space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="font-bold text-slate-500 uppercase tracking-wider">Ammeter:</span>
+                <span id="displayCurrent" class="font-bold text-cyan-600 font-mono">0.00 μA</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-bold text-slate-500 uppercase tracking-wider">Voltmeter:</span>
+                <span id="displayVoltage" class="font-bold text-amber-600 font-mono">0.00 V</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-bold text-slate-500 uppercase tracking-wider">Max Kinetic Energy:</span>
+                <span id="displayKe" class="font-bold text-emerald-600 font-mono">0.00 eV</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Apparatus Canvas & Graph Panel (8 Columns of 9) -->
+        <div class="md:col-span-8 bg-slate-900 p-4 flex flex-col gap-4 overflow-y-auto max-h-[750px] viva-scrollbar relative">
+          
+          <!-- Physics Feed Apparatus View -->
+          <div class="relative bg-slate-950 rounded-xl overflow-hidden aspect-[16/9] border border-slate-800 flex items-center justify-center min-h-[300px]">
+            <canvas id="physicsCanvas" class="absolute inset-0 w-full h-full block cursor-pointer"></canvas>
+            
+            <!-- In-Canvas Alert Overlay -->
+            <div id="simulationAlert" class="absolute inset-0 flex items-center justify-center bg-slate-950/90 text-center p-6 transition-all duration-300 pointer-events-none opacity-0 z-10">
+              <div class="max-w-md">
+                <div class="text-rose-500 text-3xl mb-2">⚠️</div>
+                <h4 class="text-base font-bold text-slate-200">No Photoelectric Emission</h4>
+                <p id="alertReason" class="text-xs text-slate-400 mt-1"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Telemetry HUD Grid -->
+          <div class="grid grid-cols-2 gap-4 text-xs font-semibold text-slate-400">
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl flex flex-col justify-between">
+              <span>Photon Frequency ($f$):</span>
+              <span id="calcFrequency" class="font-bold text-white font-mono mt-1 text-sm">-- &times; 10¹⁴ Hz</span>
+            </div>
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl flex flex-col justify-between">
+              <span>Photon Energy ($E$):</span>
+              <span id="calcEnergy" class="font-bold text-indigo-400 font-mono mt-1 text-sm">-- eV</span>
+            </div>
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl flex flex-col justify-between">
+              <span>Threshold Frequency ($f_0$):</span>
+              <span id="calcThresholdFreq" class="font-bold text-white font-mono mt-1 text-sm">-- &times; 10¹⁴ Hz</span>
+            </div>
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl flex flex-col justify-between">
+              <span>Stopping Voltage ($V_{\text{stop}}$):</span>
+              <span id="calcStoppingV" class="font-bold text-amber-500 font-mono mt-1 text-sm">-- V</span>
+            </div>
+          </div>
+
+          <!-- Live Graphs Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Graph 1: IV Curve -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1">
+                  <span>📈</span> Graph I: Current ($I$) vs Voltage ($V$)
+                </span>
+              </div>
+              <div class="relative w-full aspect-[4/3] bg-slate-950 overflow-hidden">
+                <canvas id="ivGraphCanvas" class="w-full h-full block"></canvas>
+              </div>
+            </div>
+
+            <!-- Graph 2: KE vs Frequency -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                  <span>📈</span> Graph II: Max KE vs Frequency ($f$)
+                </span>
+              </div>
+              <div class="relative w-full aspect-[4/3] bg-slate-950 overflow-hidden">
+                <canvas id="kfGraphCanvas" class="w-full h-full block"></canvas>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[750px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <!-- QUESTION 1 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does light intensity have no effect on stopping potential?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Classically, intensity corresponds to electric field energy density. But quantum model models stopping potential strictly based on individual photon energies:
+                $$eV_{\text{stop}} = hf - \Phi \implies V_{\text{stop}} = \frac{h}{e}f - \frac{\Phi}{e}$$
+                Increasing intensity only raises the number of photons (increasing photocurrent) but leaves their individual energy unchanged.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 2 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the physical significance of the slope of the KE vs Frequency graph?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Comparing Einstein's equation $K_{\text{max}} = hf - \Phi$ to the straight line formula $y = mx + c$:
+                - Slope $m = h$ (Planck's Constant).
+                - X-intercept corresponds to the threshold frequency $f_0 = \frac{\Phi}{h}$.
+                - Y-intercept corresponds to the negative of the work function $-\Phi$.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 3 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why is there no time delay in emission even under extremely faint light?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
+                Classically, electrons absorb energy continuously across wave fronts, requiring:
+                $$t = \frac{\Phi}{I \times A} \approx 10^7 \text{ seconds (over 100 days)}$$
+                In quantum physics, the energy transfer is an instantaneous, point-like collision between one photon packet and one electron, occurring in $t \le 10^{-9}$ seconds.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 4 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does the photocurrent saturate under positive voltages?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
+                At positive accelerating potentials, the electric field is strong enough to attract $100\%$ of emitted photoelectrons to the collector plate:
+                $$I_{\text{saturation}} = e \frac{dN_e}{dt}$$
+                Further increases in voltage cannot pull more electrons since all that are emitted are already swept into the ammeter loop.
+              </div>
+            </div>
+          </div>
+
+          <!-- QUESTION 5 -->
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 5</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What determines the threshold wavelength ($\lambda_0$) of a metal?
+              </h4>
+              <button onclick="toggleVerification(5)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-5">Show Scientific Verification</span>
+                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-5" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
+                The work function ($\Phi$) is the binding threshold of electrons. The minimum energy corresponds directly to:
+                $$\lambda_0 = \frac{hc}{\Phi}$$
+                Platinum with a high work function ($\Phi \approx 5.64\text{ eV}$) has a low $\lambda_0 \approx 220\text{ nm}$ (requires UV), whereas Cesium ($\Phi \approx 2.14\text{ eV}$) has $\lambda_0 \approx 580\text{ nm}$ (visible light).
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Guided Tasks Modal -->
+  <div id="tasks-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>🔬</span> Guided Virtual Laboratory Tasks
+        </h3>
+        <button id="btn-close-tasks" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      
+      <div class="space-y-4 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        
+        <!-- Task 1 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <span class="text-[9px] uppercase font-bold text-indigo-600 tracking-wider">Task 1</span>
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider mt-1">Determine Threshold Frequency of Sodium</h4>
+          <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+            1. Select Sodium ($Na$) as cathode (Work function $\Phi \approx 2.36\text{ eV}$).<br>
+            2. Set plate voltage to $0.0\text{ V}$ and intensity to $50\%$.<br>
+            3. Sweep wavelength slowly from $800\text{ nm}$ down to UV and record where Ammeter is non-zero. Verify that $f_0 = \frac{c}{\lambda_0} \approx 5.7 \times 10^{14}\text{ Hz}$.
+          </p>
+        </div>
+
+        <!-- Task 2 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <span class="text-[9px] uppercase font-bold text-indigo-600 tracking-wider">Task 2</span>
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider mt-1">Measure Planck's Constant ($h$) via stopping potentials</h4>
+          <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+            1. Select Potassium ($K$, $\Phi \approx 2.29\text{ eV}$).<br>
+            2. Set wavelength to $300\text{ nm}$, $400\text{ nm}$, $500\text{ nm}$ successively.<br>
+            3. For each, adjust voltage negatively until photocurrent is exactly $0.00\ \mu\text{A}$ and record $V_{\text{stop}}$. Plot values to verify slope is $\frac{h}{e}$.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-tasks-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Guide Modal Popup -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> PHOTOELECTRIC EFFECT - User Guide
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Explore particle-wave duality using this simulation:</p>
+        <ul class="list-disc pl-5 space-y-1.5">
+          <li><strong>Target cathode</strong>: Choose between different emitter metals.</li>
+          <li><strong>Light sliders</strong>: Control wavelength ($\lambda$) and intensity. Notice how wavelength determines emission threshold and electron velocities, while intensity controls photo-flux rate.</li>
+          <li><strong>Plate voltage</strong>: Control voltage to accelerate or retard electrons.</li>
+          <li><strong>Live Graph Telemetry</strong>: Observe real-time data plotting.</li>
+        </ul>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real-time Interactive Physics Solver & Renderer -->
+  <script>
+    // Physics Constants
+    const h_ev_s = 4.135667696e-15; 
+    const c = 299792458;           
+    const hc_ev_nm = 1239.84193;   
+    
+    // Target Metals
+    const Metals = {
+      sodium: { name: 'Sodium (Na)', phi: 2.36, color: '#94a3b8' },
+      cesium: { name: 'Cesium (Cs)', phi: 2.14, color: '#f1f5f9' },
+      potassium: { name: 'Potassium (K)', phi: 2.29, color: '#cbd5e1' },
+      zinc: { name: 'Zinc (Zn)', phi: 4.30, color: '#e2e8f0' },
+      copper: { name: 'Copper (Cu)', phi: 4.70, color: '#b45309' },
+      platinum: { name: 'Platinum (Pt)', phi: 5.64, color: '#f8fafc' }
+    };
+    
+    // App State
+    let currentMetalKey = 'sodium';
+    let currentWavelength = 380; // nm
+    let currentIntensity = 50;   // %
+    let currentVoltage = 0.00;   // V
+    
+    let photons = [];
+    let electrons = [];
+    let lastPhotonSpawnTime = 0;
+    
+    const dpi = window.devicePixelRatio || 1;
+    
+    // Canvas contexts
+    const physicsCanvas = document.getElementById('physicsCanvas');
+    const ctx = physicsCanvas.getContext('2d');
+    
+    const ivCanvas = document.getElementById('ivGraphCanvas');
+    const ivCtx = ivCanvas.getContext('2d');
+    
+    const kfCanvas = document.getElementById('kfGraphCanvas');
+    const kfCtx = kfCanvas.getContext('2d');
+    
+    // Controls
+    const sliderWavelength = document.getElementById('wavelengthSlider');
+    const numWavelength = document.getElementById('num-wavelength');
+    const sliderIntensity = document.getElementById('intensitySlider');
+    const numIntensity = document.getElementById('num-intensity');
+    const sliderVoltage = document.getElementById('voltageSlider');
+    const numVoltage = document.getElementById('num-voltage');
+
+    // Telemetry display targets
+    const displayCurrent = document.getElementById('displayCurrent');
+    const displayVoltage = document.getElementById('displayVoltage');
+    const displayKe = document.getElementById('displayKe');
+
+    const calcFrequency = document.getElementById('calcFrequency');
+    const calcEnergy = document.getElementById('calcEnergy');
+    const calcThresholdFreq = document.getElementById('calcThresholdFreq');
+    const calcStoppingV = document.getElementById('calcStoppingV');
+
+    const alertBox = document.getElementById('simulationAlert');
+    const alertReason = document.getElementById('alertReason');
+
+    // Modals
+    const btnOpenGuide = document.getElementById('btn-open-guide');
+    const btnCloseGuide = document.getElementById('btn-close-guide');
+    const btnCloseGuideConfirm = document.getElementById('btn-close-guide-confirm');
+    const userGuideModal = document.getElementById('user-guide-modal');
+
+    const btnOpenTasks = document.getElementById('btn-open-tasks');
+    const btnCloseTasks = document.getElementById('btn-close-tasks');
+    const btnCloseTasksConfirm = document.getElementById('btn-close-tasks-confirm');
+    const tasksModal = document.getElementById('tasks-modal');
+
+    const btnReset = document.getElementById('btn-reset');
+
+    function buildMetalSelectors() {
+      const selector = document.getElementById('metalSelector');
+      selector.innerHTML = '';
+      Object.keys(Metals).forEach(key => {
+        const metal = Metals[key];
+        const btn = document.createElement('button');
+        btn.id = `metal-btn-${key}`;
+        btn.className = `px-2 py-1.5 text-[10px] font-bold rounded-lg border transition-all text-center flex items-center justify-center ${
+          key === currentMetalKey 
+            ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' 
+            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+        }`;
+        btn.textContent = metal.name;
+        btn.onclick = () => selectMetal(key);
+        selector.appendChild(btn);
+      });
+    }
+
+    function selectMetal(key) {
+      document.getElementById(`metal-btn-${currentMetalKey}`).className = "px-2 py-1.5 text-[10px] font-bold rounded-lg border transition-all text-center flex items-center justify-center bg-white border-slate-200 text-slate-700 hover:bg-slate-50";
+      currentMetalKey = key;
+      document.getElementById(`metal-btn-${currentMetalKey}`).className = "px-2 py-1.5 text-[10px] font-bold rounded-lg border transition-all text-center flex items-center justify-center bg-indigo-600 text-white border-indigo-600 shadow-sm";
+      updateUI();
+    }
+
+    // Bidirectional sync
+    function updateWavelength(val) {
+      val = Math.max(200, Math.min(800, parseInt(val) || 380));
+      currentWavelength = val;
+      sliderWavelength.value = val;
+      numWavelength.value = val;
+      updateUI();
+    }
+    function updateIntensity(val) {
+      val = Math.max(0, Math.min(100, parseInt(val) || 50));
+      currentIntensity = val;
+      sliderIntensity.value = val;
+      numIntensity.value = val;
+      updateUI();
+    }
+    function updateVoltage(val) {
+      val = Math.max(-6.0, Math.min(6.0, parseFloat(val) || 0.0));
+      currentVoltage = val;
+      sliderVoltage.value = val;
+      numVoltage.value = val.toFixed(2);
+      updateUI();
+    }
+
+    sliderWavelength.addEventListener('input', (e) => updateWavelength(e.target.value));
+    numWavelength.addEventListener('change', (e) => updateWavelength(e.target.value));
+    sliderIntensity.addEventListener('input', (e) => updateIntensity(e.target.value));
+    numIntensity.addEventListener('change', (e) => updateIntensity(e.target.value));
+    sliderVoltage.addEventListener('input', (e) => updateVoltage(e.target.value));
+    numVoltage.addEventListener('change', (e) => updateVoltage(e.target.value));
+
+    // Guided tasks launch
+    function loadExperimentPreset(exp) {
+      if (exp === 'exp1') {
+        selectMetal('sodium');
+        updateWavelength(800);
+        updateIntensity(50);
+        updateVoltage(0.00);
+      } else if (exp === 'exp2') {
+        selectMetal('potassium');
+        updateWavelength(400);
+        updateIntensity(70);
+        updateVoltage(0.00);
+      } else if (exp === 'exp3') {
+        selectMetal('platinum');
+        updateWavelength(500);
+        updateIntensity(100);
+        updateVoltage(0.00);
+      }
+      tasksModal.classList.add('hidden');
+    }
+
+    btnReset.addEventListener('click', () => {
+      selectMetal('sodium');
+      updateWavelength(380);
+      updateIntensity(50);
+      updateVoltage(0.00);
+      photons = [];
+      electrons = [];
+    });
+
+    // Preset apparatus calibrations
+    function setApparatusPreset(type) {
+      const metal = Metals[currentMetalKey];
+      if (type === 'ultraviolet') {
+        updateWavelength(250);
+        updateIntensity(65);
+        updateVoltage(1.50);
+      } else if (type === 'threshold') {
+        const thresholdWavelength = Math.round(hc_ev_nm / metal.phi);
+        updateWavelength(thresholdWavelength);
+        updateIntensity(50);
+        updateVoltage(0.00);
+      } else if (type === 'stopping') {
+        updateWavelength(300);
+        const e_photon = hc_ev_nm / 300;
+        const k_max = e_photon - metal.phi;
+        updateVoltage(k_max > 0 ? -parseFloat(k_max.toFixed(2)) : 0.00);
+        updateIntensity(70);
+      } else if (type === 'saturation') {
+        updateWavelength(350);
+        updateIntensity(100);
+        updateVoltage(3.50);
+      }
+    }
+
+    // Modal Triggers
+    btnOpenGuide.addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    btnCloseGuide.addEventListener('click', closeGuide);
+    btnCloseGuideConfirm.addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    btnOpenTasks.addEventListener('click', () => tasksModal.classList.remove('hidden'));
+    const closeTasks = () => tasksModal.classList.add('hidden');
+    btnCloseTasks.addEventListener('click', closeTasks);
+    btnCloseTasksConfirm.addEventListener('click', closeTasks);
+    tasksModal.addEventListener('click', (e) => { if (e.target === tasksModal) closeTasks(); });
+
+    // Wavelength color converter
+    function wavelengthToRGB(wavelength) {
+      let r, g, b, alpha = 0.85;
+      
+      if (wavelength >= 380 && wavelength < 440) {
+        r = -((wavelength - 440) / (440 - 380)); g = 0.0; b = 1.0;
+      } else if (wavelength >= 440 && wavelength < 490) {
+        r = 0.0; g = (wavelength - 440) / (490 - 440); b = 1.0;
+      } else if (wavelength >= 490 && wavelength < 510) {
+        r = 0.0; g = 1.0; b = -((wavelength - 510) / (510 - 490));
+      } else if (wavelength >= 510 && wavelength < 580) {
+        r = (wavelength - 510) / (580 - 510); g = 1.0; b = 0.0;
+      } else if (wavelength >= 580 && wavelength < 640) {
+        r = 1.0; g = -((wavelength - 640) / (640 - 580)); b = 0.0;
+      } else if (wavelength >= 640 && wavelength <= 800) {
+        r = 1.0; g = 0.0; b = 0.0;
+      } else {
+        r = 0.6; g = 0.1; b = 0.95;
+      }
+      
+      let factor = 1.0;
+      if (wavelength >= 380 && wavelength < 420) {
+        factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+      } else if (wavelength > 700 && wavelength <= 800) {
+        factor = 0.3 + 0.7 * (800 - wavelength) / (800 - 700);
+      }
+      
+      r = Math.round(r * factor * 255);
+      g = Math.round(g * factor * 255);
+      b = Math.round(b * factor * 255);
+      
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    // High-DPI canvas sizing
+    function resizeCanvas() {
+      fitCanvas(physicsCanvas);
+      fitCanvas(ivCanvas);
+      fitCanvas(kfCanvas);
+      drawGraphs();
+    }
+
+    function fitCanvas(c) {
+      const rect = c.parentElement.getBoundingClientRect();
+      c.width = rect.width * window.devicePixelRatio;
+      c.height = rect.height * window.devicePixelRatio;
+      c.style.width = rect.width + 'px';
+      c.style.height = rect.height + 'px';
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function updateUI() {
+      const metal = Metals[currentMetalKey];
+      const phi = metal.phi;
+      
+      const frequency_hz = (c / (currentWavelength * 1e-9)); 
+      const frequency_14hz = frequency_hz / 1e14;           
+      const e_photon = hc_ev_nm / currentWavelength;        
+      const k_max = Math.max(0, e_photon - phi);            
+      const stopping_voltage = k_max;                       
+      
+      const threshold_freq_hz = (phi / h_ev_s);             
+      const threshold_freq_14hz = threshold_freq_hz / 1e14;
+      
+      document.getElementById('metalWorkFunction').textContent = `Target Cathode Metal (Φ: ${phi.toFixed(2)} eV)`;
+      displayVoltage.textContent = `${currentVoltage >= 0 ? '+' : ''}${currentVoltage.toFixed(2)} V`;
+      displayKe.textContent = e_photon > phi ? `${k_max.toFixed(2)} eV` : '0.00 eV';
+      
+      calcFrequency.textContent = `${frequency_14hz.toFixed(2)} × 10¹⁴ Hz`;
+      calcEnergy.textContent = `${e_photon.toFixed(2)} eV`;
+      calcThresholdFreq.textContent = `${threshold_freq_14hz.toFixed(2)} × 10¹⁴ Hz`;
+      calcStoppingV.textContent = k_max > 0 ? `${stopping_voltage.toFixed(2)} V` : '0.00 V';
+      
+      if (e_photon <= phi) {
+        alertBox.style.opacity = '1';
+        alertReason.innerHTML = `Photon energy ($E = ${e_photon.toFixed(2)}\\text{ eV}$) is below emitter work function ($\\Phi = ${phi.toFixed(2)}\\text{ eV}$).`;
+        if (window.MathJax) MathJax.typesetPromise([alertReason]);
+      } else {
+        alertBox.style.opacity = '0';
+      }
+      
+      // I-V Curve calculations
+      let rawCurrent = 0;
+      if (e_photon > phi && currentIntensity > 0) {
+        const maxSatCurrent = currentIntensity * 0.15;
+        if (currentVoltage >= 0) {
+          rawCurrent = maxSatCurrent * (1 + 0.05 * currentVoltage); 
+        } else {
+          const retardingV = -currentVoltage;
+          if (retardingV >= stopping_voltage) {
+            rawCurrent = 0.00;
+          } else {
+            rawCurrent = maxSatCurrent * Math.pow(1 - (retardingV / stopping_voltage), 1.6);
+          }
+        }
+      }
+      
+      displayCurrent.textContent = `${rawCurrent.toFixed(2)} μA`;
+      drawGraphs();
+    }
+
+    // --- PHYSICS / DIRECT DRAW LOOPS ---
+    function tick(timestamp) {
+      updatePhysics(timestamp);
+      drawPhysics(timestamp);
+      requestAnimationFrame(tick);
+    }
+
+    function updatePhysics(timestamp) {
+      if (currentIntensity > 0) {
+        const spawnInterval = 1000 / (currentIntensity * 0.8 + 2);
+        if (timestamp - lastPhotonSpawnTime > spawnInterval) {
+          photons.push({
+            x: 0, 
+            progress: 0,
+            speed: 0.018,
+            wavelength: currentWavelength,
+            color: wavelengthToRGB(currentWavelength)
+          });
+          lastPhotonSpawnTime = timestamp;
+        }
+      }
+      
+      for (let i = photons.length - 1; i >= 0; i--) {
+        let p = photons[i];
+        p.progress += p.speed;
+        
+        if (p.progress >= 1.0) {
+          const metal = Metals[currentMetalKey];
+          const e_photon = hc_ev_nm / currentWavelength;
+          
+          if (e_photon > metal.phi) {
+            const k_max = e_photon - metal.phi;
+            const actualEnergy = Math.random() * k_max;
+            const velocity = Math.sqrt(actualEnergy) * 1.5 + 0.3;
+            const angle = (Math.random() - 0.5) * (Math.PI / 4);
+            
+            electrons.push({
+              x: 0.28, 
+              y: 0.35 + Math.random() * 0.3, 
+              vx: Math.cos(angle) * velocity * 0.003,
+              vy: Math.sin(angle) * velocity * 0.003,
+              ke: actualEnergy,
+              alive: true
+            });
+          }
+          photons.splice(i, 1);
+        }
+      }
+      
+      const accX = currentVoltage * 0.00003; 
+      
+      for (let i = electrons.length - 1; i >= 0; i--) {
+        let e = electrons[i];
+        e.vx += accX;
+        e.x += e.vx;
+        e.y += e.vy;
+        
+        if (e.x >= 0.72 || e.x <= 0.28) {
+          electrons.splice(i, 1);
+          continue;
+        }
+        
+        if (e.y < 0.28 || e.y > 0.72) {
+          e.vy = -e.vy;
+        }
+      }
+    }
+
+    function drawPhysics(timestamp) {
+      const width = physicsCanvas.width / window.devicePixelRatio;
+      const height = physicsCanvas.height / window.devicePixelRatio;
+      
+      ctx.save();
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, width, height);
+      
+      const scaleX = width;
+      const scaleY = height;
+      
+      // 1. Quartz Glass Cylinder Envelope
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 3;
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';
+      ctx.beginPath();
+      ctx.roundRect(0.22 * scaleX, 0.26 * scaleY, 0.56 * scaleX, 0.48 * scaleY, 30);
+      ctx.fill();
+      ctx.stroke();
+      
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText("EVACUATED QUARTZ CHAMBER", 0.5 * scaleX, 0.31 * scaleY);
+      
+      // 2. Emitter Cathode
+      const metal = Metals[currentMetalKey];
+      ctx.fillStyle = metal.color;
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = metal.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.roundRect(0.26 * scaleX, 0.35 * scaleY, 0.02 * scaleX, 0.3 * scaleY, 4);
+      ctx.fill();
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      
+      // 3. Collector Anode
+      ctx.fillStyle = '#475569';
+      ctx.strokeStyle = '#64748b';
+      ctx.beginPath();
+      ctx.roundRect(0.72 * scaleX, 0.35 * scaleY, 0.02 * scaleX, 0.3 * scaleY, 4);
+      ctx.fill();
+      ctx.stroke();
+      
+      // Labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 8px monospace';
+      ctx.fillText("Emitter (-)", 0.27 * scaleX, 0.33 * scaleY);
+      ctx.fillText("Collector (+)", 0.73 * scaleX, 0.33 * scaleY);
+      
+      // Lamp Housing
+      const lampX = 0.08 * scaleX;
+      const lampY = 0.15 * scaleY;
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = '#334155';
+      ctx.beginPath();
+      ctx.arc(lampX, lampY, 28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.moveTo(lampX + 10, lampY + 10);
+      ctx.lineTo(0.22 * scaleX, 0.32 * scaleY);
+      ctx.lineTo(0.24 * scaleX, 0.28 * scaleY);
+      ctx.lineTo(lampX - 10, lampY - 10);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      
+      // Bulb glow
+      ctx.fillStyle = currentIntensity > 0 ? wavelengthToRGB(currentWavelength) : '#475569';
+      ctx.beginPath();
+      ctx.arc(lampX + 3, lampY + 3, 10, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Draw Light cone
+      if (currentIntensity > 0) {
+        let gradient = ctx.createLinearGradient(lampX, lampY, 0.27 * scaleX, 0.5 * scaleY);
+        let rayColor = wavelengthToRGB(currentWavelength);
+        let baseColor = rayColor.replace('0.85', '0.0');
+        gradient.addColorStop(0, rayColor);
+        gradient.addColorStop(1, baseColor);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.moveTo(lampX + 6, lampY + 12);
+        ctx.lineTo(0.27 * scaleX, 0.35 * scaleY);
+        ctx.lineTo(0.27 * scaleX, 0.65 * scaleY);
+        ctx.lineTo(lampX - 12, lampY - 6);
+        ctx.closePath();
+        ctx.fill();
+      }
+      
+      // Photons packets
+      photons.forEach(p => {
+        const destX = 0.27 * scaleX;
+        const destY = 0.5 * scaleY;
+        const currentX = lampX + (destX - lampX) * p.progress;
+        const currentY = lampY + (destY - lampY) * p.progress;
+        
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let j = -10; j <= 10; j++) {
+          const offsetX = j;
+          const amplitude = 4 * Math.exp(-Math.pow(j / 5, 2)); 
+          const phase = (currentWavelength / 100) * timestamp * 0.05;
+          const offsetY = amplitude * Math.sin((j / 2.5) + phase);
+          
+          if (j === -10) {
+            ctx.moveTo(currentX + offsetX, currentY + offsetY);
+          } else {
+            ctx.lineTo(currentX + offsetX, currentY + offsetY);
+          }
+        }
+        ctx.stroke();
+      });
+      
+      // Photoelectrons
+      electrons.forEach(e => {
+        const curX = e.x * scaleX;
+        const curY = e.y * scaleY;
+        ctx.fillStyle = '#22d3ee';
+        ctx.beginPath();
+        ctx.arc(curX, curY, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      
+      // Complete Circuit Wires
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2.5;
+      
+      ctx.beginPath();
+      ctx.moveTo(0.27 * scaleX, 0.65 * scaleY);
+      ctx.lineTo(0.27 * scaleX, 0.84 * scaleY);
+      ctx.lineTo(0.40 * scaleX, 0.84 * scaleY);
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.moveTo(0.73 * scaleX, 0.65 * scaleY);
+      ctx.lineTo(0.73 * scaleX, 0.84 * scaleY);
+      ctx.lineTo(0.60 * scaleX, 0.84 * scaleY);
+      ctx.stroke();
+      
+      // Micro-AmmeterHUD
+      const meterX = 0.60 * scaleX;
+      const meterY = 0.84 * scaleY;
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#06b6d4'; 
+      ctx.beginPath();
+      ctx.arc(meterX, meterY, 12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 8px sans-serif';
+      ctx.fillText("μA", meterX, meterY + 1);
+      
+      // Battery
+      const batX = 0.45 * scaleX;
+      const batY = 0.84 * scaleY;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(batX - 8, batY - 9);
+      ctx.lineTo(batX - 8, batY + 9);
+      ctx.moveTo(batX - 3, batY - 5);
+      ctx.lineTo(batX - 3, batY + 5);
+      ctx.moveTo(batX + 2, batY - 9);
+      ctx.lineTo(batX + 2, batY + 9);
+      ctx.moveTo(batX + 7, batY - 5);
+      ctx.lineTo(batX + 7, batY + 5);
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+
+    function drawGraphs() {
+      drawIVGraph();
+      drawKFGraph();
+    }
+
+    function drawIVGraph() {
+      const width = ivCanvas.width / window.devicePixelRatio;
+      const height = ivCanvas.height / window.devicePixelRatio;
+      
+      ivCtx.save();
+      ivCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      
+      ivCtx.clearRect(0, 0, width, height);
+      
+      const padLeft = 32;
+      const padRight = 10;
+      const padTop = 10;
+      const padBottom = 22;
+      
+      const plotWidth = width - padLeft - padRight;
+      const plotHeight = height - padTop - padBottom;
+      
+      ivCtx.fillStyle = '#050b18';
+      ivCtx.fillRect(padLeft, padTop, plotWidth, plotHeight);
+      
+      ivCtx.strokeStyle = '#141d31';
+      ivCtx.lineWidth = 0.5;
+      
+      const vMin = -5.0;
+      const vMax = 5.0;
+      const iMax = 20.0;
+      
+      for (let v = vMin; v <= vMax; v += 1.0) {
+        const x = padLeft + ((v - vMin) / (vMax - vMin)) * plotWidth;
+        ivCtx.beginPath();
+        ivCtx.moveTo(x, padTop);
+        ivCtx.lineTo(x, padTop + plotHeight);
+        ivCtx.stroke();
+      }
+      for (let i = 0; i <= iMax; i += 5) {
+        const y = padTop + plotHeight - (i / iMax) * plotHeight;
+        ivCtx.beginPath();
+        ivCtx.moveTo(padLeft, y);
+        ivCtx.lineTo(padLeft + plotWidth, y);
+        ivCtx.stroke();
+      }
+      
+      ivCtx.strokeStyle = '#223253';
+      ivCtx.lineWidth = 1;
+      const xOrigin = padLeft + ((0.0 - vMin) / (vMax - vMin)) * plotWidth;
+      ivCtx.beginPath();
+      ivCtx.moveTo(xOrigin, padTop);
+      ivCtx.lineTo(xOrigin, padTop + plotHeight);
+      ivCtx.stroke();
+      
+      ivCtx.beginPath();
+      ivCtx.moveTo(padLeft, padTop + plotHeight);
+      ivCtx.lineTo(padLeft + plotWidth, padTop + plotHeight);
+      ivCtx.stroke();
+      
+      const metal = Metals[currentMetalKey];
+      const e_photon = hc_ev_nm / currentWavelength;
+      const k_max = Math.max(0, e_photon - metal.phi);
+      const v_stop = k_max;
+      const maxSatCurrent = currentIntensity * 0.15;
+      
+      if (e_photon > metal.phi && currentIntensity > 0) {
+        ivCtx.strokeStyle = '#06b6d4';
+        ivCtx.lineWidth = 2;
+        ivCtx.beginPath();
+        
+        let started = false;
+        for (let px = 0; px <= plotWidth; px++) {
+          const vVal = vMin + (px / plotWidth) * (vMax - vMin);
+          let iVal = 0;
+          
+          if (vVal >= 0) {
+            iVal = maxSatCurrent * (1 + 0.05 * vVal);
+          } else {
+            const retV = -vVal;
+            if (retV < v_stop) {
+              iVal = maxSatCurrent * Math.pow(1 - (retV / v_stop), 1.6);
+            }
+          }
+          
+          const py = padTop + plotHeight - (iVal / iMax) * plotHeight;
+          if (!started) {
+            ivCtx.moveTo(padLeft + px, py);
+            started = true;
+          } else {
+            ivCtx.lineTo(padLeft + px, py);
+          }
+        }
+        ivCtx.stroke();
+        
+        // Stop dot
+        const xStop = padLeft + ((-v_stop - vMin) / (vMax - vMin)) * plotWidth;
+        if (xStop >= padLeft && xStop <= padLeft + plotWidth) {
+          ivCtx.fillStyle = '#ef4444';
+          ivCtx.beginPath();
+          ivCtx.arc(xStop, padTop + plotHeight, 3.5, 0, Math.PI * 2);
+          ivCtx.fill();
+        }
+      }
+      
+      // Cursor point
+      let activeCurrent = 0;
+      if (e_photon > metal.phi && currentIntensity > 0) {
+        if (currentVoltage >= 0) {
+          activeCurrent = maxSatCurrent * (1 + 0.05 * currentVoltage);
+        } else {
+          const retV = -currentVoltage;
+          if (retV < v_stop) {
+            activeCurrent = maxSatCurrent * Math.pow(1 - (retV / v_stop), 1.6);
+          }
+        }
+      }
+      const curX = padLeft + ((currentVoltage - vMin) / (vMax - vMin)) * plotWidth;
+      const curY = padTop + plotHeight - (activeCurrent / iMax) * plotHeight;
+      if (curX >= padLeft && curX <= padLeft + plotWidth && curY >= padTop && curY <= padTop + plotHeight) {
+        ivCtx.fillStyle = '#10b981';
+        ivCtx.beginPath();
+        ivCtx.arc(curX, curY, 4.5, 0, Math.PI * 2);
+        ivCtx.fill();
+      }
+
+      ivCtx.fillStyle = '#64748b';
+      ivCtx.font = '8px monospace';
+      ivCtx.textAlign = 'right';
+      for (let i = 0; i <= iMax; i += 5) {
+        ivCtx.fillText(i.toString(), padLeft - 4, padTop + plotHeight - (i / iMax) * plotHeight + 3);
+      }
+      ivCtx.textAlign = 'center';
+      for (let v = vMin; v <= vMax; v += 2.0) {
+        ivCtx.fillText(`${v >= 0 ? '+' : ''}${v}`, padLeft + ((v - vMin) / (vMax - vMin)) * plotWidth, padTop + plotHeight + 11);
+      }
+      
+      ivCtx.restore();
+    }
+
+    function drawKFGraph() {
+      const width = kfCanvas.width / window.devicePixelRatio;
+      const height = kfCanvas.height / window.devicePixelRatio;
+      
+      kfCtx.save();
+      kfCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      
+      kfCtx.clearRect(0, 0, width, height);
+      
+      const padLeft = 32;
+      const padRight = 10;
+      const padTop = 10;
+      const padBottom = 22;
+      
+      const plotWidth = width - padLeft - padRight;
+      const plotHeight = height - padTop - padBottom;
+      
+      kfCtx.fillStyle = '#050b18';
+      kfCtx.fillRect(padLeft, padTop, plotWidth, plotHeight);
+      
+      kfCtx.strokeStyle = '#141d31';
+      kfCtx.lineWidth = 0.5;
+      
+      const fMin = 3.0; 
+      const fMax = 15.0; 
+      const keMin = -6.0; 
+      const keMax = 6.0;  
+      
+      for (let f = fMin; f <= fMax; f += 2.0) {
+        const x = padLeft + ((f - fMin) / (fMax - fMin)) * plotWidth;
+        kfCtx.beginPath();
+        kfCtx.moveTo(x, padTop);
+        kfCtx.lineTo(x, padTop + plotHeight);
+        kfCtx.stroke();
+      }
+      for (let k = -6; k <= keMax; k += 2) {
+        const y = padTop + plotHeight - ((k - keMin) / (keMax - keMin)) * plotHeight;
+        kfCtx.beginPath();
+        kfCtx.moveTo(padLeft, y);
+        kfCtx.lineTo(padLeft + plotWidth, y);
+        kfCtx.stroke();
+      }
+      
+      kfCtx.strokeStyle = '#223253';
+      kfCtx.lineWidth = 1;
+      const yZero = padTop + plotHeight - ((0.0 - keMin) / (keMax - keMin)) * plotHeight;
+      kfCtx.beginPath();
+      kfCtx.moveTo(padLeft, yZero);
+      kfCtx.lineTo(padLeft + plotWidth, yZero);
+      kfCtx.stroke();
+      
+      const metal = Metals[currentMetalKey];
+      const phi = metal.phi; 
+      const f0_14hz = (phi / h_ev_s) / 1e14;
+      
+      kfCtx.strokeStyle = '#10b981';
+      kfCtx.lineWidth = 2;
+      kfCtx.beginPath();
+      
+      let started = false;
+      for (let px = 0; px <= plotWidth; px++) {
+        const fVal_14hz = fMin + (px / plotWidth) * (fMax - fMin);
+        const fVal_hz = fVal_14hz * 1e14;
+        const e_photon = h_ev_s * fVal_hz;
+        const ke_val = e_photon - phi;
+        
+        const py = padTop + plotHeight - ((ke_val - keMin) / (keMax - keMin)) * plotHeight;
+        if (py >= padTop && py <= padTop + plotHeight) {
+          if (!started) {
+            kfCtx.moveTo(padLeft + px, py);
+            started = true;
+          } else {
+            kfCtx.lineTo(padLeft + px, py);
+          }
+        }
+      }
+      kfCtx.stroke();
+      
+      // Threshold marker
+      const xThreshold = padLeft + ((f0_14hz - fMin) / (fMax - fMin)) * plotWidth;
+      if (xThreshold >= padLeft && xThreshold <= padLeft + plotWidth) {
+        kfCtx.fillStyle = '#f59e0b';
+        kfCtx.beginPath();
+        kfCtx.arc(xThreshold, yZero, 3.5, 0, Math.PI * 2);
+        kfCtx.fill();
+      }
+      
+      // Current marker
+      const current_f_14hz = (c / (currentWavelength * 1e-9)) / 1e14;
+      const current_e_photon = h_ev_s * (current_f_14hz * 1e14);
+      const current_ke = current_e_photon - phi;
+      const curX = padLeft + ((current_f_14hz - fMin) / (fMax - fMin)) * plotWidth;
+      const curY = padTop + plotHeight - ((current_ke - keMin) / (keMax - keMin)) * plotHeight;
+      if (curX >= padLeft && curX <= padLeft + plotWidth && curY >= padTop && curY <= padTop + plotHeight) {
+        kfCtx.fillStyle = '#3b82f6';
+        kfCtx.beginPath();
+        kfCtx.arc(curX, curY, 4.5, 0, Math.PI * 2);
+        kfCtx.fill();
+      }
+
+      kfCtx.fillStyle = '#64748b';
+      kfCtx.font = '8px monospace';
+      kfCtx.textAlign = 'right';
+      for (let k = -6; k <= keMax; k += 2) {
+        const y = padTop + plotHeight - ((k - keMin) / (keMax - keMin)) * plotHeight;
+        kfCtx.fillText(`${k >= 0 ? '+' : ''}${k}`, padLeft - 4, y + 3);
+      }
+      kfCtx.textAlign = 'center';
+      for (let f = fMin; f <= fMax; f += 2.0) {
+        kfCtx.fillText(f.toFixed(0), padLeft + ((f - fMin) / (fMax - fMin)) * plotWidth, padTop + plotHeight + 11);
+      }
+      
+      kfCtx.restore();
+    }
+
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.classList.add('rotate-180');
+        if (window.MathJax) {
+          MathJax.typesetPromise([panel]);
+        }
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.classList.remove('rotate-180');
+      }
+    }
+
+    // Launch App
+    buildMetalSelectors();
+    resizeCanvas();
+    updateUI();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>
