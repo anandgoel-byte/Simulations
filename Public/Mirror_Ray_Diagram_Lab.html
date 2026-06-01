@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mirror Ray Diagram Builder Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background-color: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
+      background-size: 20px 20px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Mirror Ray Diagram Builder</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Geometrical Optics &amp; Spherical Mirrors Lab</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Optics Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Mirror Type:</span>
+        <select id="select-mirror" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="concave">Concave Mirror (Converging)</option>
+          <option value="convex">Convex Mirror (Diverging)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm">
+          <span>🔄</span> Reset Parameters
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Optics Grid</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2 transition-all">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Cartesian Mirror Formula</span>
+            <div class="text-[14px] font-mono text-center py-1 font-bold">
+              $$\frac{1}{v} + \frac{1}{u} = \frac{1}{f}$$
+            </div>
+            <div class="text-[14px] font-mono text-center py-1 font-bold border-t border-indigo-100">
+              $$m = \frac{h_i}{h_o} = -\frac{v}{u}$$
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Object Distance ($u$)</span></span>
+              <span id="lbl-u" class="font-mono text-blue-600 text-sm">-30.0 cm</span>
+            </div>
+            <input type="range" id="sl-u" min="5" max="60" step="1" value="30" class="w-full mt-2" style="accent-color: #3b82f6; direction: rtl;">
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100 text-center uppercase tracking-widest" id="desc-zone">
+              Beyond Center of Curvature (C)
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 block"></span> <span class="uppercase text-emerald-600">Object Height ($h_o$)</span></span>
+              <span id="lbl-ho" class="font-mono text-emerald-600 text-sm">10.0 cm</span>
+            </div>
+            <input type="range" id="sl-ho" min="5" max="25" step="1" value="10" class="w-full mt-2 slider-emerald">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>Small</span>
+              <span>Large</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-sky-400 tracking-wider uppercase" id="canvas-hud">Ray Tracing Viewer</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-4 h-1 bg-blue-400"></span> Incident Rays (From Object)</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-4 h-1 bg-rose-500"></span> Real Reflected Rays</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-4 h-0.5 border-t border-dashed border-rose-400"></span> Virtual/Projected Rays</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Image Properties Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Image Distance ($v$)</div>
+              <div class="text-3xl font-bold font-mono tracking-widest text-rose-500" id="tel-v">-15.0 cm</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnification ($m$)</div>
+              <div class="text-lg font-bold font-mono text-indigo-600" id="tel-m">-0.50x</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Image Height ($h_i$)</div>
+              <div class="text-lg font-bold font-mono text-emerald-600" id="tel-hi">-5.0 cm</div>
+            </div>
+
+            <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-amber-700 font-bold uppercase tracking-wider">Nature of Image</div>
+              <div class="text-[11px] font-bold font-mono text-amber-600 tracking-widest uppercase" id="tel-nature">Real & Inverted</div>
+            </div>
+
+            <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-200 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-sky-700 font-bold uppercase tracking-wider">Size Status</div>
+              <div class="text-[11px] font-bold font-mono text-sky-600 tracking-widest uppercase" id="tel-size">Diminished</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Where must an object be placed in front of a concave mirror to produce a REAL, same-sized image?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What type of image is ALWAYS formed by a Convex mirror, regardless of object position?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the Magnification ($m$) is positive (+), what does this indicate about the image?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What happens to the image when an object is placed between the Focus ($F$) and Pole ($P$) of a concave mirror?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> RAY OPTICS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Geometrical Optics Laboratory</strong>! Explore how spherical mirrors manipulate light rays to form images.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Mirror Type</strong>: Switch between Concave (Converging, forms both real and virtual images) and Convex (Diverging, forms only virtual diminished images).</li>
+            <li><strong>Object Distance Slider</strong>: Move the blue object arrow. Pay close attention to what happens in a Concave mirror as you cross the Center of Curvature ($C$) and the Focal Point ($F$)!</li>
+            <li><strong>Ray Tracing</strong>: The simulator dynamically traces two standard rays: the Parallel Ray (reflects through Focus) and the Pole Ray (reflects symmetrically). Where they intersect is where the image forms!</li>
+            <li><strong>Sign Convention</strong>: Notice that objects are on the left ($-x$), so $u$ is always negative. Real images form on the left ($-v$), while virtual images form behind the mirror on the right ($+v$).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "Where must an object be placed in front of a concave mirror to produce a REAL, same-sized image?",
+        options: [
+          { text: "At the Focal Point (F)", isCorrect: false, exp: "Incorrect. An object at F produces an image at infinity." },
+          { text: "At the Center of Curvature (C)", isCorrect: true, exp: "Correct! When an object is placed exactly at C (where u = 2f), the image is formed exactly at C (v = 2f). It is real, inverted, and exactly the same size (m = -1)." },
+          { text: "Between F and P", isCorrect: false, exp: "Incorrect. This produces a virtual, magnified image." },
+          { text: "At Infinity", isCorrect: false, exp: "Incorrect. This produces a point-sized image at F." }
+        ]
+      },
+      q2: {
+        question: "What type of image is ALWAYS formed by a Convex mirror, regardless of object position?",
+        options: [
+          { text: "Real, Inverted, and Enlarged", isCorrect: false, exp: "Incorrect." },
+          { text: "Virtual, Erect, and Diminished", isCorrect: true, exp: "Correct! A convex mirror always diverges light rays. The reflected rays only appear to intersect behind the mirror, creating a virtual, upright (erect), and smaller (diminished) image. This is why they are used as car rear-view mirrors!" },
+          { text: "Real, Erect, and Diminished", isCorrect: false, exp: "Incorrect. Real images are always inverted." },
+          { text: "Virtual, Inverted, and Same-size", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        question: "If the Magnification (m) is positive (+), what does this indicate about the image?",
+        options: [
+          { text: "It is Virtual and Erect.", isCorrect: true, exp: "Correct! Magnification is the ratio of image height to object height (hi/ho). A positive magnification means the image is upright (erect) like the object. In spherical mirrors, erect images are always virtual (formed behind the mirror)." },
+          { text: "It is Real and Inverted.", isCorrect: false, exp: "Incorrect. Real, inverted images have a negative magnification." },
+          { text: "It is smaller than the object.", isCorrect: false, exp: "Incorrect. Size is determined by the absolute value of m (|m|), not its sign." },
+          { text: "It is located at the focal point.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "What happens to the image when an object is placed between the Focus (F) and Pole (P) of a concave mirror?",
+        options: [
+          { text: "No image is formed.", isCorrect: false, exp: "Incorrect. An image is formed at infinity when placed exactly AT Focus." },
+          { text: "A Real, Diminished image forms.", isCorrect: false, exp: "Incorrect." },
+          { text: "A Virtual, Erect, and Magnified image forms behind the mirror.", isCorrect: true, exp: "Correct! The reflected rays diverge, so they appear to intersect behind the mirror. This creates a large, upright virtual image. This is exactly how makeup/shaving mirrors work!" },
+          { text: "A Real, Magnified image forms at Infinity.", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const slU = document.getElementById('sl-u');
+    const lblU = document.getElementById('lbl-u');
+    const slHo = document.getElementById('sl-ho');
+    const lblHo = document.getElementById('lbl-ho');
+    const selMirror = document.getElementById('select-mirror');
+    const btnReset = document.getElementById('btn-reset');
+    const chkGrid = document.getElementById('chk-grid');
+    const descZone = document.getElementById('desc-zone');
+
+    const telV = document.getElementById('tel-v');
+    const telM = document.getElementById('tel-m');
+    const telHi = document.getElementById('tel-hi');
+    const telNature = document.getElementById('tel-nature');
+    const telSize = document.getElementById('tel-size');
+
+    // Mathematical Parameters
+    let mirrorType = 'concave';
+    let f_cm = -10; // Focal length in cm. Concave = -10, Convex = +10
+    let u_cm = -30; // Object distance is always negative
+    let ho_cm = 10; // Object height
+
+    // Calculated
+    let v_cm = 0;
+    let m = 0;
+    let hi_cm = 0;
+
+    // Visual Scales
+    const SCALE = 10; // 1 cm = 10 pixels
+
+    function calculateOptics() {
+        // Cartesian Formula: 1/v + 1/u = 1/f => 1/v = 1/f - 1/u
+        // Handling infinity case when object is exactly at focus
+        if (Math.abs(u_cm - f_cm) < 0.1) {
+            v_cm = Infinity;
+            m = Infinity;
+            hi_cm = Infinity;
+        } else {
+            v_cm = (u_cm * f_cm) / (u_cm - f_cm);
+            m = -v_cm / u_cm;
+            hi_cm = m * ho_cm;
+        }
+
+        // Update UI Text
+        lblU.innerText = `${u_cm.toFixed(1)} cm`;
+        lblHo.innerText = `${ho_cm.toFixed(1)} cm`;
+
+        if (v_cm === Infinity) {
+            telV.innerText = "-Infinity";
+            telM.innerText = "Infinity";
+            telHi.innerText = "Infinity";
+            telNature.innerText = "No Image (At Infinity)";
+            telNature.className = "text-[11px] font-bold font-mono text-slate-500 tracking-widest uppercase";
+            telSize.innerText = "Infinite";
+            descZone.innerText = "Exactly at Focal Point (F)";
+            descZone.className = "text-[9px] font-bold text-rose-700 mt-3 leading-tight bg-rose-100 p-2 rounded border border-rose-300 text-center uppercase tracking-widest";
+            return;
+        }
+
+        telV.innerText = `${(v_cm > 0 ? '+' : '')}${v_cm.toFixed(1)} cm`;
+        telM.innerText = `${(m > 0 ? '+' : '')}${m.toFixed(2)}x`;
+        telHi.innerText = `${(hi_cm > 0 ? '+' : '')}${hi_cm.toFixed(1)} cm`;
+
+        // Nature & Size
+        if (v_cm < 0) {
+            telNature.innerText = "Real & Inverted";
+            telNature.className = "text-[11px] font-bold font-mono text-emerald-600 tracking-widest uppercase";
+        } else {
+            telNature.innerText = "Virtual & Erect";
+            telNature.className = "text-[11px] font-bold font-mono text-amber-600 tracking-widest uppercase";
+        }
+
+        let absM = Math.abs(m);
+        if (absM > 1.05) telSize.innerText = "Enlarged (Magnified)";
+        else if (absM < 0.95) telSize.innerText = "Diminished";
+        else telSize.innerText = "Same Size";
+
+        // Zone Description for Concave
+        if (mirrorType === 'concave') {
+            if (u_cm < f_cm && u_cm > 2*f_cm) {
+                descZone.innerText = "Between Focus (F) and Center (C)";
+                descZone.className = "text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100 text-center uppercase tracking-widest";
+            } else if (Math.abs(u_cm - 2*f_cm) < 0.5) {
+                descZone.innerText = "At Center of Curvature (C)";
+                descZone.className = "text-[9px] font-bold text-indigo-700 mt-3 leading-tight bg-indigo-100 p-2 rounded border border-indigo-300 text-center uppercase tracking-widest";
+            } else if (u_cm < 2*f_cm) {
+                descZone.innerText = "Beyond Center of Curvature (C)";
+                descZone.className = "text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100 text-center uppercase tracking-widest";
+            } else if (u_cm > f_cm) {
+                descZone.innerText = "Between Pole (P) and Focus (F)";
+                descZone.className = "text-[9px] font-bold text-amber-700 mt-3 leading-tight bg-amber-100 p-2 rounded border border-amber-300 text-center uppercase tracking-widest";
+            }
+        } else {
+            descZone.innerText = "Always forms Virtual, Diminished Image";
+            descZone.className = "text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100 text-center uppercase tracking-widest";
+        }
+    }
+
+    slU.addEventListener('input', e => {
+        // Slider value is positive distance, but u is negative
+        u_cm = -parseFloat(e.target.value);
+        calculateOptics();
+    });
+
+    slHo.addEventListener('input', e => {
+        ho_cm = parseFloat(e.target.value);
+        calculateOptics();
+    });
+
+    selMirror.addEventListener('change', e => {
+        mirrorType = e.target.value;
+        if (mirrorType === 'concave') {
+            f_cm = -10; 
+        } else {
+            f_cm = 10;
+        }
+        calculateOptics();
+    });
+
+    btnReset.addEventListener('click', () => {
+        selMirror.value = 'concave'; mirrorType = 'concave'; f_cm = -10;
+        slU.value = 30; u_cm = -30;
+        slHo.value = 10; ho_cm = 10;
+        calculateOptics();
+    });
+
+    // --- CANVAS RENDERING ---
+    function drawArrow(ctx, x, baseY, tipY, color, label) {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 4;
+        
+        ctx.beginPath();
+        ctx.moveTo(x, baseY);
+        ctx.lineTo(x, tipY);
+        ctx.stroke();
+
+        // Arrowhead
+        let isUp = tipY < baseY;
+        ctx.beginPath();
+        ctx.moveTo(x, tipY);
+        ctx.lineTo(x - 5, tipY + (isUp ? 8 : -8));
+        ctx.lineTo(x + 5, tipY + (isUp ? 8 : -8));
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x, tipY + (isUp ? -10 : +20));
+    }
+
+    function renderCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderCanvas); return; }
+
+      const Px = cw * 0.65; // Pole X (shifted right to give space for object)
+      const Py = ch / 2;    // Pole Y (Principal Axis)
+
+      // 1. Draw Grid
+      if (chkGrid.checked) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          ctx.lineWidth = 1;
+          for(let x=0; x<cw; x+=SCALE*2) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,ch); ctx.stroke(); }
+          for(let y=0; y<ch; y+=SCALE*2) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(cw,y); ctx.stroke(); }
+      }
+
+      // 2. Draw Principal Axis
+      ctx.strokeStyle = '#475569'; // Slate 600
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, Py); ctx.lineTo(cw, Py); ctx.stroke();
+
+      // 3. Draw Mirror
+      ctx.strokeStyle = '#94a3b8'; // Slate 400
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      // Draw a subtle quadratic curve
+      if (mirrorType === 'concave') {
+          ctx.moveTo(Px + 20, Py - 150);
+          ctx.quadraticCurveTo(Px - 20, Py, Px + 20, Py + 150);
+      } else {
+          ctx.moveTo(Px - 20, Py - 150);
+          ctx.quadraticCurveTo(Px + 20, Py, Px - 20, Py + 150);
+      }
+      ctx.stroke();
+
+      // Hatching (Non-reflective side)
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+      for(let y = -140; y <= 140; y += 10) {
+          // approximate x on curve
+          let t = (y + 150) / 300;
+          let ctrlX = mirrorType === 'concave' ? -20 : 20;
+          let startX = mirrorType === 'concave' ? 20 : -20;
+          let cx = (1-t)*(1-t)*startX + 2*(1-t)*t*ctrlX + t*t*startX + Px;
+          
+          ctx.beginPath();
+          ctx.moveTo(cx, Py + y);
+          if (mirrorType === 'concave') ctx.lineTo(cx + 10, Py + y + 10);
+          else ctx.lineTo(cx + 10, Py + y + 10); // always hatch right side for standard left-to-right light
+          ctx.stroke();
+      }
+
+      // Draw Key Points (P, F, C)
+      const drawPoint = (x, label) => {
+          ctx.fillStyle = '#f8fafc';
+          ctx.beginPath(); ctx.arc(x, Py, 4, 0, Math.PI*2); ctx.fill();
+          ctx.font = 'bold 12px monospace'; ctx.fillText(label, x, Py + 20);
+      };
+      
+      let Fx = Px + f_cm * SCALE;
+      let Cx = Px + 2 * f_cm * SCALE;
+      
+      drawPoint(Px, 'P');
+      drawPoint(Fx, 'F');
+      drawPoint(Cx, 'C');
+
+      // 4. Draw Object
+      let Ox = Px + u_cm * SCALE;
+      let Oy_tip = Py - ho_cm * SCALE; // negative because canvas Y is down
+      drawArrow(ctx, Ox, Py, Oy_tip, '#3b82f6', 'Object'); // Blue
+
+      if (v_cm !== Infinity) {
+          // 5. Ray Tracing!
+          // Note: Light travels from Left to Right. Hits mirror at X=Px.
+          
+          // Helper: Draw Ray
+          const drawRay = (x1, y1, x2, y2, color, isDashed=false) => {
+              ctx.strokeStyle = color; ctx.lineWidth = 2;
+              if (isDashed) ctx.setLineDash([5, 5]);
+              else ctx.setLineDash([]);
+              ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+              ctx.setLineDash([]);
+          };
+
+          // Ray 1: Parallel to Principal Axis -> Reflects through/from Focus
+          let r1_hitX = Px;
+          let r1_hitY = Oy_tip;
+          // Incident
+          drawRay(Ox, Oy_tip, r1_hitX, r1_hitY, 'rgba(59, 130, 246, 0.7)');
+          // Arrowhead
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.7)'; ctx.beginPath(); ctx.moveTo(Px - 15, r1_hitY - 5); ctx.lineTo(Px - 5, r1_hitY); ctx.lineTo(Px - 15, r1_hitY + 5); ctx.fill();
+
+          // Ray 2: Pole Ray -> Reflects symmetrically
+          let r2_hitX = Px;
+          let r2_hitY = Py;
+          // Incident
+          drawRay(Ox, Oy_tip, r2_hitX, r2_hitY, 'rgba(59, 130, 246, 0.7)');
+
+          let Ix = Px + v_cm * SCALE;
+          let Iy_tip = Py - hi_cm * SCALE;
+
+          // Draw Reflected Rays
+          if (v_cm < 0) {
+              // Real Image (Formed on left side)
+              // Ray 1 reflects through Focus (which is on left for concave)
+              // We draw it passing through Image Tip
+              drawRay(r1_hitX, r1_hitY, Ix - 500, Iy_tip + ((Iy_tip - r1_hitY)/(Ix - r1_hitX))*(-500), '#f43f5e');
+              // Ray 2 reflects through Image Tip
+              drawRay(r2_hitX, r2_hitY, Ix - 500, Iy_tip + ((Iy_tip - r2_hitY)/(Ix - r2_hitX))*(-500), '#f43f5e');
+              
+          } else {
+              // Virtual Image (Formed on right side)
+              // Reflected real rays (diverge on left)
+              // They look like they came from Image Tip (Ix, Iy_tip)
+              // Ray 1 real reflection (Left side)
+              drawRay(r1_hitX, r1_hitY, r1_hitX - 500, r1_hitY + ((r1_hitY - Iy_tip)/(r1_hitX - Ix))*(-500), '#f43f5e');
+              // Ray 1 virtual projection (Right side)
+              drawRay(r1_hitX, r1_hitY, Ix + 100, Iy_tip + ((Iy_tip - r1_hitY)/(Ix - r1_hitX))*(100), '#fb7185', true);
+
+              // Ray 2 real reflection (Left side)
+              drawRay(r2_hitX, r2_hitY, r2_hitX - 500, r2_hitY + ((r2_hitY - Iy_tip)/(r2_hitX - Ix))*(-500), '#f43f5e');
+              // Ray 2 virtual projection (Right side)
+              drawRay(r2_hitX, r2_hitY, Ix + 100, Iy_tip + ((Iy_tip - r2_hitY)/(Ix - r2_hitX))*(100), '#fb7185', true);
+          }
+
+          // 6. Draw Image
+          drawArrow(ctx, Ix, Py, Iy_tip, '#f43f5e', 'Image'); // Rose
+      }
+
+      requestAnimationFrame(renderCanvas);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      calculateOptics();
+      requestAnimationFrame(renderCanvas);
+    });
+  </script>
+</body>
+</html>

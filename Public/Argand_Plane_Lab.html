@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Argand Plane & Complex Numbers Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+     alt="Sparkl Alpha Logo"
+     class="h-11 object-contain">
+
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Argand Plane &amp; Complex Numbers</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision 2D Vector &amp; Polar Coordinate Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Math Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Operation:</span>
+        <select id="select-op" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="add">Addition (z₁ + z₂)</option>
+          <option value="sub">Subtraction (z₁ - z₂)</option>
+          <option value="mul">Multiplication (z₁ · z₂)</option>
+          <option value="div">Division (z₁ / z₂)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <button id="btn-reset" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Vectors
+        </button>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-guides" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Geometric Guidelines</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div class="bg-white p-3.5 rounded-xl border border-blue-200 shadow-sm">
+              <span class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider block mb-3 border-b border-blue-100 pb-1">Complex Number $z_1$</span>
+              
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                    <span>Real ($\Re$)</span>
+                    <span id="lbl-z1-re" class="font-mono text-blue-600">3.0</span>
+                  </div>
+                  <input type="range" id="sl-z1-re" min="-10" max="10" step="0.1" value="3.0" class="w-full">
+                </div>
+                <div>
+                  <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                    <span>Imaginary ($\Im$)</span>
+                    <span id="lbl-z1-im" class="font-mono text-blue-600">4.0</span>
+                  </div>
+                  <input type="range" id="sl-z1-im" min="-10" max="10" step="0.1" value="4.0" class="w-full">
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-100 text-center text-sm font-bold font-mono text-slate-800">
+                $z_1 =$ <span id="z1-disp">3.0 + 4.0i</span>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-emerald-200 shadow-sm">
+              <span class="text-[11px] font-extrabold text-emerald-600 uppercase tracking-wider block mb-3 border-b border-emerald-100 pb-1">Complex Number $z_2$</span>
+              
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                    <span>Real ($\Re$)</span>
+                    <span id="lbl-z2-re" class="font-mono text-emerald-600">5.0</span>
+                  </div>
+                  <input type="range" id="sl-z2-re" min="-10" max="10" step="0.1" value="5.0" class="w-full">
+                </div>
+                <div>
+                  <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                    <span>Imaginary ($\Im$)</span>
+                    <span id="lbl-z2-im" class="font-mono text-emerald-600">2.0</span>
+                  </div>
+                  <input type="range" id="sl-z2-im" min="-10" max="10" step="0.1" value="2.0" class="w-full">
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-100 text-center text-sm font-bold font-mono text-slate-800">
+                $z_2 =$ <span id="z2-disp">5.0 + 2.0i</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Polar Coordinates</span>
+              <div class="text-[11px] font-mono text-center py-1 space-y-1">
+                $$z = r(\cos\theta + i\sin\theta) = re^{i\theta}$$
+                $$r = \sqrt{x^2 + y^2} \quad \theta = \arctan(y/x)$$
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Calculated Result ($z_{res}$)</span>
+            
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Cartesian Form</div>
+                <div id="tel-res-cart" class="text-base font-bold text-rose-500 font-mono mt-0.5 tracking-widest">8.0 + 6.0i</div>
+              </div>
+              
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Magnitude $|z|$</div>
+                <div id="tel-mag" class="text-sm font-bold text-amber-400 font-mono mt-0.5">10.00</div>
+              </div>
+              
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Argument $\arg(z)$</div>
+                <div id="tel-arg" class="text-sm font-bold text-cyan-400 font-mono mt-0.5">36.9°</div>
+              </div>
+
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Polar Form ($re^{i\theta}$)</div>
+                <div id="tel-res-polar" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5 tracking-widest">10.00 e^(i 0.64rad)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span class="text-[10px] font-bold text-slate-300 tracking-wider">Argand Graph ($\Re, \Im$)</span>
+          </div>
+
+          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-blue-500 block"></span> Vector $z_1$</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-emerald-500 block"></span> Vector $z_2$</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block"></span> Result $z_{res}$</div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What does the Modulus $|z|$ represent geometrically?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                The modulus $|z| = \sqrt{x^2 + y^2}$ is the exact Euclidean distance from the origin $(0,0)$ to the point $(x,y)$ on the Argand plane. It is the geometric length of the vector.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does Multiplication work visually on this plane?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                In polar form, $z_1 \cdot z_2 = (r_1 r_2)e^{i(\theta_1 + \theta_2)}$. Geometrically, you multiply their lengths together, and you <strong>add their angles</strong> together. Multiplying by $i$ simply rotates a vector by $90^\circ$ counter-clockwise!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the Complex Conjugate ($\overline{z}$)?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                The complex conjugate of $z = x + iy$ is $\overline{z} = x - iy$. Visually, it is the exact mirror reflection of the vector across the horizontal Real ($\Re$) axis.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* The Argand Plane dynamically scales its axes to ensure vectors always remain fully visible.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> ARGAND PLANE PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Complex Numbers Virtual Laboratory</strong>! Visualize the beautiful geometry behind complex arithmetic.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Z₁ and Z₂ Sliders</strong>: Adjust the Real (X-axis) and Imaginary (Y-axis) components of your two base vectors.</li>
+            <li><strong>Operation Dropdown</strong>: Switch between Addition, Subtraction, Multiplication, and Division.</li>
+            <li><strong>Geometric Guidelines</strong>: Leave this checked to see <em>how</em> the math works visually. Addition shows the parallelogram rule; Multiplication shows the rotational addition of angles!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let z1 = { r: 3.0, i: 4.0 };
+    let z2 = { r: 5.0, i: 2.0 };
+    let zRes = { r: 0.0, i: 0.0 };
+    let op = 'add'; // 'add', 'sub', 'mul', 'div'
+
+    // --- DOM Elements ---
+    const slZ1r = document.getElementById('sl-z1-re'); const lblZ1r = document.getElementById('lbl-z1-re');
+    const slZ1i = document.getElementById('sl-z1-im'); const lblZ1i = document.getElementById('lbl-z1-im');
+    const dispZ1 = document.getElementById('z1-disp');
+
+    const slZ2r = document.getElementById('sl-z2-re'); const lblZ2r = document.getElementById('lbl-z2-re');
+    const slZ2i = document.getElementById('sl-z2-im'); const lblZ2i = document.getElementById('lbl-z2-im');
+    const dispZ2 = document.getElementById('z2-disp');
+
+    const selOp = document.getElementById('select-op');
+    const chkGuides = document.getElementById('chk-guides');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telResCart = document.getElementById('tel-res-cart');
+    const telMag = document.getElementById('tel-mag');
+    const telArg = document.getElementById('tel-arg');
+    const telResPolar = document.getElementById('tel-res-polar');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Math Logic ---
+    function formatComplex(r, i) {
+       let sign = i >= 0 ? '+' : '-';
+       return `${r.toFixed(1)} ${sign} ${Math.abs(i).toFixed(1)}i`;
+    }
+
+    function calculate() {
+       if (op === 'add') {
+          zRes.r = z1.r + z2.r;
+          zRes.i = z1.i + z2.i;
+       } else if (op === 'sub') {
+          zRes.r = z1.r - z2.r;
+          zRes.i = z1.i - z2.i;
+       } else if (op === 'mul') {
+          zRes.r = (z1.r * z2.r) - (z1.i * z2.i);
+          zRes.i = (z1.r * z2.i) + (z1.i * z2.r);
+       } else if (op === 'div') {
+          let denom = (z2.r * z2.r) + (z2.i * z2.i);
+          if (denom === 0) { zRes.r = 0; zRes.i = 0; } // Prevent NaN
+          else {
+             zRes.r = ((z1.r * z2.r) + (z1.i * z2.i)) / denom;
+             zRes.i = ((z1.i * z2.r) - (z1.r * z2.i)) / denom;
+          }
+       }
+
+       updateUI();
+    }
+
+    function updateUI() {
+       dispZ1.innerText = formatComplex(z1.r, z1.i);
+       dispZ2.innerText = formatComplex(z2.r, z2.i);
+       telResCart.innerText = formatComplex(zRes.r, zRes.i);
+
+       let mag = Math.sqrt(zRes.r*zRes.r + zRes.i*zRes.i);
+       let argRad = Math.atan2(zRes.i, zRes.r);
+       let argDeg = argRad * (180 / Math.PI);
+
+       telMag.innerText = mag.toFixed(2);
+       telArg.innerText = argDeg.toFixed(1) + "°";
+       telResPolar.innerText = `${mag.toFixed(2)} e^(i ${argRad.toFixed(2)})`;
+    }
+
+    // --- Input Handlers ---
+    function syncInput(val, slider, lbl, updateVarFn) {
+       val = parseFloat(val);
+       slider.value = val;
+       lbl.innerText = val.toFixed(1);
+       updateVarFn(val);
+       calculate();
+    }
+
+    slZ1r.addEventListener('input', e => syncInput(e.target.value, slZ1r, lblZ1r, v => z1.r = v));
+    slZ1i.addEventListener('input', e => syncInput(e.target.value, slZ1i, lblZ1i, v => z1.i = v));
+    slZ2r.addEventListener('input', e => syncInput(e.target.value, slZ2r, lblZ2r, v => z2.r = v));
+    slZ2i.addEventListener('input', e => syncInput(e.target.value, slZ2i, lblZ2i, v => z2.i = v));
+
+    selOp.addEventListener('change', e => { op = e.target.value; calculate(); });
+
+    btnReset.addEventListener('click', () => {
+       syncInput(3.0, slZ1r, lblZ1r, v => z1.r = v);
+       syncInput(4.0, slZ1i, lblZ1i, v => z1.i = v);
+       syncInput(5.0, slZ2r, lblZ2r, v => z2.r = v);
+       syncInput(2.0, slZ2i, lblZ2i, v => z2.i = v);
+       selOp.value = 'add'; op = 'add';
+       calculate();
+    });
+
+    // --- Canvas Rendering ---
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawVector(x1, y1, x2, y2, color, label=null, isDashed=false, lineWidth=3) {
+       ctx.strokeStyle = color;
+       ctx.fillStyle = color;
+       ctx.lineWidth = lineWidth;
+       if(isDashed) ctx.setLineDash([5, 5]);
+       else ctx.setLineDash([]);
+       
+       ctx.beginPath();
+       ctx.moveTo(x1, y1);
+       ctx.lineTo(x2, y2);
+       ctx.stroke();
+
+       // Arrow head
+       let ang = Math.atan2(y2 - y1, x2 - x1);
+       let hLength = 12;
+       ctx.beginPath();
+       ctx.moveTo(x2, y2);
+       ctx.lineTo(x2 - hLength * Math.cos(ang - 0.4), y2 - hLength * Math.sin(ang - 0.4));
+       ctx.lineTo(x2 - hLength * Math.cos(ang + 0.4), y2 - hLength * Math.sin(ang + 0.4));
+       ctx.fill();
+
+       if(label) {
+          ctx.font = 'bold 14px sans-serif';
+          ctx.fillText(label, x2 + 15 * Math.cos(ang), y2 + 15 * Math.sin(ang));
+       }
+       ctx.setLineDash([]); // Reset
+    }
+
+    function drawArc(cx, cy, r, startAng, endAng, color, label) {
+       ctx.strokeStyle = color;
+       ctx.lineWidth = 2;
+       ctx.beginPath();
+       // Canvas Y is inverted, so angles are inverted visually.
+       // Math.atan2 returns standard angles, we must draw them considering Y down.
+       ctx.arc(cx, cy, r, -startAng, -endAng, startAng > endAng);
+       ctx.stroke();
+
+       // Label
+       let midAng = -(startAng + endAng)/2;
+       ctx.fillStyle = color;
+       ctx.font = '12px sans-serif';
+       ctx.fillText(label, cx + (r+10)*Math.cos(midAng), cy + (r+10)*Math.sin(midAng));
+    }
+
+    function renderLoop() {
+      const W = canvas.width / window.devicePixelRatio;
+      const H = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, W, H);
+
+      const oX = W / 2;
+      const oY = H / 2;
+
+      // Auto-scaling: Find max coordinate to fit everything
+      let maxCoord = Math.max(
+         Math.abs(z1.r), Math.abs(z1.i),
+         Math.abs(z2.r), Math.abs(z2.i),
+         Math.abs(zRes.r), Math.abs(zRes.i)
+      );
+      if (maxCoord < 10) maxCoord = 10; // Minimum scale
+      maxCoord *= 1.2; // 20% padding
+
+      // Pixels per unit
+      const scale = Math.min(W/2, H/2) / maxCoord;
+
+      const mapX = (r) => oX + r * scale;
+      const mapY = (i) => oY - i * scale; // Y is inverted on canvas
+
+      // Draw Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      // Tick marks every 5 units if scale is small, else every 1 unit
+      let step = maxCoord > 30 ? 10 : (maxCoord > 15 ? 5 : 2);
+      for(let i = 0; i <= maxCoord; i += step) {
+         // Verticals
+         ctx.moveTo(mapX(i), 0); ctx.lineTo(mapX(i), H);
+         ctx.moveTo(mapX(-i), 0); ctx.lineTo(mapX(-i), H);
+         // Horizontals
+         ctx.moveTo(0, mapY(i)); ctx.lineTo(W, mapY(i));
+         ctx.moveTo(0, mapY(-i)); ctx.lineTo(W, mapY(-i));
+      }
+      ctx.stroke();
+
+      // Draw Axes
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, oY); ctx.lineTo(W, oY); // Re
+      ctx.moveTo(oX, 0); ctx.lineTo(oX, H); // Im
+      ctx.stroke();
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText("Real (ℜ)", W - 60, oY - 10);
+      ctx.fillText("Imaginary (ℑ)", oX + 10, 20);
+
+      // --- Draw Guidelines ---
+      if (chkGuides.checked) {
+         if (op === 'add') {
+            // Parallelogram rule: z1 to zRes, z2 to zRes
+            drawVector(mapX(z1.r), mapY(z1.i), mapX(zRes.r), mapY(zRes.i), '#34d399', null, true, 2); // parallel to z2
+            drawVector(mapX(z2.r), mapY(z2.i), mapX(zRes.r), mapY(zRes.i), '#60a5fa', null, true, 2); // parallel to z1
+         } else if (op === 'sub') {
+            // Draw -z2
+            drawVector(oX, oY, mapX(-z2.r), mapY(-z2.i), '#34d399', '-z₂', true, 2);
+            // Parallelogram with z1 and -z2
+            drawVector(mapX(z1.r), mapY(z1.i), mapX(zRes.r), mapY(zRes.i), '#34d399', null, true, 2);
+            drawVector(mapX(-z2.r), mapY(-z2.i), mapX(zRes.r), mapY(zRes.i), '#60a5fa', null, true, 2);
+         } else if (op === 'mul') {
+            // Show angle addition
+            let a1 = Math.atan2(z1.i, z1.r);
+            let a2 = Math.atan2(z2.i, z2.r);
+            let aRes = Math.atan2(zRes.i, zRes.r);
+            
+            drawArc(oX, oY, 30, 0, a1, '#3b82f6', 'θ₁');
+            drawArc(oX, oY, 45, 0, a2, '#10b981', 'θ₂');
+            drawArc(oX, oY, 60, 0, aRes, '#f43f5e', 'θ₁+θ₂');
+         } else if (op === 'div') {
+            // Show angle subtraction
+            let a1 = Math.atan2(z1.i, z1.r);
+            let a2 = Math.atan2(z2.i, z2.r);
+            let aRes = Math.atan2(zRes.i, zRes.r);
+            
+            drawArc(oX, oY, 30, 0, a1, '#3b82f6', 'θ₁');
+            drawArc(oX, oY, 45, 0, a2, '#10b981', 'θ₂');
+            drawArc(oX, oY, 60, 0, aRes, '#f43f5e', 'θ₁-θ₂');
+         }
+      }
+
+      // --- Draw Main Vectors ---
+      drawVector(oX, oY, mapX(z1.r), mapY(z1.i), '#3b82f6', 'z₁');
+      drawVector(oX, oY, mapX(z2.r), mapY(z2.i), '#10b981', 'z₂');
+      
+      // Draw Result (Pulse/glow it slightly)
+      let glow = 5 + Math.sin(performance.now()*0.005)*5;
+      ctx.shadowColor = '#f43f5e';
+      ctx.shadowBlur = glow;
+      drawVector(oX, oY, mapX(zRes.r), mapY(zRes.i), '#f43f5e', 'z_res', false, 4);
+      ctx.shadowBlur = 0; // reset
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      calculate();
+      resizeCanvas();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

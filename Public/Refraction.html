@@ -3,20 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prism Refraction &amp; Chromatic Dispersion Laboratory</title>
+  <title>Prism Refraction &amp; Chromatic Dispersion Virtual Laboratory</title>
   
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- MathJax for rendering physical LaTeX equations -->
   <script>
     window.MathJax = {
       tex: {
@@ -62,370 +56,330 @@
       height: 16px;
       width: 16px;
       transition: all 0.15s ease-in-out;
-      box-shadow: 0 0 8px rgba(79, 70, 229, 0.4);
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
     }
     input[type="range"]::-webkit-slider-thumb:hover {
       background-color: #3730a3;
       transform: scale(1.15);
     }
-    /* Custom Scrollbar for Panels */
-    .viva-scrollbar::-webkit-scrollbar {
-      width: 5px;
-    }
-    .viva-scrollbar::-webkit-scrollbar-track {
-      background: #f8fafc;
-    }
-    .viva-scrollbar::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-  <!-- Main Premium Dashboard Container -->
   <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
     
-    <!-- Top Header & Brand -->
-    <header class="bg-slate-900 px-6 py-4 flex flex-col md:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 md:mb-0">
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
         <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
         </div>
         <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Prism Refraction &amp; Chromatic Dispersion Lab</h1>
-          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Snell's Law, Apex Angles &amp; Minimum Deviation</p>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Prism Refraction & Chromatic Dispersion</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Snell's Law, Apex Angles & Minimum Deviation Laboratory</p>
         </div>
       </div>
-      
       <div class="flex items-center space-x-3">
-        <button onclick="resetWorkspace()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-750 transition-all flex items-center gap-1.5">
-          <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Workspace
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
         </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Optical Engine Active</span>
+        </div>
       </div>
     </header>
 
-    <!-- Simulation Toolbar Controls -->
     <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex flex-wrap gap-2" id="materialPresets">
-        <button id="btnCrown" onclick="applyPreset('crown_glass')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow shadow-indigo-950">Crown Glass (n=1.52)</button>
-        <button id="btnFlint" onclick="applyPreset('flint_glass')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white border border-slate-200 text-slate-700 hover:bg-slate-50">Flint Glass (n=1.66)</button>
-        <button id="btnWater" onclick="applyPreset('water')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white border border-slate-200 text-slate-700 hover:bg-slate-50">Water (n=1.33)</button>
-        <button id="btnDiamond" onclick="applyPreset('diamond')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white border border-slate-200 text-slate-700 hover:bg-slate-50">Diamond (n=2.42)</button>
-        <button id="btnCustom" onclick="applyPreset('custom')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white border border-slate-200 text-slate-700 hover:bg-slate-50">Custom Index</button>
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Prism Material:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="crown_glass">Crown Glass (n = 1.52)</option>
+          <option value="flint_glass">Flint Glass (n = 1.66)</option>
+          <option value="water">Water / Ice (n = 1.33)</option>
+          <option value="diamond">Diamond (n = 2.42)</option>
+          <option value="custom">Custom Index...</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Setup
+        </button>
       </div>
 
-      <!-- Toggles -->
-      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-          <input type="checkbox" id="chkShowNormals" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Normals</span>
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-normals" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Normals</span>
         </label>
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-          <input type="checkbox" id="chkShowExtensions" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Extensions</span>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-extensions" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Ray Extensions</span>
         </label>
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-          <input type="checkbox" id="chkShowProtractor" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Protractor</span>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-rose-600 cursor-pointer">
+          <input type="checkbox" id="chk-dispersion" class="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-4.5 w-4.5">
+          <span class="font-extrabold">Enable White Light Dispersion</span>
         </label>
-        <label class="flex items-center space-x-2 text-sm font-semibold text-rose-600 cursor-pointer select-none">
-          <input type="checkbox" id="chkEnableDispersion" class="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-4.5 w-4.5">
-          <span class="font-extrabold flex items-center gap-1">
-            <span class="flex h-2 w-2 relative">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-450 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-600"></span>
-            </span>
-            Enable White Dispersion
-          </span>
-        </label>
-      </div>
-
-      <!-- Active status -->
-      <div class="flex items-center">
-        <span id="tirStatusText" class="text-xs font-extrabold text-emerald-600 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full font-mono">Refraction Active</span>
       </div>
     </div>
 
-    <!-- Master Layout Split -->
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
       
-      <!-- LEFT + CENTER WORKSPACE (8 Columns) -->
-      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 bg-slate-50">
-        
-        <!-- Interactive Controls (5 Columns) -->
-        <div class="md:col-span-5 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-5">
-            
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-              <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i> Apparatus Calibration
-            </h3>
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
 
-            <!-- Incidence Angle -->
-            <div>
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Angle of Incidence ($i$)</span>
-                <input type="number" id="numIncidentAngle" min="-80" max="80" step="0.5" value="45" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="slideIncidentAngle" min="-80" max="80" step="0.5" value="45" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>-80.0° (Base)</span>
-                <span>0.0° (Normal)</span>
-                <span>+80.0° (Apex)</span>
-              </div>
+          <div class="bg-white p-3.5 rounded-xl border border-indigo-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> <span class="uppercase">Angle of Incidence ($i$)</span></span>
+              <span id="lbl-inc" class="font-mono text-indigo-600 text-sm">45.0°</span>
             </div>
-
-            <!-- Prism Apex Angle -->
-            <div>
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Prism Apex Angle ($A$)</span>
-                <input type="number" id="numApexAngle" min="30" max="90" step="0.5" value="60" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="slideApexAngle" min="30" max="90" step="0.5" value="60" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>30.0° (Narrow)</span>
-                <span>60.0° (Equilat)</span>
-                <span>90.0° (Right)</span>
-              </div>
-            </div>
-
-            <!-- Laser Wavelength -->
-            <div id="panelWavelength">
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Laser Wavelength ($\lambda$)</span>
-                <input type="number" id="numWavelength" min="380" max="750" value="589" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <div class="relative">
-                <input type="range" id="slideWavelength" min="380" max="750" step="1" value="589" class="w-full" style="background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red); height: 6px; border-radius: 9999px;">
-              </div>
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span class="text-violet-600 font-bold">380 nm</span>
-                <span class="text-yellow-600 font-bold">589 nm</span>
-                <span class="text-red-600 font-bold">750 nm</span>
-              </div>
-            </div>
-
-            <!-- Custom Refractive Index -->
-            <div id="panelCustomN" class="hidden">
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Refractive Index ($n$)</span>
-                <input type="number" id="numCustomN" min="1.000" max="2.500" step="0.001" value="1.520" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="slideCustomN" min="1.000" max="2.500" step="0.001" value="1.520" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>1.00 (Vacuum)</span>
-                <span>2.50 (Dense)</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Telemetry readouts -->
-          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2">
-            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <i data-lucide="activity" class="w-3.5 h-3.5 text-indigo-500"></i> Prism Telemetry
-            </h4>
-            <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Incident Angle ($i$)</div>
-                <div id="metricIncidentAngle" class="text-sm font-extrabold text-indigo-600 mt-0.5">45.0°</div>
-              </div>
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Emergence Angle ($e$)</div>
-                <div id="metricEmergentAngle" class="text-sm font-extrabold text-emerald-600 mt-0.5">54.2°</div>
-              </div>
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Deviation Angle ($\delta$)</div>
-                <div id="metricDeviationAngle" class="text-sm font-extrabold text-amber-600 mt-0.5">39.2°</div>
-              </div>
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Min Deviation ($D_m$)</div>
-                <div id="metricMinDeviation" class="text-sm font-extrabold text-rose-600 mt-0.5">37.2°</div>
-              </div>
+            <input type="range" id="sl-inc" min="-80" max="80" step="0.5" value="45.0" class="w-full mt-2">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>-80°</span>
+              <span>0° (Normal)</span>
+              <span>+80°</span>
             </div>
           </div>
-        </div>
 
-        <!-- Simulation Display Screen (7 Columns) -->
-        <div class="md:col-span-7 relative bg-[#070A13] overflow-hidden flex items-center justify-center min-h-[500px]">
-          <canvas id="opticsCanvas" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"></canvas>
-        </div>
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> <span class="uppercase">Prism Apex Angle ($A$)</span></span>
+              <span id="lbl-apex" class="font-mono text-emerald-600 text-sm">60.0°</span>
+            </div>
+            <input type="range" id="sl-apex" min="30" max="90" step="0.5" value="60.0" class="w-full mt-2">
+          </div>
 
+          <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm transition-opacity" id="panel-wavelength">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> <span class="uppercase">Laser Wavelength ($\lambda$)</span></span>
+              <span id="lbl-wave" class="font-mono text-rose-600 text-sm">589 nm</span>
+            </div>
+            <div class="relative mt-2">
+              <input type="range" id="sl-wave" min="380" max="750" step="1" value="589" class="w-full" style="background: linear-gradient(to right, #8b5cf6, #3b82f6, #10b981, #eab308, #f97316, #ef4444); height: 6px; border-radius: 9999px;">
+            </div>
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span class="text-purple-500">Violet</span>
+              <span class="text-amber-500">Yellow</span>
+              <span class="text-rose-500">Red</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-300 shadow-sm hidden" id="panel-custom-n">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-slate-500 block"></span> <span class="uppercase">Base Refractive Index ($n$)</span></span>
+              <span id="lbl-n" class="font-mono text-slate-600 text-sm">1.520</span>
+            </div>
+            <input type="range" id="sl-n" min="1.0" max="2.5" step="0.01" value="1.52" class="w-full mt-2">
+          </div>
+
+        </div>
       </section>
 
-      <!-- RIGHT PANEL: Viva Assessment Workspace (4 Columns) -->
-      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[780px] overflow-y-auto viva-scrollbar">
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="opticsCanvas" class="absolute inset-0 w-full h-full block"></canvas>
         
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span id="status-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="status-text" class="text-[10px] font-bold text-emerald-400 tracking-widest uppercase">Refraction Active</span>
         </div>
 
-        <div class="space-y-4">
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-slate-200 block border-t border-dashed border-slate-300 bg-transparent"></span> Normal Line</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-slate-400 block border-t border-dashed border-slate-400 bg-transparent"></span> Extended Ray</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> Deviation Node</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Optical Telemetry</span>
           
-          <!-- QUESTION 1 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="bg-white p-2.5 rounded-xl border border-indigo-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Incident Angle ($i$)</div>
+              <div class="text-sm font-bold font-mono text-indigo-600" id="tel-i">45.0°</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Emergent Angle ($e$)</div>
+              <div class="text-sm font-bold font-mono text-emerald-600" id="tel-e">54.2°</div>
+            </div>
+            
+            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between items-center px-4 mt-1">
+              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Deviation ($\delta$)</div>
+              <div class="text-base font-bold font-mono text-amber-400 tracking-widest" id="tel-dev">39.2°</div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Min Deviation ($D_m$)</div>
+              <div class="text-sm font-bold font-mono text-rose-400 tracking-widest" id="tel-min-dev">37.2°</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
             <div class="space-y-2">
               <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What is the exact mathematical relationship between refractive index ($n$), Apex Angle ($A$), and Minimum Angle of Deviation ($D_m$)?
-              </h4>
-              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Scientific Verification</span>
-                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What is the mathematical relationship for the Minimum Angle of Deviation ($D_m$)?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
               </button>
             </div>
-            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
                 The Prism Formula holds when the ray passes symmetrically ($i = e$):
                 $$n = \frac{\sin\left(\frac{A + D_m}{2}\right)}{\sin\left(\frac{A}{2}\right)}$$
-                Under this unique condition, the refraction at both faces is balanced such that $r_1 = r_2 = \frac{A}{2}$. Measuring $A$ and $D_m$ via spectrometer yields $n$.
+                Measuring $A$ and $D_m$ yields the refractive index $n$.
               </div>
             </div>
           </div>
 
-          <!-- QUESTION 2 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
             <div class="space-y-2">
               <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What is the physical significance of the symmetrical light ray path inside the glass prism?
-              </h4>
-              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Scientific Verification</span>
-                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why does violet light bend more than red light?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
               </button>
             </div>
-            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
-                When the ray travels parallel to the base (symmetrically), the deviation of light $\delta$ reaches its absolute minimum value $D_m$. Mathematically:
-                $$i = e \quad \text{and} \quad r_1 = r_2$$
-                Changing the incident angle in either direction from this state increases the total deviation angle.
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                According to Cauchy's Dispersion Equation, $n \approx A + B/\lambda^2$. Because violet light has a shorter wavelength ($\approx 400\text{ nm}$) compared to red ($\approx 700\text{ nm}$), it experiences a higher refractive index, thus bending more.
               </div>
             </div>
           </div>
 
-          <!-- QUESTION 3 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
             <div class="space-y-2">
-              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why does blue or violet light bend more than red light during chromatic dispersion?
-              </h4>
-              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Scientific Verification</span>
-                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">When does Total Internal Reflection (TIR) occur?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
               </button>
             </div>
-            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
-                According to **Cauchy's Dispersion Equation**, the index of refraction $n$ depends on the incident wavelength $\lambda$:
-                $$n(\lambda) \approx B + \frac{C}{\lambda^2}$$
-                Because violet light has a shorter wavelength ($\approx 400\text{ nm}$) compared to red light ($\approx 700\text{ nm}$), it experiences a higher refractive index $n$ in glass.
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 4 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Under what exact mathematical conditions will Total Internal Reflection (TIR) occur at the second interface?
-              </h4>
-              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-4">Show Scientific Verification</span>
-                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
-                TIR occurs when the internal angle of incidence on the second face ($r_2$) exceeds the critical angle ($\theta_c$) for the boundary:
-                $$r_2 > \theta_c = \arcsin\left(\frac{1}{n}\right)$$
-                Since $r_2 = A - r_1$, a highly dense material (such as diamond, where $n = 2.42$, making $\theta_c \approx 24.4^\circ$) or a large Apex Angle $A$ will readily trigger total internal reflection.
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 5 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 5</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Can a prism propagate light with zero total deviation ($\delta = 0^\circ$)?
-              </h4>
-              <button onclick="toggleVerification(5)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-5">Show Scientific Verification</span>
-                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-5" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
-                A single triangular glass prism of positive apex angle $A > 0^\circ$ surrounded by air ($n > 1$) cannot yield zero deviation because the entering and exiting faces are non-parallel. Zero net deviation requires placing an inverted second prism in contact (Direct Vision Prism setup).
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                TIR happens when the internal angle hitting the second face exceeds the critical angle $\theta_c = \arcsin(1/n)$. Dense materials (like Diamond) or wide apex angles easily trigger TIR.
               </div>
             </div>
           </div>
 
         </div>
       </section>
-
     </main>
-
   </div>
 
-  <!-- Interactive Simulator Scripts & Physics Engine -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> PRISM REFRACTION PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Optical Laboratory</strong>! Analyze Snell's Law and chromatic dispersion through a glass prism.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Material Preset</strong>: Select predefined materials. Notice how Diamond ($n=2.42$) easily traps light via TIR compared to Water.</li>
+            <li><strong>Angle of Incidence ($i$)</strong>: Change the entry angle of the laser. Find the point where $i \approx e$ to observe the Minimum Deviation ($D_m$).</li>
+            <li><strong>White Light Dispersion</strong>: Toggle this on to simulate what happens when all wavelengths of visible light enter the prism simultaneously, fanning out into a rainbow!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Init Lucide Icons
-    lucide.createIcons();
+    // --- Physics Definitions ---
+    const ENV_N = 1.000277; // Air refractive index
+    const PRESETS = {
+      crown_glass: { n: 1.520, wave: 589 },
+      flint_glass: { n: 1.662, wave: 589 },
+      water: { n: 1.333, wave: 589 },
+      diamond: { n: 2.417, wave: 589 },
+      custom: { n: 1.500, wave: 589 }
+    };
+
+    // --- State Variables ---
+    let activePreset = 'crown_glass';
+    let baseN = 1.520;
+    let iAngleDeg = 45.0; 
+    let aAngleDeg = 60.0;     
+    let waveNm = 589;      
+    
+    // --- DOM Elements ---
+    const selPreset = document.getElementById('select-preset');
+    
+    const slInc = document.getElementById('sl-inc'); const lblInc = document.getElementById('lbl-inc');
+    const slApex = document.getElementById('sl-apex'); const lblApex = document.getElementById('lbl-apex');
+    const slWave = document.getElementById('sl-wave'); const lblWave = document.getElementById('lbl-wave');
+    const slN = document.getElementById('sl-n'); const lblN = document.getElementById('lbl-n');
+    
+    const pnlWave = document.getElementById('panel-wavelength');
+    const pnlCustomN = document.getElementById('panel-custom-n');
+    
+    const chkNormals = document.getElementById('chk-normals');
+    const chkExtensions = document.getElementById('chk-extensions');
+    const chkDispersion = document.getElementById('chk-dispersion');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telI = document.getElementById('tel-i');
+    const telE = document.getElementById('tel-e');
+    const telDev = document.getElementById('tel-dev');
+    const telMinDev = document.getElementById('tel-min-dev');
+    
+    const statusInd = document.getElementById('status-indicator');
+    const statusTxt = document.getElementById('status-text');
 
     const canvas = document.getElementById('opticsCanvas');
     const ctx = canvas.getContext('2d');
 
-    const ENV_N = 1.000277; // Air refractive index
-    const PRESETS = {
-      crown_glass: { name: "Crown Glass", n: 1.520, defaultWavelength: 589 },
-      flint_glass: { name: "Flint Glass", n: 1.662, defaultWavelength: 589 },
-      water: { name: "Water", n: 1.333, defaultWavelength: 589 },
-      diamond: { name: "Diamond", n: 2.417, defaultWavelength: 589 },
-      custom: { name: "Custom Index", n: 1.500, defaultWavelength: 589 }
-    };
-
-    // State Variables
-    let activePreset = 'crown_glass';
-    let baseN = 1.520;
-    let incidentAngleDeg = 45.0; // i
-    let apexAngleDeg = 60.0;     // A
-    let wavelengthNm = 589;      // λ
-    let showNormals = true;
-    let showExtensions = true;
-    let showProtractor = true;
-    let enableDispersion = false;
-
-    // Handle high-DPI scaling
-    function resizeCanvas() {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      const dpi = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpi;
-      canvas.height = rect.height * dpi;
-      ctx.resetTransform();
-      ctx.scale(dpi, dpi);
-      drawSimulation();
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    // Cauchy dispersion approximation
-    function getRefractiveIndexForWavelength(baseNVal, waveNm) {
+    // --- Physics Engine ---
+    function getRefractiveIndex(baseNVal, wNm) {
       let coeff = 8200;
       if (activePreset === 'water') coeff = 3100;
       else if (activePreset === 'diamond') coeff = 14000;
-      return baseNVal + coeff * (1 / (waveNm * waveNm) - 1 / (589 * 589));
+      return baseNVal + coeff * (1 / (wNm * wNm) - 1 / (589 * 589));
     }
 
-    // Line intersection helper
+    function wavelengthToColor(w) {
+      let r, g, b, factor;
+      if (w >= 380 && w < 440) { r = -((w - 440) / 60); g = 0; b = 1; }
+      else if (w >= 440 && w < 490) { r = 0; g = (w - 440) / 50; b = 1; }
+      else if (w >= 490 && w < 510) { r = 0; g = 1; b = -((w - 510) / 20); }
+      else if (w >= 510 && w < 580) { r = (w - 510) / 70; g = 1; b = 0; }
+      else if (w >= 580 && w < 645) { r = 1; g = -((w - 645) / 65); b = 0; }
+      else if (w >= 645 && w <= 780) { r = 1; g = 0; b = 0; }
+      else { r = 0; g = 0; b = 0; }
+
+      if (w >= 380 && w < 420) factor = 0.3 + 0.7 * (w - 380) / 40;
+      else if (w >= 420 && w < 701) factor = 1.0;
+      else if (w >= 701 && w <= 780) factor = 0.3 + 0.7 * (780 - w) / 79;
+      else factor = 0;
+
+      return `rgb(${Math.round(r * factor * 255)}, ${Math.round(g * factor * 255)}, ${Math.round(b * factor * 255)})`;
+    }
+
     function intersectLines(p1, v1, p2, v2) {
       const denom = v1.x * v2.y - v1.y * v2.x;
       if (Math.abs(denom) < 1e-9) return null;
@@ -434,7 +388,6 @@
       return { point: { x: p1.x + t * v1.x, y: p1.y + t * v1.y }, t, u };
     }
 
-    // Refract vector Snell's law
     function refractVector(I, N, n1, n2) {
       const dot = I.x * N.x + I.y * N.y;
       let nVec = { x: N.x, y: N.y };
@@ -453,86 +406,61 @@
       }
     }
 
-    function wavelengthToColor(wavelength) {
-      let r, g, b, factor;
-      if (wavelength >= 380 && wavelength < 440) { r = -((wavelength - 440) / 60); g = 0; b = 1; }
-      else if (wavelength >= 440 && wavelength < 490) { r = 0; g = (wavelength - 440) / 50; b = 1; }
-      else if (wavelength >= 490 && wavelength < 510) { r = 0; g = 1; b = -((wavelength - 510) / 20); }
-      else if (wavelength >= 510 && wavelength < 580) { r = (wavelength - 510) / 70; g = 1; b = 0; }
-      else if (wavelength >= 580 && wavelength < 645) { r = 1; g = -((wavelength - 645) / 65); b = 0; }
-      else if (wavelength >= 645 && wavelength <= 780) { r = 1; g = 0; b = 0; }
-      else { r = 0; g = 0; b = 0; }
+    function computeRay(nPrism) {
+      const W = canvas.width / (window.devicePixelRatio || 1);
+      const H = canvas.height / (window.devicePixelRatio || 1);
+      
+      const cx = W / 2;
+      const cy = H / 2 + 20;
+      const pSize = Math.min(W, H) * 0.40;
+      const radHalfA = (aAngleDeg * Math.PI) / 180 / 2;
 
-      if (wavelength >= 380 && wavelength < 420) factor = 0.3 + 0.7 * (wavelength - 380) / 40;
-      else if (wavelength >= 420 && wavelength < 701) factor = 1.0;
-      else if (wavelength >= 701 && wavelength <= 780) factor = 0.3 + 0.7 * (780 - wavelength) / 79;
-      else factor = 0;
+      // Prism Vertices
+      const V0 = { x: cx, y: cy - pSize / 2 }; // Apex
+      const V1 = { x: cx - pSize * Math.tan(radHalfA), y: cy + pSize / 2 }; // Left Base
+      const V2 = { x: cx + pSize * Math.tan(radHalfA), y: cy + pSize / 2 }; // Right Base
 
-      return `rgb(${Math.round(r * factor * 255)}, ${Math.round(g * factor * 255)}, ${Math.round(b * factor * 255)})`;
-    }
-
-    // Core Ray Trace Solver
-    function computeRayPath(iAngleDeg, apexDeg, nPrism) {
-      const rect = canvas.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-
-      const cx = width / 2;
-      const cy = height / 2 + 10;
-      const H = Math.min(width, height) * 0.42;
-      const alpha = (apexDeg * Math.PI) / 180 / 2;
-
-      const V0 = { x: cx, y: cy - H / 2 };
-      const V1 = { x: cx - H * Math.tan(alpha), y: cy + H / 2 };
-      const V2 = { x: cx + H * Math.tan(alpha), y: cy + H / 2 };
-
+      // Left Face Midpoint (Entry)
       const P1 = { x: (V1.x + V0.x) / 2, y: (V1.y + V0.y) / 2 };
 
-      const dx1 = V0.x - V1.x;
-      const dy1 = V0.y - V1.y;
+      // Left Face Normal
+      const dx1 = V0.x - V1.x; const dy1 = V0.y - V1.y;
       const mag1 = Math.hypot(dx1, dy1);
-      const N1 = { x: dy1 / mag1, y: -dx1 / mag1 };
+      const N1 = { x: dy1 / mag1, y: -dx1 / mag1 }; // Points outward left
 
-      const dx2 = V2.x - V0.x;
-      const dy2 = V2.y - V0.y;
+      // Right Face Normal
+      const dx2 = V2.x - V0.x; const dy2 = V2.y - V0.y;
       const mag2 = Math.hypot(dx2, dy2);
-      const N2 = { x: dy2 / mag2, y: -dx2 / mag2 };
+      const N2 = { x: dy2 / mag2, y: -dx2 / mag2 }; // Points outward right
 
-      const N3 = { x: 0, y: 1 };
+      const N3 = { x: 0, y: 1 }; // Base Normal
 
+      // Incident Ray
       const inwardN1 = { x: -N1.x, y: -N1.y };
       const radI = (iAngleDeg * Math.PI) / 180;
-
-      const cosRadI = Math.cos(radI);
-      const sinRadI = Math.sin(radI);
       const I = {
-        x: inwardN1.x * cosRadI + inwardN1.y * sinRadI,
-        y: inwardN1.y * cosRadI - inwardN1.x * sinRadI
+        x: inwardN1.x * Math.cos(radI) + inwardN1.y * Math.sin(radI),
+        y: inwardN1.y * Math.cos(radI) - inwardN1.x * Math.sin(radI)
       };
 
+      // Refract at face 1
       const refr1 = refractVector(I, N1, ENV_N, nPrism);
       const R1 = refr1.dir;
 
       const path = [P1];
-      let P2 = null;
-      let exitNormal = null;
-      let isTIR = false;
-      let exitFaceIndex = 1;
+      let P2 = null, exitNormal = null, isTIR = false;
 
-      const rightFaceDir = { x: V2.x - V0.x, y: V2.y - V0.y };
-      const intersectRight = intersectLines(P1, R1, V0, rightFaceDir);
+      // Intersect inside prism
+      const rightDir = { x: V2.x - V0.x, y: V2.y - V0.y };
+      const intRight = intersectLines(P1, R1, V0, rightDir);
+      
+      const baseDir = { x: V1.x - V2.x, y: V1.y - V2.y };
+      const intBase = intersectLines(P1, R1, V2, baseDir);
 
-      const baseFaceDir = { x: V1.x - V2.x, y: V1.y - V2.y };
-      const intersectBase = intersectLines(P1, R1, V2, baseFaceDir);
-
-      if (intersectRight && intersectRight.t > 0.01 && intersectRight.u >= 0 && intersectRight.u <= 1) {
-        P2 = intersectRight.point;
-        exitNormal = N2;
-        exitFaceIndex = 1;
-      } else if (intersectBase && intersectBase.t > 0.01 && intersectBase.u >= 0 && intersectBase.u <= 1) {
-        P2 = intersectBase.point;
-        exitNormal = N3;
-        exitFaceIndex = 2;
+      if (intRight && intRight.t > 0.01 && intRight.u >= 0 && intRight.u <= 1) {
+        P2 = intRight.point; exitNormal = N2;
+      } else if (intBase && intBase.t > 0.01 && intBase.u >= 0 && intBase.u <= 1) {
+        P2 = intBase.point; exitNormal = N3;
       }
 
       let E = null;
@@ -543,432 +471,210 @@
         isTIR = refr2.tir;
 
         if (isTIR) {
-          const reflectionDir = E;
-          const leftFaceDir = { x: V0.x - V1.x, y: V0.y - V1.y };
-          const intersectLeft = intersectLines(P2, reflectionDir, V1, leftFaceDir);
-          const intersectRight2 = intersectLines(P2, reflectionDir, V0, rightFaceDir);
-          const intersectBase2 = intersectLines(P2, reflectionDir, V2, baseFaceDir);
-
-          let closestP = null;
-          let minT = Infinity;
-          let backupNormal = null;
-
-          if (intersectLeft && intersectLeft.t > 0.1 && intersectLeft.u >= 0 && intersectLeft.u <= 1 && intersectLeft.t < minT) {
-            closestP = intersectLeft.point;
-            minT = intersectLeft.t;
-            backupNormal = N1;
-          }
-          if (intersectRight2 && intersectRight2.t > 0.1 && intersectRight2.u >= 0 && intersectRight2.u <= 1 && intersectRight2.t < minT) {
-            closestP = intersectRight2.point;
-            minT = intersectRight2.t;
-            backupNormal = N2;
-          }
-          if (intersectBase2 && intersectBase2.t > 0.1 && intersectBase2.u >= 0 && intersectBase2.u <= 1 && intersectBase2.t < minT) {
-            closestP = intersectBase2.point;
-            minT = intersectBase2.t;
-            backupNormal = N3;
-          }
-
-          if (closestP) {
-            path.push(closestP);
-            const refr3 = refractVector(reflectionDir, backupNormal, nPrism, ENV_N);
-            path.push({
-              x: closestP.x + refr3.dir.x * 600,
-              y: closestP.y + refr3.dir.y * 600
-            });
-          } else {
-            path.push({ x: P2.x + reflectionDir.x * 600, y: P2.y + reflectionDir.y * 600 });
-          }
+          // Bounce inside
+          path.push({ x: P2.x + E.x * 600, y: P2.y + E.y * 600 });
         } else {
+          // Exit
           path.push({ x: P2.x + E.x * 600, y: P2.y + E.y * 600 });
         }
       } else {
         path.push({ x: P1.x + R1.x * 600, y: P1.y + R1.y * 600 });
       }
 
-      const laserLen = 140;
-      const laserPos = { x: P1.x - I.x * laserLen, y: P1.y - I.y * laserLen };
+      const laserPos = { x: P1.x - I.x * 140, y: P1.y - I.y * 140 };
 
-      return {
-        V0, V1, V2, P1, P2, I, R1, E, N1, N2, exitNormal, laserPos, path, isTIR, exitFaceIndex, nPrism
-      };
+      return { V0, V1, V2, P1, P2, I, R1, E, N1, N2, exitNormal, laserPos, path, isTIR };
     }
 
-    function drawSimulation() {
-      const rect = canvas.getBoundingClientRect();
-      const W = rect.width;
-      const H = rect.height;
+    // --- Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      if (cw > 0 && ch > 0 && (canvas.width !== cw * dpr || canvas.height !== ch * dpr)) {
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.resetTransform();
+          ctx.scale(dpr, dpr);
+      }
 
+      const W = cw;
+      const H = ch;
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#070A13';
-      ctx.fillRect(0, 0, W, H);
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
 
-      // Dot alignment grid
+      // Draw Grid
       ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
       ctx.lineWidth = 1;
-      const grid = 40;
-      for (let x = 0; x < W; x += grid) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-      }
-      for (let y = 0; y < H; y += grid) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-      }
+      for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-      const singleTraceN = getRefractiveIndexForWavelength(baseN, wavelengthNm);
-      const sim = computeRayPath(incidentAngleDeg, apexAngleDeg, singleTraceN);
+      const refN = getRefractiveIndex(baseN, waveNm);
+      const sim = computeRay(refN);
 
-      // Draw Prism Shape
+      // Draw Prism
       ctx.beginPath();
-      ctx.moveTo(sim.V0.x, sim.V0.y);
-      ctx.lineTo(sim.V1.x, sim.V1.y);
-      ctx.lineTo(sim.V2.x, sim.V2.y);
+      ctx.moveTo(sim.V0.x, sim.V0.y); ctx.lineTo(sim.V1.x, sim.V1.y); ctx.lineTo(sim.V2.x, sim.V2.y);
       ctx.closePath();
 
       const glassGrad = ctx.createLinearGradient(sim.V0.x, sim.V0.y, sim.V1.x, sim.V1.y);
       glassGrad.addColorStop(0, 'rgba(56, 189, 248, 0.15)');
       glassGrad.addColorStop(1, 'rgba(56, 189, 248, 0.05)');
-      ctx.fillStyle = glassGrad;
-      ctx.fill();
-
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
-      ctx.lineWidth = 3.5;
-      ctx.stroke();
-
-      // Labels
-      ctx.font = 'bold 12px "Plus Jakarta Sans"';
-      ctx.fillStyle = '#818CF8';
-      ctx.textAlign = 'center';
+      ctx.fillStyle = glassGrad; ctx.fill();
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)'; ctx.lineWidth = 3.5; ctx.stroke();
+      
+      // Label A
+      ctx.font = 'bold 12px sans-serif'; ctx.fillStyle = '#818cf8'; ctx.textAlign = 'center';
       ctx.fillText("A", sim.V0.x, sim.V0.y - 12);
 
-      // Protractor Overlay
-      if (showProtractor && sim.P1) {
-        drawScientificProtractor(sim.P1, sim.N1);
-      }
-
-      // Trace ray propagation
-      if (enableDispersion) {
-        const dispersionSpectrum = [
-          { wave: 700, color: 'rgba(239, 68, 68, 0.85)' },   // Red
-          { wave: 620, color: 'rgba(249, 115, 22, 0.85)' },  // Orange
-          { wave: 580, color: 'rgba(234, 179, 8, 0.85)' },   // Yellow
-          { wave: 530, color: 'rgba(34, 197, 94, 0.85)' },   // Green
-          { wave: 470, color: 'rgba(59, 130, 246, 0.85)' },  // Blue
-          { wave: 430, color: 'rgba(79, 70, 229, 0.85)' },   // Indigo
-          { wave: 400, color: 'rgba(168, 85, 247, 0.85)' }   // Violet
+      // Draw Rays
+      if (chkDispersion.checked) {
+        const spec = [
+          {w: 700, c: 'rgba(239, 68, 68, 0.85)'}, {w: 620, c: 'rgba(249, 115, 22, 0.85)'},
+          {w: 580, c: 'rgba(234, 179, 8, 0.85)'}, {w: 530, c: 'rgba(34, 197, 94, 0.85)'},
+          {w: 470, c: 'rgba(59, 130, 246, 0.85)'}, {w: 400, c: 'rgba(168, 85, 247, 0.85)'}
         ];
-
-        dispersionSpectrum.forEach(spec => {
-          const waveN = getRefractiveIndexForWavelength(baseN, spec.wave);
-          const dSim = computeRayPath(incidentAngleDeg, apexAngleDeg, waveN);
-
-          ctx.beginPath();
-          ctx.moveTo(dSim.laserPos.x, dSim.laserPos.y);
-          dSim.path.forEach(pt => ctx.lineTo(pt.x, pt.y));
-          ctx.strokeStyle = spec.color;
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
+        spec.forEach(s => {
+          let sSim = computeRay(getRefractiveIndex(baseN, s.w));
+          ctx.beginPath(); ctx.moveTo(sSim.laserPos.x, sSim.laserPos.y);
+          sSim.path.forEach(pt => ctx.lineTo(pt.x, pt.y));
+          ctx.strokeStyle = s.c; ctx.lineWidth = 1.5; ctx.stroke();
         });
-
-        updateSystemMetrics(sim, singleTraceN, false);
+        updateTelemetry(sim, refN, false); // reference
       } else {
-        const rayColor = wavelengthToColor(wavelengthNm);
-        ctx.beginPath();
-        ctx.moveTo(sim.laserPos.x, sim.laserPos.y);
+        const rayColor = wavelengthToColor(waveNm);
+        ctx.beginPath(); ctx.moveTo(sim.laserPos.x, sim.laserPos.y);
         sim.path.forEach(pt => ctx.lineTo(pt.x, pt.y));
-
-        ctx.strokeStyle = rayColor;
-        ctx.lineWidth = 3;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = rayColor;
-        ctx.stroke();
-        ctx.shadowBlur = 0; // reset
-
-        updateSystemMetrics(sim, singleTraceN, sim.isTIR);
+        ctx.strokeStyle = rayColor; ctx.lineWidth = 3; 
+        ctx.shadowBlur = 10; ctx.shadowColor = rayColor; ctx.stroke(); ctx.shadowBlur = 0;
+        updateTelemetry(sim, refN, sim.isTIR);
       }
 
       // Draw Normals
-      if (showNormals) {
-        ctx.lineWidth = 1.2;
-        ctx.setLineDash([5, 4]);
-        ctx.strokeStyle = 'rgba(226, 232, 240, 0.55)';
-
+      if (chkNormals.checked) {
+        ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]); ctx.strokeStyle = 'rgba(226, 232, 240, 0.55)';
         if (sim.P1) {
-          ctx.beginPath();
-          ctx.moveTo(sim.P1.x - sim.N1.x * 70, sim.P1.y - sim.N1.y * 70);
-          ctx.lineTo(sim.P1.x + sim.N1.x * 70, sim.P1.y + sim.N1.y * 70);
-          ctx.stroke();
-          ctx.fillStyle = '#E2E8F0';
-          ctx.font = '10px monospace';
-          ctx.fillText("N1", sim.P1.x - sim.N1.x * 75, sim.P1.y - sim.N1.y * 75 + 3);
+          ctx.beginPath(); ctx.moveTo(sim.P1.x - sim.N1.x*70, sim.P1.y - sim.N1.y*70); ctx.lineTo(sim.P1.x + sim.N1.x*70, sim.P1.y + sim.N1.y*70); ctx.stroke();
         }
-
         if (sim.P2 && sim.exitNormal) {
-          ctx.beginPath();
-          ctx.moveTo(sim.P2.x - sim.exitNormal.x * 70, sim.P2.y - sim.exitNormal.y * 70);
-          ctx.lineTo(sim.P2.x + sim.exitNormal.x * 70, sim.P2.y + sim.exitNormal.y * 70);
-          ctx.stroke();
-          ctx.fillStyle = '#E2E8F0';
-          ctx.font = '10px monospace';
-          ctx.fillText("N2", sim.P2.x + sim.exitNormal.x * 75, sim.P2.y + sim.exitNormal.y * 75 + 3);
+          ctx.beginPath(); ctx.moveTo(sim.P2.x - sim.exitNormal.x*70, sim.P2.y - sim.exitNormal.y*70); ctx.lineTo(sim.P2.x + sim.exitNormal.x*70, sim.P2.y + sim.exitNormal.y*70); ctx.stroke();
         }
         ctx.setLineDash([]);
       }
 
-      // Draw deviation extensions
-      if (showExtensions && sim.P1 && sim.P2 && !sim.isTIR && sim.E) {
-        ctx.save();
+      // Draw Extensions & Deviation
+      if (chkExtensions.checked && sim.P1 && sim.P2 && !sim.isTIR && sim.E) {
         const O = intersectLines(sim.P1, sim.I, sim.P2, sim.E);
         if (O) {
-          ctx.setLineDash([8, 6]);
-          ctx.lineWidth = 1.5;
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-          
-          // Extended incident
-          ctx.beginPath();
-          ctx.moveTo(sim.P1.x, sim.P1.y);
-          ctx.lineTo(O.point.x + sim.I.x * 120, O.point.y + sim.I.y * 120);
-          ctx.stroke();
-
-          // Extended emergent
-          ctx.beginPath();
-          ctx.moveTo(sim.P2.x, sim.P2.y);
-          ctx.lineTo(O.point.x - sim.E.x * 120, O.point.y - sim.E.y * 120);
-          ctx.stroke();
-
-          // Draw deviation node
+          ctx.setLineDash([6, 6]); ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.beginPath(); ctx.moveTo(sim.P1.x, sim.P1.y); ctx.lineTo(O.point.x + sim.I.x*100, O.point.y + sim.I.y*100); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(sim.P2.x, sim.P2.y); ctx.lineTo(O.point.x - sim.E.x*100, O.point.y - sim.E.y*100); ctx.stroke();
           ctx.setLineDash([]);
-          ctx.fillStyle = '#EF4444';
-          ctx.beginPath();
-          ctx.arc(O.point.x, O.point.y, 4, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(O.point.x, O.point.y, 4, 0, Math.PI*2); ctx.fill();
         }
-        ctx.restore();
       }
 
-      // Draw physical laser pointer casing
-      drawLaserPointer(sim.laserPos, sim.I);
-    }
-
-    function drawLaserPointer(pos, dir) {
+      // Draw Laser Pointer
       ctx.save();
-      ctx.translate(pos.x, pos.y);
-      ctx.rotate(Math.atan2(dir.y, dir.x));
-
-      // Casing
-      ctx.fillStyle = '#1E293B';
-      ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(-35, -9, 35, 18, [3, 0, 0, 3]);
-      ctx.fill();
-      ctx.stroke();
-
-      // Brass emitter tip
-      ctx.fillStyle = '#D97706';
-      ctx.beginPath();
-      ctx.roundRect(0, -6, 8, 12, [0, 2, 2, 0]);
-      ctx.fill();
-
-      // Trigger node
-      ctx.fillStyle = '#EF4444';
-      ctx.beginPath();
-      ctx.arc(-18, -9, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.translate(sim.laserPos.x, sim.laserPos.y);
+      ctx.rotate(Math.atan2(sim.I.y, sim.I.x));
+      ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#475569'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect(-30, -8, 30, 16, [3,0,0,3]); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#d97706'; ctx.beginPath(); ctx.roundRect(0, -5, 6, 10, [0,2,2,0]); ctx.fill();
       ctx.restore();
+
+      requestAnimationFrame(renderLoop);
     }
 
-    function drawScientificProtractor(pos, normal) {
-      ctx.save();
-      ctx.translate(pos.x, pos.y);
-      // Align normal
-      const normalAngle = Math.atan2(normal.y, normal.x);
-      ctx.rotate(normalAngle);
-
-      // Outer dial arc
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(0, 0, 48, -Math.PI / 2, Math.PI / 2);
-      ctx.stroke();
-
-      // Ticks
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
-      ctx.lineWidth = 1.2;
-      for (let d = -80; d <= 80; d += 10) {
-        const rad = (d * Math.PI) / 180;
-        const inner = d % 30 === 0 ? 40 : 44;
-        ctx.beginPath();
-        ctx.moveTo(inner * Math.cos(rad), inner * Math.sin(rad));
-        ctx.lineTo(48 * Math.cos(rad), 48 * Math.sin(rad));
-        ctx.stroke();
-      }
-
-      ctx.restore();
-    }
-
-    function updateSystemMetrics(sim, nPrism, isTIR) {
-      document.getElementById('metricIncidentAngle').innerText = `${incidentAngleDeg.toFixed(1)}°`;
+    function updateTelemetry(sim, nPrism, isTIR) {
+      telI.innerText = `${iAngleDeg.toFixed(1)}°`;
       
-      let emergenceAngleDeg = 0.0;
-      let devAngleDeg = 0.0;
-
       if (isTIR) {
-        document.getElementById('tirStatusText').innerText = "LIGHT PROPAGATION: TIR ACTIVE";
-        document.getElementById('tirStatusText').className = "text-rose-500 uppercase font-bold";
-        document.getElementById('metricEmergentAngle').innerText = "TIR";
-        document.getElementById('metricDeviationAngle').innerText = "—";
+        statusTxt.innerText = "TIR ACTIVE";
+        statusInd.className = "w-2 h-2 rounded-full bg-rose-500 animate-pulse";
+        telE.innerText = "TIR"; telDev.innerText = "—";
       } else {
-        document.getElementById('tirStatusText').innerText = "LIGHT PROPAGATION: REFRACTION ACTIVE";
-        document.getElementById('tirStatusText').className = "text-emerald-400 uppercase";
-
-        // Emergence calculation
+        statusTxt.innerText = "REFRACTION ACTIVE";
+        statusInd.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+        
         if (sim.E && sim.exitNormal) {
           const dot = sim.E.x * sim.exitNormal.x + sim.E.y * sim.exitNormal.y;
-          emergenceAngleDeg = (Math.acos(Math.abs(dot)) * 180) / Math.PI;
-          document.getElementById('metricEmergentAngle').innerText = `${emergenceAngleDeg.toFixed(1)}°`;
-
-          devAngleDeg = Math.abs(incidentAngleDeg) + emergenceAngleDeg - apexAngleDeg;
-          document.getElementById('metricDeviationAngle').innerText = `${devAngleDeg.toFixed(1)}°`;
+          let eAng = (Math.acos(Math.abs(dot)) * 180) / Math.PI;
+          telE.innerText = `${eAng.toFixed(1)}°`;
+          telDev.innerText = `${(Math.abs(iAngleDeg) + eAng - aAngleDeg).toFixed(1)}°`;
         }
       }
 
-      // Calculate Min Deviation (Dm)
-      const radA = (apexAngleDeg * Math.PI) / 180;
-      const sinA2 = Math.sin(radA / 2);
-      const dmRad = 2 * Math.asin(nPrism * sinA2) - radA;
+      // Min Deviation
+      const radA = (aAngleDeg * Math.PI) / 180;
+      const dmRad = 2 * Math.asin(nPrism * Math.sin(radA / 2)) - radA;
       const dmDeg = (dmRad * 180) / Math.PI;
-
-      if (isNaN(dmDeg) || dmDeg < 0) {
-        document.getElementById('metricMinDeviation').innerText = "—";
-      } else {
-        document.getElementById('metricMinDeviation').innerText = `${dmDeg.toFixed(1)}°`;
-      }
+      if (isNaN(dmDeg) || dmDeg < 0) telMinDev.innerText = "— (TIR)";
+      else telMinDev.innerText = `${dmDeg.toFixed(1)}°`;
     }
 
-    // Presets handler
-    function applyPreset(presetKey) {
-      activePreset = presetKey;
-      const preset = PRESETS[presetKey];
-      baseN = preset.n;
-      wavelengthNm = preset.defaultWavelength;
-
-      // Update Slider active presets colors
-      ['Crown', 'Flint', 'Water', 'Diamond', 'Custom'].forEach(k => {
-        const btn = document.getElementById(`btn${k}`);
-        if (k.toLowerCase() === presetKey.split('_')[0]) {
-          btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow shadow-indigo-950";
-        } else {
-          btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white border border-slate-200 text-slate-700 hover:bg-slate-50";
-        }
-      });
-
-      const customNPanel = document.getElementById('panelCustomN');
-      const wlPanel = document.getElementById('panelWavelength');
-      if (presetKey === 'custom') {
-        customNPanel.classList.remove('hidden');
-        wlPanel.classList.add('opacity-45', 'pointer-events-none');
-      } else {
-        customNPanel.classList.add('hidden');
-        wlPanel.classList.remove('opacity-45', 'pointer-events-none');
-      }
-
-      // Sync variables to inputs
-      document.getElementById('slideWavelength').value = wavelengthNm;
-      document.getElementById('numWavelength').value = wavelengthNm;
-      document.getElementById('slideCustomN').value = baseN;
-      document.getElementById('numCustomN').value = baseN;
-
-      drawSimulation();
+    // --- Inputs ---
+    function sync(val, sl, lbl, setter, suffix="") {
+        val = parseFloat(val);
+        sl.value = val; lbl.innerText = val.toFixed(1) + suffix; setter(val);
     }
 
-    // Synced bindings for Sliders
-    setupSyncedInputs('slideIncidentAngle', 'numIncidentAngle', (val) => {
-      incidentAngleDeg = val;
-      drawSimulation();
-    });
+    slInc.addEventListener('input', e => sync(e.target.value, slInc, lblInc, v => iAngleDeg = v, "°"));
+    slApex.addEventListener('input', e => sync(e.target.value, slApex, lblApex, v => aAngleDeg = v, "°"));
+    slWave.addEventListener('input', e => sync(e.target.value, slWave, lblWave, v => waveNm = v, " nm"));
+    slN.addEventListener('input', e => sync(e.target.value, slN, lblN, v => baseN = v, ""));
 
-    setupSyncedInputs('slideApexAngle', 'numApexAngle', (val) => {
-      apexAngleDeg = val;
-      drawSimulation();
-    });
-
-    setupSyncedInputs('slideWavelength', 'numWavelength', (val) => {
-      wavelengthNm = val;
-      drawSimulation();
-    });
-
-    setupSyncedInputs('slideCustomN', 'numCustomN', (val) => {
-      baseN = val;
-      drawSimulation();
-    });
-
-    // Checkboxes
-    document.getElementById('chkShowNormals').addEventListener('change', (e) => {
-      showNormals = e.target.checked;
-      drawSimulation();
-    });
-    document.getElementById('chkShowExtensions').addEventListener('change', (e) => {
-      showExtensions = e.target.checked;
-      drawSimulation();
-    });
-    document.getElementById('chkShowProtractor').addEventListener('change', (e) => {
-      showProtractor = e.target.checked;
-      drawSimulation();
-    });
-    document.getElementById('chkEnableDispersion').addEventListener('change', (e) => {
-      enableDispersion = e.target.checked;
-      const wlPanel = document.getElementById('panelWavelength');
-      if (enableDispersion) {
-        wlPanel.classList.add('opacity-45', 'pointer-events-none');
+    selPreset.addEventListener('change', e => {
+      activePreset = e.target.value;
+      if (activePreset === 'custom') {
+         pnlCustomN.classList.remove('hidden');
+         pnlWave.classList.add('opacity-40', 'pointer-events-none');
       } else {
-        if (activePreset !== 'custom') {
-          wlPanel.classList.remove('opacity-45', 'pointer-events-none');
-        }
+         pnlCustomN.classList.add('hidden');
+         pnlWave.classList.remove('opacity-40', 'pointer-events-none');
+         baseN = PRESETS[activePreset].n;
+         sync(PRESETS[activePreset].wave, slWave, lblWave, v => waveNm = v, " nm");
       }
-      drawSimulation();
     });
 
+    chkDispersion.addEventListener('change', e => {
+      if(e.target.checked) pnlWave.classList.add('opacity-40', 'pointer-events-none');
+      else if (activePreset !== 'custom') pnlWave.classList.remove('opacity-40', 'pointer-events-none');
+    });
+
+    btnReset.addEventListener('click', () => {
+      selPreset.value = 'crown_glass'; selPreset.dispatchEvent(new Event('change'));
+      sync(45.0, slInc, lblInc, v => iAngleDeg = v, "°");
+      sync(60.0, slApex, lblApex, v => aAngleDeg = v, "°");
+      chkNormals.checked = true; chkExtensions.checked = true; chkDispersion.checked = false;
+      chkDispersion.dispatchEvent(new Event('change'));
+    });
+
+    // --- Modals & UI ---
     function toggleVerification(id) {
-      const panel = document.getElementById(`viva-panel-${id}`);
-      const arrow = document.getElementById(`btn-arrow-${id}`);
-      const btnText = document.getElementById(`btn-text-${id}`);
-      
-      if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-        arrow.style.transform = 'rotate(180deg)';
-        btnText.innerText = 'Hide Scientific Verification';
+      const p = document.getElementById(`viva-panel-${id}`);
+      const txt = document.getElementById(`btn-text-${id}`);
+      const arr = document.getElementById(`btn-arrow-${id}`);
+      if (p.classList.contains('hidden')) {
+        p.classList.remove('hidden'); txt.textContent = "Hide Verification"; arr.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([p]);
       } else {
-        panel.classList.add('hidden');
-        arrow.style.transform = 'rotate(0deg)';
-        btnText.innerText = 'Show Scientific Verification';
+        p.classList.add('hidden'); txt.textContent = "Show Verification"; arr.style.transform = "rotate(0deg)";
       }
     }
 
-    function resetWorkspace() {
-      applyPreset('crown_glass');
-      incidentAngleDeg = 45.0;
-      apexAngleDeg = 60.0;
-      showNormals = true;
-      showExtensions = true;
-      showProtractor = true;
-      enableDispersion = false;
+    const ugModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => ugModal.classList.remove('hidden'));
+    const closeGuide = () => ugModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
 
-      document.getElementById('slideIncidentAngle').value = 45;
-      document.getElementById('numIncidentAngle').value = 45;
-      document.getElementById('slideApexAngle').value = 60;
-      document.getElementById('numApexAngle').value = 60;
-
-      document.getElementById('chkShowNormals').checked = true;
-      document.getElementById('chkShowExtensions').checked = true;
-      document.getElementById('chkShowProtractor').checked = true;
-      document.getElementById('chkEnableDispersion').checked = false;
-
-      drawSimulation();
-    }
-
-    // Initial Trigger
-    resetWorkspace();
+    window.addEventListener('load', () => {
+      ugModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
   </script>
 </body>
 </html>

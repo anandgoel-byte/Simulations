@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glycolysis Pathway Animator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Glycolysis Pathway Animator</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Cellular Respiration &amp; Biochemical Engineering Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Kinetic Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-prev" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm disabled:opacity-50">
+          <span>⏮️</span> Previous Step
+        </button>
+        <button id="btn-next" class="px-6 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm disabled:opacity-50">
+          Next Step <span>⏭️</span>
+        </button>
+        <button id="btn-reset" class="px-3 py-1.5 ml-4 border border-slate-300 text-slate-500 hover:bg-slate-100 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-names" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Molecule Names</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-enzymes" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Highlight Active Enzyme</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-3 border-b border-indigo-100 pb-1 flex justify-between">
+              <span>Reaction Steps</span>
+              <span id="step-counter" class="text-slate-500">0 / 10</span>
+            </span>
+            
+            <input type="range" id="sl-step" min="0" max="10" step="1" value="0" class="w-full mt-1 mb-4">
+            
+            <div id="step-list" class="space-y-1 mt-2 max-h-[250px] overflow-y-auto viva-scrollbar pr-2">
+              </div>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-1">Enzymatic Action</span>
+            
+            <div id="rxn-enzyme" class="text-sm font-bold text-white tracking-wide mt-2">Waiting to start...</div>
+            <div id="rxn-desc" class="text-xs text-slate-400 leading-relaxed min-h-[60px] mt-1">
+              Click 'Next Step' to initiate the cellular breakdown of Glucose.
+            </div>
+
+            <div class="bg-slate-800 p-2 rounded text-center font-mono text-[10px] text-amber-300 border border-slate-700 mt-2" id="rxn-energy">
+              Net Energy Change: 0 ATP
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider uppercase" id="canvas-hud">Phase: Start</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 rounded-full bg-slate-300 block border-2 border-slate-500"></span> Carbon Atom (C)</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 rounded-full bg-amber-400 block border-2 border-amber-600"></span> Phosphate Group (P)</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-emerald-500 block"></span> Chemical Bond</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Metabolic Bank Account</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">ATP Invested</div>
+              <div class="text-xl font-bold font-mono text-rose-500" id="tel-atp-inv">0</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">ATP Harvested</div>
+              <div class="text-xl font-bold font-mono text-emerald-500" id="tel-atp-har">0</div>
+            </div>
+
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Net ATP Yield</div>
+              <div class="text-2xl font-bold font-mono text-amber-400 tracking-widest" id="tel-atp-net">0</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-cyan-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">NADH Produced (Electron Carriers)</div>
+              <div class="text-xl font-bold font-mono text-cyan-600" id="tel-nadh">0</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why does the cell initially spend 2 ATP in Steps 1 and 3?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                This is the <strong>Energy Investment Phase</strong>. Phosphorylating the glucose molecule traps it inside the cell (due to the negative charge) and destabilizes the sugar, making it much easier for Aldolase to cleave it in half during Step 4.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Which step is considered the primary "committed step" of Glycolysis?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                <strong>Step 3</strong> (catalyzed by Phosphofructokinase, PFK). This reaction is highly exergonic and essentially irreversible. Once the cell creates Fructose-1,6-bisphosphate, it is committed to finishing the glycolysis pathway. PFK is heavily regulated by allosteric feedback.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do we get 4 ATP back in the Payoff Phase if only two reactions make ATP?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                At Step 4, the 6-carbon sugar is split into <strong>two</strong> 3-carbon molecules (G3P). From Step 6 onwards, every reaction happens <em>twice</em> per original glucose molecule. Thus, the two ATP-producing steps (Step 7 and 10) yield $2 \times 1 + 2 \times 1 = 4$ ATP total!
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> GLYCOLYSIS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Biochemistry Laboratory</strong>! Trace the exact enzymatic breakdown of a sugar molecule.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Step Navigation</strong>: Use the Previous/Next buttons or the slider to progress through the 10 stages of Glycolysis.</li>
+            <li><strong>Interactive Canvas</strong>: Watch the molecular structure morph in real-time. Notice how Phosphates (Yellow P) are attached and detached. At Step 4, watch the molecule literally split in half!</li>
+            <li><strong>Metabolic Bank Account</strong>: Keep a close eye on the telemetry panel on the right. It tracks the exact net gain/loss of cellular energy (ATP and NADH) as you progress.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Data Definitions ---
+    const STEPS = [
+        { 
+            id: 0, 
+            mol: "Glucose (6C)", 
+            enzyme: "None", 
+            desc: "The starting point. A stable 6-carbon sugar ring enters the cell cytoplasm.",
+            energy: "0 ATP",
+            atpInv: 0, atpHar: 0, nadh: 0, phase: "Start"
+        },
+        { 
+            id: 1, 
+            mol: "Glucose-6-phosphate", 
+            enzyme: "Hexokinase", 
+            desc: "Hexokinase uses 1 ATP to add a phosphate group to Carbon 6, trapping glucose inside the cell.",
+            energy: "-1 ATP",
+            atpInv: 1, atpHar: 0, nadh: 0, phase: "Investment"
+        },
+        { 
+            id: 2, 
+            mol: "Fructose-6-phosphate", 
+            enzyme: "Phosphoglucose Isomerase", 
+            desc: "The molecule is rearranged (isomerized) from a 6-sided ring into a 5-sided ring to prepare for splitting.",
+            energy: "0 ATP",
+            atpInv: 1, atpHar: 0, nadh: 0, phase: "Investment"
+        },
+        { 
+            id: 3, 
+            mol: "Fructose-1,6-bisphosphate", 
+            enzyme: "Phosphofructokinase (PFK)", 
+            desc: "The 'Committed Step'. PFK consumes another ATP to add a second phosphate to Carbon 1, highly destabilizing the sugar.",
+            energy: "-1 ATP",
+            atpInv: 2, atpHar: 0, nadh: 0, phase: "Investment"
+        },
+        { 
+            id: 4, 
+            mol: "DHAP & G3P", 
+            enzyme: "Aldolase", 
+            desc: "The highly unstable F1,6BP is cleaved cleanly in half, yielding two different 3-carbon isomers: DHAP and G3P.",
+            energy: "0 ATP",
+            atpInv: 2, atpHar: 0, nadh: 0, phase: "Investment"
+        },
+        { 
+            id: 5, 
+            mol: "2x Glyceraldehyde-3-phosphate", 
+            enzyme: "Triose Phosphate Isomerase", 
+            desc: "The useless DHAP is rapidly converted into a second molecule of G3P. From here on, everything happens TWICE.",
+            energy: "0 ATP",
+            atpInv: 2, atpHar: 0, nadh: 0, phase: "Investment"
+        },
+        { 
+            id: 6, 
+            mol: "2x 1,3-Bisphosphoglycerate", 
+            enzyme: "G3P Dehydrogenase", 
+            desc: "G3P is oxidized. Electrons are harvested by NAD+ (forming 2 NADH), and inorganic phosphate is added.",
+            energy: "+2 NADH",
+            atpInv: 2, atpHar: 0, nadh: 2, phase: "Payoff"
+        },
+        { 
+            id: 7, 
+            mol: "2x 3-Phosphoglycerate", 
+            enzyme: "Phosphoglycerate Kinase", 
+            desc: "The high-energy phosphate is transferred to ADP, generating our first 2 ATP! This is substrate-level phosphorylation.",
+            energy: "+2 ATP",
+            atpInv: 2, atpHar: 2, nadh: 2, phase: "Payoff"
+        },
+        { 
+            id: 8, 
+            mol: "2x 2-Phosphoglycerate", 
+            enzyme: "Phosphoglycerate Mutase", 
+            desc: "The remaining phosphate group is shifted from Carbon 3 to Carbon 2 to prepare for dehydration.",
+            energy: "0 ATP",
+            atpInv: 2, atpHar: 2, nadh: 2, phase: "Payoff"
+        },
+        { 
+            id: 9, 
+            mol: "2x Phosphoenolpyruvate (PEP)", 
+            enzyme: "Enolase", 
+            desc: "Water is extracted (dehydration), creating PEP, a molecule with an extremely high-energy phosphate bond.",
+            energy: "0 ATP",
+            atpInv: 2, atpHar: 2, nadh: 2, phase: "Payoff"
+        },
+        { 
+            id: 10, 
+            mol: "2x Pyruvate", 
+            enzyme: "Pyruvate Kinase", 
+            desc: "The final phosphate is transferred to ADP to make 2 more ATP. The final product is Pyruvate, ready for the mitochondria!",
+            energy: "+2 ATP",
+            atpInv: 2, atpHar: 4, nadh: 2, phase: "Finish"
+        }
+    ];
+
+    // --- State Variables ---
+    let currentStep = 0;
+    
+    // Toggles
+    const chkNames = document.getElementById('chk-names');
+    const chkEnzymes = document.getElementById('chk-enzymes');
+
+    // Controls
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnReset = document.getElementById('btn-reset');
+    const slStep = document.getElementById('sl-step');
+
+    // UI Elements
+    const stepList = document.getElementById('step-list');
+    const stepCounter = document.getElementById('step-counter');
+    const rxnEnzyme = document.getElementById('rxn-enzyme');
+    const rxnDesc = document.getElementById('rxn-desc');
+    const rxnEnergy = document.getElementById('rxn-energy');
+    const canvasHud = document.getElementById('canvas-hud');
+
+    // Telemetry
+    const telAtpInv = document.getElementById('tel-atp-inv');
+    const telAtpHar = document.getElementById('tel-atp-har');
+    const telAtpNet = document.getElementById('tel-atp-net');
+    const telNadh = document.getElementById('tel-nadh');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Initialization ---
+    function initUI() {
+        stepList.innerHTML = '';
+        STEPS.forEach((step, idx) => {
+            let el = document.createElement('div');
+            el.className = `px-3 py-1.5 rounded text-[10px] font-bold border transition-colors cursor-pointer ${idx === 0 ? 'bg-indigo-100 border-indigo-300 text-indigo-700' : 'bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100'}`;
+            el.innerText = `${idx}. ${step.mol}`;
+            el.onclick = () => setStep(idx);
+            el.id = `list-step-${idx}`;
+            stepList.appendChild(el);
+        });
+    }
+
+    // --- Core Logic ---
+    function updateUI() {
+        const step = STEPS[currentStep];
+
+        // Sliders and Buttons
+        slStep.value = currentStep;
+        stepCounter.innerText = `${currentStep} / 10`;
+        btnPrev.disabled = currentStep === 0;
+        btnNext.disabled = currentStep === 10;
+
+        // List Highlighting
+        for(let i=0; i<=10; i++) {
+            let el = document.getElementById(`list-step-${i}`);
+            if (i === currentStep) {
+                el.className = 'px-3 py-1.5 rounded text-[10px] font-bold border transition-colors cursor-pointer bg-indigo-100 border-indigo-300 text-indigo-700 shadow-sm';
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                el.className = 'px-3 py-1.5 rounded text-[10px] font-bold border transition-colors cursor-pointer bg-slate-50 border-slate-100 text-slate-500 hover:bg-slate-100';
+            }
+        }
+
+        // Reaction Details
+        rxnEnzyme.innerText = `Enzyme: ${step.enzyme}`;
+        rxnDesc.innerText = step.desc;
+        rxnEnergy.innerText = `Reaction Energy Change: ${step.energy}`;
+
+        if (step.energy.includes('-')) rxnEnergy.className = "bg-rose-900/40 p-2 rounded text-center font-mono text-[10px] text-rose-300 border border-rose-800 mt-2";
+        else if (step.energy.includes('+')) rxnEnergy.className = "bg-emerald-900/40 p-2 rounded text-center font-mono text-[10px] text-emerald-300 border border-emerald-800 mt-2";
+        else rxnEnergy.className = "bg-slate-800 p-2 rounded text-center font-mono text-[10px] text-amber-300 border border-slate-700 mt-2";
+
+        // Telemetry
+        telAtpInv.innerText = step.atpInv;
+        telAtpHar.innerText = step.atpHar;
+        
+        let netAtp = step.atpHar - step.atpInv;
+        telAtpNet.innerText = netAtp > 0 ? `+${netAtp}` : netAtp;
+        telAtpNet.className = `text-2xl font-bold font-mono tracking-widest ${netAtp > 0 ? 'text-emerald-400' : (netAtp < 0 ? 'text-rose-400' : 'text-amber-400')}`;
+
+        telNadh.innerText = step.nadh;
+
+        canvasHud.innerText = `Phase: ${step.phase}`;
+    }
+
+    function setStep(val) {
+        currentStep = Math.max(0, Math.min(10, parseInt(val)));
+        updateUI();
+    }
+
+    // --- Events ---
+    btnNext.addEventListener('click', () => setStep(currentStep + 1));
+    btnPrev.addEventListener('click', () => setStep(currentStep - 1));
+    btnReset.addEventListener('click', () => setStep(0));
+    slStep.addEventListener('input', e => setStep(e.target.value));
+
+    // --- Canvas Rendering Helpers ---
+    function drawNode(x, y, type) {
+        ctx.lineWidth = 2;
+        if (type === 'C') {
+            ctx.fillStyle = '#cbd5e1'; // slate-300
+            ctx.strokeStyle = '#64748b';
+            ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#0f172a'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText("C", x, y);
+        } else if (type === 'P') {
+            ctx.fillStyle = '#fbbf24'; // amber-400
+            ctx.strokeStyle = '#b45309';
+            ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#78350f'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText("P", x, y);
+        }
+    }
+
+    function drawBond(x1, y1, x2, y2) {
+        ctx.strokeStyle = '#10b981'; // emerald-500
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+
+    function drawMolecule(cx, cy, nodes, label) {
+        // Draw bonds first
+        for(let i=0; i<nodes.length - 1; i++) {
+            // For simple linear representation
+            drawBond(cx + nodes[i].x, cy + nodes[i].y, cx + nodes[i+1].x, cy + nodes[i+1].y);
+        }
+        // Draw specific side bonds if needed (like P branching)
+        nodes.forEach(n => {
+            if (n.bondsTo !== undefined) {
+                n.bondsTo.forEach(targetIdx => {
+                   drawBond(cx + n.x, cy + n.y, cx + nodes[targetIdx].x, cy + nodes[targetIdx].y); 
+                });
+            }
+        });
+
+        // Draw nodes
+        nodes.forEach(n => drawNode(cx + n.x, cy + n.y, n.type));
+
+        if (chkNames.checked) {
+            ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(label, cx, cy + 50);
+        }
+    }
+
+    // --- Main Render Loop ---
+    let animTime = 0;
+
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      if (cw > 0 && ch > 0 && (canvas.width !== cw * dpr || canvas.height !== ch * dpr)) {
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.resetTransform();
+          ctx.scale(dpr, dpr);
+      }
+
+      const W = cw; const H = ch;
+      ctx.clearRect(0, 0, W, H);
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      animTime += 0.05;
+      const cx = W / 2;
+      const cy = H / 2;
+
+      const step = STEPS[currentStep];
+
+      // Subtle background grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+      ctx.lineWidth = 1;
+      for(let x=0; x<W; x+=30) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for(let y=0; y<H; y+=30) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+      // Define Node Structures based on step
+      // Simple visual abstractions (C spacing = 32px)
+      let sp = 34;
+
+      if (currentStep === 0) {
+          // Glucose: Ring-ish structure, abstract as a slightly bent chain 6C
+          let m = [
+              {type:'C', x:-sp*2.5, y:0}, {type:'C', x:-sp*1.5, y:-10}, {type:'C', x:-sp*0.5, y:0},
+              {type:'C', x:sp*0.5, y:-10}, {type:'C', x:sp*1.5, y:0}, {type:'C', x:sp*2.5, y:-10}
+          ];
+          drawMolecule(cx, cy, m, step.mol);
+      } 
+      else if (currentStep === 1 || currentStep === 2) {
+          // G6P / F6P: 6C + 1P on right end
+          let m = [
+              {type:'C', x:-sp*3, y:0}, {type:'C', x:-sp*2, y:-10}, {type:'C', x:-sp*1, y:0},
+              {type:'C', x:0, y:-10}, {type:'C', x:sp*1, y:0}, {type:'C', x:sp*2, y:-10, bondsTo:[6]},
+              {type:'P', x:sp*3, y:-10}
+          ];
+          drawMolecule(cx, cy, m, step.mol);
+      }
+      else if (currentStep === 3) {
+          // F1,6BP: P + 6C + P
+          let m = [
+              {type:'P', x:-sp*4, y:0},
+              {type:'C', x:-sp*3, y:0, bondsTo:[0]}, {type:'C', x:-sp*2, y:-10}, {type:'C', x:-sp*1, y:0},
+              {type:'C', x:0, y:-10}, {type:'C', x:sp*1, y:0}, {type:'C', x:sp*2, y:-10, bondsTo:[7]},
+              {type:'P', x:sp*3, y:-10}
+          ];
+          drawMolecule(cx, cy, m, step.mol);
+      }
+      else if (currentStep === 4) {
+          // DHAP + G3P: Splitting visualization
+          let dist = Math.min(60, animTime*10); // Animate splitting apart slightly
+          let m1 = [ {type:'P', x:-sp*2, y:0}, {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0}, {type:'C', x:sp, y:0} ];
+          let m2 = [ {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0}, {type:'C', x:sp, y:0}, {type:'P', x:sp*2, y:0} ];
+          
+          drawMolecule(cx - 100, cy - dist, m1, "DHAP");
+          drawMolecule(cx + 100, cy + dist, m2, "G3P");
+      }
+      else if (currentStep === 5) {
+          // 2x G3P
+          let m = [ {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0}, {type:'C', x:sp, y:0}, {type:'P', x:sp*2, y:0} ];
+          drawMolecule(cx, cy - 40, m, "G3P (1)");
+          drawMolecule(cx, cy + 40, m, "G3P (2)");
+      }
+      else if (currentStep === 6) {
+          // 2x 1,3-BPG: P + 3C + P
+          let m = [ {type:'P', x:-sp*2, y:0}, {type:'C', x:-sp, y:0, bondsTo:[0]}, {type:'C', x:0, y:0}, {type:'C', x:sp, y:0}, {type:'P', x:sp*2, y:0} ];
+          drawMolecule(cx, cy - 40, m, "");
+          drawMolecule(cx, cy + 40, m, step.mol);
+      }
+      else if (currentStep === 7) {
+          // 2x 3-PG: 3C + P (lost the left P to ATP)
+          let m = [ {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0}, {type:'C', x:sp, y:0}, {type:'P', x:sp*2, y:0} ];
+          drawMolecule(cx, cy - 40, m, "");
+          drawMolecule(cx, cy + 40, m, step.mol);
+      }
+      else if (currentStep === 8) {
+          // 2x 2-PG: 3C, P moved to middle C
+          let m = [ {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0, bondsTo:[3]}, {type:'C', x:sp, y:0}, {type:'P', x:0, y:-sp} ];
+          drawMolecule(cx, cy - 40, m, "");
+          drawMolecule(cx, cy + 40, m, step.mol);
+      }
+      else if (currentStep === 9) {
+          // 2x PEP: 3C, P on middle C (represented same as 2-PG visually but labeled diff)
+          let m = [ {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0, bondsTo:[3]}, {type:'C', x:sp, y:0}, {type:'P', x:0, y:-sp} ];
+          drawMolecule(cx, cy - 40, m, "");
+          drawMolecule(cx, cy + 40, m, step.mol);
+      }
+      else if (currentStep === 10) {
+          // 2x Pyruvate: 3C (lost final P)
+          let m = [ {type:'C', x:-sp, y:0}, {type:'C', x:0, y:0}, {type:'C', x:sp, y:0} ];
+          drawMolecule(cx, cy - 40, m, "");
+          drawMolecule(cx, cy + 40, m, step.mol);
+      }
+
+      // Draw Enzyme Action Highlight
+      if (chkEnzymes.checked && step.enzyme !== "None") {
+          ctx.fillStyle = 'rgba(99, 102, 241, 0.1)';
+          ctx.strokeStyle = '#6366f1';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          // Draw a pulsing box around the active area
+          let pulse = Math.sin(animTime * 2) * 5;
+          ctx.beginPath();
+          ctx.roundRect(cx - 160 - pulse, cy - 90 - pulse, 320 + pulse*2, 180 + pulse*2, 20);
+          ctx.fill(); ctx.stroke();
+          ctx.setLineDash([]);
+          
+          ctx.fillStyle = '#818cf8'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText(`⚡ ${step.enzyme}`, cx, cy - 100 - pulse);
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initialize
+    window.addEventListener('load', () => {
+      initUI();
+      updateUI();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AC Circuit Phasor Diagram Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+    <img
+        src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+        alt="Sparkl Alpha Logo"
+        class="h-10 w-auto object-contain"
+    />
+</div>
+<div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">AC Series RLC Circuit &amp; Phasor Diagrams</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Alternating Current &amp; Reactance Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Waveform Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>▶</span> Power On
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>⏸</span> Power Off
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Circuit
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-components" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Individual Components ($V_R, V_L, V_C$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-freeze" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Freeze Phasor Rotation</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-5">
+            
+            <div>
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Resistance ($R$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-r" step="10" min="10" max="500" value="100" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">$\Omega$</span>
+                </div>
+              </div>
+              <input type="range" id="slider-r" min="10" max="500" step="1" value="100" class="w-full">
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> Inductance ($L$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-l" step="10" min="10" max="500" value="150" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">mH</span>
+                </div>
+              </div>
+              <input type="range" id="slider-l" min="10" max="500" step="1" value="150" class="w-full">
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-cyan-400 block"></span> Capacitance ($C$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-c" step="10" min="10" max="500" value="100" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">$\mu$F</span>
+                </div>
+              </div>
+              <input type="range" id="slider-c" min="10" max="500" step="1" value="100" class="w-full">
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> AC Frequency ($f$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-f" step="5" min="10" max="100" value="50" class="w-14 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">Hz</span>
+                </div>
+              </div>
+              <input type="range" id="slider-f" min="10" max="100" step="1" value="50" class="w-full">
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3 shadow-sm space-y-1.5">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Circuit Impedance</span>
+              <div class="text-[11px] font-mono text-center py-1">
+                $$Z = \sqrt{R^2 + (X_L - X_C)^2}$$
+                $$\phi = \arctan\left(\frac{X_L - X_C}{R}\right)$$
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Calculated System Telemetry</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Total Impedance ($Z$)</div>
+                <div id="tel-Z" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5">100.0 $\Omega$</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Resonance ($f_0$)</div>
+                <div id="tel-f0" class="text-sm font-bold text-amber-400 font-mono mt-0.5">41.1 Hz</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Phase Angle ($\phi$)</div>
+                <div id="tel-phase" class="text-sm font-bold text-emerald-400 font-mono mt-0.5 tracking-widest">0.0° (In Phase)</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Power Factor ($\cos \phi$)</div>
+                <div id="tel-pf" class="text-sm font-bold text-slate-300 font-mono mt-0.5 tracking-widest">1.000</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 flex flex-col border-8 border-slate-900 min-h-[500px]">
+          
+          <div class="relative bg-[#0b0f19] flex-1 border-b-2 border-slate-800 overflow-hidden">
+            <canvas id="phasorCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+            <div class="absolute top-3 left-3 px-2 py-1 bg-slate-900/80 rounded border border-slate-700 text-[10px] font-bold text-slate-400 tracking-wider">
+               Phasor Diagram
+            </div>
+          </div>
+
+          <div class="relative bg-[#0b0f19] flex-1 overflow-hidden">
+            <canvas id="waveCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+            <div class="absolute top-3 left-3 px-2 py-1 bg-slate-900/80 rounded border border-slate-700 text-[10px] font-bold text-slate-400 tracking-wider">
+               Time Domain Waveform
+            </div>
+            
+            <div class="absolute top-3 right-3 flex flex-col gap-1 px-2 py-1.5 bg-slate-900/80 rounded border border-slate-700 text-[9px] font-bold text-slate-300">
+               <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-indigo-500 block"></span> $V_{total}$</div>
+               <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-amber-400 block"></span> $I$ (Current)</div>
+               <div id="leg-comps" class="flex flex-col gap-1">
+                 <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-emerald-500 block"></span> $V_R$ (Resistor)</div>
+                 <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-rose-500 block"></span> $V_L$ (Inductor)</div>
+                 <div class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-cyan-400 block"></span> $V_C$ (Capacitor)</div>
+               </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What does ELI the ICE man mean in AC circuits?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                It's a mnemonic to remember phase shifts! <br><br>
+                <strong>ELI:</strong> In an Inductor (L), voltage (E) leads current (I) by 90°.<br>
+                <strong>ICE:</strong> In a Capacitor (C), current (I) leads voltage (E) by 90°.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What happens mathematically to the circuit at the Resonance Frequency ($f_0$)?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                At resonance, the inductive reactance ($X_L$) exactly equals the capacitive reactance ($X_C$). Because they are 180° out of phase, they completely cancel each other out ($X_L - X_C = 0$). The total impedance $Z$ drops to its minimum value (just $R$), and current reaches its maximum peak.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why is a Power Factor ($\cos \phi$) of 1.0 desirable in power grids?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                Real power (Watts) actually consumed by a circuit is $P = V \times I \times \cos(\phi)$. If the phase angle $\phi$ is large, $\cos(\phi)$ approaches 0, meaning the utility company has to pump massive amounts of current (I) through the wires to deliver the same real power. This wastes energy as heat in the transmission lines.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How do you graphically add $V_R$, $V_L$, and $V_C$ to find total Voltage $V$ on the Phasor Diagram?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                You add them via vector addition! Because $V_L$ points 90° ahead and $V_C$ points 90° behind the current, they lie on the same axis but point opposite ways. You subtract them ($V_L - V_C$) to get the net reactive voltage, and then use the Pythagorean theorem with $V_R$ to find the hypotenuse ($V_{total}$).
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Current (I) is visually scaled up relative to Voltage for clear representation on graphs.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> RLC PHASOR PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>AC Circuit Phasor Laboratory</strong>! Visualize the phase differences caused by reactive components.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>The Sliders</strong>: Adjust Resistance ($R$), Inductance ($L$), Capacitance ($C$), and AC Frequency ($f$).</li>
+            <li><strong>Resonance</strong>: Try to match the AC frequency ($f$) to the natural Resonance Frequency ($f_0$) displayed on the dashboard. Watch the phase angle drop to zero and the current spike!</li>
+            <li><strong>Phasor Diagram (Top)</strong>: Visualizes the signals as rotating vectors. Use the "Freeze Rotation" toggle to pause them and examine the 90° relationships between $V_R$, $V_L$, and $V_C$.</li>
+            <li><strong>Waveform Graph (Bottom)</strong>: Traces the actual sinusoidal time-domain signals. Notice how the peaks of the Inductor and Capacitor voltages are out of sync with the Current.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let isRunning = true;
+    
+    // Base inputs
+    let R = 100; // Ohms
+    let L = 150; // mH
+    let C = 100; // uF
+    let f = 50;  // Hz
+    let Vm = 100; // Peak Voltage (fixed for scale)
+
+    // Calculated derived metrics
+    let omega = 0;
+    let XL = 0;
+    let XC = 0;
+    let Z = 0;
+    let Im = 0;
+    let phi = 0; // Phase angle in radians (V leads I if > 0)
+    let f0 = 0;
+    
+    // Component Voltages
+    let VR = 0;
+    let VL = 0;
+    let VC = 0;
+
+    // Time Tracking
+    let simTime = 0;
+
+    // --- DOM Elements ---
+    const sliderR = document.getElementById('slider-r');
+    const numR = document.getElementById('num-r');
+    const sliderL = document.getElementById('slider-l');
+    const numL = document.getElementById('num-l');
+    const sliderC = document.getElementById('slider-c');
+    const numC = document.getElementById('num-c');
+    const sliderF = document.getElementById('slider-f');
+    const numF = document.getElementById('num-f');
+
+    const chkComps = document.getElementById('chk-components');
+    const chkFreeze = document.getElementById('chk-freeze');
+    const legComps = document.getElementById('leg-comps');
+
+    const telZ = document.getElementById('tel-Z');
+    const telf0 = document.getElementById('tel-f0');
+    const telPhase = document.getElementById('tel-phase');
+    const telPf = document.getElementById('tel-pf');
+
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+
+    const pCanvas = document.getElementById('phasorCanvas');
+    const pCtx = pCanvas.getContext('2d');
+    
+    const wCanvas = document.getElementById('waveCanvas');
+    const wCtx = wCanvas.getContext('2d');
+
+    // --- Core Math Engine ---
+    function updateCalculations() {
+       omega = 2 * Math.PI * f;
+       
+       // Convert mH and uF to standard units
+       let L_H = L * 1e-3;
+       let C_F = C * 1e-6;
+
+       XL = omega * L_H;
+       XC = 1 / (omega * C_F);
+       
+       Z = Math.sqrt(R*R + Math.pow(XL - XC, 2));
+       Im = Vm / Z;
+
+       // Phase angle: atan((XL - XC) / R). Positive means V leads I (Inductive).
+       phi = Math.atan2(XL - XC, R);
+
+       VR = Im * R;
+       VL = Im * XL;
+       VC = Im * XC;
+
+       f0 = 1 / (2 * Math.PI * Math.sqrt(L_H * C_F));
+
+       updateTelemetryUI();
+    }
+
+    function updateTelemetryUI() {
+       telZ.innerHTML = `${Z.toFixed(1)} &Omega;`;
+       telf0.innerText = `${f0.toFixed(1)} Hz`;
+       
+       let phiDeg = phi * (180 / Math.PI);
+       let stateStr = "In Phase";
+       let colorClass = "text-slate-400";
+       
+       if (phiDeg > 1.0) { stateStr = "V leads I (Inductive)"; colorClass = "text-rose-400"; }
+       else if (phiDeg < -1.0) { stateStr = "I leads V (Capacitive)"; colorClass = "text-cyan-400"; }
+       else { stateStr = "Resonance"; colorClass = "text-emerald-400"; }
+
+       telPhase.innerText = `${Math.abs(phiDeg).toFixed(1)}° (${stateStr})`;
+       telPhase.className = `text-sm font-bold font-mono mt-0.5 tracking-widest ${colorClass}`;
+
+       telPf.innerText = Math.cos(phi).toFixed(3);
+    }
+
+    // --- Input Handlers ---
+    function syncInput(val, slider, num, updateVarFn) {
+      val = parseFloat(val);
+      slider.value = val;
+      num.value = val;
+      updateVarFn(val);
+      updateCalculations();
+    }
+
+    sliderR.addEventListener('input', e => syncInput(e.target.value, sliderR, numR, v => R = v));
+    numR.addEventListener('change', e => syncInput(e.target.value, sliderR, numR, v => R = v));
+
+    sliderL.addEventListener('input', e => syncInput(e.target.value, sliderL, numL, v => L = v));
+    numL.addEventListener('change', e => syncInput(e.target.value, sliderL, numL, v => L = v));
+
+    sliderC.addEventListener('input', e => syncInput(e.target.value, sliderC, numC, v => C = v));
+    numC.addEventListener('change', e => syncInput(e.target.value, sliderC, numC, v => C = v));
+
+    sliderF.addEventListener('input', e => syncInput(e.target.value, sliderF, numF, v => f = v));
+    numF.addEventListener('change', e => syncInput(e.target.value, sliderF, numF, v => f = v));
+
+    chkComps.addEventListener('change', (e) => {
+       legComps.style.display = e.target.checked ? 'flex' : 'none';
+    });
+
+    btnRun.addEventListener('click', () => {
+      isRunning = true;
+      btnRun.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      btnPause.classList.remove('bg-indigo-600', 'text-white');
+    });
+
+    btnPause.addEventListener('click', () => {
+      isRunning = false;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+    });
+
+    btnReset.addEventListener('click', () => {
+      syncInput(100, sliderR, numR, v => R = v);
+      syncInput(150, sliderL, numL, v => L = v);
+      syncInput(100, sliderC, numC, v => C = v);
+      syncInput(50, sliderF, numF, v => f = v);
+      simTime = 0;
+    });
+
+    // --- Canvas Rendering Helpers ---
+    function resizeCanvases() {
+      const pContainer = pCanvas.parentElement;
+      const wContainer = wCanvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      
+      pCanvas.width = pContainer.clientWidth * dpr;
+      pCanvas.height = pContainer.clientHeight * dpr;
+      pCtx.resetTransform();
+      pCtx.scale(dpr, dpr);
+
+      wCanvas.width = wContainer.clientWidth * dpr;
+      wCanvas.height = wContainer.clientHeight * dpr;
+      wCtx.resetTransform();
+      wCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvases);
+
+    function drawVector(ctx, cx, cy, mag, ang, color, label=null, lineWidth=3) {
+       let endX = cx + mag * Math.cos(ang);
+       let endY = cy - mag * Math.sin(ang); // Minus because canvas Y is down
+
+       ctx.strokeStyle = color;
+       ctx.fillStyle = color;
+       ctx.lineWidth = lineWidth;
+       
+       ctx.beginPath();
+       ctx.moveTo(cx, cy);
+       ctx.lineTo(endX, endY);
+       ctx.stroke();
+
+       // Arrow head
+       let hLength = 8;
+       ctx.beginPath();
+       ctx.moveTo(endX, endY);
+       ctx.lineTo(endX - hLength * Math.cos(ang - 0.4), endY + hLength * Math.sin(ang - 0.4));
+       ctx.lineTo(endX - hLength * Math.cos(ang + 0.4), endY + hLength * Math.sin(ang + 0.4));
+       ctx.fill();
+
+       if (label) {
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillText(label, endX + 10 * Math.cos(ang), endY - 10 * Math.sin(ang));
+       }
+    }
+
+    // --- Render Loop ---
+    let lastTime = performance.now();
+
+    function renderLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      if (isRunning) {
+         simTime += dt;
+      }
+
+      // Time variables
+      let t_eval = simTime;
+      // If frozen, render at t=0 so V is flat on x-axis
+      if (chkFreeze.checked) t_eval = 0;
+
+      const wt = omega * t_eval;
+
+      // ------------------------------------------------
+      // 1. PHASOR DIAGRAM (Polar)
+      // ------------------------------------------------
+      const pW = pCanvas.width / window.devicePixelRatio;
+      const pH = pCanvas.height / window.devicePixelRatio;
+      pCtx.clearRect(0, 0, pW, pH);
+
+      const cx = pW / 2;
+      const cy = pH / 2;
+      const maxRadius = Math.min(cx, cy) - 30;
+
+      // Polar Grid
+      pCtx.strokeStyle = '#1e293b';
+      pCtx.lineWidth = 1;
+      pCtx.beginPath();
+      // Concentric circles
+      pCtx.arc(cx, cy, maxRadius, 0, Math.PI*2);
+      pCtx.arc(cx, cy, maxRadius*0.66, 0, Math.PI*2);
+      pCtx.arc(cx, cy, maxRadius*0.33, 0, Math.PI*2);
+      // Axes
+      pCtx.moveTo(cx - maxRadius, cy); pCtx.lineTo(cx + maxRadius, cy);
+      pCtx.moveTo(cx, cy - maxRadius); pCtx.lineTo(cx, cy + maxRadius);
+      pCtx.stroke();
+
+      // Find largest magnitude to scale vectors cleanly
+      // Vm is fixed at 100. VR, VL, VC can exceed Vm near resonance.
+      let maxMag = Math.max(Vm, VR, VL, VC);
+      let pxScale = maxRadius / maxMag;
+      
+      // I is usually much smaller than V, so multiply by a visual constant relative to V scale
+      // Let's map I to be visually distinct. Max Im happens at resonance: Vm/R. 
+      // If R=10, Im=10. If V=100, we want I to look decent. 
+      let iScale = pxScale * (Vm / (1000/R)); // Dynamic visual scaling for I
+
+      // Define standard angles. Note: in standard math convention, angle is positive counter-clockwise.
+      // Total V angle = wt
+      let angV = wt;
+      // I angle = wt - phi (Current lags voltage by phi)
+      let angI = wt - phi;
+
+      // Draw Individual Components if checked
+      if (chkComps.checked) {
+         // VR is in phase with I
+         drawVector(pCtx, cx, cy, VR * pxScale, angI, '#10b981', 'V_R', 2);
+         // VL leads I by 90 (pi/2)
+         drawVector(pCtx, cx, cy, VL * pxScale, angI + Math.PI/2, '#f43f5e', 'V_L', 2);
+         // VC lags I by 90
+         drawVector(pCtx, cx, cy, VC * pxScale, angI - Math.PI/2, '#22d3ee', 'V_C', 2);
+      }
+
+      // Draw Total V and I
+      drawVector(pCtx, cx, cy, Vm * pxScale, angV, '#6366f1', 'V_T', 3); // Indigo
+      drawVector(pCtx, cx, cy, Im * iScale * 100, angI, '#fbbf24', 'I', 3); // Amber. *100 purely visual boost
+
+
+      // ------------------------------------------------
+      // 2. WAVEFORM GRAPH (Cartesian)
+      // ------------------------------------------------
+      const wW = wCanvas.width / window.devicePixelRatio;
+      const wH = wCanvas.height / window.devicePixelRatio;
+      wCtx.clearRect(0, 0, wW, wH);
+
+      const oX = 40;
+      const oY = wH / 2;
+      const graphW = wW - 60;
+      const graphH = wH - 40;
+
+      // Grid
+      wCtx.strokeStyle = '#1e293b';
+      wCtx.lineWidth = 1;
+      wCtx.beginPath();
+      wCtx.moveTo(oX, oY); wCtx.lineTo(oX + graphW, oY); // Zero line
+      wCtx.moveTo(oX, oY - graphH/2); wCtx.lineTo(oX + graphW, oY - graphH/2); // Top bound
+      wCtx.moveTo(oX, oY + graphH/2); wCtx.lineTo(oX + graphW, oY + graphH/2); // Bottom bound
+      wCtx.stroke();
+      
+      // X-Axis Window = 3 full cycles of the default 50Hz = 0.06 seconds.
+      const timeWindow = 0.06; 
+      
+      const drawSine = (mag, phaseShift, color, lineWidth=2, isDashed=false) => {
+         wCtx.strokeStyle = color;
+         wCtx.lineWidth = lineWidth;
+         if(isDashed) wCtx.setLineDash([4,4]);
+         else wCtx.setLineDash([]);
+         wCtx.lineJoin = 'round';
+         wCtx.beginPath();
+         
+         // If frozen, we draw a static wave spanning t=0 to t=timeWindow
+         // If running, we draw from t=(simTime) to t=(simTime+timeWindow), but sliding left
+         let t_start = chkFreeze.checked ? 0 : simTime;
+
+         for(let px = 0; px <= graphW; px += 2) {
+            let t_local = t_start + (px / graphW) * timeWindow;
+            // sin(omega*t - phi)
+            let val = mag * Math.sin(omega * t_local - phaseShift);
+            
+            // Map amplitude to pixels (using same maxMag pxScale)
+            let py = oY - (val * pxScale); 
+            // Clamp to avoid drawing over headers
+            py = Math.max(oY - graphH/2, Math.min(oY + graphH/2, py));
+
+            // Shift X so the wave flows left-to-right or right-to-left
+            // To make wave move right-to-left, we render t_local but map px normally
+            if(px===0) wCtx.moveTo(oX + px, py);
+            else wCtx.lineTo(oX + px, py);
+         }
+         wCtx.stroke();
+      };
+
+      // Ensure iScale matches phasor visual boost
+      let iWaveScale = (Im * iScale * 100) / Im;
+
+      if (chkComps.checked) {
+         drawSine(VR, phi, '#10b981', 1.5, true); // VR (phase = phi, lags V)
+         drawSine(VL, phi - Math.PI/2, '#f43f5e', 1.5, true); // VL (leads I, so phase = phi - pi/2)
+         drawSine(VC, phi + Math.PI/2, '#22d3ee', 1.5, true); // VC (lags I, so phase = phi + pi/2)
+      }
+
+      // Total V has 0 intrinsic phase shift from itself
+      drawSine(Vm, 0, '#6366f1', 2.5);
+      // I lags V by phi
+      drawSine(Im * iWaveScale, phi, '#fbbf24', 2.5);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      resizeCanvases();
+      updateCalculations();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

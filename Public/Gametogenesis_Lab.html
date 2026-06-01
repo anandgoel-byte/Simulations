@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gametogenesis Stage Animator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-rose::-webkit-slider-thumb {
+      background-color: #f43f5e;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"].slider-blue::-webkit-slider-thumb {
+      background-color: #3b82f6;
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Gametogenesis Stage Animator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Human Reproduction &amp; Meiotic Cell Division Lab</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Biological Pathway:</span>
+        <button id="btn-sperm" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded transition-all shadow-sm">
+          Spermatogenesis (Male)
+        </button>
+        <button id="btn-oo" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm">
+          Oogenesis (Female)
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-chromosomes" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Ploidy ($2n$ / $n$)</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm transition-colors duration-300" id="info-panel">
+             <span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1" id="info-title">Spermatogenesis</span>
+             <p class="text-[11px] font-medium text-slate-700 leading-relaxed" id="info-desc">
+               Occurs continuously in the seminiferous tubules. A single diploid spermatogonium undergoes equal meiotic divisions to produce four perfectly functional, motile spermatozoa.
+             </p>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="uppercase">Developmental Stage</span>
+              <span id="lbl-stage" class="font-mono text-indigo-600 text-sm font-bold">Stage 1</span>
+            </div>
+            <input type="range" id="sl-stage" min="0" max="4" step="1" value="0" class="w-full mt-2 slider-blue">
+            
+            <div class="space-y-1.5 mt-4">
+              <button onclick="setStage(0)" class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[10px] rounded transition-colors border border-slate-200 uppercase tracking-wider" id="btn-st0">
+                1. Multiplication Phase
+              </button>
+              <button onclick="setStage(1)" class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[10px] rounded transition-colors border border-slate-200 uppercase tracking-wider" id="btn-st1">
+                2. Growth Phase
+              </button>
+              <button onclick="setStage(2)" class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[10px] rounded transition-colors border border-slate-200 uppercase tracking-wider" id="btn-st2">
+                3. Meiosis I (Reduction)
+              </button>
+              <button onclick="setStage(3)" class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[10px] rounded transition-colors border border-slate-200 uppercase tracking-wider" id="btn-st3">
+                4. Meiosis II (Equation)
+              </button>
+              <button onclick="setStage(4)" class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[10px] rounded transition-colors border border-slate-200 uppercase tracking-wider" id="btn-st4">
+                5. Differentiation
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-blue-400 tracking-wider uppercase" id="canvas-hud">Cell Lineage Viewer</span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Cellular Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Current Ploidy</div>
+              <div class="text-xl font-bold font-mono text-slate-700" id="tel-ploidy">Diploid ($2n$)</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Chromosomes</div>
+              <div class="text-xl font-bold font-mono text-slate-700" id="tel-chromos">46</div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 mt-1 transition-colors duration-300" id="tel-box">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Active Cell Name</div>
+              <div class="text-[13px] font-bold font-mono tracking-widest text-blue-400 uppercase" id="tel-name">Spermatogonium</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                During which specific stage does the chromosome number halve from $2n$ to $n$?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does Oogenesis produce non-functional polar bodies?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the process of Spermiogenesis?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                At what stage is Oogenesis arrested in human females at birth?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> GAMETOGENESIS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Human Reproduction Laboratory</strong>! Compare the cellular pathways that produce sperm and eggs.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Pathway Toggle</strong>: Switch between the Male (Spermatogenesis) and Female (Oogenesis) pathways. Notice how the visual tree structure drastically changes!</li>
+            <li><strong>Developmental Slider</strong>: Drag the slider (or click the phase buttons) to step through Mitosis, Growth, Meiosis I, Meiosis II, and Differentiation.</li>
+            <li><strong>Ploidy Tracking</strong>: Watch the Telemetry panel. Note exactly when the cell drops from 46 chromosomes (Diploid) to 23 chromosomes (Haploid).</li>
+            <li><strong>Polar Bodies</strong>: In the female pathway, observe the unequal division of cytoplasm. The tiny offshoot cells are Polar Bodies, which exist solely to discard excess chromosomes while saving the nutrients for the Ovum!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "During which specific stage does the chromosome number halve from 2n to n?",
+        options: [
+          { text: "Mitosis (Multiplication Phase)", isCorrect: false, exp: "Incorrect. Mitosis maintains the diploid (2n) number." },
+          { text: "Meiosis I (Reduction Division)", isCorrect: true, exp: "Correct! Meiosis I separates homologous chromosomes. The Primary Spermatocyte (2n = 46) divides into two Secondary Spermatocytes (n = 23). This is the crucial reduction step." },
+          { text: "Meiosis II (Equation Division)", isCorrect: false, exp: "Incorrect. Meiosis II separates sister chromatids, maintaining the haploid (n) state." },
+          { text: "Differentiation", isCorrect: false, exp: "Incorrect. This phase involves structural changes (like growing a tail), not genetic division." }
+        ]
+      },
+      q2: {
+        question: "Why does Oogenesis produce non-functional polar bodies?",
+        options: [
+          { text: "To eliminate mutant DNA.", isCorrect: false, exp: "Incorrect. The DNA is perfectly normal." },
+          { text: "To feed the developing sperm.", isCorrect: false, exp: "Incorrect. Polar bodies degenerate." },
+          { text: "To discard half the chromosomes while retaining nearly all the cytoplasm for the ovum.", isCorrect: true, exp: "Correct! The zygote needs a massive store of nutrients and organelles to survive its initial divisions before implanting in the uterus. Unequal cytokinesis ensures one massive, resource-rich cell is produced instead of four small ones." },
+          { text: "To act as backups in case the ovum fails.", isCorrect: false, exp: "Incorrect. They cannot be fertilized." }
+        ]
+      },
+      q3: {
+        question: "What is the process of Spermiogenesis?",
+        options: [
+          { text: "The initial mitotic division of spermatogonia.", isCorrect: false, exp: "Incorrect. That is the multiplication phase." },
+          { text: "The structural differentiation of round spermatids into motile spermatozoa.", isCorrect: true, exp: "Correct! Spermiogenesis is the final phase where the haploid spermatids shed excess cytoplasm, pack their mitochondria, and grow a flagellum (tail) to become fully functional sperm." },
+          { text: "The formation of semen.", isCorrect: false, exp: "Incorrect." },
+          { text: "The hormonal trigger for puberty.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "At what stage is Oogenesis arrested in human females at birth?",
+        options: [
+          { text: "Prophase I (as Primary Oocytes)", isCorrect: true, exp: "Correct! Females are born with all the eggs they will ever have. These cells begin Meiosis I but are frozen in Prophase I until puberty, when hormones trigger them to resume the cycle one by one each month." },
+          { text: "Metaphase II", isCorrect: false, exp: "Incorrect. The egg arrests at Metaphase II *after* ovulation, waiting for fertilization by a sperm." },
+          { text: "Oogonia", isCorrect: false, exp: "Incorrect. Oogonia differentiate into primary oocytes before birth." },
+          { text: "Mature Ovum", isCorrect: false, exp: "Incorrect. A mature ovum only forms if fertilization occurs." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- BIOLOGICAL ENGINE & UI ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const btnSperm = document.getElementById('btn-sperm');
+    const btnOo = document.getElementById('btn-oo');
+    const slStage = document.getElementById('sl-stage');
+    const chkChromosomes = document.getElementById('chk-chromosomes');
+    
+    const infoPanel = document.getElementById('info-panel');
+    const infoTitle = document.getElementById('info-title');
+    const infoDesc = document.getElementById('info-desc');
+    const hud = document.getElementById('canvas-hud');
+    
+    const telPloidy = document.getElementById('tel-ploidy');
+    const telChromos = document.getElementById('tel-chromos');
+    const telBox = document.getElementById('tel-box');
+    const telName = document.getElementById('tel-name');
+
+    // State
+    let mode = 'sperm'; // 'sperm' or 'oo'
+    let currentStage = 0; // 0 to 4
+    let targetStage = 0; // For smooth interpolation
+    let animProgress = 0; // Smooth 0 to 4
+
+    // Data Models
+    const DATA = {
+        sperm: {
+            theme: 'blue',
+            title: "Spermatogenesis",
+            desc: "Occurs continuously in the seminiferous tubules. A single diploid spermatogonium undergoes equal meiotic divisions to produce four perfectly functional, motile spermatozoa.",
+            stages: [
+                { name: "Spermatogonium", ploidy: "Diploid ($2n$)", chr: 46 },
+                { name: "Primary Spermatocyte", ploidy: "Diploid ($2n$)", chr: 46 },
+                { name: "Secondary Spermatocytes", ploidy: "Haploid ($n$)", chr: 23 },
+                { name: "Spermatids", ploidy: "Haploid ($n$)", chr: 23 },
+                { name: "Spermatozoa (Mature)", ploidy: "Haploid ($n$)", chr: 23 }
+            ]
+        },
+        oo: {
+            theme: 'rose',
+            title: "Oogenesis",
+            desc: "Occurs in the ovaries. Highly unequal cytoplasm division results in one massive Ovum rich in nutrients, and tiny Polar Bodies that degenerate.",
+            stages: [
+                { name: "Oogonium", ploidy: "Diploid ($2n$)", chr: 46 },
+                { name: "Primary Oocyte", ploidy: "Diploid ($2n$)", chr: 46 },
+                { name: "Secondary Oocyte + 1st PB", ploidy: "Haploid ($n$)", chr: 23 },
+                { name: "Ootid + 2nd PB", ploidy: "Haploid ($n$)", chr: 23 },
+                { name: "Mature Ovum", ploidy: "Haploid ($n$)", chr: 23 }
+            ]
+        }
+    };
+
+    function setMode(newMode) {
+        mode = newMode;
+        if (mode === 'sperm') {
+            btnSperm.className = "px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded transition-all shadow-sm";
+            btnOo.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
+            slStage.className = "w-full mt-2 slider-blue";
+            infoPanel.className = "bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm transition-colors duration-300";
+            infoTitle.className = "text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1";
+            hud.className = "text-[10px] font-bold text-blue-400 tracking-wider uppercase";
+        } else {
+            btnOo.className = "px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded transition-all shadow-sm";
+            btnSperm.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
+            slStage.className = "w-full mt-2 slider-rose";
+            infoPanel.className = "bg-rose-50 p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300";
+            infoTitle.className = "text-[11px] font-extrabold text-rose-600 uppercase tracking-wider block mb-2 border-b border-rose-100 pb-1";
+            hud.className = "text-[10px] font-bold text-rose-400 tracking-wider uppercase";
+        }
+        infoTitle.innerText = DATA[mode].title;
+        infoDesc.innerText = DATA[mode].desc;
+        updateUI();
+    }
+
+    // Exposed to HTML buttons
+    window.setStage = function(val) {
+        targetStage = parseInt(val);
+        slStage.value = targetStage;
+        updateUI();
+    };
+
+    slStage.addEventListener('input', e => {
+        targetStage = parseInt(e.target.value);
+        updateUI();
+    });
+
+    btnSperm.addEventListener('click', () => setMode('sperm'));
+    btnOo.addEventListener('click', () => setMode('oo'));
+
+    function updateUI() {
+        // Highlight active button
+        for(let i=0; i<=4; i++) {
+            let b = document.getElementById(`btn-st${i}`);
+            if (i === targetStage) {
+                b.classList.remove('bg-slate-50', 'text-slate-600');
+                if(mode==='sperm') b.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-300');
+                else b.classList.add('bg-rose-100', 'text-rose-800', 'border-rose-300');
+            } else {
+                b.className = "w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-[10px] rounded transition-colors border border-slate-200 uppercase tracking-wider";
+            }
+        }
+
+        // Telemetry Update based on targetStage
+        let stData = DATA[mode].stages[targetStage];
+        
+        telPloidy.innerHTML = stData.ploidy;
+        telChromos.innerText = stData.chr;
+        telName.innerText = stData.name;
+
+        if (stData.chr === 46) {
+            telName.className = `text-[13px] font-bold font-mono tracking-widest uppercase ${mode==='sperm' ? 'text-blue-400' : 'text-rose-400'}`;
+        } else {
+            telName.className = `text-[13px] font-bold font-mono tracking-widest uppercase text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]`;
+            telPloidy.innerHTML = "Haploid ($n$)"; // Force refresh mathjax
+        }
+
+        // Re-process MathJax if available
+        if(window.MathJax) {
+            MathJax.typesetPromise([telPloidy]).catch((err) => console.log(err));
+        }
+    }
+
+    // --- CANVAS RENDERING ---
+    function lerp(start, end, amt) {
+        return (1 - amt) * start + amt * end;
+    }
+
+    function drawCell(x, y, r, color, label, ploidyText, drawTail=false, opacity=1.0) {
+        if (opacity < 0.05) return;
+        ctx.globalAlpha = opacity;
+        
+        ctx.fillStyle = color;
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = color; ctx.shadowBlur = 15;
+        
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Draw Tail (Spermiogenesis)
+        if (drawTail) {
+            ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y + r);
+            ctx.quadraticCurveTo(x + 10, y + r + 20, x, y + r + 40);
+            ctx.quadraticCurveTo(x - 10, y + r + 60, x, y + r + 80);
+            ctx.stroke();
+        }
+
+        if (chkChromosomes.checked && r >= 15) {
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(ploidyText, x, y);
+        }
+
+        ctx.globalAlpha = 1.0;
+    }
+
+    function drawLine(x1, y1, x2, y2, opacity=1.0) {
+        if(opacity < 0.05) return;
+        ctx.globalAlpha = opacity;
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        ctx.globalAlpha = 1.0;
+    }
+
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderLoop); return; }
+
+      // Smooth interpolation
+      animProgress = lerp(animProgress, targetStage, 0.1);
+
+      const cx = cw / 2;
+      const stepY = ch / 5;
+      const y0 = stepY * 0.5;
+      const y1 = stepY * 1.5;
+      const y2 = stepY * 2.5;
+      const y3 = stepY * 3.5;
+      const y4 = stepY * 4.5;
+
+      const cBase = mode === 'sperm' ? '#3b82f6' : '#f43f5e';
+      const cHap = '#10b981'; // Green for haploid
+
+      if (mode === 'sperm') {
+          // --- SPERMATOGENESIS TREE ---
+          // Stage 0 -> 1: Spermatogonium -> Primary Spermatocyte (Growth)
+          let r1 = lerp(20, 30, Math.min(1, animProgress)); // grows
+          drawCell(cx, y0, 20, cBase, '', '2n');
+          drawLine(cx, y0+20, cx, y1-r1, Math.min(1, animProgress));
+          
+          if (animProgress > 0.1) {
+              drawCell(cx, y1, r1, cBase, '', '2n', false, Math.min(1, animProgress));
+          }
+
+          // Stage 1 -> 2: Meiosis I (Split to 2)
+          let op2 = Math.max(0, Math.min(1, animProgress - 1));
+          let s2_x1 = cx - 80; let s2_x2 = cx + 80;
+          drawLine(cx, y1+r1, s2_x1, y2-20, op2);
+          drawLine(cx, y1+r1, s2_x2, y2-20, op2);
+          
+          if (animProgress > 1.1) {
+              drawCell(s2_x1, y2, 20, cHap, '', 'n', false, op2);
+              drawCell(s2_x2, y2, 20, cHap, '', 'n', false, op2);
+          }
+
+          // Stage 2 -> 3: Meiosis II (Split to 4)
+          let op3 = Math.max(0, Math.min(1, animProgress - 2));
+          let s3_x1 = cx - 120; let s3_x2 = cx - 40;
+          let s3_x3 = cx + 40;  let s3_x4 = cx + 120;
+          
+          drawLine(s2_x1, y2+20, s3_x1, y3-15, op3);
+          drawLine(s2_x1, y2+20, s3_x2, y3-15, op3);
+          drawLine(s2_x2, y2+20, s3_x3, y3-15, op3);
+          drawLine(s2_x2, y2+20, s3_x4, y3-15, op3);
+
+          if (animProgress > 2.1) {
+              drawCell(s3_x1, y3, 15, cHap, '', 'n', false, op3);
+              drawCell(s3_x2, y3, 15, cHap, '', 'n', false, op3);
+              drawCell(s3_x3, y3, 15, cHap, '', 'n', false, op3);
+              drawCell(s3_x4, y3, 15, cHap, '', 'n', false, op3);
+          }
+
+          // Stage 3 -> 4: Differentiation (Tails grow)
+          let op4 = Math.max(0, Math.min(1, animProgress - 3));
+          drawLine(s3_x1, y3+15, s3_x1, y4-10, op4);
+          drawLine(s3_x2, y3+15, s3_x2, y4-10, op4);
+          drawLine(s3_x3, y3+15, s3_x3, y4-10, op4);
+          drawLine(s3_x4, y3+15, s3_x4, y4-10, op4);
+
+          if (animProgress > 3.1) {
+              // Draw tails based on op4
+              drawCell(s3_x1, y4, 10, cHap, '', 'n', true, op4);
+              drawCell(s3_x2, y4, 10, cHap, '', 'n', true, op4);
+              drawCell(s3_x3, y4, 10, cHap, '', 'n', true, op4);
+              drawCell(s3_x4, y4, 10, cHap, '', 'n', true, op4);
+          }
+
+      } else {
+          // --- OOGENESIS TREE ---
+          // Keep the main cell centered, polar bodies push off to the right
+          
+          // Stage 0 -> 1: Oogonium -> Primary Oocyte (Massive Growth)
+          let r1 = lerp(20, 45, Math.min(1, animProgress)); // grows huge
+          drawCell(cx, y0, 20, cBase, '', '2n');
+          drawLine(cx, y0+20, cx, y1-r1, Math.min(1, animProgress));
+          
+          if (animProgress > 0.1) {
+              drawCell(cx, y1, r1, cBase, '', '2n', false, Math.min(1, animProgress));
+          }
+
+          // Stage 1 -> 2: Meiosis I (Unequal Split)
+          let op2 = Math.max(0, Math.min(1, animProgress - 1));
+          let s2_mainX = cx; 
+          let s2_pbX = cx + 90; // Polar body off to right
+          
+          drawLine(cx, y1+r1, s2_mainX, y2-35, op2);
+          drawLine(cx + r1*0.7, y1+r1*0.7, s2_pbX, y2-10, op2);
+          
+          if (animProgress > 1.1) {
+              // Secondary Oocyte (Large)
+              drawCell(s2_mainX, y2, 35, cHap, '', 'n', false, op2);
+              // 1st Polar Body (Tiny)
+              drawCell(s2_pbX, y2, 10, '#64748b', '', 'n', false, op2);
+          }
+
+          // Stage 2 -> 3: Meiosis II (Unequal Split again)
+          let op3 = Math.max(0, Math.min(1, animProgress - 2));
+          let s3_mainX = cx;
+          let s3_pb2X = cx + 80;
+          let s3_pb1aX = cx + 120; // 1st PB splits (sometimes)
+          let s3_pb1bX = cx + 150;
+          
+          drawLine(s2_mainX, y2+35, s3_mainX, y3-35, op3);
+          drawLine(s2_mainX + 25, y2+25, s3_pb2X, y3-10, op3);
+          
+          // PB1 dividing
+          drawLine(s2_pbX, y2+10, s3_pb1aX, y3-8, op3);
+          drawLine(s2_pbX, y2+10, s3_pb1bX, y3-8, op3);
+
+          if (animProgress > 2.1) {
+              // Ootid / Ovum (Massive)
+              drawCell(s3_mainX, y3, 35, cHap, '', 'n', false, op3);
+              // 2nd Polar Body
+              drawCell(s3_pb2X, y3, 10, '#64748b', '', 'n', false, op3);
+              // Divided 1st Polar bodies
+              drawCell(s3_pb1aX, y3, 8, '#64748b', '', '', false, op3);
+              drawCell(s3_pb1bX, y3, 8, '#64748b', '', '', false, op3);
+          }
+
+          // Stage 3 -> 4: Maturation (No physical division, just final status)
+          let op4 = Math.max(0, Math.min(1, animProgress - 3));
+          drawLine(s3_mainX, y3+35, s3_mainX, y4-40, op4);
+
+          if (animProgress > 3.1) {
+              // Mature Ovum
+              drawCell(s3_mainX, y4, 40, cHap, '', 'n', false, op4);
+              
+              // Draw degenerate X over polar bodies
+              ctx.globalAlpha = op4 * 0.8;
+              ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2;
+              let pbs = [s3_pb2X, s3_pb1aX, s3_pb1bX];
+              pbs.forEach(px => {
+                  ctx.beginPath(); ctx.moveTo(px-10, y3+20); ctx.lineTo(px+10, y3+40); ctx.stroke();
+                  ctx.beginPath(); ctx.moveTo(px+10, y3+20); ctx.lineTo(px-10, y3+40); ctx.stroke();
+              });
+              ctx.globalAlpha = 1.0;
+          }
+      }
+
+      // Draw Grid / Labels
+      ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText("Multiplication", 10, y0);
+      ctx.fillText("Growth", 10, y1);
+      ctx.fillText("Meiosis I", 10, y2);
+      ctx.fillText("Meiosis II", 10, y3);
+      ctx.fillText("Maturation", 10, y4);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      updateUI();
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

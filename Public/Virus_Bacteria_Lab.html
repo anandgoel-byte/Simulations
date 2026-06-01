@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virus vs Bacteria Comparator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-rose::-webkit-slider-thumb {
+      background-color: #f43f5e;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Virus vs Bacteria Comparator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Microbiology &amp; Pathogen Structural Analysis</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Display Mode:</span>
+        <select id="select-mode" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="split">Split-Screen Comparison</option>
+          <option value="bacteria">Focus: Bacterium (Prokaryote)</option>
+          <option value="virus">Focus: Virus (Bacteriophage)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-labels" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Organelle Labels</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-3 border-b border-indigo-100 pb-1 flex justify-between">
+              <span>Scale Zoom Lens</span>
+              <span id="lbl-scale" class="font-mono text-indigo-600">Normalized</span>
+            </span>
+            <input type="range" id="sl-zoom" min="0" max="100" step="1" value="100" class="w-full mt-1">
+            <div class="flex justify-between text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-wider">
+              <span>True Relative Size</span>
+              <span>Visual Detail (Normalized)</span>
+            </div>
+            <div class="text-[9px] text-slate-500 font-medium mt-3 leading-tight bg-slate-50 p-2 rounded border border-slate-100">
+              Drag left to reveal the true massive size difference between a host bacteria and a virus.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-1 border-b border-slate-100 pb-1">Anatomy Isolator</span>
+            
+            <label class="flex items-center justify-between cursor-pointer group">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-purple-500 shadow-sm"></span>
+                <span class="text-xs font-bold text-slate-700">Genetic Material (DNA/RNA)</span>
+              </div>
+              <input type="checkbox" id="tgl-dna" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer group">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+                <span class="text-xs font-bold text-slate-700">Bacterial Cell Wall</span>
+              </div>
+              <input type="checkbox" id="tgl-wall" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer group">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-amber-400 shadow-sm"></span>
+                <span class="text-xs font-bold text-slate-700">Ribosomes (Protein Factory)</span>
+              </div>
+              <input type="checkbox" id="tgl-ribo" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer group">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500 shadow-sm"></span>
+                <span class="text-xs font-bold text-slate-700">Viral Protein Capsid</span>
+              </div>
+              <input type="checkbox" id="tgl-capsid" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300">
+            </label>
+          </div>
+
+          <div class="bg-rose-50 p-4 rounded-xl border border-rose-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-rose-600 uppercase tracking-wider block mb-3 border-b border-rose-100 pb-1 flex justify-between">
+              <span>Medical Intervention</span>
+            </span>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-antibiotic" class="px-2 py-2 bg-white hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold text-[10px] rounded transition-all shadow-sm">
+                Apply Antibiotic (Penicillin)
+              </button>
+              <button id="btn-antiviral" class="px-2 py-2 bg-white hover:bg-blue-100 text-blue-700 border border-blue-300 font-bold text-[10px] rounded transition-all shadow-sm">
+                Apply Antiviral
+              </button>
+            </div>
+            <div id="treatment-feedback" class="hidden mt-3 text-[10px] font-bold text-slate-700 bg-white p-2 rounded border border-slate-200 leading-snug">
+              Feedback
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Specimen Chamber</span>
+        </div>
+
+        <div class="absolute bottom-4 right-4 z-20 pointer-events-none">
+          <span class="text-[10px] font-mono text-slate-400 opacity-60">1 Grid Unit = 100 nm (at True Scale)</span>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Biological Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Bacterium Size</div>
+              <div class="text-lg font-bold font-mono text-emerald-600">1,000 nm</div>
+              <div class="text-[8px] text-slate-500 font-medium">(1 µm)</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Virus Size</div>
+              <div class="text-lg font-bold font-mono text-rose-500">60 nm</div>
+              <div class="text-[8px] text-slate-500 font-medium">(0.06 µm)</div>
+            </div>
+
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="w-full flex justify-between items-center border-b border-slate-700 pb-2 mb-2">
+              <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Metabolism Status</span>
+              <span class="text-[10px] font-bold font-mono text-emerald-400 tracking-widest" id="tel-meta">Bacteria: Active</span>
+            </div>
+            <div class="w-full flex justify-between items-center">
+              <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Reproduction</span>
+              <span class="text-[10px] font-bold font-mono text-rose-400 tracking-widest" id="tel-repro">Virus: Obligate Parasite</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-2">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why are viruses generally considered to be "non-living"?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do antibiotics like Penicillin kill bacteria but have zero effect on viruses?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the protective outer shell of a virus called, and what is it made of?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does a virus reproduce?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> PATHOGEN COMPARATOR PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Microbiology Laboratory</strong>! Explore the stark structural differences between living bacteria and viral agents.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Scale Zoom Lens</strong>: This is the most important tool. At "Normalized" (100%), both pathogens are drawn side-by-side so you can see their internal parts. Slide it to 0% to see their <strong>True Relative Size</strong>. Notice how the virus becomes a tiny, barely-visible speck!</li>
+            <li><strong>Anatomy Isolator</strong>: Toggle specific biological structures on and off. Notice how unchecking "Ribosomes" removes them from the bacteria, but nothing changes on the virus (because viruses don't have ribosomes!).</li>
+            <li><strong>Medical Treatment</strong>: Apply an Antibiotic. The simulator will show the bacterial cell wall rupturing while the virus remains completely untouched.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "Why are viruses generally considered to be 'non-living'?",
+        options: [
+          { text: "They lack genetic material.", isCorrect: false, exp: "Incorrect. All viruses contain a genetic payload of either DNA or RNA." },
+          { text: "They lack a metabolism, organelles, and the ability to reproduce independently.", isCorrect: true, exp: "Correct! Viruses are obligate intracellular parasites. Outside of a host cell, they are completely inert chemical particles with no metabolism or biological machinery." },
+          { text: "They are too small to be seen with a light microscope.", isCorrect: false, exp: "Incorrect. Size does not determine biological life status." },
+          { text: "They do not cause diseases in plants.", isCorrect: false, exp: "Incorrect. Viruses infect all forms of life, including plants and bacteria." }
+        ]
+      },
+      q2: {
+        question: "Why do antibiotics like Penicillin kill bacteria but have zero effect on viruses?",
+        options: [
+          { text: "Antibiotics target specific living structures like the peptidoglycan cell wall or 70S ribosomes, which viruses do not possess.", isCorrect: true, exp: "Correct! Antibiotics work by jamming the physical gears of bacterial metabolism or cell wall synthesis. Since a virus has no cell wall and no metabolism, the antibiotic has nothing to attack." },
+          { text: "Viruses move too fast for antibiotics to catch them.", isCorrect: false, exp: "Incorrect. Antibiotics are chemicals, not physical hunters." },
+          { text: "Viruses possess a stronger immune system than bacteria.", isCorrect: false, exp: "Incorrect. Neither viruses nor bacteria have an 'immune system' in the human sense." },
+          { text: "Antibiotics only work in the presence of oxygen.", isCorrect: false, exp: "Incorrect. Many antibiotics work on anaerobic bacteria." }
+        ]
+      },
+      q3: {
+        question: "What is the protective outer shell of a virus called, and what is it made of?",
+        options: [
+          { text: "The Nucleus, made of lipids.", isCorrect: false, exp: "Incorrect. Viruses do not have a nucleus." },
+          { text: "The Cell Wall, made of cellulose.", isCorrect: false, exp: "Incorrect. That is the structure of a plant cell." },
+          { text: "The Capsid, made of proteins.", isCorrect: true, exp: "Correct! The viral genetic material is protected inside a geometric shell called a capsid, which is constructed from repeating protein subunits called capsomeres." },
+          { text: "The Capsule, made of carbohydrates.", isCorrect: false, exp: "Incorrect. A capsule is often found on the outside of bacteria, not viruses." }
+        ]
+      },
+      q4: {
+        question: "How does a virus reproduce?",
+        options: [
+          { text: "By dividing in half through binary fission.", isCorrect: false, exp: "Incorrect. That is how bacteria reproduce." },
+          { text: "By hijacking the ribosomes and enzymes of a living host cell to manufacture viral parts.", isCorrect: true, exp: "Correct! The virus injects its DNA/RNA into a host. The host's own ribosomes are tricked into reading the viral code and building thousands of new viral clones, eventually destroying the host cell." },
+          { text: "Through sexual reproduction with another virus.", isCorrect: false, exp: "Incorrect. Viruses do not have sexes or sexual reproduction." },
+          { text: "By absorbing nutrients from the environment and growing.", isCorrect: false, exp: "Incorrect. Viruses do not eat, grow, or have a metabolism." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- 2D CANVAS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const selMode = document.getElementById('select-mode');
+    const btnReset = document.getElementById('btn-reset');
+    const slZoom = document.getElementById('sl-zoom');
+    const lblScale = document.getElementById('lbl-scale');
+    const chkLabels = document.getElementById('chk-labels');
+
+    const tglDna = document.getElementById('tgl-dna');
+    const tglWall = document.getElementById('tgl-wall');
+    const tglRibo = document.getElementById('tgl-ribo');
+    const tglCapsid = document.getElementById('tgl-capsid');
+
+    const btnAntiB = document.getElementById('btn-antibiotic');
+    const btnAntiV = document.getElementById('btn-antiviral');
+    const txtFeedback = document.getElementById('treatment-feedback');
+
+    // Physics State
+    let zoomLevel = 1.0; // 0 to 1
+    let displayMode = 'split'; // split, bacteria, virus
+    let time = 0;
+    
+    let isBacteriumDead = false;
+    let isVirusBlocked = false;
+
+    // Initialization
+    function initApp() {
+        slZoom.addEventListener('input', e => {
+            zoomLevel = parseFloat(e.target.value) / 100;
+            if (zoomLevel > 0.9) lblScale.innerText = "Normalized (Visual)";
+            else if (zoomLevel < 0.1) lblScale.innerText = "True Relative Scale";
+            else lblScale.innerText = "Scaling...";
+        });
+
+        selMode.addEventListener('change', e => displayMode = e.target.value);
+
+        btnAntiB.addEventListener('click', () => {
+            isBacteriumDead = true;
+            txtFeedback.innerText = "Antibiotic (Penicillin) applied. Bacterial cell wall synthesis inhibited. Cell lyses and dies. Virus is completely unaffected.";
+            txtFeedback.className = "mt-3 text-[10px] font-bold text-emerald-700 bg-emerald-50 p-2 rounded border border-emerald-200 leading-snug block";
+            setTimeout(() => { isBacteriumDead = false; txtFeedback.classList.add('hidden'); }, 6000);
+        });
+
+        btnAntiV.addEventListener('click', () => {
+            isVirusBlocked = true;
+            txtFeedback.innerText = "Antiviral applied. Viral attachment proteins blocked. Virus neutralized. Bacterium is completely unaffected.";
+            txtFeedback.className = "mt-3 text-[10px] font-bold text-blue-700 bg-blue-50 p-2 rounded border border-blue-200 leading-snug block";
+            setTimeout(() => { isVirusBlocked = false; txtFeedback.classList.add('hidden'); }, 6000);
+        });
+
+        btnReset.addEventListener('click', () => {
+            slZoom.value = 100; zoomLevel = 1.0; lblScale.innerText = "Normalized (Visual)";
+            selMode.value = 'split'; displayMode = 'split';
+            tglDna.checked = true; tglWall.checked = true; tglRibo.checked = true; tglCapsid.checked = true;
+            chkLabels.checked = true;
+            isBacteriumDead = false; isVirusBlocked = false;
+            txtFeedback.classList.add('hidden');
+        });
+
+        renderQuestions();
+        requestAnimationFrame(renderLoop);
+    }
+
+    // Drawing Helpers
+    function drawLabel(x, y, text, color='#fff') {
+        if (!chkLabels.checked) return;
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, x, y);
+    }
+
+    function drawWavyPath(cx, cy, radius, frequency, amplitude, offset) {
+        ctx.beginPath();
+        for(let i=0; i<=Math.PI*2; i+=0.1) {
+            let r = radius + Math.sin(i * frequency + offset) * amplitude;
+            let x = cx + Math.cos(i) * r;
+            let y = cy + Math.sin(i) * r;
+            if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.closePath();
+    }
+
+    // Main Render Loop
+    function renderLoop() {
+        const container = canvas.parentElement;
+        const dpr = window.devicePixelRatio || 1;
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+        
+        if (cw > 0 && ch > 0 && (canvas.width !== cw * dpr || canvas.height !== ch * dpr)) {
+            canvas.width = cw * dpr;
+            canvas.height = ch * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+        }
+
+        const W = cw; const H = ch;
+        ctx.clearRect(0, 0, W, H);
+        if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+        time += 0.05;
+        
+        // Define base sizes
+        const baseBactRadius = 120;
+        const baseVirusRadius = 60; // Visually comparable
+        
+        // True scale ratio (Bacterium is 1000nm, Virus is ~60nm. Ratio is ~16x)
+        const trueScaleRatio = 0.06;
+
+        // Calculate dynamic scales based on slider
+        // When zoomLevel = 1 (Normalized), scale is 1
+        // When zoomLevel = 0 (True scale), virus scale shrinks to trueScaleRatio
+        const vScale = trueScaleRatio + (1.0 - trueScaleRatio) * zoomLevel;
+        
+        // Setup Viewports
+        let bX = W/2, vX = W/2;
+        let bY = H/2, vY = H/2;
+        let bDrawScale = 1.0, vDrawScale = vScale;
+
+        if (displayMode === 'split') {
+            bX = W * 0.3;
+            vX = W * 0.75;
+        } else if (displayMode === 'bacteria') {
+            vX = -999; // hide
+            bDrawScale = 1.5;
+        } else if (displayMode === 'virus') {
+            bX = -999; // hide
+            vDrawScale = 1.5; // override normal scale logic when focused
+        }
+
+        // ==========================================
+        // DRAW BACTERIUM
+        // ==========================================
+        if (bX > 0) {
+            ctx.save();
+            ctx.translate(bX, bY);
+            ctx.scale(bDrawScale, bDrawScale);
+
+            const bR = baseBactRadius;
+
+            // Death animation logic
+            let lysisOffset = isBacteriumDead ? (Math.random()*10 - 5) : 0;
+            let deathAlpha = isBacteriumDead ? 0.3 : 1.0;
+
+            // Flagella (Appendages)
+            ctx.globalAlpha = deathAlpha;
+            ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(-bR, 0);
+            for(let i=0; i<150; i+=5) {
+                let wave = isBacteriumDead ? 0 : Math.sin(i*0.05 - time)*15;
+                ctx.lineTo(-bR - i, wave);
+            }
+            ctx.stroke();
+
+            // Pili
+            ctx.lineWidth = 2;
+            for(let i=0; i<Math.PI*2; i+=0.3) {
+                let x1 = Math.cos(i)*bR; let y1 = Math.sin(i)*(bR*0.6);
+                let x2 = Math.cos(i)*(bR+20); let y2 = Math.sin(i)*(bR*0.6 + 20);
+                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            }
+
+            // Cell Wall & Capsule
+            if (tglWall.checked) {
+                ctx.fillStyle = isBacteriumDead ? 'rgba(244, 63, 94, 0.2)' : 'rgba(16, 185, 129, 0.2)'; // Turns red/fades if dead
+                ctx.strokeStyle = isBacteriumDead ? '#f43f5e' : '#10b981'; 
+                ctx.lineWidth = 10;
+                ctx.beginPath(); 
+                if (isBacteriumDead) {
+                    // Broken wall
+                    ctx.arc(0, 0, bR, -Math.PI/2, Math.PI);
+                    ctx.stroke();
+                    drawLabel(0, -bR - 25, "Ruptured Cell Wall (Lysed)", '#f43f5e');
+                } else {
+                    ctx.ellipse(0, 0, bR, bR*0.6, 0, 0, Math.PI*2);
+                    ctx.fill(); ctx.stroke();
+                    drawLabel(0, -bR*0.6 - 25, "Peptidoglycan Cell Wall", '#10b981');
+                }
+            }
+
+            // Plasma Membrane (Inner)
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.15)'; 
+            ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.ellipse(0, 0, bR-10 + lysisOffset, bR*0.6 - 10 + lysisOffset, 0, 0, Math.PI*2);
+            ctx.fill(); ctx.stroke();
+            if(!isBacteriumDead) drawLabel(0, bR*0.6 + 25, "Plasma Membrane", '#0ea5e9');
+
+            // DNA Nucleoid
+            if (tglDna.checked) {
+                ctx.strokeStyle = '#a855f7'; // Purple
+                ctx.lineWidth = 2;
+                ctx.save();
+                ctx.translate(20, 0);
+                let dnaWave = isBacteriumDead ? 0 : time;
+                drawWavyPath(0, 0, 40, 6, 15, dnaWave);
+                ctx.stroke();
+                
+                // Plasmid
+                ctx.beginPath(); ctx.arc(-60, 0, 15, 0, Math.PI*2); ctx.stroke();
+                ctx.restore();
+
+                drawLabel(20, 70, "Nucleoid (Circular DNA)", '#a855f7');
+            }
+
+            // Ribosomes (70S)
+            if (tglRibo.checked) {
+                ctx.fillStyle = '#f59e0b'; // Amber
+                for(let i=0; i<40; i++) {
+                    // pseudo-random distribution inside ellipse
+                    let angle = i * 2.4;
+                    let rad = (i * 13) % (bR - 20);
+                    let rx = Math.cos(angle)*rad;
+                    let ry = Math.sin(angle)*(rad*0.5);
+                    ctx.beginPath(); ctx.arc(rx, ry, 3, 0, Math.PI*2); ctx.fill();
+                }
+                drawLabel(-50, -40, "70S Ribosomes", '#f59e0b');
+            }
+
+            ctx.restore();
+            
+            if (displayMode === 'split') {
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText("BACTERIUM", bX, H - 40);
+                ctx.font = '11px sans-serif'; ctx.fillStyle = '#94a3b8';
+                ctx.fillText("Living Prokaryote", bX, H - 25);
+            }
+        }
+
+        // ==========================================
+        // DRAW VIRUS (Bacteriophage)
+        // ==========================================
+        if (vX > 0) {
+            ctx.save();
+            ctx.translate(vX, vY);
+            ctx.scale(vDrawScale, vDrawScale);
+
+            const vColor = isVirusBlocked ? '#64748b' : '#f43f5e'; // Slate if blocked, Rose if active
+            const pulse = isVirusBlocked ? 0 : Math.sin(time*2)*2;
+
+            // Label Offset adjusts based on scale so text doesn't overlap weirdly
+            const lblOff = 1 / vDrawScale;
+
+            // Tail fibers
+            ctx.strokeStyle = vColor; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+            for(let i=-1; i<=1; i+=2) {
+                ctx.beginPath();
+                ctx.moveTo(0, 50);
+                ctx.lineTo(i*30, 80 + pulse);
+                ctx.lineTo(i*50, 100);
+                ctx.stroke();
+            }
+            if(vDrawScale > 0.4) drawLabel(0, 120 * lblOff, "Tail Fibers", vColor);
+
+            // Sheath (Body)
+            ctx.fillStyle = '#334155'; ctx.strokeStyle = vColor; ctx.lineWidth = 2;
+            ctx.fillRect(-10, 10, 20, 40);
+            ctx.strokeRect(-10, 10, 20, 40);
+            // Rings
+            for(let i=15; i<50; i+=6) {
+                ctx.beginPath(); ctx.moveTo(-10, i); ctx.lineTo(10, i); ctx.stroke();
+            }
+
+            // Capsid (Icosahedral Head) 2D abstraction (Hexagon)
+            if (tglCapsid.checked) {
+                ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
+                if(isVirusBlocked) ctx.fillStyle = 'rgba(100, 116, 139, 0.5)';
+                ctx.beginPath();
+                for(let a=0; a<6; a++) {
+                    let angle = a * Math.PI/3 - Math.PI/2;
+                    let hx = Math.cos(angle) * 35;
+                    let hy = Math.sin(angle) * 35 - 20;
+                    if(a===0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+                }
+                ctx.closePath();
+                ctx.fill(); ctx.stroke();
+                
+                // Inner lines
+                ctx.beginPath(); ctx.moveTo(-30, -35); ctx.lineTo(30, -35); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(-30, -5); ctx.lineTo(0, -55); ctx.stroke();
+
+                if(vDrawScale > 0.4) drawLabel(0, -65 * lblOff, "Protein Capsid", vColor);
+            }
+
+            // Viral DNA/RNA inside capsid
+            if (tglDna.checked) {
+                ctx.strokeStyle = '#38bdf8'; // Light blue
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for(let i=-15; i<=15; i+=2) {
+                    let w = isVirusBlocked ? 0 : Math.sin(i*0.5 - time*3)*5;
+                    if(i===-15) ctx.moveTo(i, -20 + w); else ctx.lineTo(i, -20 + w);
+                }
+                ctx.stroke();
+                if(vDrawScale > 0.4) drawLabel(0, -45 * lblOff, "Viral DNA/RNA", '#38bdf8');
+            }
+
+            ctx.restore();
+
+            if (displayMode === 'split') {
+                ctx.fillStyle = '#fff'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText("VIRUS", vX, H - 40);
+                ctx.font = '11px sans-serif'; ctx.fillStyle = '#94a3b8';
+                ctx.fillText("Non-Living Agent", vX, H - 25);
+            }
+        }
+
+        requestAnimationFrame(renderLoop);
+    }
+
+    // --- Guide & Init ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    window.addEventListener('load', () => {
+        initApp();
+        userGuideModal.classList.remove('hidden');
+    });
+
+  </script>
+</body>
+</html>

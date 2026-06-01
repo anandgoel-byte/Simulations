@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vector Operations 3D Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    /* 3D Label Overlay */
+    .label-3d {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid #475569;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: bold;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.1s;
+      z-index: 20;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Vector Addition & Products</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision 3D Spatial Geometry &amp; Linear Algebra Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">3D Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Operation:</span>
+        <select id="select-op" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="add">Vector Addition (u + v)</option>
+          <option value="dot">Dot Product (u · v)</option>
+          <option value="cross">Cross Product (u × v)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Vectors
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-axes" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show 3D Axes</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-white p-3.5 rounded-xl border border-cyan-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-cyan-600 uppercase tracking-wider block mb-3 border-b border-cyan-100 pb-1">Vector $\vec{u}$ Components</span>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$u_x$</span>
+                <input type="range" id="sl-ux" min="-5" max="5" step="0.5" value="3.0" class="w-full">
+                <span id="lbl-ux" class="font-mono text-[10px] font-bold w-6 text-right">3.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$u_y$</span>
+                <input type="range" id="sl-uy" min="-5" max="5" step="0.5" value="0.0" class="w-full">
+                <span id="lbl-uy" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$u_z$</span>
+                <input type="range" id="sl-uz" min="-5" max="5" step="0.5" value="0.0" class="w-full">
+                <span id="lbl-uz" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-100 text-center text-[11px] font-bold font-mono text-cyan-700">
+              $\vec{u} = \langle$ <span id="disp-u">3.0, 0.0, 0.0</span> $\rangle$
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-rose-500 uppercase tracking-wider block mb-3 border-b border-rose-100 pb-1">Vector $\vec{v}$ Components</span>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$v_x$</span>
+                <input type="range" id="sl-vx" min="-5" max="5" step="0.5" value="2.0" class="w-full">
+                <span id="lbl-vx" class="font-mono text-[10px] font-bold w-6 text-right">2.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$v_y$</span>
+                <input type="range" id="sl-vy" min="-5" max="5" step="0.5" value="4.0" class="w-full">
+                <span id="lbl-vy" class="font-mono text-[10px] font-bold w-6 text-right">4.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$v_z$</span>
+                <input type="range" id="sl-vz" min="-5" max="5" step="0.5" value="0.0" class="w-full">
+                <span id="lbl-vz" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+            </div>
+            <div class="mt-3 pt-2 border-t border-slate-100 text-center text-[11px] font-bold font-mono text-rose-600">
+              $\vec{v} = \langle$ <span id="disp-v">2.0, 4.0, 0.0</span> $\rangle$
+            </div>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1" id="formula-title">Vector Addition</span>
+            <div class="text-[11px] font-mono text-center py-2 space-y-1.5" id="formula-math">
+              $$\vec{u} + \vec{v} = \langle u_x+v_x, u_y+v_y, u_z+v_z \rangle$$
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <div id="canvas-container" class="absolute inset-0 w-full h-full block"></div>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider">Interactive 3D Space (Drag to Orbit)</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-cyan-400 block"></span> Vector $\vec{u}$</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block"></span> Vector $\vec{v}$</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span id="leg-res-color" class="w-3 h-0.5 bg-amber-400 block"></span> Resultant Operation</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Calculated Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnitude $|\vec{u}|$</div>
+              <div class="text-sm font-bold font-mono text-cyan-600" id="tel-mag-u">3.00</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnitude $|\vec{v}|$</div>
+              <div class="text-sm font-bold font-mono text-rose-500" id="tel-mag-v">4.47</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Angle ($\theta$)</div>
+              <div class="text-sm font-bold font-mono text-indigo-600 tracking-widest" id="tel-theta">63.4°</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-2" id="res-title">Result: Vector $\vec{w}$</div>
+            <div class="text-xl font-bold font-mono text-amber-400 tracking-widest" id="res-val">$\langle 5.0, 4.0, 0.0 \rangle$</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What does the Dot Product represent geometrically?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                The dot product is a scalar (a number). It represents how much of vector $\vec{u}$ points in the exact same direction as $\vec{v}$. It's calculated as $|\vec{u}| |\vec{v}| \cos(\theta)$. If the dot product is exactly 0, the vectors are perfectly orthogonal (perpendicular).
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why does the Cross Product output a new vector?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                Unlike the dot product, the cross product generates a third vector that is <strong>perpendicular to the plane</strong> formed by $\vec{u}$ and $\vec{v}$. The length (magnitude) of this new vector is exactly equal to the area of the parallelogram spanned by $\vec{u}$ and $\vec{v}$.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">How does Vector Addition work visually?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                It uses the "Tip-to-Tail" or "Parallelogram" rule. If you imagine walking along vector $\vec{u}$, and then walking along vector $\vec{v}$ from that new spot, the Resultant vector is the straight-line path from your start to your finish.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> VECTOR OPERATIONS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Linear Algebra Laboratory</strong>! Visualize the mechanics of vectors in 3D space.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Vector Sliders</strong>: Adjust the individual $x,y,z$ components of Vectors $\vec{u}$ and $\vec{v}$.</li>
+            <li><strong>Operation Dropdown</strong>: 
+              <ul class="list-circle pl-4 mt-1">
+                 <li><em>Addition:</em> Draws the resultant vector and completing parallelogram.</li>
+                 <li><em>Dot Product:</em> Draws a dashed line showing the geometric projection.</li>
+                 <li><em>Cross Product:</em> Generates the orthogonal vector and shades the spanning area.</li>
+              </ul>
+            </li>
+            <li><strong>Camera Controls</strong>: <strong>Click and drag</strong> on the 3D canvas to orbit around the vectors. Scroll to zoom.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let ux = 3.0, uy = 0.0, uz = 0.0;
+    let vx = 2.0, vy = 4.0, vz = 0.0;
+    let op = 'add'; // 'add', 'dot', 'cross'
+
+    // --- DOM Elements ---
+    const slUx = document.getElementById('sl-ux'); const lblUx = document.getElementById('lbl-ux');
+    const slUy = document.getElementById('sl-uy'); const lblUy = document.getElementById('lbl-uy');
+    const slUz = document.getElementById('sl-uz'); const lblUz = document.getElementById('lbl-uz');
+    
+    const slVx = document.getElementById('sl-vx'); const lblVx = document.getElementById('lbl-vx');
+    const slVy = document.getElementById('sl-vy'); const lblVy = document.getElementById('lbl-vy');
+    const slVz = document.getElementById('sl-vz'); const lblVz = document.getElementById('lbl-vz');
+
+    const dispU = document.getElementById('disp-u');
+    const dispV = document.getElementById('disp-v');
+
+    const selOp = document.getElementById('select-op');
+    const btnReset = document.getElementById('btn-reset');
+    const chkAxes = document.getElementById('chk-axes');
+
+    const formTitle = document.getElementById('formula-title');
+    const formMath = document.getElementById('formula-math');
+
+    const telMagU = document.getElementById('tel-mag-u');
+    const telMagV = document.getElementById('tel-mag-v');
+    const telTheta = document.getElementById('tel-theta');
+    
+    const resTitle = document.getElementById('res-title');
+    const resVal = document.getElementById('res-val');
+    const legColor = document.getElementById('leg-res-color');
+
+    const container = document.getElementById('canvas-container');
+    
+    // Inject label container
+    const lbContainer = document.createElement('div');
+    lbContainer.id = 'labels-container';
+    lbContainer.className = 'absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-20';
+    container.appendChild(lbContainer);
+
+    // --- Core Logic & Telemetry ---
+    function calculate() {
+       let u = new THREE.Vector3(ux, uy, uz);
+       let v = new THREE.Vector3(vx, vy, vz);
+
+       dispU.innerText = `${ux.toFixed(1)}, ${uy.toFixed(1)}, ${uz.toFixed(1)}`;
+       dispV.innerText = `${vx.toFixed(1)}, ${vy.toFixed(1)}, ${vz.toFixed(1)}`;
+
+       let magU = u.length();
+       let magV = v.length();
+       telMagU.innerText = magU.toFixed(2);
+       telMagV.innerText = magV.toFixed(2);
+
+       // Angle
+       let thetaRad = 0;
+       if (magU > 0 && magV > 0) {
+           let dot = u.dot(v);
+           let cosTheta = Math.max(-1, Math.min(1, dot / (magU * magV))); // clamp for floating point
+           thetaRad = Math.acos(cosTheta);
+       }
+       let thetaDeg = thetaRad * (180 / Math.PI);
+       telTheta.innerText = `${thetaDeg.toFixed(1)}°`;
+
+       // Operations
+       if (op === 'add') {
+           formTitle.innerText = "Vector Addition";
+           formMath.innerHTML = `$$\\vec{u} + \\vec{v} = \\langle u_x+v_x, u_y+v_y, u_z+v_z \\rangle$$`;
+           
+           let rx = ux+vx, ry = uy+vy, rz = uz+vz;
+           resTitle.innerText = "Result: Vector w";
+           resVal.innerHTML = `$\\langle ${rx.toFixed(1)}, ${ry.toFixed(1)}, ${rz.toFixed(1)} \\rangle$`;
+           resVal.className = "text-xl font-bold font-mono text-amber-400 tracking-widest";
+           legColor.className = "w-3 h-0.5 bg-amber-400 block";
+       } 
+       else if (op === 'dot') {
+           formTitle.innerText = "Dot Product (Scalar)";
+           formMath.innerHTML = `$$\\vec{u} \\cdot \\vec{v} = u_xv_x + u_yv_y + u_zv_z$$`;
+           
+           let dot = u.dot(v);
+           resTitle.innerText = "Result: Scalar Value";
+           resVal.innerHTML = `$${dot.toFixed(2)}$`;
+           resVal.className = "text-3xl font-bold font-mono text-fuchsia-400 tracking-widest";
+           legColor.className = "w-3 h-0.5 bg-fuchsia-400 block border-t border-dashed border-fuchsia-400 bg-transparent"; // Dashed line for projection
+       }
+       else if (op === 'cross') {
+           formTitle.innerText = "Cross Product";
+           formMath.innerHTML = `$$\\vec{u} \\times \\vec{v} = \\langle u_yv_z - u_zv_y, \\dots \\rangle$$`;
+           
+           let w = new THREE.Vector3().crossVectors(u, v);
+           resTitle.innerText = "Result: Orthogonal Vector w";
+           resVal.innerHTML = `$\\langle ${w.x.toFixed(1)}, ${w.y.toFixed(1)}, ${w.z.toFixed(1)} \\rangle$`;
+           resVal.className = "text-xl font-bold font-mono text-emerald-400 tracking-widest";
+           legColor.className = "w-3 h-0.5 bg-emerald-400 block";
+       }
+
+       if (window.MathJax) MathJax.typesetPromise([formMath, resVal]);
+       buildGeometry();
+    }
+
+    // --- Input Handlers ---
+    function sync(val, sl, lbl, setter) {
+        val = parseFloat(val);
+        sl.value = val;
+        lbl.innerText = val.toFixed(1);
+        setter(val);
+        calculate();
+    }
+
+    slUx.addEventListener('input', e => sync(e.target.value, slUx, lblUx, v => ux = v));
+    slUy.addEventListener('input', e => sync(e.target.value, slUy, lblUy, v => uy = v));
+    slUz.addEventListener('input', e => sync(e.target.value, slUz, lblUz, v => uz = v));
+    
+    slVx.addEventListener('input', e => sync(e.target.value, slVx, lblVx, v => vx = v));
+    slVy.addEventListener('input', e => sync(e.target.value, slVy, lblVy, v => vy = v));
+    slVz.addEventListener('input', e => sync(e.target.value, slVz, lblVz, v => vz = v));
+
+    selOp.addEventListener('change', e => {
+        op = e.target.value;
+        calculate();
+    });
+
+    btnReset.addEventListener('click', () => {
+       sync(3.0, slUx, lblUx, v => ux = v); sync(0.0, slUy, lblUy, v => uy = v); sync(0.0, slUz, lblUz, v => uz = v);
+       sync(2.0, slVx, lblVx, v => vx = v); sync(4.0, slVy, lblVy, v => vy = v); sync(0.0, slVz, lblVz, v => vz = v);
+       selOp.value = 'add'; op = 'add';
+       calculate();
+    });
+
+    chkAxes.addEventListener('change', buildGeometry);
+
+    // --- Three.js Setup ---
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(12, 10, 15); 
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Mathematical Group (Z = Up)
+    const mathGroup = new THREE.Group();
+    mathGroup.rotation.x = -Math.PI / 2; 
+    scene.add(mathGroup);
+
+    let geoGroup = new THREE.Group();
+    mathGroup.add(geoGroup);
+
+    // HTML Labels Tracking
+    let htmlLabels = [];
+
+    function clearLabels() {
+      lbContainer.innerHTML = '';
+      htmlLabels = [];
+    }
+
+    function addLabel(position3D, text, colorClass="bg-slate-900/80") {
+      const el = document.createElement('div');
+      el.className = `label-3d ${colorClass}`;
+      el.innerHTML = text; // allow latex/html
+      lbContainer.appendChild(el);
+      htmlLabels.push({ element: el, pos: position3D });
+    }
+
+    // Helper to draw arrows properly in MathGroup
+    function createVectorArrow(vec, color, thickness=1) {
+        if (vec.length() < 0.01) return new THREE.Group(); // empty
+        
+        const dir = vec.clone().normalize();
+        const length = vec.length();
+        const hex = color;
+        
+        // ArrowHelper (dir, origin, length, hex, headLength, headWidth)
+        const arrow = new THREE.ArrowHelper(dir, new THREE.Vector3(0,0,0), length, hex, 0.8, 0.4);
+        arrow.line.material.linewidth = thickness * 2; // only works on some WebGL configs
+        
+        // Better thick line approach:
+        const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), vec]);
+        const mat = new THREE.LineBasicMaterial({ color: hex, linewidth: 3 });
+        const line = new THREE.Line(geo, mat);
+        
+        // Merge them for better visibility
+        const group = new THREE.Group();
+        group.add(arrow);
+        group.add(line);
+        return group;
+    }
+
+    function buildGeometry() {
+        geoGroup.clear();
+        clearLabels();
+
+        // 1. Grid & Axes
+        if (chkAxes.checked) {
+            const gridHelper = new THREE.GridHelper(20, 20, 0x475569, 0x1e293b);
+            gridHelper.rotation.x = Math.PI / 2; // Flat on Math XY plane
+            geoGroup.add(gridHelper);
+
+            // X=Red, Y=Green, Z=Blue
+            const createAxis = (color, len, rx, ry, rz) => {
+                const mat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+                const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-len,0,0), new THREE.Vector3(len,0,0)]);
+                const line = new THREE.Line(geo, mat);
+                line.rotation.set(rx, ry, rz);
+                return line;
+            };
+            geoGroup.add(createAxis(0xf43f5e, 10, 0, 0, 0)); // X
+            geoGroup.add(createAxis(0x10b981, 10, 0, 0, Math.PI/2)); // Y
+            geoGroup.add(createAxis(0x3b82f6, 10, 0, Math.PI/2, 0)); // Z
+            
+            addLabel(new THREE.Vector3(10.5, 0, 0), "X", "bg-rose-900/80 border-rose-500");
+            addLabel(new THREE.Vector3(0, 10.5, 0), "Y", "bg-emerald-900/80 border-emerald-500");
+            addLabel(new THREE.Vector3(0, 0, 10.5), "Z", "bg-blue-900/80 border-blue-500");
+        }
+
+        const vU = new THREE.Vector3(ux, uy, uz);
+        const vV = new THREE.Vector3(vx, vy, vz);
+        const origin = new THREE.Vector3(0,0,0);
+
+        // 2. Draw Base Vectors
+        geoGroup.add(createVectorArrow(vU, 0x06b6d4)); // Cyan
+        geoGroup.add(createVectorArrow(vV, 0xf43f5e)); // Rose
+
+        addLabel(vU.clone().multiplyScalar(1.1), "u", "bg-cyan-900/80 border-cyan-500 text-cyan-100");
+        addLabel(vV.clone().multiplyScalar(1.1), "v", "bg-rose-900/80 border-rose-500 text-rose-100");
+
+        // 3. Draw Operations
+        if (op === 'add') {
+            const vW = new THREE.Vector3().addVectors(vU, vV);
+            geoGroup.add(createVectorArrow(vW, 0xfbbf24)); // Amber
+            addLabel(vW.clone().multiplyScalar(1.1), "u+v", "bg-amber-900/80 border-amber-500 text-amber-100");
+
+            // Parallelogram dashed lines
+            const dashMat = new THREE.LineDashedMaterial({ color: 0x94a3b8, dashSize: 0.3, gapSize: 0.2 });
+            
+            const l1Geo = new THREE.BufferGeometry().setFromPoints([vU, vW]);
+            const l1 = new THREE.Line(l1Geo, dashMat);
+            l1.computeLineDistances();
+            geoGroup.add(l1);
+
+            const l2Geo = new THREE.BufferGeometry().setFromPoints([vV, vW]);
+            const l2 = new THREE.Line(l2Geo, dashMat);
+            l2.computeLineDistances();
+            geoGroup.add(l2);
+        }
+        else if (op === 'dot') {
+            if (vV.length() > 0.1 && vU.length() > 0.1) {
+                // Projection of U onto V
+                const vNorm = vV.clone().normalize();
+                const projLen = vU.dot(vNorm);
+                const projVec = vNorm.clone().multiplyScalar(projLen);
+
+                // Dashed line from tip of U to projection point
+                const dashMat = new THREE.LineDashedMaterial({ color: 0xe879f9, dashSize: 0.2, gapSize: 0.1 }); // Fuchsia
+                const projGeo = new THREE.BufferGeometry().setFromPoints([vU, projVec]);
+                const projLine = new THREE.Line(projGeo, dashMat);
+                projLine.computeLineDistances();
+                geoGroup.add(projLine);
+
+                // Highlight projection on V
+                const thickMat = new THREE.LineBasicMaterial({ color: 0xe879f9, linewidth: 5 });
+                const baseGeo = new THREE.BufferGeometry().setFromPoints([origin, projVec]);
+                geoGroup.add(new THREE.Line(baseGeo, thickMat));
+            }
+        }
+        else if (op === 'cross') {
+            const vW = new THREE.Vector3().crossVectors(vU, vV);
+            
+            // Draw Orthogonal vector
+            if (vW.length() > 0.01) {
+                geoGroup.add(createVectorArrow(vW, 0x10b981)); // Emerald
+                addLabel(vW.clone().multiplyScalar(1.05), "u x v", "bg-emerald-900/80 border-emerald-500 text-emerald-100");
+            }
+
+            // Draw Area Parallelogram (shaded)
+            const vSum = new THREE.Vector3().addVectors(vU, vV);
+            const shapeGeo = new THREE.BufferGeometry().setFromPoints([
+                origin, vU, vSum, vV, origin
+            ]);
+            shapeGeo.setIndex([
+                0, 1, 3,
+                1, 2, 3
+            ]); // Two triangles to make the quad
+            shapeGeo.computeVertexNormals();
+
+            const shapeMat = new THREE.MeshBasicMaterial({ 
+                color: 0x10b981, 
+                transparent: true, 
+                opacity: 0.2,
+                side: THREE.DoubleSide
+            });
+            geoGroup.add(new THREE.Mesh(shapeGeo, shapeMat));
+
+            // Outline
+            const outlineMat = new THREE.LineDashedMaterial({ color: 0x10b981, dashSize: 0.3, gapSize: 0.2 });
+            const olGeo1 = new THREE.BufferGeometry().setFromPoints([vU, vSum]);
+            const ol1 = new THREE.Line(olGeo1, outlineMat); ol1.computeLineDistances(); geoGroup.add(ol1);
+            
+            const olGeo2 = new THREE.BufferGeometry().setFromPoints([vV, vSum]);
+            const ol2 = new THREE.Line(olGeo2, outlineMat); ol2.computeLineDistances(); geoGroup.add(ol2);
+        }
+    }
+
+    // --- Window Resize for Three.js ---
+    function resizeCanvas() {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      if (cw > 0 && ch > 0) {
+          camera.aspect = cw / ch;
+          camera.updateProjectionMatrix();
+          renderer.setSize(cw, ch);
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // --- Render Loop ---
+    function renderLoop() {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Auto-resize guard
+      if (cw > 0 && ch > 0 && (renderer.domElement.width !== cw * (window.devicePixelRatio||1))) {
+          resizeCanvas();
+      }
+
+      controls.update();
+
+      // Update HTML Labels Position
+      if (htmlLabels.length > 0) {
+        mathGroup.updateMatrixWorld();
+        
+        htmlLabels.forEach(lbl => {
+           const vec = lbl.pos.clone();
+           vec.applyMatrix4(mathGroup.matrixWorld); 
+           vec.project(camera);
+           
+           const x = (vec.x * .5 + .5) * cw;
+           const y = (vec.y * -.5 + .5) * ch;
+           
+           lbl.element.style.left = `${x}px`;
+           lbl.element.style.top = `${y}px`;
+           
+           if (vec.z > 1) lbl.element.style.opacity = '0';
+           else lbl.element.style.opacity = '1';
+        });
+      }
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      calculate(); // Builds geometry
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resistance in Series & Parallel Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background-color: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Resistance in Series &amp; Parallel</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Circuit Topology &amp; Electrodynamics Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Physics Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Circuit Mode:</span>
+        <button id="btn-series" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm">
+          Series Configuration
+        </button>
+        <button id="btn-parallel" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm">
+          Parallel Configuration
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-electrons" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Visualize Electron Flow</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2 transition-all" id="eq-box">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Equivalent Resistance</span>
+            <div class="text-[14px] font-mono text-center py-2 font-bold" id="eq-math">
+              $$R_{eq} = R_1 + R_2$$
+            </div>
+            <div class="text-[9px] font-bold text-slate-500 text-center leading-tight mt-1" id="eq-desc">
+              In Series, resistance is purely additive.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Battery Voltage (V)</span></span>
+              <span id="lbl-voltage" class="font-mono text-blue-600 text-sm">12.0 V</span>
+            </div>
+            <input type="range" id="sl-voltage" min="0" max="24" step="0.5" value="12" class="w-full mt-2" style="accent-color: #3b82f6;">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>0V</span>
+              <span>24V</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 block"></span> <span class="uppercase text-amber-600">Resistor 1 ($R_1$)</span></span>
+              <span id="lbl-r1" class="font-mono text-amber-600 text-sm">10 Ω</span>
+            </div>
+            <input type="range" id="sl-r1" min="1" max="100" step="1" value="10" class="w-full mt-2 slider-amber">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>1 Ω</span>
+              <span>100 Ω</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 block"></span> <span class="uppercase text-emerald-600">Resistor 2 ($R_2$)</span></span>
+              <span id="lbl-r2" class="font-mono text-emerald-600 text-sm">10 Ω</span>
+            </div>
+            <input type="range" id="sl-r2" min="1" max="100" step="1" value="10" class="w-full mt-2 slider-emerald">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>1 Ω</span>
+              <span>100 Ω</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Schematic: Series Topology</span>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Circuit Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Equivalent Resistance ($R_{eq}$)</div>
+              <div class="text-3xl font-bold font-mono tracking-widest text-indigo-400" id="tel-req">20.0 Ω</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Circuit Current ($I_{total}$)</div>
+              <div class="text-2xl font-bold font-mono text-slate-700" id="tel-itotal">0.60 A</div>
+            </div>
+
+            <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center transition-all" id="box-sub1">
+              <div class="text-[8px] text-amber-700 font-bold uppercase tracking-wider mb-0.5" id="lbl-sub1">Voltage Drop ($V_1$)</div>
+              <div class="text-sm font-bold font-mono text-amber-600" id="tel-sub1">6.0 V</div>
+            </div>
+
+            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center transition-all" id="box-sub2">
+              <div class="text-[8px] text-emerald-700 font-bold uppercase tracking-wider mb-0.5" id="lbl-sub2">Voltage Drop ($V_2$)</div>
+              <div class="text-sm font-bold font-mono text-emerald-600" id="tel-sub2">6.0 V</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In a Series circuit, which electrical property remains constant across all components?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In a Parallel circuit, which electrical property remains constant across all branches?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What happens to the Equivalent Resistance ($R_{eq}$) when you add an extra resistor in Parallel?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If one resistor burns out and breaks the connection in a Series circuit, what happens?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> CIRCUIT TOPOLOGY PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Electrodynamics Laboratory</strong>! Explore the fundamental laws governing simple DC circuits.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Circuit Mode Toggle</strong>: Instantly switch between Series and Parallel. Watch the canvas re-wire itself! The MathJax equations on the left will automatically update to reflect the new topology.</li>
+            <li><strong>Series Dynamics</strong>: When in Series, increase $R_1$. Notice how the total Resistance increases, the total Current drops, and $R_1$ "hogs" more of the voltage drop compared to $R_2$.</li>
+            <li><strong>Parallel Dynamics</strong>: Switch to Parallel. Notice that the total equivalent resistance is actually *lower* than both individual resistors! Watch the electrons split at the junction: the path with the lower resistance will physically show faster electron flow.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "In a Series circuit, which electrical property remains constant across all components?",
+        options: [
+          { text: "Voltage", isCorrect: false, exp: "Incorrect. Voltage is divided (dropped) across the components." },
+          { text: "Current", isCorrect: true, exp: "Correct! Because there is only one single path for the electrons to flow, the rate of flow (Current in Amps) must be exactly the same at every point in a series circuit." },
+          { text: "Resistance", isCorrect: false, exp: "Incorrect. Resistance is a property of the individual component." },
+          { text: "Power", isCorrect: false, exp: "Incorrect. Power depends on both Voltage and Current." }
+        ]
+      },
+      q2: {
+        question: "In a Parallel circuit, which electrical property remains constant across all branches?",
+        options: [
+          { text: "Current", isCorrect: false, exp: "Incorrect. Current splits across the branches." },
+          { text: "Voltage", isCorrect: true, exp: "Correct! In a parallel circuit, every branch connects directly to the same two terminals of the power source. Therefore, the potential difference (Voltage) across every branch is identical." },
+          { text: "Resistance", isCorrect: false, exp: "Incorrect." },
+          { text: "Charge", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        question: "What happens to the Equivalent Resistance (R_eq) when you add an extra resistor in Parallel?",
+        options: [
+          { text: "It increases.", isCorrect: false, exp: "Incorrect. This happens in series." },
+          { text: "It decreases.", isCorrect: true, exp: "Correct! Adding a resistor in parallel provides an *additional* path for the electrons to flow through. More pathways mean it is easier overall for current to flow, which lowers the total Equivalent Resistance." },
+          { text: "It remains the same.", isCorrect: false, exp: "Incorrect." },
+          { text: "It zeroes out.", isCorrect: false, exp: "Incorrect. That would be a short circuit." }
+        ]
+      },
+      q4: {
+        question: "If one resistor burns out and breaks the connection in a Series circuit, what happens?",
+        options: [
+          { text: "The other components receive more voltage.", isCorrect: false, exp: "Incorrect." },
+          { text: "The entire circuit stops functioning.", isCorrect: true, exp: "Correct! Because a series circuit provides only one continuous path for electrons, a break anywhere in the path halts the flow of current entirely." },
+          { text: "The current bypasses the broken resistor.", isCorrect: false, exp: "Incorrect. There is no alternative path." },
+          { text: "Nothing changes.", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const slVolt = document.getElementById('sl-voltage');
+    const lblVolt = document.getElementById('lbl-voltage');
+    const slR1 = document.getElementById('sl-r1');
+    const lblR1 = document.getElementById('lbl-r1');
+    const slR2 = document.getElementById('sl-r2');
+    const lblR2 = document.getElementById('lbl-r2');
+    
+    const btnSeries = document.getElementById('btn-series');
+    const btnParallel = document.getElementById('btn-parallel');
+    const chkElectrons = document.getElementById('chk-electrons');
+    
+    const eqMath = document.getElementById('eq-math');
+    const eqDesc = document.getElementById('eq-desc');
+    const canvasHud = document.getElementById('canvas-hud');
+
+    const telReq = document.getElementById('tel-req');
+    const telItotal = document.getElementById('tel-itotal');
+    
+    const lblSub1 = document.getElementById('lbl-sub1');
+    const telSub1 = document.getElementById('tel-sub1');
+    const lblSub2 = document.getElementById('lbl-sub2');
+    const telSub2 = document.getElementById('tel-sub2');
+
+    // State Variables
+    let mode = 'series'; // 'series' or 'parallel'
+    let V = 12.0;
+    let R1 = 10;
+    let R2 = 10;
+    
+    let Req = 20;
+    let Itotal = 0.6;
+    let V1 = 6, V2 = 6; // Series drops
+    let I1 = 1.2, I2 = 1.2; // Parallel branches
+
+    // Particles for animation
+    // Define simple path definitions based on 0-1 offset
+    let particles = [];
+    
+    function initParticles() {
+        particles = [];
+        // Spawn 40 particles
+        for(let i=0; i<40; i++) {
+            // For parallel, randomly assign to branch 1 or 2 based on current ratio
+            let branch = 1;
+            if (mode === 'parallel') {
+                let r = Math.random();
+                // I1 and I2 calculated later, but assume equal initially for spawn distribution
+                if (r > 0.5) branch = 2;
+            }
+            particles.push({ offset: Math.random(), branch: branch });
+        }
+    }
+
+    function setMode(newMode) {
+        mode = newMode;
+        if (mode === 'series') {
+            btnSeries.className = "px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm";
+            btnParallel.className = "px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
+            
+            eqMath.innerHTML = "$$R_{eq} = R_1 + R_2$$";
+            eqDesc.innerText = "In Series, resistance is purely additive.";
+            canvasHud.innerText = "Schematic: Series Topology";
+            canvasHud.className = "text-[10px] font-bold text-indigo-400 tracking-wider uppercase";
+
+            lblSub1.innerText = "Voltage Drop ($V_1$)";
+            lblSub2.innerText = "Voltage Drop ($V_2$)";
+        } else {
+            btnParallel.className = "px-4 py-1.5 ml-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition-all shadow-sm";
+            btnSeries.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
+            
+            eqMath.innerHTML = "$$R_{eq} = \\frac{R_1 \\cdot R_2}{R_1 + R_2}$$";
+            eqDesc.innerText = "In Parallel, total resistance is lower than the lowest branch.";
+            canvasHud.innerText = "Schematic: Parallel Topology";
+            canvasHud.className = "text-[10px] font-bold text-emerald-400 tracking-wider uppercase";
+
+            lblSub1.innerText = "Branch Current ($I_1$)";
+            lblSub2.innerText = "Branch Current ($I_2$)";
+        }
+        
+        if (window.MathJax) {
+            MathJax.typesetPromise([eqMath]).catch((err) => console.log(err));
+        }
+
+        // Re-distribute particles for parallel branches
+        particles.forEach(p => {
+            if (mode === 'parallel') {
+                p.branch = Math.random() < (I1 / Itotal) ? 1 : 2;
+            } else {
+                p.branch = 1; // Series only has 1 path
+            }
+        });
+
+        calculatePhysics();
+    }
+
+    btnSeries.addEventListener('click', () => setMode('series'));
+    btnParallel.addEventListener('click', () => setMode('parallel'));
+
+    function calculatePhysics() {
+        if (mode === 'series') {
+            Req = R1 + R2;
+            Itotal = V / Req;
+            V1 = Itotal * R1;
+            V2 = Itotal * R2;
+            
+            telSub1.innerText = `${V1.toFixed(1)} V`;
+            telSub2.innerText = `${V2.toFixed(1)} V`;
+        } else {
+            Req = (R1 * R2) / (R1 + R2);
+            Itotal = V / Req;
+            I1 = V / R1;
+            I2 = V / R2;
+
+            telSub1.innerText = `${I1.toFixed(2)} A`;
+            telSub2.innerText = `${I2.toFixed(2)} A`;
+        }
+
+        telReq.innerText = `${Req.toFixed(1)} Ω`;
+        telItotal.innerText = `${Itotal.toFixed(2)} A`;
+    }
+
+    slVolt.addEventListener('input', e => {
+        V = parseFloat(e.target.value);
+        lblVolt.innerText = `${V.toFixed(1)} V`;
+        calculatePhysics();
+    });
+
+    slR1.addEventListener('input', e => {
+        R1 = parseInt(e.target.value);
+        lblR1.innerText = `${R1} Ω`;
+        calculatePhysics();
+    });
+
+    slR2.addEventListener('input', e => {
+        R2 = parseInt(e.target.value);
+        lblR2.innerText = `${R2} Ω`;
+        calculatePhysics();
+    });
+
+    // --- CANVAS RENDERING ---
+    // Helper to get position along a path array of points
+    function getPathPos(offset, pathNodes) {
+        // Calculate total length
+        let totalLen = 0;
+        let lengths = [];
+        for(let i=0; i<pathNodes.length-1; i++) {
+            let dx = pathNodes[i+1].x - pathNodes[i].x;
+            let dy = pathNodes[i+1].y - pathNodes[i].y;
+            let l = Math.hypot(dx, dy);
+            lengths.push(l);
+            totalLen += l;
+        }
+
+        let targetLen = offset * totalLen;
+        let currentLen = 0;
+
+        for(let i=0; i<lengths.length; i++) {
+            if (currentLen + lengths[i] >= targetLen) {
+                // It's on this segment
+                let segmentOffset = (targetLen - currentLen) / lengths[i];
+                let px = pathNodes[i].x + (pathNodes[i+1].x - pathNodes[i].x) * segmentOffset;
+                let py = pathNodes[i].y + (pathNodes[i+1].y - pathNodes[i].y) * segmentOffset;
+                return { x: px, y: py };
+            }
+            currentLen += lengths[i];
+        }
+        return pathNodes[pathNodes.length-1]; // Failsafe
+    }
+
+    function drawResistor(ctx, x, y, width, height, isVertical=false) {
+        ctx.strokeStyle = '#fbbf24'; // Amber
+        ctx.lineWidth = 3;
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        
+        let segments = 6;
+        let step = (isVertical ? height : width) / segments;
+        let amp = isVertical ? width/2 : height/2;
+
+        if (isVertical) {
+            ctx.moveTo(x, y - height/2);
+            for(let i=1; i<=segments; i++) {
+                let nx = x + (i%2===0 ? -amp : amp);
+                let ny = (y - height/2) + i*step;
+                if(i===segments) nx = x; // end in center
+                ctx.lineTo(nx, ny);
+            }
+        } else {
+            ctx.moveTo(x - width/2, y);
+            for(let i=1; i<=segments; i++) {
+                let nx = (x - width/2) + i*step;
+                let ny = y + (i%2===0 ? -amp : amp);
+                if(i===segments) ny = y; // end in center
+                ctx.lineTo(nx, ny);
+            }
+        }
+        ctx.stroke();
+    }
+
+    function renderCircuit() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderCircuit); return; }
+
+      const cx = cw / 2;
+      const botY = ch - 60;
+      const topY = 60;
+      const midY = ch / 2;
+      const leftX = Math.max(cx - 200, 60);
+      const rightX = Math.min(cx + 200, cw - 60);
+
+      // --- Draw Schematic ---
+      ctx.strokeStyle = '#475569'; // Slate 600
+      ctx.lineWidth = 4;
+      
+      let pathSeries = [];
+      let pathPar1 = [];
+      let pathPar2 = [];
+
+      if (mode === 'series') {
+          // Wiring
+          ctx.beginPath();
+          ctx.moveTo(cx + 20, botY);
+          ctx.lineTo(rightX, botY); ctx.lineTo(rightX, topY);
+          ctx.lineTo(cx + 40, topY); // to R2
+          ctx.moveTo(cx - 40, topY); ctx.lineTo(cx - 60, topY); // between R2 and R1
+          ctx.moveTo(cx - 140, topY); // from R1
+          ctx.lineTo(leftX, topY); ctx.lineTo(leftX, botY);
+          ctx.lineTo(cx - 20, botY);
+          ctx.stroke();
+
+          // Resistors
+          drawResistor(ctx, cx + 80, topY, 80, 20, false); // R2
+          drawResistor(ctx, cx - 100, topY, 80, 20, false); // R1
+
+          // Labels
+          ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText("R1", cx - 100, topY - 25);
+          ctx.fillStyle = '#10b981';
+          ctx.fillText("R2", cx + 80, topY - 25);
+
+          // Path for particles (counter clockwise from positive right terminal to left negative)
+          pathSeries = [
+              {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: topY},
+              {x: leftX, y: topY}, {x: leftX, y: botY}, {x: cx-20, y: botY}
+          ];
+
+      } else {
+          // Parallel Wiring
+          ctx.beginPath();
+          // Battery to right junction
+          ctx.moveTo(cx + 20, botY); ctx.lineTo(rightX, botY); ctx.lineTo(rightX, midY);
+          // Right junction up to R1, left through R1 to left junction
+          ctx.moveTo(rightX, midY); ctx.lineTo(rightX, topY); ctx.lineTo(cx + 40, topY);
+          ctx.moveTo(cx - 40, topY); ctx.lineTo(leftX, topY); ctx.lineTo(leftX, midY);
+          // Right junction left through R2 to left junction
+          ctx.moveTo(rightX, midY); ctx.lineTo(cx + 40, midY);
+          ctx.moveTo(cx - 40, midY); ctx.lineTo(leftX, midY);
+          // Left junction to battery
+          ctx.moveTo(leftX, midY); ctx.lineTo(leftX, botY); ctx.lineTo(cx - 20, botY);
+          
+          // Draw Junction Dots
+          ctx.fillStyle = '#475569';
+          ctx.arc(rightX, midY, 6, 0, Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(leftX, midY, 6, 0, Math.PI*2); ctx.fill();
+          ctx.stroke();
+
+          // Resistors
+          drawResistor(ctx, cx, topY, 80, 20, false); // R1 (Top)
+          drawResistor(ctx, cx, midY, 80, 20, false); // R2 (Middle)
+
+          // Labels
+          ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText("R1", cx, topY - 25);
+          ctx.fillStyle = '#10b981';
+          ctx.fillText("R2", cx, midY - 25);
+
+          pathPar1 = [
+              {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: topY},
+              {x: leftX, y: topY}, {x: leftX, y: botY}, {x: cx-20, y: botY}
+          ];
+          pathPar2 = [
+              {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: midY},
+              {x: leftX, y: midY}, {x: leftX, y: botY}, {x: cx-20, y: botY}
+          ];
+      }
+
+      // Battery
+      ctx.fillStyle = '#0f172a'; ctx.fillRect(cx - 30, botY - 20, 60, 40); // wipe wire behind
+      ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4; // Blue
+      ctx.beginPath(); ctx.moveTo(cx - 15, botY - 15); ctx.lineTo(cx - 15, botY + 15); ctx.stroke(); // short (-)
+      ctx.beginPath(); ctx.moveTo(cx + 15, botY - 25); ctx.lineTo(cx + 15, botY + 25); ctx.stroke(); // long (+)
+      ctx.fillStyle = '#3b82f6'; ctx.font = '14px monospace'; ctx.fillText("+", cx + 25, botY - 15);
+      ctx.fillText("-", cx - 25, botY - 15);
+      ctx.fillText("V", cx, botY + 40);
+
+      // --- Electron Animation ---
+      if (chkElectrons.checked && V > 0) {
+          
+          let baseSpeed = 0.005;
+
+          particles.forEach(p => {
+              // Calculate specific speed
+              let speed = 0;
+              if (mode === 'series') {
+                  speed = baseSpeed * Itotal;
+              } else {
+                  // In parallel, speed along the branch depends on the current in that branch
+                  // To keep things visually intuitive, we scale speed.
+                  speed = baseSpeed * (p.branch === 1 ? I1 : I2);
+                  // Ensure minimum speed so they don't stall completely if R is high
+                  speed = Math.max(speed, 0.001); 
+              }
+
+              p.offset += speed;
+
+              // If particle completes a loop, re-assign branch randomly for parallel
+              if (p.offset >= 1) {
+                  p.offset -= 1;
+                  if (mode === 'parallel') {
+                      // Probability of going to branch 1 is I1 / Itotal
+                      let prob1 = I1 / Itotal;
+                      p.branch = Math.random() < prob1 ? 1 : 2;
+                  }
+              }
+
+              let pos;
+              if (mode === 'series') pos = getPathPos(p.offset, pathSeries);
+              else if (p.branch === 1) pos = getPathPos(p.offset, pathPar1);
+              else pos = getPathPos(p.offset, pathPar2);
+
+              ctx.fillStyle = '#38bdf8'; // Cyan
+              ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 6;
+              ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
+              ctx.shadowBlur = 0;
+          });
+      }
+
+      requestAnimationFrame(renderCircuit);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      setMode('series');
+      initParticles();
+      requestAnimationFrame(renderCircuit);
+    });
+  </script>
+</body>
+</html>

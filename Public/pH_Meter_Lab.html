@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pH Meter & Indicator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">pH Meter &amp; Indicator Virtual Lab</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Acid-Base Chemistry &amp; Colorimetry Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Chem-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Test Solution:</span>
+        <select id="select-solution" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="1.0">0.1M Hydrochloric Acid (pH 1.0)</option>
+          <option value="2.2">Lemon Juice (pH 2.2)</option>
+          <option value="3.0">Vinegar (pH 3.0)</option>
+          <option value="5.0">Black Coffee (pH 5.0)</option>
+          <option value="7.0" selected>Pure Distilled Water (pH 7.0)</option>
+          <option value="7.4">Human Blood (pH 7.4)</option>
+          <option value="9.0">Baking Soda Solution (pH 9.0)</option>
+          <option value="11.5">Household Ammonia (pH 11.5)</option>
+          <option value="13.0">0.1M Sodium Hydroxide (pH 13.0)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Chemical Indicator:</span>
+        <select id="select-indicator" class="bg-white border border-slate-300 text-rose-600 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-rose-500 transition-all cursor-pointer shadow-sm">
+          <option value="universal">Universal Indicator (Full Spectrum)</option>
+          <option value="phenolphthalein">Phenolphthalein (8.2 - 10.0)</option>
+          <option value="bromothymol">Bromothymol Blue (6.0 - 7.6)</option>
+          <option value="methyl">Methyl Orange (3.1 - 4.4)</option>
+          <option value="litmus">Litmus (4.5 - 8.3)</option>
+        </select>
+      </div>
+
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">The Power of Hydrogen</span>
+            <div class="text-[14px] font-mono text-center py-2 font-bold">
+              $$pH = -\log_{10}[H^+]$$
+              $$pOH = -\log_{10}[OH^-]$$
+            </div>
+            <div class="text-[11px] font-mono text-center font-bold border-t border-indigo-200 pt-2">
+              $$pH + pOH = 14$$
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-1 border-b border-slate-100 pb-1">Sample Profile</span>
+            <h3 class="text-sm font-bold text-slate-800" id="info-name">Pure Distilled Water</h3>
+            <p class="text-[10px] font-medium text-slate-500 leading-snug" id="info-desc">
+              A perfectly neutral substance where the concentration of H+ exactly equals the concentration of OH-.
+            </p>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Manual pH Adjuster</span></span>
+              <span id="lbl-ph" class="font-mono text-blue-600 text-sm">7.0</span>
+            </div>
+            <input type="range" id="sl-ph" min="0" max="14" step="0.1" value="7.0" class="w-full mt-2" style="accent-color: #3b82f6;">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>Highly Acidic (0)</span>
+              <span>Highly Basic (14)</span>
+            </div>
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100 text-center">
+              Use this to manually sweep through the pH scale and observe the exact indicator transition points.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Digital pH Probe &amp; Beaker</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 right-4 bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-2 select-none z-20">
+          <div class="flex justify-between items-center text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+            <span id="key-name">Universal Indicator Profile</span>
+            <span id="key-range" class="text-rose-400">Full Spectrum</span>
+          </div>
+          <div class="w-full h-3 rounded border border-slate-600 shadow-inner" id="indicator-gradient"></div>
+          <div class="w-full flex justify-between text-[8px] font-bold text-slate-500 font-mono mt-0.5">
+            <span>pH 0</span><span>7</span><span>14</span>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Solution Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 transition-colors duration-500" id="tel-box">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Measured pH Level</div>
+              <div class="text-4xl font-bold font-mono tracking-widest text-emerald-400" id="tel-ph">7.00</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Hydronium [$H^+$]</div>
+              <div class="text-[13px] font-bold font-mono text-rose-600" id="tel-h">1.0e-7 M</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-blue-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Hydroxide [$OH^-$]</div>
+              <div class="text-[13px] font-bold font-mono text-blue-600" id="tel-oh">1.0e-7 M</div>
+            </div>
+
+            <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-300 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Classification</div>
+              <div class="text-[12px] font-bold font-mono text-slate-700 tracking-widest uppercase" id="tel-class">Neutral</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the pH of a solution drops from 5.0 to 4.0, what happens to the Hydrogen ion ($H^+$) concentration?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What color will Phenolphthalein turn in a strongly basic solution (pH > 10)?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What makes the "Universal Indicator" different from indicators like Litmus or Methyl Orange?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If a solution has a $[H^+]$ of $1.0 \times 10^{-9}$ M, is it acidic or basic?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> pH & INDICATOR PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Colorimetry & pH Laboratory</strong>! Explore the logarithmic scale of acidity.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Test Solutions</strong>: Use the top dropdown to swap between everyday liquids. Watch the pH meter calculate the exact value and the solution physically change color based on the active indicator.</li>
+            <li><strong>Manual pH Slider</strong>: Want to test the exact transition point of an indicator? Grab the manual slider and sweep it from 0 to 14!</li>
+            <li><strong>Indicators & The Gradient Bar</strong>: Different indicators are useful for different tasks. Notice the gradient bar at the bottom of the canvas—it provides a map of the current indicator's color profile across all 14 pH levels.</li>
+            <li><strong>Telemetry Panel</strong>: Because pH is logarithmic ($-\log[H^+]$), a drop from pH 6 to pH 5 means the $[H^+]$ concentration has increased by a factor of 10! Watch the scientific notation update live.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "If the pH of a solution drops from 5.0 to 4.0, what happens to the Hydrogen ion (H+) concentration?",
+        options: [
+          { text: "It decreases by a factor of 10.", isCorrect: false, exp: "Incorrect. Lower pH means MORE acidic." },
+          { text: "It increases by a factor of 10.", isCorrect: true, exp: "Correct! Because the pH scale is a base-10 logarithmic scale (pH = -log[H+]), a drop of 1 pH unit represents a 10-fold INCREASE in the concentration of hydrogen ions." },
+          { text: "It increases by 1.", isCorrect: false, exp: "Incorrect. It is logarithmic, not linear." },
+          { text: "It remains the same.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        question: "What color will Phenolphthalein turn in a strongly basic solution (pH > 10)?",
+        options: [
+          { text: "Colorless", isCorrect: false, exp: "Incorrect. It is colorless in acidic and neutral solutions." },
+          { text: "Yellow", isCorrect: false, exp: "Incorrect." },
+          { text: "Pink / Magenta", isCorrect: true, exp: "Correct! Phenolphthalein transitions from colorless to a vivid pink/magenta between pH 8.2 and 10.0, making it perfect for identifying bases." },
+          { text: "Blue", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        question: "What makes the 'Universal Indicator' different from indicators like Litmus or Methyl Orange?",
+        options: [
+          { text: "It is the only one that works in acids.", isCorrect: false, exp: "Incorrect." },
+          { text: "It is a blend of several different indicators, allowing it to display a smooth, continuous spectrum of colors from pH 0 to 14.", isCorrect: true, exp: "Correct! While most indicators only have one transition range (e.g., Litmus is just red or blue), Universal Indicator is a mixture (Water, Propanol, Phenolphthalein, Sodium salt, Bromothymol blue, etc.) that creates a rainbow spectrum across the entire pH scale." },
+          { text: "It is invisible.", isCorrect: false, exp: "Incorrect." },
+          { text: "It changes color based on temperature, not pH.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "If a solution has a [H+] of 1.0e-9 M, is it acidic or basic?",
+        options: [
+          { text: "Acidic", isCorrect: false, exp: "Incorrect." },
+          { text: "Neutral", isCorrect: false, exp: "Incorrect. Neutral is 1.0e-7 M." },
+          { text: "Basic", isCorrect: true, exp: "Correct! pH = -log(1.0e-9) = 9.0. Any pH greater than 7.0 is considered basic (alkaline)." },
+          { text: "It is impossible to tell.", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- CHEMISTRY ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const selSolution = document.getElementById('select-solution');
+    const selIndicator = document.getElementById('select-indicator');
+    const slPh = document.getElementById('sl-ph');
+    const lblPh = document.getElementById('lbl-ph');
+    
+    const infoName = document.getElementById('info-name');
+    const infoDesc = document.getElementById('info-desc');
+    
+    const keyName = document.getElementById('key-name');
+    const keyRange = document.getElementById('key-range');
+    const indGradient = document.getElementById('indicator-gradient');
+
+    const telPh = document.getElementById('tel-ph');
+    const telH = document.getElementById('tel-h');
+    const telOh = document.getElementById('tel-oh');
+    const telClass = document.getElementById('tel-class');
+    const telBox = document.getElementById('tel-box');
+
+    const descriptions = {
+        "1.0": { n: "0.1M Hydrochloric Acid (HCl)", d: "A strong laboratory acid that completely dissociates in water. Highly corrosive." },
+        "2.2": { n: "Lemon Juice", d: "Contains high levels of Citric Acid. Very sour and noticeably acidic." },
+        "3.0": { n: "Vinegar", d: "A dilute solution of Acetic Acid (a weak acid). Commonly used in cooking." },
+        "5.0": { n: "Black Coffee", d: "Slightly acidic. Contains various organic acids extracted during brewing." },
+        "7.0": { n: "Pure Distilled Water", d: "A perfectly neutral substance where the concentration of H+ exactly equals the concentration of OH-." },
+        "7.4": { n: "Human Blood", d: "Slightly basic. Tightly buffered by the body to remain between pH 7.35 and 7.45 for survival." },
+        "9.0": { n: "Baking Soda Solution", d: "Sodium Bicarbonate dissolved in water. A weak, safe household base." },
+        "11.5": { n: "Household Ammonia", d: "A strong alkaline cleaner. Effective at breaking down greases and fats." },
+        "13.0": { n: "0.1M Sodium Hydroxide", d: "A strong laboratory base (lye). Completely dissociates and is highly caustic." }
+    };
+
+    // State Variables
+    let currentPH = 7.0;
+    let targetColor = [255, 255, 255, 0.1];
+    let currentColor = [255, 255, 255, 0.1];
+    let activeIndicator = 'universal';
+
+    // Math/Color Helpers
+    const blend = (c1, c2, ratio) => {
+        return [
+            c1[0] + (c2[0]-c1[0])*ratio,
+            c1[1] + (c2[1]-c1[1])*ratio,
+            c1[2] + (c2[2]-c1[2])*ratio,
+            c1[3] + (c2[3]-c1[3])*ratio
+        ];
+    };
+
+    const universalStops = [
+        {p: 0, c: [239, 68, 68, 0.8]},   // Red
+        {p: 3, c: [249, 115, 22, 0.8]},  // Orange
+        {p: 5, c: [234, 179, 8, 0.8]},   // Yellow
+        {p: 7, c: [16, 185, 129, 0.8]},  // Green
+        {p: 10, c: [59, 130, 246, 0.8]}, // Blue
+        {p: 14, c: [139, 92, 246, 0.8]}  // Violet
+    ];
+
+    function calcColor(ph, ind) {
+        if (ind === 'universal') {
+            for(let i=0; i<universalStops.length-1; i++) {
+                if (ph >= universalStops[i].p && ph <= universalStops[i+1].p) {
+                    let r = (ph - universalStops[i].p) / (universalStops[i+1].p - universalStops[i].p);
+                    return blend(universalStops[i].c, universalStops[i+1].c, r);
+                }
+            }
+            if(ph < 0) return universalStops[0].c;
+            return universalStops[5].c;
+        } 
+        else if (ind === 'phenolphthalein') {
+            let c1 = [255, 255, 255, 0.1]; // Clear
+            let c2 = [236, 72, 153, 0.8]; // Pink
+            if (ph < 8.2) return c1;
+            if (ph > 10.0) return c2;
+            return blend(c1, c2, (ph - 8.2)/1.8);
+        }
+        else if (ind === 'bromothymol') {
+            let c1 = [250, 204, 21, 0.8]; // Yellow
+            let c2 = [59, 130, 246, 0.8]; // Blue
+            let cm = [16, 185, 129, 0.8]; // Green
+            if (ph < 6.0) return c1;
+            if (ph > 7.6) return c2;
+            if (ph <= 6.8) return blend(c1, cm, (ph - 6.0)/0.8);
+            return blend(cm, c2, (ph - 6.8)/0.8);
+        }
+        else if (ind === 'methyl') {
+            let c1 = [239, 68, 68, 0.8]; // Red
+            let c2 = [250, 204, 21, 0.8]; // Yellow
+            if (ph < 3.1) return c1;
+            if (ph > 4.4) return c2;
+            return blend(c1, c2, (ph - 3.1)/1.3);
+        }
+        else if (ind === 'litmus') {
+            let c1 = [239, 68, 68, 0.8]; // Red
+            let c2 = [59, 130, 246, 0.8]; // Blue
+            if (ph < 4.5) return c1;
+            if (ph > 8.3) return c2;
+            return blend(c1, c2, (ph - 4.5)/3.8);
+        }
+        return [255,255,255,0.1];
+    }
+
+    function updateGradientBar() {
+        // Build a CSS linear-gradient string spanning pH 0 to 14
+        let stops = [];
+        for (let i = 0; i <= 14; i++) {
+            let c = calcColor(i, activeIndicator);
+            // Convert to solid rgb for the bar to look good
+            let rgb = `rgb(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])})`;
+            let pct = (i / 14) * 100;
+            stops.push(`${rgb} ${pct}%`);
+        }
+        indGradient.style.background = `linear-gradient(to right, ${stops.join(', ')})`;
+    }
+
+    function updateChemistry() {
+        // Telemetry Update
+        telPh.innerText = currentPH.toFixed(2);
+        
+        // Math: [H+] = 10^-pH
+        let hConc = Math.pow(10, -currentPH);
+        let ohConc = Math.pow(10, -(14 - currentPH));
+        
+        telH.innerText = hConc.toExponential(1) + " M";
+        telOh.innerText = ohConc.toExponential(1) + " M";
+
+        // Classification
+        if (currentPH < 6.8) {
+            telClass.innerText = "Acidic";
+            telBox.className = "bg-rose-950 p-3.5 rounded-xl border border-rose-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 transition-colors duration-500";
+            telPh.className = "text-4xl font-bold font-mono tracking-widest text-rose-400";
+        } else if (currentPH > 7.2) {
+            telClass.innerText = "Basic (Alkaline)";
+            telBox.className = "bg-blue-950 p-3.5 rounded-xl border border-blue-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 transition-colors duration-500";
+            telPh.className = "text-4xl font-bold font-mono tracking-widest text-blue-400";
+        } else {
+            telClass.innerText = "Neutral";
+            telBox.className = "bg-emerald-950 p-3.5 rounded-xl border border-emerald-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 transition-colors duration-500";
+            telPh.className = "text-4xl font-bold font-mono tracking-widest text-emerald-400";
+        }
+
+        // Target Canvas Color
+        targetColor = calcColor(currentPH, activeIndicator);
+
+        // Update Key Text
+        let selText = selIndicator.options[selIndicator.selectedIndex].text;
+        keyName.innerText = selText.split('(')[0].trim() + " Profile";
+        
+        if (activeIndicator === 'universal') keyRange.innerText = "Full Spectrum";
+        else if (activeIndicator === 'phenolphthalein') keyRange.innerText = "Transition: 8.2 - 10.0";
+        else if (activeIndicator === 'bromothymol') keyRange.innerText = "Transition: 6.0 - 7.6";
+        else if (activeIndicator === 'methyl') keyRange.innerText = "Transition: 3.1 - 4.4";
+        else if (activeIndicator === 'litmus') keyRange.innerText = "Transition: 4.5 - 8.3";
+    }
+
+    // Input Listeners
+    slPh.addEventListener('input', e => {
+        currentPH = parseFloat(e.target.value);
+        lblPh.innerText = currentPH.toFixed(1);
+        
+        // Disconnect from preset description
+        selSolution.value = ""; 
+        infoName.innerText = "Manual Override";
+        infoDesc.innerText = "Custom pH level set by the user slider.";
+        
+        updateChemistry();
+    });
+
+    selSolution.addEventListener('change', e => {
+        if (!e.target.value) return;
+        currentPH = parseFloat(e.target.value);
+        slPh.value = currentPH;
+        lblPh.innerText = currentPH.toFixed(1);
+        
+        let desc = descriptions[e.target.value];
+        infoName.innerText = desc.n;
+        infoDesc.innerText = desc.d;
+
+        updateChemistry();
+    });
+
+    selIndicator.addEventListener('change', e => {
+        activeIndicator = e.target.value;
+        updateGradientBar();
+        updateChemistry();
+    });
+
+    // --- CANVAS RENDERING ---
+    function renderCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderCanvas); return; }
+
+      // Smooth color interpolation
+      currentColor = blend(currentColor, targetColor, 0.05);
+
+      const cx = cw / 2;
+      const cy = ch / 2 + 30; // shift down slightly
+      
+      const bW = 160;
+      const bH = 220;
+      const bRad = 15;
+      const liqLevel = bH * 0.7; // Fill level
+
+      // 1. Draw Liquid in Beaker
+      ctx.fillStyle = `rgba(${Math.round(currentColor[0])}, ${Math.round(currentColor[1])}, ${Math.round(currentColor[2])}, ${currentColor[3]})`;
+      ctx.beginPath();
+      ctx.moveTo(cx - bW/2 + 4, cy + bH/2 - liqLevel);
+      ctx.lineTo(cx + bW/2 - 4, cy + bH/2 - liqLevel);
+      ctx.lineTo(cx + bW/2 - 4, cy + bH/2 - bRad);
+      ctx.quadraticCurveTo(cx + bW/2 - 4, cy + bH/2 - 4, cx + bW/2 - bRad, cy + bH/2 - 4);
+      ctx.lineTo(cx - bW/2 + bRad, cy + bH/2 - 4);
+      ctx.quadraticCurveTo(cx - bW/2 + 4, cy + bH/2 - 4, cx - bW/2 + 4, cy + bH/2 - bRad);
+      ctx.closePath();
+      ctx.fill();
+
+      // Liquid Surface Oval
+      ctx.fillStyle = `rgba(${Math.round(currentColor[0])}, ${Math.round(currentColor[1])}, ${Math.round(currentColor[2])}, ${currentColor[3] + 0.2})`; // Slightly darker surface
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + bH/2 - liqLevel, bW/2 - 4, 8, 0, 0, Math.PI*2);
+      ctx.fill();
+
+      // 2. Draw Beaker Glass
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(cx - bW/2, cy - bH/2);
+      ctx.lineTo(cx - bW/2, cy + bH/2 - bRad);
+      ctx.quadraticCurveTo(cx - bW/2, cy + bH/2, cx - bW/2 + bRad, cy + bH/2);
+      ctx.lineTo(cx + bW/2 - bRad, cy + bH/2);
+      ctx.quadraticCurveTo(cx + bW/2, cy + bH/2, cx + bW/2, cy + bH/2 - bRad);
+      ctx.lineTo(cx + bW/2, cy - bH/2);
+      ctx.stroke();
+
+      // Beaker Rim & Spout
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - bH/2, bW/2, 10, 0, 0, Math.PI*2);
+      ctx.stroke();
+      
+      // Volume Ticks
+      ctx.lineWidth = 2;
+      ctx.textAlign = 'right'; ctx.font = '12px sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      for(let i=1; i<=4; i++) {
+          let tickY = cy + bH/2 - (i/5)*bH;
+          ctx.beginPath(); ctx.moveTo(cx - bW/2, tickY); ctx.lineTo(cx - bW/2 + 15, tickY); ctx.stroke();
+          ctx.fillText(`${i*100} mL`, cx - bW/2 - 10, tickY + 4);
+      }
+
+      // 3. Draw Digital pH Probe
+      let pX = cx + 30; // Offset from center
+      let pBotY = cy + bH/2 - 20; // Near bottom
+      let pTopY = cy - bH/2 - 60; // High above
+
+      // Probe Body (Black plastic)
+      ctx.fillStyle = '#1e293b'; // Slate 800
+      ctx.fillRect(pX - 10, pTopY, 20, pBotY - pTopY - 15);
+      
+      // Glass Bulb Tip
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.beginPath(); ctx.arc(pX, pBotY - 5, 8, 0, Math.PI*2); ctx.fill();
+
+      // Digital Meter Head
+      ctx.fillStyle = '#334155'; // Slate 700
+      ctx.fillRect(pX - 35, pTopY - 50, 70, 50);
+      ctx.strokeStyle = '#475569'; ctx.strokeRect(pX - 35, pTopY - 50, 70, 50);
+      
+      // LCD Screen
+      ctx.fillStyle = '#ecfccb'; // Emerald/Yellowish LCD tint
+      ctx.fillRect(pX - 25, pTopY - 40, 50, 25);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 16px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(currentPH.toFixed(2), pX, pTopY - 27);
+
+      requestAnimationFrame(renderCanvas);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      // Initialization
+      selSolution.value = "7.0"; // Water default
+      selIndicator.value = "universal";
+      updateGradientBar();
+      updateChemistry();
+      
+      // Snap color instantly on boot to avoid fading from clear
+      targetColor = calcColor(7.0, 'universal');
+      currentColor = [...targetColor];
+
+      requestAnimationFrame(renderCanvas);
+    });
+  </script>
+</body>
+</html>

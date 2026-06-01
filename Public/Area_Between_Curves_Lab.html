@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Area Between Two Curves Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Area Between Two Curves</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Definite Integrals &amp; Riemann Sums Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Calculus Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Function Pair:</span>
+        <select id="select-funcs" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="parabolas">Intersecting Parabolas</option>
+          <option value="line_parabola">Line &amp; Parabola</option>
+          <option value="trig">Trigonometric Waves</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-riemann" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Riemann Rectangles ($dx$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-bounds" checked class="rounded border-slate-300 text-slate-500 focus:ring-slate-500 h-4.5 w-4.5">
+          <span>Show Integral Bounds ($a, b$)</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+        
+        <div class="lg:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block border-b border-slate-100 pb-1">Active Functions</span>
+              <div class="flex items-center justify-between text-sm font-bold">
+                <span class="text-cyan-500">Upper: $f(x)$</span>
+                <span id="lbl-fx" class="font-mono text-slate-800">$4 - x^2$</span>
+              </div>
+              <div class="flex items-center justify-between text-sm font-bold">
+                <span class="text-rose-500">Lower: $g(x)$</span>
+                <span id="lbl-gx" class="font-mono text-slate-800">$x^2 - 4$</span>
+              </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> <span class="uppercase">Lower Limit ($a$)</span></span>
+                <span id="lbl-a" class="font-mono text-indigo-600 text-lg">-2.0</span>
+              </div>
+              <input type="range" id="sl-a" min="-4" max="4" step="0.1" value="-2.0" class="w-full mt-3">
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> <span class="uppercase">Upper Limit ($b$)</span></span>
+                <span id="lbl-b" class="font-mono text-indigo-600 text-lg">2.0</span>
+              </div>
+              <input type="range" id="sl-b" min="-4" max="4" step="0.1" value="2.0" class="w-full mt-3">
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Integral Telemetry Dashboard</span>
+            
+            <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center">
+              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">Definite Integral Formulation</div>
+              <div id="tel-integral" class="text-sm font-mono text-slate-200 mb-4 overflow-x-auto w-full">
+                $$\int_{-2}^{2} [ (4-x^2) - (x^2-4) ] \,dx$$
+              </div>
+              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 border-t border-slate-700 pt-3 w-full">Calculated Net Area</div>
+              <div class="text-2xl font-bold font-mono text-emerald-400 tracking-widest" id="tel-area">21.33</div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="lg:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span class="text-[10px] font-bold text-slate-300 tracking-wider">Cartesian Coordinate Plane</span>
+          </div>
+
+          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-cyan-400 block"></span> Upper Curve $f(x)$</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block"></span> Lower Curve $g(x)$</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-indigo-500/40 border border-indigo-400 block"></span> Bounded Area</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-slate-400 block border-t border-dashed border-slate-400 bg-transparent"></span> Integration Limits ($a,b$)</div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do we integrate $f(x) - g(x)$ specifically?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                The integral sums up infinitely many vertical slices (rectangles). The height of any individual slice is precisely the top $y$-value minus the bottom $y$-value. Therefore, the height function is $h(x) = f(x) - g(x)$.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What happens to the calculation if the two curves cross each other?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                If the curves cross, the "top" and "bottom" functions switch! If you just integrate $f(x) - g(x)$, the area where $g(x) > f(x)$ will evaluate as negative, canceling out actual geometric area. To find true total area, you must split the integral at the intersection points.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What does the Riemann Rectangles toggle illustrate?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                It reveals the fundamental definition of the integral: $\lim_{n \to \infty} \sum_{i=1}^{n} [f(x_i) - g(x_i)]\Delta x$. By breaking the area into discrete rectangles, it visualizes how calculus bridges the gap between finite sums and continuous areas.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Numerical area is calculated using a high-precision discrete summation approximation over the interval $[a, b]$.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> AREA BETWEEN CURVES PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Calculus Laboratory</strong>! Explore the geometric meaning of definite integrals.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Function Pair Dropdown</strong>: Select different mathematical scenarios (Parabolas, Lines, Trigonometry).</li>
+            <li><strong>Limits of Integration ($a, b$)</strong>: Adjust the left and right boundaries of your integration. The simulation will prevent $a$ from crossing over $b$.</li>
+            <li><strong>Riemann Rectangles Toggle</strong>: Switch between the smooth, exact analytic area and the discrete rectangular slices ($dx$) that conceptually build the integral.</li>
+            <li><strong>Live Telemetry</strong>: Watch the formal mathematical notation and the exact calculated numerical area update instantly as you change parameters!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Math Definitions ---
+    const functionRegistry = {
+        parabolas: {
+            f: (x) => 4 - x*x,
+            g: (x) => x*x - 4,
+            fLatex: "4 - x^2",
+            gLatex: "x^2 - 4",
+            defaultA: -2.0,
+            defaultB: 2.0
+        },
+        line_parabola: {
+            f: (x) => x + 2,
+            g: (x) => x*x,
+            fLatex: "x + 2",
+            gLatex: "x^2",
+            defaultA: -1.0,
+            defaultB: 2.0
+        },
+        trig: {
+            f: (x) => Math.sin(x) + 2,
+            g: (x) => Math.cos(x),
+            fLatex: "\\sin(x) + 2",
+            gLatex: "\\cos(x)",
+            defaultA: -2.0,
+            defaultB: 3.0
+        }
+    };
+
+    // --- State Variables ---
+    let currentMode = 'parabolas';
+    let activeFuncs = functionRegistry[currentMode];
+    let limitA = activeFuncs.defaultA;
+    let limitB = activeFuncs.defaultB;
+
+    // --- DOM Elements ---
+    const selFuncs = document.getElementById('select-funcs');
+    const slA = document.getElementById('sl-a'); const lblA = document.getElementById('lbl-a');
+    const slB = document.getElementById('sl-b'); const lblB = document.getElementById('lbl-b');
+    
+    const lblFx = document.getElementById('lbl-fx');
+    const lblGx = document.getElementById('lbl-gx');
+    
+    const chkRiemann = document.getElementById('chk-riemann');
+    const chkBounds = document.getElementById('chk-bounds');
+
+    const telIntegral = document.getElementById('tel-integral');
+    const telArea = document.getElementById('tel-area');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Math Logic & Telemetry ---
+    function updateTelemetry() {
+       lblFx.innerHTML = `$${activeFuncs.fLatex}$`;
+       lblGx.innerHTML = `$${activeFuncs.gLatex}$`;
+       
+       let eq = `\\int_{${limitA.toFixed(1)}}^{${limitB.toFixed(1)}} [ (${activeFuncs.fLatex}) - (${activeFuncs.gLatex}) ] \\,dx`;
+       telIntegral.innerHTML = `$$${eq}$$`;
+
+       // Calculate Area numerically
+       // Since the standard question is "Area between", we technically take |f(x) - g(x)|
+       // so that negative areas don't cancel out if curves cross. 
+       let area = 0;
+       const steps = 1000;
+       const dx = (limitB - limitA) / steps;
+       
+       if (limitA === limitB) {
+           area = 0;
+       } else {
+           for (let i = 0; i < steps; i++) {
+               let x = limitA + i * dx + (dx/2); // Midpoint rule for accuracy
+               area += Math.abs(activeFuncs.f(x) - activeFuncs.g(x)) * dx;
+           }
+       }
+       
+       telArea.innerText = area.toFixed(2);
+       
+       if (window.MathJax) {
+           MathJax.typesetPromise([lblFx, lblGx, telIntegral]).catch((err) => console.log(err));
+       }
+    }
+
+    // --- Input Handlers ---
+    selFuncs.addEventListener('change', (e) => {
+        currentMode = e.target.value;
+        activeFuncs = functionRegistry[currentMode];
+        
+        limitA = activeFuncs.defaultA;
+        limitB = activeFuncs.defaultB;
+        slA.value = limitA; lblA.innerText = limitA.toFixed(1);
+        slB.value = limitB; lblB.innerText = limitB.toFixed(1);
+        
+        updateTelemetry();
+    });
+
+    slA.addEventListener('input', ev => {
+        let val = parseFloat(ev.target.value);
+        if (val > limitB) { val = limitB; ev.target.value = val; } // Constrain A <= B
+        limitA = val;
+        lblA.innerText = limitA.toFixed(1);
+        updateTelemetry();
+    });
+
+    slB.addEventListener('input', ev => {
+        let val = parseFloat(ev.target.value);
+        if (val < limitA) { val = limitA; ev.target.value = val; } // Constrain B >= A
+        limitB = val;
+        lblB.innerText = limitB.toFixed(1);
+        updateTelemetry();
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Dynamic dimension check to prevent layout collapse
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      const cx = W / 2;
+      const cy = H / 2;
+
+      // Map mathematical coords [-6, 6] to canvas pixels
+      const scaleX = W / 12; 
+      const scaleY = H / 12;
+
+      const mapX = (x) => cx + x * scaleX;
+      const mapY = (y) => cy - y * scaleY; // Invert Y for screen coords
+
+      // 1. Draw Cartesian Grid & Axes
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      // Draw grid lines every 1 unit
+      for(let x = -6; x <= 6; x++) { ctx.moveTo(mapX(x), 0); ctx.lineTo(mapX(x), H); }
+      for(let y = -6; y <= 6; y++) { ctx.moveTo(0, mapY(y)); ctx.lineTo(W, mapY(y)); }
+      ctx.stroke();
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+      ctx.stroke();
+
+      // 2. Draw Area (Smooth Shading or Riemann Rects)
+      if (limitA < limitB) {
+          if (chkRiemann.checked) {
+              // Riemann Sum Rectangles
+              const rectCount = 20; // Visual number of slices
+              const rDx = (limitB - limitA) / rectCount;
+              
+              for (let i = 0; i < rectCount; i++) {
+                  let x = limitA + i * rDx;
+                  let fVal = activeFuncs.f(x);
+                  let gVal = activeFuncs.g(x);
+                  
+                  let topY = mapY(Math.max(fVal, gVal));
+                  let botY = mapY(Math.min(fVal, gVal));
+                  let pxX = mapX(x);
+                  let pxW = mapX(x + rDx) - pxX;
+
+                  ctx.fillStyle = 'rgba(99, 102, 241, 0.4)'; // Indigo fill
+                  ctx.strokeStyle = 'rgba(99, 102, 241, 0.9)'; // Indigo border
+                  ctx.lineWidth = 1;
+
+                  ctx.fillRect(pxX, topY, pxW, botY - topY);
+                  ctx.strokeRect(pxX, topY, pxW, botY - topY);
+              }
+
+          } else {
+              // Smooth Shading
+              ctx.beginPath();
+              // Traverse F forward
+              for(let x = limitA; x <= limitB; x += 0.05) {
+                  let pxX = mapX(x);
+                  let pxY = mapY(activeFuncs.f(x));
+                  if (x === limitA) ctx.moveTo(pxX, pxY);
+                  else ctx.lineTo(pxX, pxY);
+              }
+              // Safety to exact b
+              ctx.lineTo(mapX(limitB), mapY(activeFuncs.f(limitB)));
+              
+              // Traverse G backward
+              for(let x = limitB; x >= limitA; x -= 0.05) {
+                  ctx.lineTo(mapX(x), mapY(activeFuncs.g(x)));
+              }
+              // Safety to exact a
+              ctx.lineTo(mapX(limitA), mapY(activeFuncs.g(limitA)));
+              
+              ctx.closePath();
+              ctx.fillStyle = 'rgba(99, 102, 241, 0.4)'; // Indigo
+              ctx.fill();
+          }
+      }
+
+      // 3. Draw Curves (f(x) and g(x))
+      const plotCurve = (fn, color) => {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          for(let x = -6; x <= 6; x += 0.1) {
+              let pxX = mapX(x);
+              let pxY = mapY(fn(x));
+              if (x === -6) ctx.moveTo(pxX, pxY);
+              else ctx.lineTo(pxX, pxY);
+          }
+          ctx.stroke();
+      };
+
+      plotCurve(activeFuncs.f, '#22d3ee'); // Cyan for Upper
+      plotCurve(activeFuncs.g, '#f43f5e'); // Rose for Lower
+
+      // 4. Draw Bounds (a and b)
+      if (chkBounds.checked) {
+          ctx.strokeStyle = '#94a3b8'; // Slate dashed
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.moveTo(mapX(limitA), 0); ctx.lineTo(mapX(limitA), H);
+          ctx.moveTo(mapX(limitB), 0); ctx.lineTo(mapX(limitB), H);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          
+          ctx.fillStyle = '#f8fafc';
+          ctx.font = 'bold 12px monospace';
+          ctx.fillText("a", mapX(limitA) - 15, cy - 10);
+          ctx.fillText("b", mapX(limitB) + 5, cy - 10);
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      updateTelemetry();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

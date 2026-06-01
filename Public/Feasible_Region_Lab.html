@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feasible Region Graphical Method Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Feasible Region Graphical Method</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Linear Programming &amp; Optimization Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Optimization Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Scenario:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="standard">Standard Maximization</option>
+          <option value="redundant">Redundant Constraint</option>
+          <option value="steep">Steep Objective Function</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-region" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Fill Feasible Region</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-vertices" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Highlight Vertices</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-5">
+
+          <div class="bg-white p-3.5 rounded-xl border border-amber-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-amber-500 uppercase tracking-wider block mb-3 border-b border-amber-100 pb-1">Objective Function (Max $Z$)</span>
+            <div class="text-center font-mono font-bold text-amber-600 text-sm mb-3" id="lbl-obj">
+              $Z = 3x + 2y$
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$C_1$</span>
+                <input type="range" id="sl-objX" min="1" max="10" step="1" value="3" class="w-full">
+                <span id="lbl-objX" class="font-mono text-[10px] font-bold w-4 text-right">3</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$C_2$</span>
+                <input type="range" id="sl-objY" min="1" max="10" step="1" value="2" class="w-full">
+                <span id="lbl-objY" class="font-mono text-[10px] font-bold w-4 text-right">2</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-blue-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider block mb-3 border-b border-blue-100 pb-1">Constraint 1 (Blue)</span>
+            <div class="text-center font-mono font-bold text-blue-600 text-sm mb-3" id="lbl-c1">
+              $1x + 2y \le 8$
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$x$</span>
+                <input type="range" id="sl-c1X" min="1" max="10" step="1" value="1" class="w-full">
+                <span id="lbl-c1X" class="font-mono text-[10px] font-bold w-4 text-right">1</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$y$</span>
+                <input type="range" id="sl-c1Y" min="1" max="10" step="1" value="2" class="w-full">
+                <span id="lbl-c1Y" class="font-mono text-[10px] font-bold w-4 text-right">2</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$\le$</span>
+                <input type="range" id="sl-c1C" min="2" max="20" step="1" value="8" class="w-full">
+                <span id="lbl-c1C" class="font-mono text-[10px] font-bold w-4 text-right">8</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-rose-500 uppercase tracking-wider block mb-3 border-b border-rose-100 pb-1">Constraint 2 (Rose)</span>
+            <div class="text-center font-mono font-bold text-rose-600 text-sm mb-3" id="lbl-c2">
+              $2x + 1y \le 10$
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$x$</span>
+                <input type="range" id="sl-c2X" min="1" max="10" step="1" value="2" class="w-full">
+                <span id="lbl-c2X" class="font-mono text-[10px] font-bold w-4 text-right">2</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$y$</span>
+                <input type="range" id="sl-c2Y" min="1" max="10" step="1" value="1" class="w-full">
+                <span id="lbl-c2Y" class="font-mono text-[10px] font-bold w-4 text-right">1</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">$\le$</span>
+                <input type="range" id="sl-c2C" min="2" max="20" step="1" value="10" class="w-full">
+                <span id="lbl-c2C" class="font-mono text-[10px] font-bold w-4 text-right">10</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-100 text-slate-600 p-2 rounded text-center text-[10px] font-bold border border-slate-200">
+            * Implicit constraints: $x \ge 0, y \ge 0$
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col border-8 border-slate-900 min-h-[500px]">
+        
+        <div class="absolute top-4 left-1/2 transform -translate-x-1/2 w-3/4 max-w-sm bg-slate-900/90 backdrop-blur-md px-4 py-3 rounded-xl border border-slate-700 shadow-xl z-20 flex flex-col space-y-2">
+           <div class="flex justify-between items-center text-[10px] font-bold text-amber-400 tracking-wider">
+             <span class="uppercase">Drag Objective Line ($Z$)</span>
+             <span class="font-mono bg-slate-800 px-2 py-0.5 rounded text-white" id="val-zline">Z = 0</span>
+           </div>
+           <input type="range" id="sl-zline" min="0" max="60" step="0.5" value="0" class="w-full">
+        </div>
+
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-blue-500 block"></span> Constraint 1 Line</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block"></span> Constraint 2 Line</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-emerald-500/30 border border-emerald-400 block"></span> Feasible Region</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-amber-400 block border-t border-dashed border-amber-400 bg-transparent"></span> Objective Line (Isoprofit)</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Corner Point Evaluation</span>
+          
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-[9px] uppercase tracking-wider text-slate-500">
+                  <th class="px-3 py-2 border-b border-slate-200">Vertex $(x,y)$</th>
+                  <th class="px-3 py-2 border-b border-slate-200 text-right">Value $Z$</th>
+                </tr>
+              </thead>
+              <tbody id="vertex-table-body" class="text-xs font-mono font-bold text-slate-700">
+                </tbody>
+            </table>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">Optimal Solution (Max)</div>
+            <div class="text-2xl font-bold font-mono text-emerald-400 tracking-widest" id="tel-opt-z">Z = 16.0</div>
+            <div class="text-[11px] font-mono text-emerald-200 mt-1" id="tel-opt-pt">at (4.0, 2.0)</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What is the Corner Point Theorem?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                The Fundamental Theorem of Linear Programming states that if an objective function has an optimal value (maximum or minimum) within a bounded feasible region, that optimal value will <strong>always occur at one of the vertices</strong> (corner points) of the region.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What does the dashed Objective Line represent visually?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                Often called an "Isoprofit" or "Isocost" line, it represents all combinations of $(x,y)$ that yield a specific target $Z$ value. As you drag the $Z$ slider, the line moves parallel to itself. The optimal solution is the very last point the line touches before leaving the feasible region entirely.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What is a "Binding" or "Active" constraint?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                A constraint is binding if it physically dictates the optimal solution point (i.e., the optimal point lies exactly on the line $ax+by=c$). If a constraint line bounds the region but the optimal point occurs elsewhere, it is non-binding (meaning there is "slack" or leftover capacity).
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> LINEAR PROGRAMMING PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Operations Research Laboratory</strong>! Visualize the mechanics of linear optimization.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Equation Sliders</strong>: Adjust the coefficients for the Objective Function ($Z$) and the two constraints. Watch how changing the limits redraws the green Feasible Region in real-time.</li>
+            <li><strong>Top Objective Line Slider</strong>: Physically grab and slide the $Z$ value to sweep the dashed objective line across the graph. Try to manually find the highest $Z$ value before the line completely detaches from the green region!</li>
+            <li><strong>Corner Point Evaluation Table</strong>: The system automatically calculates all valid intersection points, filters out the invalid ones, and dynamically highlights the geometric optimal solution in green.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let objX = 3, objY = 2;
+    let c1X = 1, c1Y = 2, c1C = 8;
+    let c2X = 2, c2Y = 1, c2C = 10;
+    
+    let zLineVal = 0; // Value for manual Isoprofit line
+    let optimalZ = 0;
+
+    const PRESETS = {
+        standard: { objX: 3, objY: 2, c1X: 1, c1Y: 2, c1C: 8, c2X: 2, c2Y: 1, c2C: 10 },
+        redundant: { objX: 4, objY: 3, c1X: 1, c1Y: 1, c1C: 10, c2X: 1, c2Y: 1, c2C: 15 },
+        steep: { objX: 10, objY: 1, c1X: 2, c1Y: 3, c1C: 12, c2X: 4, c2Y: 1, c2C: 16 }
+    };
+
+    // --- DOM Elements ---
+    const slObjX = document.getElementById('sl-objX'); const lblObjX = document.getElementById('lbl-objX');
+    const slObjY = document.getElementById('sl-objY'); const lblObjY = document.getElementById('lbl-objY');
+    
+    const slC1X = document.getElementById('sl-c1X'); const lblC1X = document.getElementById('lbl-c1X');
+    const slC1Y = document.getElementById('sl-c1Y'); const lblC1Y = document.getElementById('lbl-c1Y');
+    const slC1C = document.getElementById('sl-c1C'); const lblC1C = document.getElementById('lbl-c1C');
+
+    const slC2X = document.getElementById('sl-c2X'); const lblC2X = document.getElementById('lbl-c2X');
+    const slC2Y = document.getElementById('sl-c2Y'); const lblC2Y = document.getElementById('lbl-c2Y');
+    const slC2C = document.getElementById('sl-c2C'); const lblC2C = document.getElementById('lbl-c2C');
+
+    const lblObj = document.getElementById('lbl-obj');
+    const lblC1 = document.getElementById('lbl-c1');
+    const lblC2 = document.getElementById('lbl-c2');
+
+    const slZline = document.getElementById('sl-zline');
+    const valZline = document.getElementById('val-zline');
+
+    const selPreset = document.getElementById('select-preset');
+    const btnReset = document.getElementById('btn-reset');
+    const chkRegion = document.getElementById('chk-region');
+    const chkVertices = document.getElementById('chk-vertices');
+
+    const tableBody = document.getElementById('vertex-table-body');
+    const telOptZ = document.getElementById('tel-opt-z');
+    const telOptPt = document.getElementById('tel-opt-pt');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Math Engine ---
+    let vertices = [];
+
+    function findIntersection(a1, b1, c1, a2, b2, c2) {
+        let det = a1 * b2 - a2 * b1;
+        if (Math.abs(det) < 1e-9) return null; // Parallel
+        let x = (c1 * b2 - c2 * b1) / det;
+        let y = (a1 * c2 - a2 * c1) / det;
+        return {x, y};
+    }
+
+    function isFeasible(x, y) {
+        if (x < -0.01 || y < -0.01) return false;
+        if (c1X * x + c1Y * y > c1C + 0.01) return false;
+        if (c2X * x + c2Y * y > c2C + 0.01) return false;
+        return true;
+    }
+
+    function calculateVertices() {
+        vertices = [];
+        let rawPts = [];
+        
+        // Lines:
+        // L0: x=0 (y-axis)
+        // L1: y=0 (x-axis)
+        // L2: c1X*x + c1Y*y = c1C
+        // L3: c2X*x + c2Y*y = c2C
+
+        // Intersections with Origin
+        rawPts.push({x:0, y:0});
+        // L2 with Axes
+        if (c1X !== 0) rawPts.push({x: c1C/c1X, y: 0});
+        if (c1Y !== 0) rawPts.push({x: 0, y: c1C/c1Y});
+        // L3 with Axes
+        if (c2X !== 0) rawPts.push({x: c2C/c2X, y: 0});
+        if (c2Y !== 0) rawPts.push({x: 0, y: c2C/c2Y});
+        // L2 with L3
+        let p23 = findIntersection(c1X, c1Y, c1C, c2X, c2Y, c2C);
+        if (p23) rawPts.push(p23);
+
+        // Filter and remove duplicates
+        rawPts.forEach(pt => {
+            if (isFeasible(pt.x, pt.y)) {
+                // Check if already in vertices
+                let exists = vertices.some(v => Math.abs(v.x - pt.x) < 0.05 && Math.abs(v.y - pt.y) < 0.05);
+                if (!exists) {
+                    vertices.push({x: Math.max(0, pt.x), y: Math.max(0, pt.y)}); // clean up tiny floating -0.00
+                }
+            }
+        });
+
+        // Sort vertices counter-clockwise to form a valid polygon
+        if (vertices.length > 0) {
+            let cx = vertices.reduce((sum, v) => sum + v.x, 0) / vertices.length;
+            let cy = vertices.reduce((sum, v) => sum + v.y, 0) / vertices.length;
+            vertices.sort((a, b) => {
+                return Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx);
+            });
+        }
+    }
+
+    function updateTelemetry() {
+        lblObj.innerHTML = `$$Z = ${objX}x + ${objY}y$$`;
+        lblC1.innerHTML = `$$${c1X}x + ${c1Y}y \\le ${c1C}$$`;
+        lblC2.innerHTML = `$$${c2X}x + ${c2Y}y \\le ${c2C}$$`;
+        
+        if (window.MathJax) MathJax.typesetPromise([lblObj, lblC1, lblC2]);
+
+        calculateVertices();
+
+        // Populate Table and find Max
+        tableBody.innerHTML = '';
+        let maxZ = -Infinity;
+        let optPt = null;
+
+        vertices.forEach(v => {
+            let z = objX * v.x + objY * v.y;
+            if (z > maxZ) {
+                maxZ = z;
+                optPt = v;
+            }
+        });
+        
+        optimalZ = maxZ;
+
+        vertices.forEach(v => {
+            let z = objX * v.x + objY * v.y;
+            let isOptimal = Math.abs(z - maxZ) < 0.01;
+            
+            let row = document.createElement('tr');
+            row.className = isOptimal ? 'bg-emerald-50' : 'border-b border-slate-100';
+            
+            row.innerHTML = `
+              <td class="px-3 py-2 ${isOptimal ? 'text-emerald-700' : ''}">(${v.x.toFixed(2)}, ${v.y.toFixed(2)})</td>
+              <td class="px-3 py-2 text-right ${isOptimal ? 'text-emerald-700' : ''}">${z.toFixed(2)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        if (optPt) {
+            telOptZ.innerText = `Z = ${maxZ.toFixed(1)}`;
+            telOptPt.innerText = `at (${optPt.x.toFixed(1)}, ${optPt.y.toFixed(1)})`;
+        } else {
+            telOptZ.innerText = "No Region";
+            telOptPt.innerText = "-";
+        }
+
+        // Adjust Z slider range dynamically to give some buffer past the max
+        slZline.max = Math.ceil(maxZ * 1.5) || 20;
+    }
+
+    // --- Input Synchronizers ---
+    function sync(val, sl, lbl, setter) {
+        val = parseFloat(val);
+        sl.value = val;
+        lbl.innerText = val.toString();
+        setter(val);
+        updateTelemetry();
+    }
+
+    slObjX.addEventListener('input', e => sync(e.target.value, slObjX, lblObjX, v => objX = v));
+    slObjY.addEventListener('input', e => sync(e.target.value, slObjY, lblObjY, v => objY = v));
+    
+    slC1X.addEventListener('input', e => sync(e.target.value, slC1X, lblC1X, v => c1X = v));
+    slC1Y.addEventListener('input', e => sync(e.target.value, slC1Y, lblC1Y, v => c1Y = v));
+    slC1C.addEventListener('input', e => sync(e.target.value, slC1C, lblC1C, v => c1C = v));
+
+    slC2X.addEventListener('input', e => sync(e.target.value, slC2X, lblC2X, v => c2X = v));
+    slC2Y.addEventListener('input', e => sync(e.target.value, slC2Y, lblC2Y, v => c2Y = v));
+    slC2C.addEventListener('input', e => sync(e.target.value, slC2C, lblC2C, v => c2C = v));
+
+    slZline.addEventListener('input', e => {
+        zLineVal = parseFloat(e.target.value);
+        valZline.innerText = `Z = ${zLineVal.toFixed(1)}`;
+    });
+
+    selPreset.addEventListener('change', e => {
+        let p = PRESETS[e.target.value];
+        sync(p.objX, slObjX, lblObjX, v => objX = v); sync(p.objY, slObjY, lblObjY, v => objY = v);
+        sync(p.c1X, slC1X, lblC1X, v => c1X = v); sync(p.c1Y, slC1Y, lblC1Y, v => c1Y = v); sync(p.c1C, slC1C, lblC1C, v => c1C = v);
+        sync(p.c2X, slC2X, lblC2X, v => c2X = v); sync(p.c2Y, slC2Y, lblC2Y, v => c2Y = v); sync(p.c2C, slC2C, lblC2C, v => c2C = v);
+        
+        slZline.value = 0; zLineVal = 0; valZline.innerText = "Z = 0.0";
+    });
+
+    btnReset.addEventListener('click', () => {
+        selPreset.value = 'standard';
+        selPreset.dispatchEvent(new Event('change'));
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      if (cw > 0 && ch > 0 && (canvas.width !== cw * dpr || canvas.height !== ch * dpr)) {
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.resetTransform();
+          ctx.scale(dpr, dpr);
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      // Fixed logical coordinate system: X from -2 to 12, Y from -2 to 12
+      const X_MIN = -2, X_MAX = 14;
+      const Y_MIN = -2, Y_MAX = 12;
+
+      const scaleX = W / (X_MAX - X_MIN); 
+      const scaleY = H / (Y_MAX - Y_MIN);
+      
+      const mapX = (x) => (x - X_MIN) * scaleX;
+      const mapY = (y) => H - (y - Y_MIN) * scaleY;
+
+      // 1. Draw Grid & Axes
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let x = 0; x <= X_MAX; x+=1) { ctx.moveTo(mapX(x), 0); ctx.lineTo(mapX(x), H); }
+      for(let y = 0; y <= Y_MAX; y+=1) { ctx.moveTo(0, mapY(y)); ctx.lineTo(W, mapY(y)); }
+      ctx.stroke();
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, mapY(0)); ctx.lineTo(W, mapY(0)); // X axis
+      ctx.moveTo(mapX(0), 0); ctx.lineTo(mapX(0), H); // Y axis
+      ctx.stroke();
+      
+      ctx.fillStyle = '#64748b'; ctx.font = '10px monospace';
+      for(let x = 2; x <= X_MAX-2; x+=2) ctx.fillText(x, mapX(x)-3, mapY(0)+15);
+      for(let y = 2; y <= Y_MAX-2; y+=2) ctx.fillText(y, mapX(0)-15, mapY(y)+3);
+
+      // 2. Draw Constraint Lines
+      const drawLine = (a, b, c, color) => {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          if (b !== 0) {
+              // x from 0 to max
+              ctx.moveTo(mapX(0), mapY(c/b));
+              ctx.lineTo(mapX(X_MAX), mapY((c - a*X_MAX)/b));
+          } else {
+              // vertical line
+              ctx.moveTo(mapX(c/a), 0);
+              ctx.lineTo(mapX(c/a), H);
+          }
+          ctx.stroke();
+      };
+      drawLine(c1X, c1Y, c1C, '#3b82f6'); // Blue
+      drawLine(c2X, c2Y, c2C, '#f43f5e'); // Rose
+
+      // 3. Draw Feasible Region
+      if (chkRegion.checked && vertices.length > 2) {
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.25)'; // Emerald transparent
+          ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(mapX(vertices[0].x), mapY(vertices[0].y));
+          for(let i=1; i<vertices.length; i++) {
+              ctx.lineTo(mapX(vertices[i].x), mapY(vertices[i].y));
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+      }
+
+      // 4. Draw Objective Line (Isoprofit Z)
+      if (zLineVal > 0) {
+          ctx.strokeStyle = '#fbbf24'; // Amber
+          ctx.lineWidth = 3;
+          ctx.setLineDash([8, 8]);
+          ctx.beginPath();
+          if (objY !== 0) {
+              // Calculate endpoints far enough to span screen
+              let x1 = -5; let y1 = (zLineVal - objX*x1)/objY;
+              let x2 = 20; let y2 = (zLineVal - objX*x2)/objY;
+              ctx.moveTo(mapX(x1), mapY(y1));
+              ctx.lineTo(mapX(x2), mapY(y2));
+          } else {
+              ctx.moveTo(mapX(zLineVal/objX), 0);
+              ctx.lineTo(mapX(zLineVal/objX), H);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+      }
+
+      // 5. Draw Vertices
+      if (chkVertices.checked) {
+          vertices.forEach(v => {
+              let z = objX * v.x + objY * v.y;
+              let isOpt = Math.abs(z - optimalZ) < 0.01;
+              
+              ctx.fillStyle = isOpt ? '#10b981' : '#f8fafc'; // Emerald or White
+              ctx.strokeStyle = isOpt ? '#047857' : '#475569';
+              ctx.lineWidth = 2;
+              
+              ctx.beginPath();
+              ctx.arc(mapX(v.x), mapY(v.y), isOpt ? 7 : 5, 0, Math.PI*2);
+              
+              if(isOpt) {
+                  ctx.shadowColor = '#10b981';
+                  ctx.shadowBlur = 10;
+              }
+              ctx.fill(); ctx.stroke();
+              ctx.shadowBlur = 0;
+          });
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initialize
+    window.addEventListener('load', () => {
+      selPreset.value = 'standard';
+      selPreset.dispatchEvent(new Event('change'));
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

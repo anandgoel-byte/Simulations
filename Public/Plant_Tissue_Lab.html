@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Tissue Cross-Section Viewer Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Plant Tissue Cross-Section Viewer</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Botanical Anatomy &amp; Vascular Architecture Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Renderer Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Specimen Selection:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="dicotStem">Dicot Stem (e.g., Sunflower)</option>
+          <option value="monocotStem">Monocot Stem (e.g., Corn/Maize)</option>
+          <option value="dicotRoot">Dicot Root (e.g., Bean)</option>
+          <option value="monocotRoot">Monocot Root (e.g., Orchid)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm">
+          <span>🔄</span> Reset Overlays
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-labels" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Tissue Markers</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm border border-indigo-200 space-y-1.5">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Tissue Isolator Panel</span>
+          <div class="text-[11px] font-medium leading-relaxed pt-1">
+            Toggle tissues on or off to highlight their exact spatial arrangement within the selected plant organ.
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group transition-colors hover:border-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: #64748b;"></span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">Epidermis (Dermal)</span>
+            </div>
+            <input type="checkbox" id="tgl-epidermis" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group transition-colors hover:border-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: #a3e635;"></span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">Cortex / Ground Tissue</span>
+            </div>
+            <input type="checkbox" id="tgl-cortex" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group transition-colors hover:border-slate-300 transition-opacity" id="row-endo">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: #a855f7;"></span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">Endodermis</span>
+            </div>
+            <input type="checkbox" id="tgl-endo" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group transition-colors hover:border-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: #3b82f6;"></span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">Phloem (Sugar Transport)</span>
+            </div>
+            <input type="checkbox" id="tgl-phloem" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group transition-colors hover:border-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: #f43f5e;"></span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">Xylem (Water Transport)</span>
+            </div>
+            <input type="checkbox" id="tgl-xylem" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between group transition-colors hover:border-slate-300 transition-opacity" id="row-pith">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: #fde047;"></span>
+              <span class="text-xs font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">Pith (Central Core)</span>
+            </div>
+            <input type="checkbox" id="tgl-pith" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300 cursor-pointer">
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Specimen: Dicot Stem</span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Structural Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Vascular Arrangement</div>
+              <div class="text-[11px] font-bold font-mono text-indigo-600 leading-tight" id="tel-arrange">Conjoint & Collateral</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Bundle Distribution</div>
+              <div class="text-[11px] font-bold font-mono text-emerald-600 leading-tight" id="tel-dist">Neat Concentric Ring</div>
+            </div>
+
+            <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-300 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Secondary Growth Capability</div>
+              <div class="text-[11px] font-bold font-mono text-slate-700 tracking-widest" id="tel-growth">Possible (Cambium Present)</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the defining feature of a Monocot stem cross-section?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does the arrangement of xylem and phloem differ in Roots versus Stems?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the primary function of the Endodermis in roots?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which tissue is responsible for secondary growth (thickening) in Dicot stems?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> TISSUE VIEWER PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Botanical Anatomy Laboratory</strong>! Explore the internal cross-sections of plant organs.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Specimen Selector</strong>: Instantly swap between the four major vascular cross-sections. Watch the central structural geometry change entirely between roots and stems.</li>
+            <li><strong>Tissue Isolators</strong>: Check and uncheck specific tissues to isolate their locations. Non-applicable tissues (like Pith in a Dicot Root) will be automatically disabled.</li>
+            <li><strong>Visual Features</strong>: Notice the "monkey face" vascular bundles in Monocot stems, the solid star-shaped Xylem core in Dicot roots, and the distinct waterproof Endodermis ring only present in roots!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "What is the defining feature of a Monocot stem cross-section?",
+        options: [
+          { text: "A massive central pith.", isCorrect: false, exp: "Incorrect. Pith is found in dicot stems and monocot roots." },
+          { text: "Vascular bundles scattered randomly throughout the ground tissue.", isCorrect: true, exp: "Correct! Unlike dicot stems which form a neat ring, monocot stems have vascular bundles (which look like little monkey faces) scattered wildly throughout the entire stem." },
+          { text: "A distinct, thick endodermis layer.", isCorrect: false, exp: "Incorrect. Endodermis is a feature of roots, not stems." },
+          { text: "Vascular bundles arranged in a perfect ring.", isCorrect: false, exp: "Incorrect. This describes a dicot stem." }
+        ]
+      },
+      q2: {
+        question: "How does the arrangement of xylem and phloem differ in Roots versus Stems?",
+        options: [
+          { text: "Stems are Radial (alternating); Roots are Conjoint (bundled together).", isCorrect: false, exp: "Incorrect. It is the exact opposite." },
+          { text: "Stems have Xylem on the outside; Roots have Phloem on the inside.", isCorrect: false, exp: "Incorrect. Xylem is always generally internal to phloem." },
+          { text: "Stems are Conjoint (bundled together); Roots are Radial (arranged in alternating patches).", isCorrect: true, exp: "Correct! In stems, a single bundle contains both xylem and phloem (Conjoint). In roots, xylem and phloem are separated into alternating arms/patches forming a star or ring shape (Radial)." },
+          { text: "There is no difference in arrangement.", isCorrect: false, exp: "Incorrect. The vascular architecture is fundamentally different." }
+        ]
+      },
+      q3: {
+        question: "What is the primary function of the Endodermis in roots?",
+        options: [
+          { text: "To perform photosynthesis underground.", isCorrect: false, exp: "Incorrect. Roots do not generally photosynthesize." },
+          { text: "To actively transport sugars down to the root tip.", isCorrect: false, exp: "Incorrect. Phloem handles sugar transport." },
+          { text: "To act as a waterproof barrier (Casparian strip) regulating water entering the xylem.", isCorrect: true, exp: "Correct! The endodermis contains a waxy Casparian strip that forces all water and minerals to pass *through* cell membranes, filtering toxins before they reach the vascular core." },
+          { text: "To generate lateral roots.", isCorrect: false, exp: "Incorrect. The Pericycle generates lateral roots." }
+        ]
+      },
+      q4: {
+        question: "Which tissue is responsible for secondary growth (thickening) in Dicot stems?",
+        options: [
+          { text: "Vascular Cambium", isCorrect: true, exp: "Correct! The vascular cambium is a strip of meristematic tissue sandwiched between the xylem and phloem. It divides to create new wood (xylem) and bark (phloem), thickening the tree trunk." },
+          { text: "Epidermis", isCorrect: false, exp: "Incorrect. Epidermis is just the outer skin layer." },
+          { text: "Pith", isCorrect: false, exp: "Incorrect. Pith is central storage tissue and does not divide." },
+          { text: "Endodermis", isCorrect: false, exp: "Incorrect. Endodermis regulates water in roots." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- 2D CANVAS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const selPreset = document.getElementById('select-preset');
+    const btnReset = document.getElementById('btn-reset');
+    const chkLabels = document.getElementById('chk-labels');
+    const hud = document.getElementById('canvas-hud');
+
+    const tglEpi = document.getElementById('tgl-epidermis');
+    const tglCor = document.getElementById('tgl-cortex');
+    const tglEndo = document.getElementById('tgl-endo');
+    const tglPhl = document.getElementById('tgl-phloem');
+    const tglXyl = document.getElementById('tgl-xylem');
+    const tglPith = document.getElementById('tgl-pith');
+
+    const rowEndo = document.getElementById('row-endo');
+    const rowPith = document.getElementById('row-pith');
+
+    const telArrange = document.getElementById('tel-arrange');
+    const telDist = document.getElementById('tel-dist');
+    const telGrowth = document.getElementById('tel-growth');
+
+    // Colors
+    const C_EPI = '#64748b';   // Slate
+    const C_COR = '#a3e635';   // Lime Green
+    const C_ENDO = '#a855f7';  // Purple
+    const C_PHL = '#3b82f6';   // Blue
+    const C_XYL = '#f43f5e';   // Rose
+    const C_PITH = '#fde047';  // Yellow
+    const C_CAMB = '#fbbf24';  // Amber
+    const C_OFF = 'rgba(255,255,255,0.05)';
+
+    // State
+    let specimen = 'dicotStem'; 
+
+    function getAlpha(tgl) { return tgl.checked ? 1.0 : 0.15; }
+
+    function updateUI() {
+        if (specimen === 'dicotStem') {
+            hud.innerText = "Specimen: Dicot Stem";
+            rowEndo.classList.add('opacity-40', 'pointer-events-none'); tglEndo.checked = false;
+            rowPith.classList.remove('opacity-40', 'pointer-events-none'); 
+            
+            telArrange.innerText = "Conjoint & Collateral";
+            telDist.innerText = "Neat Concentric Ring";
+            telGrowth.innerText = "Possible (Cambium Present)";
+        } 
+        else if (specimen === 'monocotStem') {
+            hud.innerText = "Specimen: Monocot Stem";
+            rowEndo.classList.add('opacity-40', 'pointer-events-none'); tglEndo.checked = false;
+            rowPith.classList.add('opacity-40', 'pointer-events-none'); tglPith.checked = false;
+            
+            telArrange.innerText = "Conjoint & Collateral";
+            telDist.innerText = "Scattered in Ground Tissue";
+            telGrowth.innerText = "Impossible (No Cambium)";
+        }
+        else if (specimen === 'dicotRoot') {
+            hud.innerText = "Specimen: Dicot Root";
+            rowEndo.classList.remove('opacity-40', 'pointer-events-none');
+            rowPith.classList.add('opacity-40', 'pointer-events-none'); tglPith.checked = false;
+            
+            telArrange.innerText = "Radial (Alternating Patches)";
+            telDist.innerText = "Central Solid Star/Cross";
+            telGrowth.innerText = "Possible (Secondary Cambium)";
+        }
+        else if (specimen === 'monocotRoot') {
+            hud.innerText = "Specimen: Monocot Root";
+            rowEndo.classList.remove('opacity-40', 'pointer-events-none');
+            rowPith.classList.remove('opacity-40', 'pointer-events-none');
+            
+            telArrange.innerText = "Radial (Alternating Ring)";
+            telDist.innerText = "Polyarch Vascular Ring";
+            telGrowth.innerText = "Impossible (No Cambium)";
+        }
+    }
+
+    selPreset.addEventListener('change', e => {
+        specimen = e.target.value;
+        // reset toggles
+        tglEpi.checked = true; tglCor.checked = true; tglEndo.checked = true;
+        tglPhl.checked = true; tglXyl.checked = true; tglPith.checked = true;
+        updateUI();
+    });
+
+    btnReset.addEventListener('click', () => {
+        tglEpi.checked = true; tglCor.checked = true; tglEndo.checked = true;
+        tglPhl.checked = true; tglXyl.checked = true; tglPith.checked = true;
+        updateUI();
+    });
+
+    // Helper draw fn
+    function drawCircle(cx, cy, r, color, alpha, strokeColor=null) {
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+        if (strokeColor) {
+            ctx.strokeStyle = strokeColor; ctx.lineWidth = 2; ctx.stroke();
+        }
+        ctx.globalAlpha = 1.0;
+    }
+
+    // Specimen Drawing Functions
+    function drawDicotStem(cx, cy, R) {
+        // Epidermis
+        drawCircle(cx, cy, R, C_EPI, getAlpha(tglEpi));
+        // Cortex
+        drawCircle(cx, cy, R*0.96, C_COR, getAlpha(tglCor));
+        // Pith (Central core, drawn before bundles so they overlap it)
+        drawCircle(cx, cy, R*0.55, C_PITH, getAlpha(tglPith));
+
+        // Vascular Bundles (Ring)
+        let nBundles = 12;
+        for(let i=0; i<nBundles; i++) {
+            let a = (i/nBundles) * Math.PI*2;
+            let bx = cx + Math.cos(a) * R * 0.68;
+            let by = cy + Math.sin(a) * R * 0.68;
+            
+            ctx.save();
+            ctx.translate(bx, by);
+            ctx.rotate(a + Math.PI/2);
+            
+            // Phloem (Outer top wedge)
+            ctx.globalAlpha = getAlpha(tglPhl);
+            ctx.fillStyle = C_PHL;
+            ctx.beginPath(); ctx.ellipse(0, -18, 20, 14, 0, 0, Math.PI*2); ctx.fill();
+            
+            // Cambium strip
+            ctx.globalAlpha = Math.min(getAlpha(tglPhl), getAlpha(tglXyl)) === 1.0 ? 1.0 : 0.15;
+            ctx.fillStyle = C_CAMB;
+            ctx.fillRect(-20, -5, 40, 6);
+
+            // Xylem (Inner bottom wedge)
+            ctx.globalAlpha = getAlpha(tglXyl);
+            ctx.fillStyle = C_XYL;
+            ctx.beginPath(); ctx.moveTo(-15, 1); ctx.lineTo(15, 1); ctx.lineTo(8, 25); ctx.lineTo(-8, 25); ctx.fill();
+            // Xylem vessels (dots)
+            ctx.fillStyle = '#be123c'; ctx.beginPath(); ctx.arc(0, 8, 4, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(-6, 8, 3, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(6, 8, 3, 0, Math.PI*2); ctx.fill();
+            
+            ctx.restore();
+        }
+
+        if(chkLabels.checked) {
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            if(tglPith.checked) ctx.fillText("Pith", cx, cy + 5);
+            if(tglCor.checked) ctx.fillText("Cortex", cx, cy - R*0.8);
+            if(tglPhl.checked) ctx.fillText("Phloem (Outer Ring)", cx, cy + R*0.85);
+        }
+    }
+
+    function drawMonocotStem(cx, cy, R) {
+        // Epidermis
+        drawCircle(cx, cy, R, C_EPI, getAlpha(tglEpi));
+        // Ground Tissue (Everywhere inside)
+        drawCircle(cx, cy, R*0.96, C_COR, getAlpha(tglCor));
+
+        // Scattered Bundles
+        // Procedurally place them: smaller dense near edge, larger sparse near center
+        let bundles = [];
+        let rSteps = [0.8, 0.6, 0.3];
+        let counts = [24, 12, 5];
+        let scales = [0.6, 0.8, 1.1];
+
+        for(let rIdx=0; rIdx<rSteps.length; rIdx++) {
+            let n = counts[rIdx];
+            for(let i=0; i<n; i++) {
+                let a = (i/n) * Math.PI*2 + (rIdx*0.5); // offset
+                let bx = cx + Math.cos(a) * R * rSteps[rIdx];
+                let by = cy + Math.sin(a) * R * rSteps[rIdx];
+                bundles.push({x: bx, y: by, ang: a + Math.PI/2, s: scales[rIdx]});
+            }
+        }
+
+        bundles.forEach(b => {
+            ctx.save();
+            ctx.translate(b.x, b.y);
+            ctx.rotate(b.ang);
+            ctx.scale(b.s, b.s);
+
+            // "Monkey Face" structure
+            // Sclerenchyma bundle sheath (halo)
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI*2); ctx.fill();
+
+            // Phloem (Forehead)
+            ctx.globalAlpha = getAlpha(tglPhl);
+            ctx.fillStyle = C_PHL;
+            ctx.beginPath(); ctx.ellipse(0, -8, 10, 6, 0, 0, Math.PI*2); ctx.fill();
+
+            // Xylem (Eyes & Mouth)
+            ctx.globalAlpha = getAlpha(tglXyl);
+            ctx.fillStyle = C_XYL;
+            ctx.beginPath(); ctx.arc(-8, 3, 5, 0, Math.PI*2); ctx.fill(); // Left eye
+            ctx.beginPath(); ctx.arc(8, 3, 5, 0, Math.PI*2); ctx.fill();  // Right eye
+            ctx.beginPath(); ctx.arc(0, 10, 4, 0, Math.PI*2); ctx.fill(); // Mouth (water cavity)
+
+            ctx.restore();
+        });
+
+        if(chkLabels.checked) {
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            if(tglCor.checked) ctx.fillText("Ground Tissue", cx, cy + R*0.3);
+            if(tglXyl.checked || tglPhl.checked) {
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(cx - 70, cy - R*0.8 - 12, 140, 20);
+                ctx.fillStyle = '#fff';
+                ctx.fillText("Scattered Vascular Bundles", cx, cy - R*0.8);
+            }
+        }
+    }
+
+    function drawDicotRoot(cx, cy, R) {
+        // Epidermis & Root hairs
+        ctx.globalAlpha = getAlpha(tglEpi);
+        ctx.strokeStyle = C_EPI; ctx.lineWidth = 2;
+        for(let i=0; i<30; i++) {
+            let a = (i/30)*Math.PI*2;
+            ctx.beginPath(); ctx.moveTo(cx + Math.cos(a)*R, cy + Math.sin(a)*R);
+            ctx.lineTo(cx + Math.cos(a)*(R+15), cy + Math.sin(a)*(R+15)); ctx.stroke();
+        }
+        drawCircle(cx, cy, R, C_EPI, getAlpha(tglEpi));
+        
+        // Massive Cortex
+        drawCircle(cx, cy, R*0.95, C_COR, getAlpha(tglCor));
+
+        // Endodermis (Ring)
+        drawCircle(cx, cy, R*0.35, C_ENDO, getAlpha(tglEndo));
+        // Pericycle (Inner thin ring)
+        drawCircle(cx, cy, R*0.30, '#d8b4fe', Math.max(getAlpha(tglXyl), getAlpha(tglPhl)));
+
+        // Central Xylem Solid Star (Tetrarch = 4 arms)
+        let starR = R*0.30;
+        ctx.globalAlpha = getAlpha(tglXyl);
+        ctx.fillStyle = C_XYL;
+        ctx.beginPath();
+        for(let a=0; a<=Math.PI*2; a+=0.1) {
+            let r = starR * (0.4 + 0.6*Math.pow(Math.cos(a*2), 2)); // 4 arms
+            let px = cx + Math.cos(a)*r;
+            let py = cy + Math.sin(a)*r;
+            if(a===0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.fill();
+
+        // Alternating Phloem patches
+        ctx.globalAlpha = getAlpha(tglPhl);
+        ctx.fillStyle = C_PHL;
+        for(let i=0; i<4; i++) {
+            let a = (i/4)*Math.PI*2 + Math.PI/4; // Offset 45 deg between arms
+            let px = cx + Math.cos(a)*(starR*0.55);
+            let py = cy + Math.sin(a)*(starR*0.55);
+            ctx.beginPath(); ctx.arc(px, py, starR*0.25, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        if(chkLabels.checked) {
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            if(tglCor.checked) ctx.fillText("Thick Cortex", cx, cy - R*0.6);
+            if(tglEndo.checked) ctx.fillText("Endodermis Ring", cx, cy + R*0.45);
+            if(tglXyl.checked) {
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(cx - 50, cy - 6, 100, 16);
+                ctx.fillStyle = '#fff'; ctx.fillText("Xylem Core", cx, cy + 6);
+            }
+        }
+    }
+
+    function drawMonocotRoot(cx, cy, R) {
+        // Epidermis & Root hairs
+        ctx.globalAlpha = getAlpha(tglEpi);
+        ctx.strokeStyle = C_EPI; ctx.lineWidth = 2;
+        for(let i=0; i<30; i++) {
+            let a = (i/30)*Math.PI*2;
+            ctx.beginPath(); ctx.moveTo(cx + Math.cos(a)*R, cy + Math.sin(a)*R);
+            ctx.lineTo(cx + Math.cos(a)*(R+15), cy + Math.sin(a)*(R+15)); ctx.stroke();
+        }
+        drawCircle(cx, cy, R, C_EPI, getAlpha(tglEpi));
+        
+        // Cortex
+        drawCircle(cx, cy, R*0.95, C_COR, getAlpha(tglCor));
+
+        // Endodermis
+        drawCircle(cx, cy, R*0.45, C_ENDO, getAlpha(tglEndo));
+        
+        // Pith (Central core, unlike dicot root!)
+        drawCircle(cx, cy, R*0.40, C_PITH, getAlpha(tglPith));
+
+        // Polyarch Radial Vascular Ring
+        let nArms = 12; // Many arms
+        let ringR = R*0.30;
+        
+        for(let i=0; i<nArms; i++) {
+            let a = (i/nArms)*Math.PI*2;
+            
+            // Xylem (Large circles facing inward)
+            ctx.globalAlpha = getAlpha(tglXyl);
+            ctx.fillStyle = C_XYL;
+            ctx.beginPath(); ctx.arc(cx + Math.cos(a)*ringR, cy + Math.sin(a)*ringR, 10, 0, Math.PI*2); ctx.fill();
+            
+            // Phloem (Small patches alternating further out)
+            let a2 = a + Math.PI/nArms; // offset half step
+            ctx.globalAlpha = getAlpha(tglPhl);
+            ctx.fillStyle = C_PHL;
+            ctx.beginPath(); ctx.arc(cx + Math.cos(a2)*(ringR+12), cy + Math.sin(a2)*(ringR+12), 6, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        if(chkLabels.checked) {
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            if(tglPith.checked) {
+                ctx.fillStyle = '#1e293b'; ctx.fillRect(cx - 30, cy - 6, 60, 16);
+                ctx.fillStyle = '#fff'; ctx.fillText("Pith", cx, cy + 6);
+            }
+            if(tglXyl.checked || tglPhl.checked) ctx.fillText("Polyarch Alternating Ring", cx, cy - R*0.55);
+        }
+    }
+
+    // --- Render Loop ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = Math.max(container.clientWidth, 10);
+      const ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.resetTransform();
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+
+      const cx = cw / 2;
+      const cy = ch / 2 + 10;
+      const R = Math.min(cw, ch) * 0.40;
+
+      if (specimen === 'dicotStem') drawDicotStem(cx, cy, R);
+      else if (specimen === 'monocotStem') drawMonocotStem(cx, cy, R);
+      else if (specimen === 'dicotRoot') drawDicotRoot(cx, cy, R);
+      else if (specimen === 'monocotRoot') drawMonocotRoot(cx, cy, R);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      updateUI();
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

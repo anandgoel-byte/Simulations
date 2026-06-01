@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reactivity Series Displacement Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    /* Radio Button Custom Styling */
+    .chem-radio input[type="radio"] { display: none; }
+    .chem-radio span {
+      display: block; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 8px;
+      font-size: 11px; font-weight: 700; text-align: center; cursor: pointer; transition: all 0.2s;
+      background-color: white; color: #64748b;
+    }
+    .chem-radio input[type="radio"]:checked + span {
+      border-color: #4f46e5; background-color: #e0e7ff; color: #3730a3; box-shadow: 0 2px 4px rgba(79,70,229,0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Reactivity Series Displacement Lab</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Inorganic Chemistry &amp; Redox Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Chem-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-drop" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5">
+          ⚗️ Drop Metal into Solution
+        </button>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all shadow-sm">
+          <span>🔄</span> Reset Beaker
+        </button>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Reaction Speed: Fast-Forward</span>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-5">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Single Displacement Law</span>
+            <div class="text-[12px] font-mono text-center py-1 font-bold">
+              $$A_{(s)} + BC_{(aq)} \rightarrow AC_{(aq)} + B_{(s)}$$
+            </div>
+            <div class="text-[9px] font-semibold text-slate-600 leading-tight text-center">
+              (Occurs only if Metal A is more reactive than Metal B)
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-3 border-b border-slate-100 pb-1">1. Select Solid Metal Strip</span>
+            <div class="grid grid-cols-2 gap-2" id="metal-radios">
+              <label class="chem-radio"><input type="radio" name="metal" value="Mg"><span class="font-mono">Mg (Magnesium)</span></label>
+              <label class="chem-radio"><input type="radio" name="metal" value="Zn" checked><span class="font-mono">Zn (Zinc)</span></label>
+              <label class="chem-radio"><input type="radio" name="metal" value="Fe"><span class="font-mono">Fe (Iron)</span></label>
+              <label class="chem-radio"><input type="radio" name="metal" value="Cu"><span class="font-mono">Cu (Copper)</span></label>
+              <label class="chem-radio"><input type="radio" name="metal" value="Ag"><span class="font-mono">Ag (Silver)</span></label>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-3 border-b border-slate-100 pb-1">2. Select Aqueous Solution</span>
+            <div class="grid grid-cols-1 gap-2" id="solution-radios">
+              <label class="chem-radio"><input type="radio" name="solution" value="MgSO4"><span class="font-mono">Magnesium Sulfate (MgSO₄)</span></label>
+              <label class="chem-radio"><input type="radio" name="solution" value="ZnSO4"><span class="font-mono">Zinc Sulfate (ZnSO₄)</span></label>
+              <label class="chem-radio"><input type="radio" name="solution" value="FeSO4"><span class="font-mono">Iron(II) Sulfate (FeSO₄)</span></label>
+              <label class="chem-radio"><input type="radio" name="solution" value="CuSO4" checked><span class="font-mono">Copper(II) Sulfate (CuSO₄)</span></label>
+              <label class="chem-radio"><input type="radio" name="solution" value="AgNO3"><span class="font-mono">Silver Nitrate (AgNO₃)</span></label>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-sky-400 tracking-wider uppercase" id="canvas-hud">Beaker Environment Ready</span>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Chemical Telemetry</span>
+          
+          <div class="grid grid-cols-1 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center transition-colors duration-500" id="tel-box">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Displacement Status</div>
+              <div class="text-xl font-bold font-mono tracking-widest text-slate-300 uppercase" id="tel-status">Awaiting Drop</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-1">Full Chemical Equation</div>
+              <div class="text-sm font-bold font-mono text-indigo-600" id="tel-eq">...</div>
+            </div>
+
+            <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-200 shadow-sm flex justify-between items-center px-4">
+              <div class="text-[9px] text-rose-700 font-bold uppercase tracking-wider">Oxidation (Loss of $e^-$)</div>
+              <div class="text-[11px] font-bold font-mono text-rose-600" id="tel-ox">...</div>
+            </div>
+
+            <div class="bg-blue-50 p-2.5 rounded-xl border border-blue-200 shadow-sm flex justify-between items-center px-4">
+              <div class="text-[9px] text-blue-700 font-bold uppercase tracking-wider">Reduction (Gain of $e^-$)</div>
+              <div class="text-[11px] font-bold font-mono text-blue-600" id="tel-red">...</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does Zinc displace Copper from Copper(II) Sulfate, but Copper cannot displace Zinc?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In the reaction $Mg_{(s)} + CuSO_{4(aq)} \rightarrow MgSO_{4(aq)} + Cu_{(s)}$, which species is being Oxidized?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What visual change indicates that a reaction is occurring between Iron metal and Copper Sulfate solution?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Of the metals tested in this lab, which is the LEAST reactive?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> REACTIVITY SERIES PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Inorganic Chemistry Laboratory</strong>! Observe electron transfer through single displacement reactions.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Setup the Beaker</strong>: Select a solid metal strip and an aqueous salt solution from the left panels. Notice their initial colors.</li>
+            <li><strong>Initiate Reaction</strong>: Click "Drop Metal". If the solid metal is <em>higher</em> on the reactivity series than the metal in the solution, a reaction will occur!</li>
+            <li><strong>Visual Evidence</strong>: Watch the canvas! If a reaction occurs, the solid metal will dissolve (oxidize), and the solution metal will precipitate out as a colored coating on the strip. Simultaneously, the solution color will change as the new ions dissolve!</li>
+            <li><strong>Chemical Telemetry</strong>: The right panel will break down the exact balanced chemical equation and split it into its Oxidation and Reduction half-reactions.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "Why does Zinc displace Copper from Copper(II) Sulfate, but Copper cannot displace Zinc?",
+        options: [
+          { text: "Because Zinc is heavier than Copper.", isCorrect: false, exp: "Incorrect. Reactivity is not determined by atomic weight." },
+          { text: "Because Zinc is more reactive, meaning it has a higher tendency to lose electrons and form positive ions than Copper.", isCorrect: true, exp: "Correct! Zinc sits higher on the reactivity series. It acts as a stronger reducing agent, easily forcing its electrons onto the Copper ions. Copper holds its electrons too tightly to do the reverse." },
+          { text: "Because Copper Sulfate is blue.", isCorrect: false, exp: "Incorrect. Color is a result of the ions, not the cause of reactivity." },
+          { text: "Because Zinc is a transition metal.", isCorrect: false, exp: "Incorrect. Both are transition metals." }
+        ]
+      },
+      q2: {
+        question: "In the reaction Mg(s) + CuSO4(aq) -> MgSO4(aq) + Cu(s), which species is being Oxidized?",
+        options: [
+          { text: "Copper Ion (Cu2+)", isCorrect: false, exp: "Incorrect. Cu2+ gains electrons to become Cu(s), so it is reduced." },
+          { text: "Sulfate Ion (SO4 2-)", isCorrect: false, exp: "Incorrect. Sulfate is a spectator ion and does not participate in the electron transfer." },
+          { text: "Magnesium Solid (Mg)", isCorrect: true, exp: "Correct! Oxidation is the Loss of Electrons (OIL RIG). Solid Magnesium starts with an oxidation state of 0 and becomes Mg2+ by losing 2 electrons to the copper." },
+          { text: "Water", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        question: "What visual change indicates that a reaction is occurring between Iron metal and Copper Sulfate solution?",
+        options: [
+          { text: "The solution turns bright red.", isCorrect: false, exp: "Incorrect." },
+          { text: "The blue solution fades to a pale green, and a reddish-brown coating forms on the iron.", isCorrect: true, exp: "Correct! The blue color of the solution is due to Cu2+ ions. As they are reduced to solid Copper, the blue fades. Simultaneously, Iron oxidizes into Fe2+ ions, which give the solution a pale green tint. The solid copper deposits onto the iron strip." },
+          { text: "A massive explosion occurs.", isCorrect: false, exp: "Incorrect. It is a quiet displacement reaction." },
+          { text: "The iron strip turns invisible.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "Of the metals tested in this lab, which is the LEAST reactive?",
+        options: [
+          { text: "Magnesium (Mg)", isCorrect: false, exp: "Incorrect. Mg is the most reactive of this group." },
+          { text: "Iron (Fe)", isCorrect: false, exp: "Incorrect." },
+          { text: "Zinc (Zn)", isCorrect: false, exp: "Incorrect." },
+          { text: "Silver (Ag)", isCorrect: true, exp: "Correct! Silver sits at the very bottom of this specific group. It holds onto its electrons very tightly, making it a precious, noble metal that rarely corrodes or displaces other metals." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- CHEMISTRY ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const btnDrop = document.getElementById('btn-drop');
+    const btnReset = document.getElementById('btn-reset');
+    const canvasHud = document.getElementById('canvas-hud');
+    
+    const telStatus = document.getElementById('tel-status');
+    const telBox = document.getElementById('tel-box');
+    const telEq = document.getElementById('tel-eq');
+    const telOx = document.getElementById('tel-ox');
+    const telRed = document.getElementById('tel-red');
+
+    // Chemical Data
+    // Rank: lower number = more reactive
+    const CHEM_DATA = {
+        "Mg": { rank: 1, name: "Magnesium", mCol: [203, 213, 225], sCol: [255, 255, 255, 0.1], ion: "Mg^{2+}" }, // Silver/white, Clear
+        "Zn": { rank: 2, name: "Zinc",      mCol: [148, 163, 184], sCol: [255, 255, 255, 0.1], ion: "Zn^{2+}" }, // Grey, Clear
+        "Fe": { rank: 3, name: "Iron",      mCol: [71, 85, 105],   sCol: [187, 247, 208, 0.7], ion: "Fe^{2+}" }, // Dark grey, Pale green
+        "Cu": { rank: 4, name: "Copper",    mCol: [180, 83, 9],    sCol: [59, 130, 246, 0.8],  ion: "Cu^{2+}" }, // Copper, Blue
+        "Ag": { rank: 5, name: "Silver",    mCol: [226, 232, 240], sCol: [255, 255, 255, 0.1], ion: "Ag^{+}" }   // Shiny silver, Clear
+    };
+
+    const SOL_DATA = {
+        "MgSO4": { metal: "Mg", anion: "SO_4", an_name: "Sulfate" },
+        "ZnSO4": { metal: "Zn", anion: "SO_4", an_name: "Sulfate" },
+        "FeSO4": { metal: "Fe", anion: "SO_4", an_name: "Sulfate" },
+        "CuSO4": { metal: "Cu", anion: "SO_4", an_name: "Sulfate" },
+        "AgNO3": { metal: "Ag", anion: "NO_3", an_name: "Nitrate", val: 1 } // Needs balancing
+    };
+
+    // State
+    let state = 'idle'; // idle, dropping, reacting, done
+    let selMetal = 'Zn';
+    let selSol = 'CuSO4';
+    let animProgress = 0; // 0 to 1 for reaction completion
+    let dropProgress = 0; // 0 to 1 for metal dropping into beaker
+    let isReaction = false;
+
+    // Colors for rendering
+    let currentMetalColor = [...CHEM_DATA['Zn'].mCol];
+    let currentSolColor = [...CHEM_DATA['Cu'].sCol];
+
+    function getRadios(name) {
+        let radios = document.getElementsByName(name);
+        for(let i=0; i<radios.length; i++) {
+            if(radios[i].checked) return radios[i].value;
+        }
+    }
+
+    function initChemistry() {
+        selMetal = getRadios('metal');
+        selSol = getRadios('solution');
+        
+        let solMetal = SOL_DATA[selSol].metal;
+        
+        currentMetalColor = [...CHEM_DATA[selMetal].mCol];
+        currentSolColor = [...CHEM_DATA[solMetal].sCol];
+
+        state = 'idle';
+        animProgress = 0;
+        dropProgress = 0;
+
+        telStatus.innerText = "Awaiting Drop";
+        telBox.className = "bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center transition-colors duration-500";
+        telStatus.className = "text-xl font-bold font-mono tracking-widest text-slate-300 uppercase";
+        
+        telEq.innerText = "...";
+        telOx.innerText = "...";
+        telRed.innerText = "...";
+        
+        canvasHud.innerText = "Beaker Environment Ready";
+        canvasHud.className = "text-[10px] font-bold text-sky-400 tracking-wider uppercase";
+    }
+
+    // Attach listeners to all radios
+    document.querySelectorAll('input[type=radio]').forEach(r => {
+        r.addEventListener('change', () => {
+            if (state === 'idle') initChemistry();
+            else {
+                // If changing mid-experiment, reset everything
+                initChemistry();
+            }
+        });
+    });
+
+    btnReset.addEventListener('click', initChemistry);
+
+    btnDrop.addEventListener('click', () => {
+        if (state !== 'idle') return;
+
+        let solMetal = SOL_DATA[selSol].metal;
+        isReaction = CHEM_DATA[selMetal].rank < CHEM_DATA[solMetal].rank;
+
+        state = 'dropping';
+        canvasHud.innerText = "Submerging Metal Strip...";
+        canvasHud.className = "text-[10px] font-bold text-amber-400 tracking-wider uppercase";
+    });
+
+    function calculateEquation() {
+        let sM = selMetal;
+        let lM = SOL_DATA[selSol].metal;
+        let an = SOL_DATA[selSol].anion;
+
+        // Simplify MathJax for Silver (valency 1) vs others (valency 2)
+        // Ag requires 2Ag to displace Cu.
+        let m1 = sM; let m2 = lM;
+        let eqStr = ""; let oxStr = ""; let redStr = "";
+
+        if (sM === 'Ag') {
+            // Ag won't displace anything here, but for completeness
+            eqStr = `$$Ag_{(s)} + ${lM}${an}_{(aq)} \\rightarrow \\text{No Reaction}$$`;
+        } else if (lM === 'Ag') {
+            // m1 is 2+, Ag is 1+
+            eqStr = `$$${sM}_{(s)} + 2AgNO_{3(aq)} \\rightarrow ${sM}(NO_3)_{2(aq)} + 2Ag_{(s)}$$`;
+            oxStr = `$$${sM} \\rightarrow ${CHEM_DATA[sM].ion} + 2e^-$$`;
+            redStr = `$$2Ag^+ + 2e^- \\rightarrow 2Ag$$`;
+        } else {
+            // Both are 2+
+            eqStr = `$$${sM}_{(s)} + ${lM}${an}_{(aq)} \\rightarrow ${sM}${an}_{(aq)} + ${lM}_{(s)}$$`;
+            oxStr = `$$${sM} \\rightarrow ${CHEM_DATA[sM].ion} + 2e^-$$`;
+            redStr = `$$${CHEM_DATA[lM].ion} + 2e^- \\rightarrow ${lM}$$`;
+        }
+
+        telEq.innerHTML = eqStr;
+        telOx.innerHTML = oxStr;
+        telRed.innerHTML = redStr;
+
+        if (window.MathJax) {
+            MathJax.typesetPromise([telEq, telOx, telRed]).catch((err) => console.log(err));
+        }
+    }
+
+    // --- CANVAS RENDERING ---
+    function blendColor(c1, c2, r) {
+        let r_val = c1[0] + (c2[0] - c1[0]) * r;
+        let g_val = c1[1] + (c2[1] - c1[1]) * r;
+        let b_val = c1[2] + (c2[2] - c1[2]) * r;
+        
+        if (c1.length === 4 && c2.length === 4) {
+            let a_val = c1[3] + (c2[3] - c1[3]) * r;
+            return `rgba(${r_val},${g_val},${b_val},${a_val})`;
+        }
+        return `rgb(${r_val},${g_val},${b_val})`;
+    }
+
+    function renderCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderCanvas); return; }
+
+      // Logic Updates
+      if (state === 'dropping') {
+          dropProgress += 0.05;
+          if (dropProgress >= 1) {
+              dropProgress = 1;
+              if (isReaction) {
+                  state = 'reacting';
+                  canvasHud.innerText = "Reaction Proceeding...";
+                  canvasHud.className = "text-[10px] font-bold text-rose-400 tracking-wider uppercase";
+                  calculateEquation();
+                  
+                  telStatus.innerText = "Reaction Occurring";
+                  telBox.className = "bg-emerald-950 p-3.5 rounded-xl border border-emerald-800 shadow-sm flex flex-col justify-center items-center text-center transition-colors duration-500";
+                  telStatus.className = "text-xl font-bold font-mono tracking-widest text-emerald-400 uppercase";
+              } else {
+                  state = 'done';
+                  canvasHud.innerText = "No Reaction";
+                  canvasHud.className = "text-[10px] font-bold text-slate-400 tracking-wider uppercase";
+                  
+                  telEq.innerHTML = `$$${selMetal}_{(s)} + \\text{${selSol}}_{(aq)} \\rightarrow \\text{No Reaction}$$`;
+                  telOx.innerText = "N/A"; telRed.innerText = "N/A";
+                  if (window.MathJax) MathJax.typesetPromise([telEq]).catch((err) => console.log(err));
+
+                  telStatus.innerText = "No Displacement";
+                  telBox.className = "bg-rose-950 p-3.5 rounded-xl border border-rose-800 shadow-sm flex flex-col justify-center items-center text-center transition-colors duration-500";
+                  telStatus.className = "text-xl font-bold font-mono tracking-widest text-rose-400 uppercase";
+              }
+          }
+      } else if (state === 'reacting') {
+          animProgress += 0.003; // Slow reaction
+          if (animProgress >= 1) {
+              animProgress = 1;
+              state = 'done';
+              canvasHud.innerText = "Reaction Complete";
+              canvasHud.className = "text-[10px] font-bold text-emerald-400 tracking-wider uppercase";
+          }
+      }
+
+      const cx = cw / 2;
+      const cy = ch / 2 + 50;
+      const bW = 160;
+      const bH = 200;
+      const liqLevel = bH * 0.7;
+
+      // Calculate Target Colors for Animation
+      let drawSolCol = currentSolColor;
+      let drawMetCol = currentMetalColor;
+
+      if (state === 'reacting' || (state === 'done' && isReaction)) {
+          let solMetal = SOL_DATA[selSol].metal;
+          let targetSolCol = CHEM_DATA[selMetal].sCol; // New solution is the solid metal dissolving
+          let targetMetCol = CHEM_DATA[solMetal].mCol; // New solid is the solution metal precipitating
+
+          // Blend colors based on animProgress
+          drawSolColStr = blendColor(currentSolColor, targetSolCol, animProgress);
+          
+          // For the metal, we'll draw a "coating" over the base metal
+      } else {
+          drawSolColStr = `rgba(${currentSolColor[0]},${currentSolColor[1]},${currentSolColor[2]},${currentSolColor[3]})`;
+      }
+
+      let drawMetColStr = `rgb(${currentMetalColor[0]},${currentMetalColor[1]},${currentMetalColor[2]})`;
+
+      // 1. Draw Liquid in Beaker
+      ctx.fillStyle = drawSolColStr;
+      ctx.beginPath();
+      ctx.moveTo(cx - bW/2 + 4, cy + bH/2 - liqLevel);
+      ctx.lineTo(cx + bW/2 - 4, cy + bH/2 - liqLevel);
+      ctx.lineTo(cx + bW/2 - 4, cy + bH/2 - 15);
+      ctx.quadraticCurveTo(cx + bW/2 - 4, cy + bH/2 - 4, cx + bW/2 - 15, cy + bH/2 - 4);
+      ctx.lineTo(cx - bW/2 + 15, cy + bH/2 - 4);
+      ctx.quadraticCurveTo(cx - bW/2 + 4, cy + bH/2 - 4, cx - bW/2 + 4, cy + bH/2 - 15);
+      ctx.closePath();
+      ctx.fill();
+
+      // Liquid Surface Oval
+      // Extract alpha and darken for surface
+      let aRegex = /rgba\(\d+,\s*\d+,\s*\d+,\s*([\d.]+)\)/;
+      let match = drawSolColStr.match(aRegex);
+      if(match) {
+          let a = Math.min(1.0, parseFloat(match[1]) + 0.2);
+          ctx.fillStyle = drawSolColStr.replace(/[\d.]+\)/, `${a})`);
+      }
+      ctx.beginPath(); ctx.ellipse(cx, cy + bH/2 - liqLevel, bW/2 - 4, 8, 0, 0, Math.PI*2); ctx.fill();
+
+      // 2. Draw Metal Strip
+      // Drops from y=-100 to y=cy+bH/2 - 10
+      let metW = 30;
+      let metH = 140;
+      let metTopY_start = cy - bH/2 - 100;
+      let metTopY_end = cy + bH/2 - 10 - metH;
+      let currentMetY = metTopY_start + (metTopY_end - metTopY_start) * dropProgress;
+
+      ctx.fillStyle = drawMetColStr;
+      ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(cx - metW/2, currentMetY, metW, metH, 4); ctx.fill(); ctx.stroke();
+
+      // Draw Precipitate Coating if Reacting
+      if (state === 'reacting' || (state === 'done' && isReaction)) {
+          let solMetal = SOL_DATA[selSol].metal;
+          let targetMetCol = CHEM_DATA[solMetal].mCol;
+          let coatColStr = `rgb(${targetMetCol[0]},${targetMetCol[1]},${targetMetCol[2]})`;
+          
+          // Submerged portion only
+          let subY = cy + bH/2 - liqLevel;
+          let subH = (currentMetY + metH) - subY;
+          if (subH > 0) {
+              ctx.globalAlpha = animProgress;
+              ctx.fillStyle = coatColStr;
+              // Make it look bumpy/textured
+              ctx.beginPath();
+              ctx.moveTo(cx - metW/2 - 2, subY);
+              for(let y=subY; y<subY+subH; y+=5) {
+                  ctx.lineTo(cx - metW/2 - 2 - Math.random()*2, y);
+              }
+              for(let x=cx-metW/2; x<cx+metW/2; x+=5) {
+                  ctx.lineTo(x, subY+subH + 2 + Math.random()*2);
+              }
+              for(let y=subY+subH; y>subY; y-=5) {
+                  ctx.lineTo(cx + metW/2 + 2 + Math.random()*2, y);
+              }
+              ctx.fill();
+              ctx.globalAlpha = 1.0;
+
+              // Draw bubbling effect
+              if (state === 'reacting') {
+                  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                  for(let i=0; i<5; i++) {
+                      let bx = cx - metW/2 + Math.random()*metW;
+                      let by = subY + Math.random()*subH;
+                      ctx.beginPath(); ctx.arc(bx, by, Math.random()*2 + 1, 0, Math.PI*2); ctx.fill();
+                  }
+              }
+          }
+      }
+
+      // 3. Draw Beaker Glass (Over liquid/metal)
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(cx - bW/2, cy - bH/2);
+      ctx.lineTo(cx - bW/2, cy + bH/2 - 15);
+      ctx.quadraticCurveTo(cx - bW/2, cy + bH/2, cx - bW/2 + 15, cy + bH/2);
+      ctx.lineTo(cx + bW/2 - 15, cy + bH/2);
+      ctx.quadraticCurveTo(cx + bW/2, cy + bH/2, cx + bW/2, cy + bH/2 - 15);
+      ctx.lineTo(cx + bW/2, cy - bH/2);
+      ctx.stroke();
+
+      // Rim
+      ctx.beginPath(); ctx.ellipse(cx, cy - bH/2, bW/2, 10, 0, 0, Math.PI*2); ctx.stroke();
+
+      requestAnimationFrame(renderCanvas);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      initChemistry();
+      requestAnimationFrame(renderCanvas);
+    });
+  </script>
+</body>
+</html>

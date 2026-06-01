@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angle Between Planes Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    /* 3D Label Overlay */
+    .label-3d {
+      position: absolute;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid #475569;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: bold;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.1s;
+      z-index: 20;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Angle Between Planes Calculator</h1>
+          <p class="text-[11px] text-slate-400 font-medium">3D Spatial Geometry &amp; Vector Dot Products</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">3D Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Presets:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="intersect">Standard Intersection (~60°)</option>
+          <option value="orthogonal">Orthogonal Planes (90°)</option>
+          <option value="parallel">Parallel Planes (0°)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Setup
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-normals" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Normal Vectors ($\vec{n}$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-intersect" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Line of Intersection</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm space-y-1.5 border border-indigo-200">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-indigo-200 pb-1">Plane Equation Format</span>
+            <div class="text-[12px] font-mono text-center py-1">
+              $$Ax + By + Cz = 0$$
+            </div>
+            <div class="text-[9px] font-sans text-indigo-700 text-center leading-tight">
+              (Planes are fixed at the origin $D=0$ to isolate the angle geometry)
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-blue-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider block mb-3 border-b border-blue-100 pb-1">Plane 1 Normal ($\vec{n_1}$)</span>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-6">$A_1$</span>
+                <input type="range" id="sl-a1" min="-5" max="5" step="0.5" value="0.0" class="w-full">
+                <span id="lbl-a1" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-6">$B_1$</span>
+                <input type="range" id="sl-b1" min="-5" max="5" step="0.5" value="1.0" class="w-full">
+                <span id="lbl-b1" class="font-mono text-[10px] font-bold w-6 text-right">1.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-6">$C_1$</span>
+                <input type="range" id="sl-c1" min="-5" max="5" step="0.5" value="1.0" class="w-full">
+                <span id="lbl-c1" class="font-mono text-[10px] font-bold w-6 text-right">1.0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-rose-500 uppercase tracking-wider block mb-3 border-b border-rose-100 pb-1">Plane 2 Normal ($\vec{n_2}$)</span>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-6">$A_2$</span>
+                <input type="range" id="sl-a2" min="-5" max="5" step="0.5" value="1.0" class="w-full">
+                <span id="lbl-a2" class="font-mono text-[10px] font-bold w-6 text-right">1.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-6">$B_2$</span>
+                <input type="range" id="sl-b2" min="-5" max="5" step="0.5" value="0.0" class="w-full">
+                <span id="lbl-b2" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-6">$C_2$</span>
+                <input type="range" id="sl-c2" min="-5" max="5" step="0.5" value="1.0" class="w-full">
+                <span id="lbl-c2" class="font-mono text-[10px] font-bold w-6 text-right">1.0</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <div id="canvas-container" class="absolute inset-0 w-full h-full block"></div>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider">3D Vector Canvas (Orbit Camera)</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-blue-500/30 border border-blue-400 block"></span> Plane 1</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-rose-500/30 border border-rose-400 block"></span> Plane 2</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-amber-400 block"></span> Line of Intersection</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Vector Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnitude $|\vec{n_1}|$</div>
+              <div class="text-sm font-bold font-mono text-blue-600" id="tel-mag1">1.41</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnitude $|\vec{n_2}|$</div>
+              <div class="text-sm font-bold font-mono text-rose-500" id="tel-mag2">1.41</div>
+            </div>
+            <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-300 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Dot Product ($\vec{n_1} \cdot \vec{n_2}$)</div>
+              <div class="text-sm font-bold font-mono text-slate-700 tracking-widest" id="tel-dot">1.00</div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-3.5 shadow-sm border border-slate-200 space-y-1.5">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block border-b border-slate-100 pb-1">Calculation</span>
+            <div class="text-[11px] font-mono text-center py-1 text-slate-700 overflow-x-auto" id="algebra-display">
+              $$\cos(\theta) = \frac{|\vec{n_1} \cdot \vec{n_2}|}{|\vec{n_1}| |\vec{n_2}|}$$
+            </div>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-2">Calculated Intersection Angle ($\theta$)</div>
+            <div class="text-3xl font-bold font-mono text-emerald-400 tracking-widest" id="tel-angle">60.0°</div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase mt-1" id="tel-status">Acute Intersection</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-2">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do we use the Normal Vectors to find the angle?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                The angle between two intersecting flat planes is geometrically identical to the angle between their perpendicular normal vectors. Vectors are much easier to manipulate algebraically using the Dot Product than infinite flat surfaces!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What happens if the Dot Product is exactly zero?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                If $\vec{n_1} \cdot \vec{n_2} = 0$, then the numerator is 0, making $\cos(\theta) = 0$. This means $\theta = 90^\circ$. The two planes are perfectly Orthogonal (perpendicular) to each other!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">How is the Line of Intersection determined mathematically?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                The line of intersection lies strictly inside BOTH planes. Therefore, its direction vector must be completely perpendicular to both normal vectors. We find this by taking the Cross Product: $\vec{v_{line}} = \vec{n_1} \times \vec{n_2}$.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* The absolute value $|\vec{n_1} \cdot \vec{n_2}|$ is used to ensure we always calculate the Acute angle ($0^\circ$ to $90^\circ$) between the planes.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> ANGLE BETWEEN PLANES PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>3D Geometry Laboratory</strong>! Analyze the spatial relationships and intersections of infinite planes.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Normal Vector Sliders</strong>: Adjust the $A, B, C$ coefficients for Plane 1 (Blue) and Plane 2 (Rose). This tilts the planes in 3D space.</li>
+            <li><strong>Preset Dropdown</strong>: Instantly jump to mathematically significant states like Orthogonal (90°) or Parallel (0°).</li>
+            <li><strong>Camera Controls</strong>: <strong>Click and drag</strong> on the 3D canvas to orbit around the intersection. Scroll to zoom.</li>
+            <li><strong>Visual Toggles</strong>: Turn the Normal Vector arrows and the bright yellow Line of Intersection on or off to clarify the geometry.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let a1 = 0.0, b1 = 1.0, c1 = 1.0;
+    let a2 = 1.0, b2 = 0.0, c2 = 1.0;
+
+    const PRESETS = {
+        intersect: { a1: 0.0, b1: 1.0, c1: 1.0, a2: 1.0, b2: 0.0, c2: 1.0 },
+        orthogonal: { a1: 1.0, b1: 0.0, c1: 0.0, a2: 0.0, b2: 1.0, c2: 0.0 },
+        parallel: { a1: 1.0, b1: 1.0, c1: 1.0, a2: -2.0, b2: -2.0, c2: -2.0 }
+    };
+
+    // --- DOM Elements ---
+    const slA1 = document.getElementById('sl-a1'); const lblA1 = document.getElementById('lbl-a1');
+    const slB1 = document.getElementById('sl-b1'); const lblB1 = document.getElementById('lbl-b1');
+    const slC1 = document.getElementById('sl-c1'); const lblC1 = document.getElementById('lbl-c1');
+    
+    const slA2 = document.getElementById('sl-a2'); const lblA2 = document.getElementById('lbl-a2');
+    const slB2 = document.getElementById('sl-b2'); const lblB2 = document.getElementById('lbl-b2');
+    const slC2 = document.getElementById('sl-c2'); const lblC2 = document.getElementById('lbl-c2');
+
+    const selPreset = document.getElementById('select-preset');
+    const btnReset = document.getElementById('btn-reset');
+    
+    const chkNormals = document.getElementById('chk-normals');
+    const chkIntersect = document.getElementById('chk-intersect');
+
+    const telMag1 = document.getElementById('tel-mag1');
+    const telMag2 = document.getElementById('tel-mag2');
+    const telDot = document.getElementById('tel-dot');
+    const telAngle = document.getElementById('tel-angle');
+    const telStatus = document.getElementById('tel-status');
+
+    const container = document.getElementById('canvas-container');
+
+    // Dynamic label tracking injection
+    const lbContainer = document.createElement('div');
+    lbContainer.id = 'labels-container';
+    lbContainer.className = 'absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-20';
+    container.appendChild(lbContainer);
+
+    // --- Core Math Logic & Calculations ---
+    function calculate() {
+        let n1 = new THREE.Vector3(a1, b1, c1);
+        let n2 = new THREE.Vector3(a2, b2, c2);
+
+        let mag1 = n1.length();
+        let mag2 = n2.length();
+        
+        telMag1.innerText = mag1.toFixed(2);
+        telMag2.innerText = mag2.toFixed(2);
+
+        if (mag1 < 0.01 || mag2 < 0.01) {
+            telDot.innerText = "0.00";
+            telAngle.innerText = "Undefined";
+            telStatus.innerText = "Zero Vector Error";
+            telStatus.className = "text-[10px] font-bold text-rose-500 uppercase mt-1";
+            build3DScene(n1, n2, null, true);
+            return;
+        }
+
+        let dot = n1.dot(n2);
+        telDot.innerText = dot.toFixed(2);
+
+        // Angle Calculation (using absolute value for acute angle between planes)
+        let cosTheta = Math.abs(dot) / (mag1 * mag2);
+        // Clamp to prevent floating point errors causing NaN in acos
+        cosTheta = Math.max(0, Math.min(1, cosTheta));
+        
+        let thetaRad = Math.acos(cosTheta);
+        let thetaDeg = thetaRad * (180 / Math.PI);
+        
+        telAngle.innerText = `${thetaDeg.toFixed(1)}°`;
+
+        let isParallel = false;
+        let cross = new THREE.Vector3().crossVectors(n1, n2);
+        
+        if (cross.length() < 0.01) {
+            isParallel = true;
+            telStatus.innerText = "Parallel Planes";
+            telStatus.className = "text-[10px] font-bold text-amber-500 uppercase mt-1";
+        } else if (Math.abs(dot) < 0.01) {
+            telStatus.innerText = "Orthogonal (Perpendicular)";
+            telStatus.className = "text-[10px] font-bold text-fuchsia-500 uppercase mt-1";
+        } else {
+            telStatus.innerText = "Acute Intersection";
+            telStatus.className = "text-[10px] font-bold text-emerald-400 uppercase mt-1";
+        }
+
+        build3DScene(n1, n2, cross, isParallel);
+    }
+
+    // --- Input Synchronizers ---
+    function sync(val, sl, lbl, setter) {
+        val = parseFloat(val);
+        sl.value = val;
+        lbl.innerText = val.toFixed(1);
+        setter(val);
+        calculate();
+    }
+
+    slA1.addEventListener('input', e => sync(e.target.value, slA1, lblA1, v => a1 = v));
+    slB1.addEventListener('input', e => sync(e.target.value, slB1, lblB1, v => b1 = v));
+    slC1.addEventListener('input', e => sync(e.target.value, slC1, lblC1, v => c1 = v));
+    
+    slA2.addEventListener('input', e => sync(e.target.value, slA2, lblA2, v => a2 = v));
+    slB2.addEventListener('input', e => sync(e.target.value, slB2, lblB2, v => b2 = v));
+    slC2.addEventListener('input', e => sync(e.target.value, slC2, lblC2, v => c2 = v));
+
+    selPreset.addEventListener('change', e => {
+        let p = PRESETS[e.target.value];
+        sync(p.a1, slA1, lblA1, v => a1 = v); sync(p.b1, slB1, lblB1, v => b1 = v); sync(p.c1, slC1, lblC1, v => c1 = v);
+        sync(p.a2, slA2, lblA2, v => a2 = v); sync(p.b2, slB2, lblB2, v => b2 = v); sync(p.c2, slC2, lblC2, v => c2 = v);
+    });
+
+    btnReset.addEventListener('click', () => {
+        selPreset.value = 'intersect';
+        selPreset.dispatchEvent(new Event('change'));
+    });
+
+    chkNormals.addEventListener('change', calculate);
+    chkIntersect.addEventListener('change', calculate);
+
+    // --- Three.js Spatial Engine Setup ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(12, 10, 15);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // Standard Cartesian rotation container (Z = Up)
+    const mathGroup = new THREE.Group();
+    mathGroup.rotation.x = -Math.PI / 2;
+    scene.add(mathGroup);
+
+    let elementsGroup = new THREE.Group();
+    mathGroup.add(elementsGroup);
+
+    let htmlLabels = [];
+    function clearLabels() { lbContainer.innerHTML = ''; htmlLabels = []; }
+    function addLabel(pos, text, cl="bg-slate-900/80") {
+        const el = document.createElement('div');
+        el.className = `label-3d ${cl}`;
+        el.innerHTML = text;
+        lbContainer.appendChild(el);
+        htmlLabels.push({ element: el, pos: pos });
+    }
+
+    function createPlane(normal, colorHex) {
+        if (normal.length() < 0.01) return new THREE.Group();
+        let nNorm = normal.clone().normalize();
+        
+        const planeGeo = new THREE.PlaneGeometry(12, 12);
+        const planeMat = new THREE.MeshBasicMaterial({ 
+            color: colorHex, transparent: true, opacity: 0.35, side: THREE.DoubleSide, depthWrite: false 
+        });
+        const mesh = new THREE.Mesh(planeGeo, planeMat);
+        
+        // Orient plane to match normal vector. Plane default normal is (0,0,1).
+        mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), nNorm);
+
+        // Add subtle wireframe
+        const edgeGeo = new THREE.EdgesGeometry(planeGeo);
+        const edgeLine = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: colorHex, linewidth: 2, transparent: true, opacity: 0.7 }));
+        mesh.add(edgeLine);
+
+        return mesh;
+    }
+
+    function createVectorArrow(vec, color) {
+        if (vec.length() < 0.01) return new THREE.Group();
+        const dir = vec.clone().normalize();
+        const length = vec.length() * 1.5; // Scale up visually
+        
+        const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), vec.clone().multiplyScalar(1.5)]);
+        const mat = new THREE.LineBasicMaterial({ color: color, linewidth: 3 });
+        const line = new THREE.Line(geo, mat);
+        
+        const arrow = new THREE.ArrowHelper(dir, new THREE.Vector3(0,0,0), length, color, 0.6, 0.3);
+        
+        const group = new THREE.Group();
+        group.add(arrow); group.add(line);
+        return group;
+    }
+
+    function build3DScene(n1, n2, cross, isParallel) {
+        elementsGroup.clear();
+        clearLabels();
+
+        // 1. Structural Grid & Axes
+        const grid = new THREE.GridHelper(20, 20, 0x475569, 0x1e293b);
+        grid.rotation.x = Math.PI / 2;
+        elementsGroup.add(grid);
+
+        const createAxisLine = (color, rx, ry, rz) => {
+            const m = new THREE.LineBasicMaterial({ color, linewidth: 2 });
+            const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-10,0,0), new THREE.Vector3(10,0,0)]);
+            const l = new THREE.Line(g, m); l.rotation.set(rx, ry, rz); return l;
+        };
+        elementsGroup.add(createAxisLine(0xf43f5e, 0, 0, 0)); // X
+        elementsGroup.add(createAxisLine(0x10b981, 0, 0, Math.PI/2)); // Y
+        elementsGroup.add(createAxisLine(0x3b82f6, 0, Math.PI/2, 0)); // Z
+
+        addLabel(new THREE.Vector3(10.5, 0, 0), "X", "bg-rose-900/80 border-rose-500");
+        addLabel(new THREE.Vector3(0, 10.5, 0), "Y", "bg-emerald-900/80 border-emerald-500");
+        addLabel(new THREE.Vector3(0, 0, 10.5), "Z", "bg-blue-900/80 border-blue-500");
+
+        // 2. Planes
+        elementsGroup.add(createPlane(n1, 0x3b82f6)); // Blue
+        elementsGroup.add(createPlane(n2, 0xf43f5e)); // Rose
+
+        // 3. Normal Vectors
+        if (chkNormals.checked) {
+            if(n1.length() > 0.01) {
+                elementsGroup.add(createVectorArrow(n1, 0x60a5fa));
+                addLabel(n1.clone().multiplyScalar(1.6), "n₁", "bg-blue-900/80 border-blue-400");
+            }
+            if(n2.length() > 0.01) {
+                elementsGroup.add(createVectorArrow(n2, 0xfb7185));
+                addLabel(n2.clone().multiplyScalar(1.6), "n₂", "bg-rose-900/80 border-rose-400");
+            }
+        }
+
+        // 4. Line of Intersection
+        if (chkIntersect.checked && !isParallel && cross && cross.length() > 0.01) {
+            let dir = cross.clone().normalize();
+            const extA = dir.clone().multiplyScalar(-10);
+            const extB = dir.clone().multiplyScalar(10);
+
+            const lineGeo = new THREE.BufferGeometry().setFromPoints([extA, extB]);
+            const lineMesh = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0xfbbf24, linewidth: 4 })); // Amber
+            elementsGroup.add(lineMesh);
+        }
+    }
+
+    // --- Window Layout Sync resizing ---
+    function resizeCanvas() {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      if (cw > 0 && ch > 0) {
+          camera.aspect = cw / ch;
+          camera.updateProjectionMatrix();
+          renderer.setSize(cw, ch);
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // --- Animation Execution Loop ---
+    function renderLoop() {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      if (cw > 0 && ch > 0 && (renderer.domElement.width !== cw * (window.devicePixelRatio||1))) {
+          resizeCanvas();
+      }
+
+      controls.update();
+
+      // Project 3D labels onto 2D viewport coordinates
+      if (htmlLabels.length > 0) {
+        mathGroup.updateMatrixWorld();
+        htmlLabels.forEach(lbl => {
+           const v = lbl.pos.clone(); v.applyMatrix4(mathGroup.matrixWorld); v.project(camera);
+           const x = (v.x * .5 + .5) * cw; const y = (v.y * -.5 + .5) * ch;
+           lbl.element.style.left = `${x}px`; lbl.element.style.top = `${y}px`;
+           lbl.element.style.opacity = (v.z > 1) ? '0' : '1';
+        });
+      }
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Assessment UI Accordion Logic ---
+    function toggleVerification(id) {
+      const p = document.getElementById(`viva-panel-${id}`);
+      const txt = document.getElementById(`btn-text-${id}`);
+      const arr = document.getElementById(`btn-arrow-${id}`);
+      
+      if (p.classList.contains('hidden')) {
+        p.classList.remove('hidden'); txt.textContent = "Hide Verification"; arr.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([p]);
+      } else {
+        p.classList.add('hidden'); txt.textContent = "Show Verification"; arr.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Protocols ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Start Lab System
+    window.addEventListener('load', () => {
+      calculate();
+      resizeCanvas();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

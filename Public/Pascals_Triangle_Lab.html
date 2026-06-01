@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pascal's Triangle & Binomial Expansion Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Pascal's Triangle & Binomial Expansion</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Combinatorics & Algebraic Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Math Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-reset" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Triangle
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-nck" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Combinatorics Notation ($\binom{n}{k}$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-parents" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Highlight Parent Additions on Hover</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+        
+        <div class="lg:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> <span class="uppercase">Selected Row ($n$)</span></span>
+                <span id="lbl-n" class="font-mono text-indigo-600 text-lg">4</span>
+              </div>
+              <input type="range" id="sl-n" min="0" max="10" step="1" value="4" class="w-full mt-3">
+              <div class="text-center text-[10px] font-bold text-slate-400 mt-2">Drag to build the triangle</div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">The Addition Rule</span>
+              <div class="text-[11px] font-mono text-center py-2 space-y-1.5">
+                $$\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}$$
+                <div class="text-[9px] text-slate-400 font-sans mt-2 text-left">Every number is exactly the sum of the two numbers directly above it in the previous row.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Row Telemetry Dashboard</span>
+            
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-white p-2.5 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Sum of Row ($2^n$)</div>
+                <div class="text-xl font-bold font-mono text-amber-500" id="tel-sum">16</div>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Number of Terms</div>
+                <div class="text-xl font-bold font-mono text-emerald-500" id="tel-terms">5</div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="lg:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span class="text-[10px] font-bold text-slate-300 tracking-wider">Pascal's Triangle</span>
+          </div>
+
+          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-6 py-4 rounded-xl border border-slate-700 shadow-2xl flex flex-col items-center gap-1 z-10 w-11/12 max-w-2xl transition-all">
+            <span class="text-[10px] font-extrabold text-indigo-400 tracking-widest uppercase mb-1">Corresponding Binomial Expansion</span>
+            <div id="eq-container" class="text-sm font-mono text-white text-center overflow-x-auto w-full">
+              $$(x+y)^4 = x^4 + 4x^3y + 6x^2y^2 + 4xy^3 + y^4$$
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What does each number in Pascal's Triangle represent mathematically?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Each number represents the number of ways to choose $k$ items from a set of $n$ items, mathematically written as $nCk$ or $\binom{n}{k}$. It is the absolute core of combinatorics!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do the values in row $n$ always sum exactly to $2^n$?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                The sum of the $n$-th row is $\sum \binom{n}{k}$. This is equivalent to counting the total number of possible subsets of a set with $n$ elements. Each element can either be "in" or "out" (2 choices), so $n$ elements give $2 \times 2 \times \dots = 2^n$ total subsets.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">How is this related to the Binomial Theorem?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                The Binomial Theorem expands $(x+y)^n$. When multiplied out, the coefficient of each $x^{n-k}y^k$ term is exactly the number of ways to pick $y$ from $k$ of the binomial factors, which is $\binom{n}{k}$ — matching the $n$-th row of Pascal's Triangle perfectly!
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Hover over the nodes in the active row to trace the arithmetic addition rule up the pyramid.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> PASCAL'S TRIANGLE PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Pascal's Triangle Laboratory</strong>! Explore the deepest connections in combinatorics and algebra.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Row Slider ($n$)</strong>: Adjust the active row. The active row is highlighted in blue, while the rows below it are dimmed out.</li>
+            <li><strong>Combinatorics Toggle</strong>: Switch the nodes from displaying integers to displaying their formal $\binom{n}{k}$ mathematical notation.</li>
+            <li><strong>Addition Tracing</strong>: Hover your mouse over any active node! If "Highlight Parent Additions" is checked, it will glow yellow and draw lines to its two parent nodes in the row above, proving the addition rule!</li>
+            <li><strong>Binomial Expansion</strong>: Watch the mathematical equation at the bottom of the canvas automatically rewrite itself to perfectly match the coefficients of your selected row!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let nSelected = 4;
+    const MAX_ROW = 10;
+    let nodes = []; // {r, c, val, x, y}
+    let hoveredNode = null;
+
+    // --- DOM Elements ---
+    const slN = document.getElementById('sl-n');
+    const lblN = document.getElementById('lbl-n');
+    const chkNck = document.getElementById('chk-nck');
+    const chkParents = document.getElementById('chk-parents');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telSum = document.getElementById('tel-sum');
+    const telTerms = document.getElementById('tel-terms');
+    const eqContainer = document.getElementById('eq-container');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Math Logic ---
+    function nCr(n, r) {
+        if (r < 0 || r > n) return 0;
+        if (r === 0 || r === n) return 1;
+        let res = 1;
+        for (let i = 1; i <= r; i++) {
+            res = res * (n - i + 1) / i;
+        }
+        return Math.round(res);
+    }
+
+    function calculate() {
+       telSum.innerText = Math.pow(2, nSelected);
+       telTerms.innerText = nSelected + 1;
+
+       // Update Binomial Equation
+       let eq = `(x+y)^{${nSelected}} = `;
+       if (nSelected === 0) {
+           eq += `1`;
+       } else {
+           for(let k=0; k<=nSelected; k++) {
+               let c = nCr(nSelected, k);
+               let cStr = c === 1 ? '' : c;
+               let xPow = nSelected - k;
+               let yPow = k;
+               
+               let term = '';
+               if (xPow > 0) term += xPow === 1 ? 'x' : `x^{${xPow}}`;
+               if (yPow > 0) term += yPow === 1 ? 'y' : `y^{${yPow}}`;
+               
+               if (xPow === 0 && yPow === 0) term = '1';
+               else term = cStr + term;
+               
+               eq += (k === 0 ? term : ` + ${term}`);
+           }
+       }
+       eqContainer.innerHTML = `$$${eq}$$`;
+       if (window.MathJax) MathJax.typesetPromise([eqContainer]);
+    }
+
+    // --- Input Handlers ---
+    slN.addEventListener('input', e => {
+       nSelected = parseInt(e.target.value);
+       lblN.innerText = nSelected;
+       buildNodes();
+       calculate();
+    });
+
+    btnReset.addEventListener('click', () => {
+       nSelected = 4;
+       slN.value = 4;
+       lblN.innerText = 4;
+       buildNodes();
+       calculate();
+    });
+
+    // --- Canvas Rendering ---
+    function buildNodes() {
+      const container = canvas.parentElement;
+      const W = container.clientWidth;
+      const H = container.clientHeight;
+      
+      nodes = [];
+      if (W === 0 || H === 0) return; // Prevent building on unrendered container
+
+      const topPadding = 60;
+      const verticalSpacing = (H - 160) / MAX_ROW; // leave room at bottom for eq
+      const horizontalSpacing = Math.min(60, W / (MAX_ROW + 2)); // Dynamic scaling
+      
+      for(let r = 0; r <= MAX_ROW; r++) {
+          let startX = W / 2 - (r * horizontalSpacing) / 2;
+          let y = topPadding + r * verticalSpacing;
+          
+          for(let c = 0; c <= r; c++) {
+              let val = nCr(r, c);
+              let x = startX + c * horizontalSpacing;
+              nodes.push({r, c, val, x, y});
+          }
+      }
+    }
+
+    // --- Hover Logic ---
+    canvas.addEventListener('mousemove', (e) => {
+       const rect = canvas.getBoundingClientRect();
+       const dpr = window.devicePixelRatio || 1;
+       const mx = (e.clientX - rect.left);
+       const my = (e.clientY - rect.top);
+       
+       hoveredNode = null;
+       for(let node of nodes) {
+           if(node.r > nSelected) continue; // Don't interact with dimmed out rows
+           let dist = Math.hypot(node.x - mx, node.y - my);
+           if(dist < 20) { // Hitbox radius
+               hoveredNode = node;
+               break;
+           }
+       }
+    });
+
+    canvas.addEventListener('mouseleave', () => { hoveredNode = null; });
+
+    // --- Render Loop (with dynamic dimension checking) ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Fixes the "blank canvas on load" bug by rebuilding nodes the moment CSS Grid settles
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+              buildNodes(); 
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (nodes.length === 0) { requestAnimationFrame(renderLoop); return; }
+
+      // 1. Draw Base Edges
+      nodes.forEach(node => {
+          if(node.r >= MAX_ROW) return;
+          let leftChild = nodes.find(n => n.r === node.r+1 && n.c === node.c);
+          let rightChild = nodes.find(n => n.r === node.r+1 && n.c === node.c+1);
+          
+          ctx.beginPath();
+          ctx.moveTo(node.x, node.y);
+          if (leftChild) ctx.lineTo(leftChild.x, leftChild.y);
+          ctx.moveTo(node.x, node.y);
+          if (rightChild) ctx.lineTo(rightChild.x, rightChild.y);
+          
+          // Dim edges that go beyond the selected row
+          if (node.r >= nSelected) ctx.strokeStyle = 'rgba(148, 163, 184, 0.15)'; 
+          else ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)'; 
+          
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+      });
+
+      // 2. Draw Hover Parent Connections
+      if (chkParents.checked && hoveredNode && hoveredNode.r > 0) {
+          let p1 = nodes.find(n => n.r === hoveredNode.r-1 && n.c === hoveredNode.c-1);
+          let p2 = nodes.find(n => n.r === hoveredNode.r-1 && n.c === hoveredNode.c);
+          
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = '#facc15'; // Amber glow
+          ctx.shadowColor = '#facc15';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          if (p1) { ctx.moveTo(p1.x, p1.y); ctx.lineTo(hoveredNode.x, hoveredNode.y); }
+          if (p2) { ctx.moveTo(p2.x, p2.y); ctx.lineTo(hoveredNode.x, hoveredNode.y); }
+          ctx.stroke();
+          ctx.shadowBlur = 0; // reset
+      }
+
+      // 3. Draw Nodes
+      nodes.forEach(node => {
+          let isHoverTarget = hoveredNode && (node === hoveredNode || 
+                             (chkParents.checked && hoveredNode.r > 0 && node.r === hoveredNode.r-1 && (node.c === hoveredNode.c-1 || node.c === hoveredNode.c)));
+                             
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 16, 0, Math.PI*2);
+          
+          if (isHoverTarget) {
+              ctx.fillStyle = '#facc15'; // Yellow
+              ctx.shadowColor = '#facc15';
+              ctx.shadowBlur = 15;
+          } else if (node.r === nSelected) {
+              ctx.fillStyle = '#4f46e5'; // Indigo active
+              ctx.shadowBlur = 0;
+          } else if (node.r < nSelected) {
+              ctx.fillStyle = '#1e293b'; // Slate dark
+              ctx.shadowBlur = 0;
+          } else {
+              ctx.fillStyle = 'rgba(30, 41, 59, 0.4)'; // Dimmed out
+              ctx.shadowBlur = 0;
+          }
+          ctx.fill();
+          
+          // Draw Text
+          if (isHoverTarget) {
+              ctx.fillStyle = '#0f172a'; // Dark text on yellow
+          } else if (node.r <= nSelected) {
+              ctx.fillStyle = '#f8fafc'; 
+          } else {
+              ctx.fillStyle = 'rgba(248, 250, 252, 0.2)'; // Faded text
+          }
+          
+          let displayNck = chkNck.checked ? (document.getElementById('chk-nck').checked) : false; // safety check
+          
+          ctx.font = 'bold 11px monospace';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          let txt = displayNck ? `${node.r}C${node.c}` : node.val;
+          
+          // If numbers get huge, scale text down slightly
+          if (txt.toString().length > 3) ctx.font = 'bold 9px monospace';
+          
+          ctx.fillText(txt, node.x, node.y + 1);
+      });
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      calculate();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

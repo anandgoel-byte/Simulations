@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electromagnetic Induction Explorer Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background-color: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+    input[type="range"].slider-rose::-webkit-slider-thumb {
+      background-color: #f43f5e;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Electromagnetic Induction Explorer</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Faraday's &amp; Lenz's Law Physics Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Physics Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-auto" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5">
+          ▶ Auto-Thrust Magnet
+        </button>
+        <button id="btn-flip" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm">
+          <span>🧲</span> Flip Magnet Poles (N/S)
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-field" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Magnetic Field Lines</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-voltmeter" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Galvanometer Overlay</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2 transition-all">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Faraday's Law of Induction</span>
+            <div class="text-[16px] font-mono text-center py-2 font-bold">
+              $$\varepsilon = -N \frac{d\Phi_B}{dt}$$
+            </div>
+            <div class="text-[9px] font-bold text-slate-500 text-center leading-tight mt-1">
+              Induced Voltage ($\varepsilon$) depends on the number of turns ($N$) and the rate of change of magnetic flux ($\frac{d\Phi_B}{dt}$).
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Movement Speed ($v$)</span></span>
+              <span id="lbl-speed" class="font-mono text-blue-600 text-sm">Medium</span>
+            </div>
+            <input type="range" id="sl-speed" min="1" max="5" step="0.5" value="3" class="w-full mt-2" style="accent-color: #3b82f6;">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>Slow</span>
+              <span>Fast</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> <span class="uppercase text-rose-700">Magnetic Strength ($B$)</span></span>
+              <span id="lbl-b" class="font-mono text-rose-600 text-sm">50%</span>
+            </div>
+            <input type="range" id="sl-b" min="10" max="100" step="10" value="50" class="w-full mt-2 slider-rose">
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-rose-50 p-2 rounded border border-rose-100">
+              A stronger magnet emits denser field lines, resulting in a higher total magnetic flux ($\Phi_B$).
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 block"></span> <span class="uppercase text-emerald-600">Coil Turns ($N$)</span></span>
+              <span id="lbl-n" class="font-mono text-emerald-600 text-sm">4 Loops</span>
+            </div>
+            <input type="range" id="sl-n" min="1" max="8" step="1" value="4" class="w-full mt-2 slider-emerald">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>1 Loop</span>
+              <span>8 Loops</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-amber-400 tracking-wider uppercase" id="canvas-hud">Live Magnetic Flux Analyzer</span>
+        </div>
+        
+        <div class="absolute bottom-4 left-0 w-full flex justify-center pointer-events-none select-none z-20" id="drag-hint">
+          <span class="text-[10px] font-bold text-slate-300 tracking-widest uppercase bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700 shadow-sm">
+            Drag the magnet manually to induce current
+          </span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Live Telemetry Dashboard</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Induced EMF (Voltage)</div>
+              <div class="text-3xl font-bold font-mono tracking-widest text-emerald-400 transition-colors" id="tel-emf">0.00 V</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center relative overflow-hidden">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5 relative z-10">Magnetic Flux ($\Phi_B$)</div>
+              <div class="text-lg font-bold font-mono text-amber-600 relative z-10" id="tel-flux">0.0 Wb</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Rate of Change ($d\Phi/dt$)</div>
+              <div class="text-lg font-bold font-mono text-rose-500" id="tel-rate">0.0 Wb/s</div>
+            </div>
+
+            <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-200 shadow-sm col-span-2 flex justify-between items-center px-4 transition-colors" id="box-dir">
+              <div class="text-[10px] text-sky-700 font-bold uppercase tracking-wider">Current Direction</div>
+              <div class="text-[11px] font-bold font-mono text-sky-600 tracking-widest uppercase" id="tel-dir">None</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                According to Faraday's Law, what happens if you move the magnet through the coil TWICE as fast?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What does the negative sign in Faraday's equation represent?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the magnet is sitting perfectly still completely inside the coil, what is the induced EMF?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If you double the number of turns (N) in the coil, what happens to the induced voltage?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> EM INDUCTION PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Electromagnetism Laboratory</strong>! Explore how physical movement can be converted directly into electrical energy.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Manual Dragging</strong>: You can click and drag the bar magnet horizontally across the canvas. Notice that the faster you drag it through the coil, the wilder the galvanometer needle swings!</li>
+            <li><strong>Auto-Thrust</strong>: Click the play button to let the machine oscillate the magnet back and forth at a constant speed (adjustable via slider).</li>
+            <li><strong>Faraday's Multipliers</strong>: Increase the Magnet Strength ($B$) or the Coil Turns ($N$). Watch the mathematical readout on the right dynamically multiply the voltage output!</li>
+            <li><strong>Lenz's Law in Action</strong>: Flip the Magnet Poles. Notice that pushing the North pole into the coil creates a current in one direction, while pushing the South pole in creates a current in the exact opposite direction.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "According to Faraday's Law, what happens if you move the magnet through the coil TWICE as fast?",
+        options: [
+          { text: "The induced EMF halves.", isCorrect: false, exp: "Incorrect." },
+          { text: "The induced EMF stays the same.", isCorrect: false, exp: "Incorrect." },
+          { text: "The induced EMF doubles.", isCorrect: true, exp: "Correct! The formula states EMF is proportional to the RATE of change of flux (dΦ/dt). Moving the magnet twice as fast cuts the time (dt) in half, which doubles the overall rate of change, thereby doubling the voltage." },
+          { text: "The current reverses direction.", isCorrect: false, exp: "Incorrect. Speed affects magnitude, not direction." }
+        ]
+      },
+      q2: {
+        question: "What does the negative sign in Faraday's equation represent?",
+        options: [
+          { text: "It indicates that voltage is always negative.", isCorrect: false, exp: "Incorrect. Voltage oscillates positive and negative." },
+          { text: "It represents Lenz's Law: the induced current opposes the change in magnetic flux.", isCorrect: true, exp: "Correct! If you push a North pole into a coil, the coil induces a current that generates its own North pole to push back against you. This physical resistance is Lenz's Law and it ensures the conservation of energy." },
+          { text: "It shows that electrons have a negative charge.", isCorrect: false, exp: "Incorrect." },
+          { text: "It is a mathematical correction factor for gravity.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        question: "If the magnet is sitting perfectly still completely inside the coil, what is the induced EMF?",
+        options: [
+          { text: "Maximum Voltage", isCorrect: false, exp: "Incorrect." },
+          { text: "Zero Volts", isCorrect: true, exp: "Correct! Induction requires a CHANGE in flux over time. If the magnet is stationary, dΦ/dt = 0. Even though the magnetic field is very strong inside the coil, there is no change, so zero voltage is induced." },
+          { text: "It depends on the magnet's strength.", isCorrect: false, exp: "Incorrect. Even an infinitely strong magnet induces nothing if it isn't moving." },
+          { text: "It produces a steady DC current.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "If you double the number of turns (N) in the coil, what happens to the induced voltage?",
+        options: [
+          { text: "It doubles.", isCorrect: true, exp: "Correct! Each loop of wire generates its own small voltage. Because they are connected in series, these voltages stack additively. Doubling N mathematically doubles the total EMF." },
+          { text: "It halves.", isCorrect: false, exp: "Incorrect." },
+          { text: "It quadruples.", isCorrect: false, exp: "Incorrect." },
+          { text: "It remains the same.", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const slSpeed = document.getElementById('sl-speed');
+    const lblSpeed = document.getElementById('lbl-speed');
+    const slB = document.getElementById('sl-b');
+    const lblB = document.getElementById('lbl-b');
+    const slN = document.getElementById('sl-n');
+    const lblN = document.getElementById('lbl-n');
+    
+    const btnAuto = document.getElementById('btn-auto');
+    const btnFlip = document.getElementById('btn-flip');
+    const chkField = document.getElementById('chk-field');
+    const chkVoltmeter = document.getElementById('chk-voltmeter');
+    const dragHint = document.getElementById('drag-hint');
+
+    const telEmf = document.getElementById('tel-emf');
+    const telFlux = document.getElementById('tel-flux');
+    const telRate = document.getElementById('tel-rate');
+    const boxDir = document.getElementById('box-dir');
+    const telDir = document.getElementById('tel-dir');
+
+    // Physics Parameters
+    let N = 4; // Turns
+    let B_strength = 0.5; // 0.1 to 1.0
+    let v_mag = 3; // Speed scalar
+    let isReversed = false; // N/S flip
+
+    // Dynamic State
+    let isAuto = false;
+    let autoPhase = 0;
+    
+    let magX = 0; // Relative to canvas center (px)
+    let prevMagX = 0;
+    
+    let flux = 0;
+    let dFluxDt = 0;
+    let emf = 0;
+
+    // Interaction State
+    let isDragging = false;
+    let dragOffsetX = 0;
+
+    // Helper Math
+    // Flux is modeled as a Gaussian bell curve based on distance from center.
+    // Max flux occurs when magnet is perfectly centered inside the coil (magX = 0).
+    function calcFlux(x) {
+        // Bell curve: A * exp(-x^2 / 2c^2)
+        const spread = 150; // visual width of coil influence
+        const baseArea = 100;
+        return B_strength * baseArea * Math.exp(-(x * x) / (2 * spread * spread));
+    }
+
+    // Input Binds
+    slSpeed.addEventListener('input', e => {
+        v_mag = parseFloat(e.target.value);
+        if(v_mag < 2) lblSpeed.innerText = "Slow";
+        else if (v_mag < 4) lblSpeed.innerText = "Medium";
+        else lblSpeed.innerText = "Fast";
+    });
+
+    slB.addEventListener('input', e => {
+        let val = parseInt(e.target.value);
+        lblB.innerText = `${val}%`;
+        B_strength = val / 100;
+    });
+
+    slN.addEventListener('input', e => {
+        N = parseInt(e.target.value);
+        lblN.innerText = `${N} Loop${N>1?'s':''}`;
+    });
+
+    btnFlip.addEventListener('click', () => {
+        isReversed = !isReversed;
+    });
+
+    btnAuto.addEventListener('click', () => {
+        isAuto = !isAuto;
+        if (isAuto) {
+            btnAuto.innerHTML = "⏸ Pause Auto-Thrust";
+            btnAuto.className = "px-5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
+            dragHint.classList.add('hidden');
+        } else {
+            btnAuto.innerHTML = "▶ Auto-Thrust Magnet";
+            btnAuto.className = "px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
+            dragHint.classList.remove('hidden');
+        }
+    });
+
+    // Mouse/Touch Interaction
+    function getMouseX(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches && e.touches.length > 0) return e.touches[0].clientX - rect.left;
+        return e.clientX - rect.left;
+    }
+
+    canvas.addEventListener('mousedown', startDrag);
+    canvas.addEventListener('touchstart', startDrag, {passive: false});
+
+    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener('touchend', stopDrag);
+
+    window.addEventListener('mousemove', handleDrag);
+    window.addEventListener('touchmove', handleDrag, {passive: false});
+
+    function startDrag(e) {
+        if (isAuto) return;
+        let mx = getMouseX(e);
+        let cx = canvas.width / (window.devicePixelRatio || 1) / 2;
+        let visualMagX = cx + magX;
+        
+        // Check if clicking near magnet
+        if (Math.abs(mx - visualMagX) < 100) {
+            isDragging = true;
+            dragOffsetX = visualMagX - mx;
+            canvas.style.cursor = 'grabbing';
+            dragHint.classList.add('hidden');
+            if(e.cancelable) e.preventDefault();
+        }
+    }
+
+    function stopDrag() {
+        if (isDragging) {
+            isDragging = false;
+            canvas.style.cursor = 'grab';
+        }
+    }
+
+    function handleDrag(e) {
+        if (!isDragging) return;
+        let mx = getMouseX(e);
+        let cx = canvas.width / (window.devicePixelRatio || 1) / 2;
+        
+        // Constrain movement
+        let maxDist = Math.max(200, cx - 100);
+        magX = (mx + dragOffsetX) - cx;
+        magX = Math.max(-maxDist, Math.min(maxDist, magX));
+        
+        if(e.cancelable) e.preventDefault();
+    }
+
+    // --- MAIN RENDER LOOP ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderLoop); return; }
+
+      // 1. Physics Calculations
+      prevMagX = magX;
+
+      if (isAuto) {
+          // Sine wave oscillation
+          autoPhase += 0.02 * v_mag;
+          let amplitude = cw * 0.35;
+          magX = Math.sin(autoPhase) * amplitude;
+      }
+
+      // Calculate velocity (dx/dt)
+      let velocity = magX - prevMagX; // px per frame
+      
+      // Calculate Flux
+      flux = calcFlux(magX);
+      
+      // Calculate Rate of Change of Flux (dPhi/dt)
+      // dPhi/dx of Gaussian is -x/c^2 * Phi.  dPhi/dt = dPhi/dx * dx/dt
+      let c = 150;
+      dFluxDt = (-magX / (c*c)) * flux * velocity;
+
+      // Faraday's Law: EMF = -N * dPhi/dt
+      // Multiply by polarity flag
+      let polarity = isReversed ? -1 : 1;
+      emf = -N * dFluxDt * polarity * 0.1; // visual scalar
+
+      // Apply a slight low-pass filter to EMF to make needle smoother if dragging jaggedly
+      if (!isAuto) {
+          emf = emf * 0.2 + (parseFloat(telEmf.innerText) || 0) * 0.8;
+      }
+
+      // Update Telemetry
+      telFlux.innerText = `${flux.toFixed(1)} Wb`;
+      telRate.innerText = `${dFluxDt.toFixed(2)} Wb/s`;
+
+      let dispEmf = emf.toFixed(2);
+      if (Math.abs(emf) < 0.05) dispEmf = "0.00"; // Deadzone
+      
+      telEmf.innerText = `${emf > 0.05 ? '+' : ''}${dispEmf} V`;
+      
+      if (emf > 0.5) {
+          telEmf.className = "text-3xl font-bold font-mono tracking-widest text-emerald-400";
+          boxDir.className = "bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 shadow-sm col-span-2 flex justify-between items-center px-4 transition-colors";
+          telDir.innerText = "Clockwise (+)";
+          telDir.className = "text-[11px] font-bold font-mono text-emerald-600 tracking-widest uppercase";
+      } else if (emf < -0.5) {
+          telEmf.className = "text-3xl font-bold font-mono tracking-widest text-rose-500";
+          boxDir.className = "bg-rose-50 p-2.5 rounded-xl border border-rose-200 shadow-sm col-span-2 flex justify-between items-center px-4 transition-colors";
+          telDir.innerText = "Counter-Clockwise (-)";
+          telDir.className = "text-[11px] font-bold font-mono text-rose-600 tracking-widest uppercase";
+      } else {
+          telEmf.className = "text-3xl font-bold font-mono tracking-widest text-slate-400";
+          boxDir.className = "bg-slate-100 p-2.5 rounded-xl border border-slate-300 shadow-sm col-span-2 flex justify-between items-center px-4 transition-colors";
+          telDir.innerText = "Zero Flow";
+          telDir.className = "text-[11px] font-bold font-mono text-slate-500 tracking-widest uppercase";
+      }
+
+
+      // 2. Rendering Base Geometry
+      const cx = cw / 2;
+      const cy = ch / 2 + 20;
+
+      // Draw Coil (Back Half)
+      ctx.strokeStyle = '#b45309'; // Copper dark
+      ctx.lineWidth = 4;
+      let coilWidth = 100;
+      let coilR = 60;
+      let turnStep = coilWidth / Math.max(1, N-1);
+
+      for(let i=0; i<N; i++) {
+          let x = cx - coilWidth/2 + i*turnStep;
+          ctx.beginPath();
+          ctx.ellipse(x, cy, 15, coilR, 0, Math.PI/2, Math.PI*1.5);
+          ctx.stroke();
+      }
+
+      // Draw Magnet
+      let mWidth = 160;
+      let mHeight = 40;
+      let visualMagX = cx + magX;
+
+      let pole1Color = isReversed ? '#0ea5e9' : '#ef4444'; // S=Blue, N=Red
+      let pole2Color = isReversed ? '#ef4444' : '#0ea5e9';
+      let pole1Label = isReversed ? 'S' : 'N';
+      let pole2Label = isReversed ? 'N' : 'S';
+
+      ctx.fillStyle = pole1Color;
+      ctx.fillRect(visualMagX - mWidth/2, cy - mHeight/2, mWidth/2, mHeight);
+      ctx.fillStyle = pole2Color;
+      ctx.fillRect(visualMagX, cy - mHeight/2, mWidth/2, mHeight);
+      
+      // Magnet Labels
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 20px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(pole1Label, visualMagX - mWidth/4, cy);
+      ctx.fillText(pole2Label, visualMagX + mWidth/4, cy);
+
+      // Draw Magnetic Field Lines (if checked)
+      if (chkField.checked) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+          ctx.lineWidth = 1;
+          // Number of lines scales with B_strength
+          let numLines = Math.floor(B_strength * 6);
+          for(let i=1; i<=numLines; i++) {
+              let ry = mHeight/2 + i*15;
+              
+              // Top loop
+              ctx.beginPath();
+              ctx.moveTo(visualMagX - mWidth/2, cy - 10);
+              ctx.bezierCurveTo(visualMagX - mWidth, cy - ry, visualMagX + mWidth, cy - ry, visualMagX + mWidth/2, cy - 10);
+              ctx.stroke();
+              
+              // Bottom loop
+              ctx.beginPath();
+              ctx.moveTo(visualMagX - mWidth/2, cy + 10);
+              ctx.bezierCurveTo(visualMagX - mWidth, cy + ry, visualMagX + mWidth, cy + ry, visualMagX + mWidth/2, cy + 10);
+              ctx.stroke();
+          }
+      }
+
+      // Draw Coil (Front Half)
+      ctx.strokeStyle = '#f59e0b'; // Copper light
+      ctx.lineWidth = 5;
+      
+      for(let i=0; i<N; i++) {
+          let x = cx - coilWidth/2 + i*turnStep;
+          ctx.beginPath();
+          ctx.ellipse(x, cy, 15, coilR, 0, -Math.PI/2, Math.PI/2);
+          ctx.stroke();
+      }
+
+      // Wires leading out
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 3;
+      ctx.beginPath();
+      // Left wire
+      ctx.moveTo(cx - coilWidth/2, cy + coilR);
+      ctx.lineTo(cx - coilWidth/2, cy + coilR + 40);
+      ctx.lineTo(cx - 50, cy + coilR + 40);
+      // Right wire
+      ctx.moveTo(cx + coilWidth/2, cy + coilR);
+      ctx.lineTo(cx + coilWidth/2, cy + coilR + 40);
+      ctx.lineTo(cx + 50, cy + coilR + 40);
+      ctx.stroke();
+
+      // Electron flow dots on front coil based on EMF
+      if (Math.abs(emf) > 0.5) {
+          ctx.fillStyle = '#38bdf8'; // Cyan
+          let dir = emf > 0 ? 1 : -1;
+          // We'll just draw a few moving dots on the front half arcs
+          let eOffset = (Date.now() / 1000 * Math.abs(emf) * 0.5) % 1;
+          if (dir < 0) eOffset = 1 - eOffset;
+
+          for(let i=0; i<N; i++) {
+              let cx_coil = cx - coilWidth/2 + i*turnStep;
+              // Arc goes from -PI/2 to PI/2. 
+              let angle = -Math.PI/2 + (eOffset * Math.PI);
+              let px = cx_coil + Math.cos(angle)*15;
+              let py = cy + Math.sin(angle)*coilR;
+              
+              ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 5;
+              ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI*2); ctx.fill();
+              ctx.shadowBlur = 0;
+          }
+      }
+
+      // 3. Draw Galvanometer Overlay
+      if (chkVoltmeter.checked) {
+          const gX = cx;
+          const gY = cy + coilR + 40;
+          
+          ctx.fillStyle = '#0f172a'; ctx.strokeStyle = '#334155'; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.arc(gX, gY, 40, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          
+          // Ticks
+          ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(gX, gY - 30); ctx.lineTo(gX, gY - 20); ctx.stroke(); // Zero
+          ctx.beginPath(); ctx.moveTo(gX - 25, gY - 20); ctx.lineTo(gX - 18, gY - 15); ctx.stroke(); // Left
+          ctx.beginPath(); ctx.moveTo(gX + 25, gY - 20); ctx.lineTo(gX + 18, gY - 15); ctx.stroke(); // Right
+          
+          ctx.fillStyle = '#94a3b8'; ctx.font = '10px sans-serif'; ctx.fillText("-", gX - 20, gY - 5); ctx.fillText("+", gX + 20, gY - 5);
+          ctx.fillText("0", gX, gY - 10);
+
+          // Needle
+          // Map emf to angle (-PI/4 to PI/4)
+          // Let's say 20V = Max deflection
+          let maxV = 20;
+          let clampedEmf = Math.max(-maxV, Math.min(maxV, emf));
+          let angle = (clampedEmf / maxV) * (Math.PI/3); // up to 60 deg deflection
+
+          ctx.save();
+          ctx.translate(gX, gY + 10); // pivot near bottom
+          ctx.rotate(angle);
+          ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -35); ctx.stroke();
+          // Pivot dot
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0,0,3,0,Math.PI*2); ctx.fill();
+          ctx.restore();
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      if (!isAuto) canvas.style.cursor = 'grab';
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

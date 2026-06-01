@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SN1 vs SN2 Mechanism Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <svg class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Nucleophilic Substitution (Sₙ1 vs Sₙ2)</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Reaction Kinetics &amp; Stereochemistry Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Mechanism Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>▶</span> Start Reaction
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Flask
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-energy" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Energy Profile Diagram</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Substrate (Electrophile)</span>
+              <select id="select-substrate" class="w-full bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+                <option value="methyl">Methyl (-CH₃)</option>
+                <option value="primary">Primary (1°)</option>
+                <option value="secondary">Secondary (2°)</option>
+                <option value="tertiary">Tertiary (3°)</option>
+              </select>
+            </div>
+
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Nucleophile (Nu:⁻)</span>
+              <select id="select-nu" class="w-full bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+                <option value="strong">Strong / Charged (e.g., OH⁻, CN⁻)</option>
+                <option value="weak">Weak / Neutral (e.g., H₂O, CH₃OH)</option>
+              </select>
+            </div>
+
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Solvent System</span>
+              <select id="select-solvent" class="w-full bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+                <option value="aprotic">Polar Aprotic (e.g., Acetone, DMSO)</option>
+                <option value="protic">Polar Protic (e.g., Water, Ethanol)</option>
+              </select>
+            </div>
+
+            <div id="mechanism-card" class="bg-indigo-50 rounded-xl p-3 border border-indigo-200 shadow-sm space-y-2 transition-all">
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-600 uppercase">Predicted Pathway</span>
+                 <span id="label-pathway" class="text-indigo-700 font-mono text-sm">Sₙ2</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold border-t border-indigo-100 pt-1 mt-1">
+                 <span class="text-slate-600 uppercase">Rate Law</span>
+                 <span id="label-rate" class="text-indigo-600 font-mono">k[R-X][Nu⁻]</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold border-t border-indigo-100 pt-1 mt-1">
+                 <span class="text-slate-600 uppercase">Stereochemistry</span>
+                 <span id="label-stereo" class="text-emerald-600 font-mono">100% Inversion</span>
+               </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Mechanism Definitions</span>
+              <div class="text-[10px] font-mono text-center py-2 space-y-2">
+                <div class="text-left text-slate-300">
+                  <span class="text-emerald-400 font-bold">Sₙ2:</span> Substitution Nucleophilic Bimolecular (Concerted 1-step)
+                </div>
+                <div class="text-left text-slate-300">
+                  <span class="text-rose-400 font-bold">Sₙ1:</span> Substitution Nucleophilic Unimolecular (2-step via Carbocation)
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Live Reaction Telemetry</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Reaction State</div>
+                <div id="telemetryState" class="text-sm font-bold text-slate-400 font-mono mt-0.5 tracking-widest">READY</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Steric Hindrance</div>
+                <div id="telemetrySteric" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5">Low</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Carbocation Stability</div>
+                <div id="telemetryCation" class="text-sm font-bold text-amber-400 font-mono mt-0.5">None</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span id="simStatusText" class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider">Flask Cleaned</span>
+          </div>
+
+          <div id="energy-overlay" class="absolute bottom-4 right-4 bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-lg w-[200px] h-[150px] pointer-events-none z-10 transition-opacity duration-300">
+             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Energy Profile</span>
+             <canvas id="energyCanvas" class="w-full h-[100px] block"></canvas>
+             <div class="flex justify-between text-[8px] font-bold text-slate-500 mt-1">
+               <span>Rxn Coord. →</span>
+             </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do tertiary (3°) substrates exclusively undergo Sₙ1 reactions instead of Sₙ2?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                <strong>Steric Hindrance.</strong> The three bulky alkyl groups physically block the nucleophile from attacking the central carbon from the backside (required for Sₙ2). Furthermore, the resulting 3° carbocation is highly stable, making the two-step Sₙ1 pathway energetically favorable.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is "Walden Inversion" and in which mechanism does it occur?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Walden Inversion occurs in <strong>Sₙ2</strong> reactions. Because the nucleophile must attack from the exact opposite side of the leaving group, the remaining three bonds are pushed "inside out" like an umbrella flipping in the wind, completely inverting the stereochemical configuration (R becomes S, or vice versa).
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do Polar Aprotic solvents strongly favor Sₙ2 reactions?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                Polar Aprotic solvents (like Acetone or DMSO) lack O-H or N-H bonds, meaning they cannot hydrogen-bond. Therefore, they do not "solvate" (surround and trap) the nucleophile anion. This leaves the nucleophile "naked" and highly reactive, perfectly primed for a fast Sₙ2 attack.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the Rate-Determining Step in an Sₙ1 reaction?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                The Slow (Rate-Determining) Step in Sₙ1 is the initial departure of the leaving group to form the Carbocation intermediate. Because this step only involves the substrate, the overall reaction rate is Unimolecular ($Rate = k[R-X]$) and does not depend on the concentration of the nucleophile.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Animation geometry strictly maps 3D stereochemical Wedges &amp; Dashes to the 2D plane.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> REACTION KINETICS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Nucleophilic Substitution Virtual Laboratory</strong>! Explore the competitive battle between Sₙ1 and Sₙ2 pathways.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Substrate</strong>: Alter the steric hindrance. Methyl and 1° favor Sₙ2. 3° forces Sₙ1.</li>
+            <li><strong>Nucleophile &amp; Solvent</strong>: Tweaking these shifts the balance for Secondary (2°) substrates. Strong Nu/Aprotic pushes Sₙ2. Weak Nu/Protic pushes Sₙ1.</li>
+            <li><strong>Stereochemical Rendering</strong>: Notice the proper 3D tetrahedral geometry! Solid lines are in-plane, Thick Wedges point toward you, and Dashes point away.</li>
+            <li><strong>Animation</strong>: Watch the physical difference! Sₙ2 flips the molecule like an umbrella in one fluid step (Walden Inversion). Sₙ1 breaks apart, forms a flat $sp^2$ intermediate, and attacks.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Application State ---
+    let isReacting = false;
+    let rxnProgress = 0; // 0.0 to 1.0
+    
+    let mechanism = 'SN2'; // 'SN1' or 'SN2'
+    let substrateType = 0; // 0=Methyl, 1=Primary, 2=Secondary, 3=Tertiary
+    
+    // Atoms Base Config
+    const ATOMS = {
+      C: { color: '#334155', rad: 26, label: 'C' },        // Slate 700
+      Nu: { color: '#f43f5e', rad: 22, label: 'Nu:⁻' },    // Rose 500
+      LG: { color: '#10b981', rad: 22, label: 'LG' },      // Emerald 500
+      H: { color: '#e2e8f0', rad: 14, label: 'H' },        // Slate 200
+      CH3: { color: '#64748b', rad: 20, label: 'CH₃' }     // Slate 500
+    };
+
+    // Substrate Configs (R1, R2, R3 types)
+    const GROUPS = [
+      ['H', 'H', 'H'],           // Methyl
+      ['CH3', 'H', 'H'],         // 1 deg
+      ['CH3', 'CH3', 'H'],       // 2 deg
+      ['CH3', 'CH3', 'CH3']      // 3 deg
+    ];
+
+    // --- DOM Elements ---
+    const selSubstrate = document.getElementById('select-substrate');
+    const selNu = document.getElementById('select-nu');
+    const selSolvent = document.getElementById('select-solvent');
+
+    const lblPathway = document.getElementById('label-pathway');
+    const lblRate = document.getElementById('label-rate');
+    const lblStereo = document.getElementById('label-stereo');
+    
+    const telState = document.getElementById('telemetryState');
+    const telSteric = document.getElementById('telemetrySteric');
+    const telCation = document.getElementById('telemetryCation');
+
+    const btnRun = document.getElementById('btn-run');
+    const btnReset = document.getElementById('btn-reset');
+    
+    const chkEnergy = document.getElementById('chk-energy');
+    const energyOverlay = document.getElementById('energy-overlay');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const eCanvas = document.getElementById('energyCanvas');
+    const eCtx = eCanvas.getContext('2d');
+
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    // --- Core Logic ---
+    function calculateMechanism() {
+      let sub = selSubstrate.value;
+      let nu = selNu.value;
+      let sol = selSolvent.value;
+
+      substrateType = (sub === 'methyl') ? 0 : (sub === 'primary') ? 1 : (sub === 'secondary') ? 2 : 3;
+      
+      let stericHindrance = (substrateType === 0) ? 'None' : (substrateType === 1) ? 'Low' : (substrateType === 2) ? 'Moderate' : 'Severe';
+      let cationStab = (substrateType === 0) ? 'Extremely Unstable' : (substrateType === 1) ? 'Unstable' : (substrateType === 2) ? 'Moderate' : 'Highly Stable';
+      
+      telSteric.innerText = stericHindrance;
+      telCation.innerText = cationStab;
+
+      // Deterministic Logic
+      if (substrateType === 3) mechanism = 'SN1'; // 3 deg is always SN1
+      else if (substrateType === 0 || substrateType === 1) mechanism = 'SN2'; // Methyl/1 deg always SN2
+      else {
+        // 2 deg is the battleground
+        if (nu === 'strong' || sol === 'aprotic') mechanism = 'SN2';
+        else mechanism = 'SN1';
+      }
+
+      // Update UI
+      if (mechanism === 'SN2') {
+        lblPathway.innerText = 'Sₙ2 (Bimolecular)';
+        lblPathway.className = 'text-emerald-500 font-bold font-mono text-sm';
+        lblRate.innerText = 'k[R-X][Nu⁻]';
+        lblStereo.innerText = '100% Inversion';
+      } else {
+        lblPathway.innerText = 'Sₙ1 (Unimolecular)';
+        lblPathway.className = 'text-rose-500 font-bold font-mono text-sm';
+        lblRate.innerText = 'k[R-X]';
+        lblStereo.innerText = 'Racemization (Mix)';
+      }
+      
+      drawEnergyProfile();
+    }
+
+    // --- Input Handlers ---
+    selSubstrate.addEventListener('change', () => { resetReaction(); calculateMechanism(); });
+    selNu.addEventListener('change', () => { resetReaction(); calculateMechanism(); });
+    selSolvent.addEventListener('change', () => { resetReaction(); calculateMechanism(); });
+    
+    chkEnergy.addEventListener('change', (e) => {
+      energyOverlay.style.opacity = e.target.checked ? '1' : '0';
+    });
+
+    btnRun.addEventListener('click', () => {
+      if(isReacting || rxnProgress > 0) return;
+      isReacting = true;
+      btnRun.classList.add('opacity-50', 'cursor-not-allowed');
+      statusText.innerText = "Reaction Proceeding...";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
+      
+      telState.innerText = "REACTING";
+      telState.className = "text-sm font-bold text-rose-500 font-mono mt-0.5 tracking-widest";
+    });
+
+    function resetReaction() {
+      isReacting = false;
+      rxnProgress = 0;
+      btnRun.classList.remove('opacity-50', 'cursor-not-allowed');
+      statusText.innerText = "Flask Cleaned";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+      
+      telState.innerText = "READY";
+      telState.className = "text-sm font-bold text-slate-400 font-mono mt-0.5 tracking-widest";
+      drawEnergyProfile();
+    }
+
+    btnReset.addEventListener('click', resetReaction);
+
+
+    // --- Canvas Rendering ---
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawAtom(ctx, x, y, atom, customLabel=null) {
+      ctx.beginPath();
+      ctx.arc(x, y, atom.rad, 0, Math.PI * 2);
+      ctx.fillStyle = atom.color;
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#0f172a';
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      if(atom.color === '#e2e8f0') ctx.fillStyle = '#0f172a'; // Dark text for H
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(customLabel || atom.label, x, y);
+    }
+
+    // Standard Bond
+    function drawSolidBond(ctx, x1, y1, x2, y2, color='#94a3b8') {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+    
+    // Transition State Dashed Bond
+    function drawTSBond(ctx, x1, y1, x2, y2, color) {
+      ctx.save();
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Stereochemical Wedge (Coming Out)
+    function drawWedgeBond(ctx, x1, y1, x2, y2, color='#94a3b8') {
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        let len = Math.hypot(dx, dy);
+        if(len === 0) return;
+        let ux = dx / len;
+        let uy = dy / len;
+        let px = -uy;
+        let py = ux;
+        let w = 5; // Half-width at the wide end
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1); // narrow at central carbon
+        ctx.lineTo(x2 + px * w, y2 + py * w); // wide at substituent
+        ctx.lineTo(x2 - px * w, y2 - py * w);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Stereochemical Dash (Going In)
+    function drawDashBond(ctx, x1, y1, x2, y2, color='#94a3b8') {
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        let len = Math.hypot(dx, dy);
+        if(len === 0) return;
+        let ux = dx / len;
+        let uy = dy / len;
+        let px = -uy;
+        let py = ux;
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        let numDashes = 7;
+        for (let i = 1; i <= numDashes; i++) {
+            let t = i / numDashes;
+            let cx = x1 + dx * t;
+            let cy = y1 + dy * t;
+            let w = 5 * t; // gets wider away from center
+            ctx.moveTo(cx + px * w, cy + py * w);
+            ctx.lineTo(cx - px * w, cy - py * w);
+        }
+        ctx.stroke();
+    }
+
+    function drawEnergyProfile() {
+       const w = eCanvas.width = eCanvas.offsetWidth * (window.devicePixelRatio || 1);
+       const h = eCanvas.height = eCanvas.offsetHeight * (window.devicePixelRatio || 1);
+       eCtx.clearRect(0, 0, w, h);
+       
+       eCtx.strokeStyle = '#38bdf8'; // Blue line
+       eCtx.lineWidth = 3;
+       eCtx.lineJoin = 'round';
+       eCtx.beginPath();
+       
+       if (mechanism === 'SN2') {
+         // Single peak
+         for(let i=0; i<=100; i++) {
+            let px = (i/100) * w;
+            let py = h*0.8 - Math.exp(-Math.pow((i-50)/15, 2)) * (h*0.7);
+            if (i > 80) py += (i-80)*0.5; // Products slightly lower energy
+            if(i===0) eCtx.moveTo(px, py);
+            else eCtx.lineTo(px, py);
+         }
+       } else {
+         // SN1: Two peaks
+         for(let i=0; i<=100; i++) {
+            let px = (i/100) * w;
+            let peak1 = Math.exp(-Math.pow((i-35)/10, 2)) * (h*0.7);
+            let peak2 = Math.exp(-Math.pow((i-70)/10, 2)) * (h*0.4);
+            let valley = Math.exp(-Math.pow((i-52)/15, 2)) * (h*0.3); 
+            let py = h*0.8 - peak1 - peak2 + valley;
+            if (i > 85) py += (i-85)*0.5;
+            if(i===0) eCtx.moveTo(px, py);
+            else eCtx.lineTo(px, py);
+         }
+       }
+       eCtx.stroke();
+       
+       // Draw Progress Dot
+       if(rxnProgress > 0) {
+          let i = rxnProgress * 100;
+          let px = (i/100) * w;
+          let py;
+          if(mechanism==='SN2') {
+             py = h*0.8 - Math.exp(-Math.pow((i-50)/15, 2)) * (h*0.7);
+             if (i > 80) py += (i-80)*0.5;
+          } else {
+             let peak1 = Math.exp(-Math.pow((i-35)/10, 2)) * (h*0.7);
+             let peak2 = Math.exp(-Math.pow((i-70)/10, 2)) * (h*0.4);
+             let valley = Math.exp(-Math.pow((i-52)/15, 2)) * (h*0.3);
+             py = h*0.8 - peak1 - peak2 + valley;
+             if (i > 85) py += (i-85)*0.5;
+          }
+          eCtx.fillStyle = '#f43f5e';
+          eCtx.beginPath();
+          eCtx.arc(px, py, 4, 0, Math.PI*2);
+          eCtx.fill();
+       }
+    }
+
+    let lastTime = performance.now();
+
+    function renderLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      if (isReacting) {
+        // SN1 takes longer visually due to two steps
+        let speed = mechanism === 'SN2' ? 0.35 : 0.25; 
+        rxnProgress += speed * dt;
+        
+        if (rxnProgress >= 1.0) {
+           rxnProgress = 1.0;
+           isReacting = false;
+           statusText.innerText = "Reaction Complete";
+           statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500";
+           telState.innerText = "FINISHED";
+           telState.className = "text-sm font-bold text-emerald-500 font-mono mt-0.5 tracking-widest";
+        }
+        drawEnergyProfile();
+      }
+
+      const W = canvas.width / window.devicePixelRatio;
+      const H = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, W, H);
+
+      const cX = W / 2;
+      const cY = H / 2;
+      
+      // Bond lengths
+      const bondLenSolid = 80;
+      const bondLenWedge = 70; // Shorter to look like it's pointing out
+      const bondLenDash = 60;  // Shorter to look like it's pointing in
+
+      // Group types
+      let g1Type = GROUPS[substrateType][0];
+      let g2Type = GROUPS[substrateType][1];
+      let g3Type = GROUPS[substrateType][2];
+
+      // --- KINEMATICS MAPPING ---
+      let lgX = cX + 100;
+      let lgY = cY;
+      let nuX = cX - 250;
+      let nuY = cY;
+      
+      let a1, a2, a3; // Angles for R groups in degrees
+      let len1 = bondLenSolid, len2 = bondLenWedge, len3 = bondLenDash;
+
+      if (mechanism === 'SN2') {
+         // SN2: Concerted Walden Inversion
+         let startA1 = 110, startA2 = 240, startA3 = 160;
+         let tsA1 = 90, tsA2 = 270, tsA3 = 270; // Planar
+         let endA1 = 70, endA2 = 300, endA3 = 20;
+         
+         if (rxnProgress < 0.5) {
+            let p = rxnProgress / 0.5; // 0 to 1
+            nuX = cX - 250 + (140 * p); // Approaches to -110
+            lgX = cX + 100 + (40 * p);  // Stretches to +140
+            
+            a1 = startA1 + (tsA1 - startA1) * p;
+            a2 = startA2 + (tsA2 - startA2) * p;
+            a3 = startA3 + (tsA3 - startA3) * p;
+            
+            // Adjust lengths for perspective flattening at TS
+            len2 = bondLenWedge + (bondLenSolid - bondLenWedge) * p;
+            len3 = bondLenDash + (40 - bondLenDash) * p; // make dash very short so it hides behind wedge
+         } else {
+            let p = (rxnProgress - 0.5) / 0.5; // 0 to 1
+            nuX = cX - 110 + (30 * p); // Bonds at -80
+            lgX = cX + 140 + (160 * p); // Leaves to +300
+            
+            a1 = tsA1 + (endA1 - tsA1) * p;
+            a2 = tsA2 + (endA2 - tsA2) * p;
+            a3 = tsA3 + (endA3 - tsA3) * p;
+
+            len2 = bondLenSolid - (bondLenSolid - bondLenWedge) * p;
+            len3 = 40 + (bondLenDash - 40) * p;
+         }
+
+      } else {
+         // SN1: Two-step
+         let startA1 = 110, startA2 = 240, startA3 = 160;
+         let planA1 = 90, planA2 = 210, planA3 = 330; // Trigonal planar front view
+         let endA1 = 110, endA2 = 240, endA3 = 160; // Attack from right, same as start
+         
+         if (rxnProgress < 0.4) {
+            // Step 1: LG Leaves
+            let p = rxnProgress / 0.4;
+            lgX = cX + 100 + (200 * p);
+            nuX = cX - 250; 
+            
+            a1 = startA1 + (planA1 - startA1) * p;
+            a2 = startA2 + (planA2 - startA2) * p;
+            a3 = startA3 + (planA3 - startA3) * p;
+
+            // Transition all to solid length to represent flat sp2 plane
+            len2 = bondLenWedge + (bondLenSolid - bondLenWedge) * p;
+            len3 = bondLenDash + (bondLenSolid - bondLenDash) * p;
+
+         } else if (rxnProgress < 0.6) {
+            // Intermediate: Carbocation
+            lgX = cX + 300;
+            nuX = cX - 250 + (350 * ((rxnProgress-0.4)/0.2)); // Nu moves across to right side
+            a1 = planA1; a2 = planA2; a3 = planA3;
+            len2 = bondLenSolid; len3 = bondLenSolid;
+         } else {
+            // Step 2: Nu attacks from right
+            let p = (rxnProgress - 0.6) / 0.4;
+            lgX = cX + 300;
+            nuX = cX + 100 - (20 * p); // Attacks from right +100
+            
+            a1 = planA1 + (endA1 - planA1) * p;
+            a2 = planA2 + (endA2 - planA2) * p;
+            a3 = planA3 + (endA3 - planA3) * p;
+
+            len2 = bondLenSolid - (bondLenSolid - bondLenWedge) * p;
+            len3 = bondLenSolid - (bondLenSolid - bondLenDash) * p;
+         }
+      }
+
+      const getPos = (ang, len) => ({
+         x: cX + Math.cos(ang * Math.PI/180) * len,
+         y: cY + Math.sin(ang * Math.PI/180) * len
+      });
+
+      let p1 = getPos(a1, len1);
+      let p2 = getPos(a2, len2);
+      let p3 = getPos(a3, len3);
+
+      // --- RENDERING ---
+      
+      // Draw Central Bonds
+      if (mechanism === 'SN2' && rxnProgress > 0.3 && rxnProgress < 0.7) {
+         drawTSBond(ctx, cX, cY, nuX, nuY, '#f43f5e'); // forming
+         drawTSBond(ctx, cX, cY, lgX, lgY, '#10b981'); // breaking
+         
+         ctx.fillStyle = '#94a3b8';
+         ctx.font = '28px sans-serif';
+         ctx.fillText("‡", cX + 60, cY - 80);
+      } else {
+         if (mechanism === 'SN2') {
+           if (rxnProgress < 0.5) drawSolidBond(ctx, cX, cY, lgX, lgY);
+           else drawSolidBond(ctx, cX, cY, nuX, nuY);
+         } else {
+           if (rxnProgress < 0.4) drawSolidBond(ctx, cX, cY, lgX, lgY); 
+           if (rxnProgress > 0.6) drawSolidBond(ctx, cX, cY, nuX, nuY); 
+         }
+      }
+
+      // Draw R-Group Bonds based on Geometry State
+      if (mechanism === 'SN1' && rxnProgress >= 0.4 && rxnProgress <= 0.6) {
+          // All solid in planar state
+          drawSolidBond(ctx, cX, cY, p1.x, p1.y);
+          drawSolidBond(ctx, cX, cY, p2.x, p2.y);
+          drawSolidBond(ctx, cX, cY, p3.x, p3.y);
+      } else {
+          // Standard Tetrahedral 
+          drawDashBond(ctx, cX, cY, p3.x, p3.y);  // Dash drawn first (back)
+          drawSolidBond(ctx, cX, cY, p1.x, p1.y); // Solid
+          drawWedgeBond(ctx, cX, cY, p2.x, p2.y); // Wedge drawn last (front)
+      }
+
+      // Draw Carbocation (+ charge) in SN1 intermediate
+      if (mechanism === 'SN1' && rxnProgress >= 0.4 && rxnProgress <= 0.6) {
+         ctx.fillStyle = '#38bdf8';
+         ctx.beginPath(); ctx.arc(cX + 18, cY - 22, 12, 0, Math.PI*2); ctx.fill();
+         ctx.fillStyle = '#0f172a'; ctx.font='bold 16px sans-serif'; ctx.fillText("+", cX + 18, cY - 22);
+      }
+
+      // Draw Atoms (Z-sorting: Dash -> Center -> Wedge)
+      drawAtom(ctx, p3.x, p3.y, ATOMS[g3Type]); // Back
+      
+      drawAtom(ctx, p1.x, p1.y, ATOMS[g1Type]); // Plane
+      drawAtom(ctx, cX, cY, ATOMS.C);
+      drawAtom(ctx, lgX, lgY, ATOMS.LG);
+      drawAtom(ctx, nuX, nuY, ATOMS.Nu);
+
+      if (mechanism !== 'SN1' || rxnProgress < 0.4 || rxnProgress > 0.6) {
+         drawAtom(ctx, p2.x, p2.y, ATOMS[g2Type]); // Front Wedge (except when planar)
+      } else {
+         drawAtom(ctx, p2.x, p2.y, ATOMS[g2Type]); // Draw normal if planar
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      calculateMechanism();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

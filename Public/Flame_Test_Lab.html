@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flame Test & Emission Spectroscopy Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <svg class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Flame Test &amp; Emission Spectroscopy</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Quantum Transitions &amp; Photon Energy Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Spectrometer Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-ignite" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔥</span> Ignite Burner
+        </button>
+        <button id="btn-extinguish" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🛑</span> Extinguish
+        </button>
+        <button id="btn-test" class="px-5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5 opacity-50 cursor-not-allowed pointer-events-none transition-opacity">
+          <span>🧪</span> Perform Flame Test
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-spectroscope" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Emission Spectroscope</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+            
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Aqueous Metal Cation (Salt)</span>
+              <select id="select-metal" class="w-full bg-white border border-slate-300 text-slate-800 text-[11px] font-bold rounded-lg px-3 py-2.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+                <option value="none">--- Select a Sample ---</option>
+                <option value="na">Sodium Chloride (Na⁺)</option>
+                <option value="k">Potassium Chloride (K⁺)</option>
+                <option value="li">Lithium Chloride (Li⁺)</option>
+                <option value="ca">Calcium Chloride (Ca²⁺)</option>
+                <option value="sr">Strontium Chloride (Sr²⁺)</option>
+                <option value="ba">Barium Chloride (Ba²⁺)</option>
+                <option value="cu">Copper(II) Chloride (Cu²⁺)</option>
+              </select>
+            </div>
+
+            <div id="substance-card" class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm space-y-2 transition-all opacity-50">
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-500 uppercase">Observed Flame</span>
+                 <span id="label-color-name" class="text-slate-800 font-mono">--</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-500 uppercase">Dominant λ</span>
+                 <span id="label-wavelength" class="text-emerald-600 font-mono">-- nm</span>
+               </div>
+            </div>
+            
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Planck-Einstein Relation</span>
+              <div class="text-[11px] font-mono text-center py-2 space-y-1.5">
+                $$E = h\nu = \frac{hc}{\lambda}$$
+                <div class="text-[9px] text-slate-400 font-sans mt-2 text-left">Where $h$ is Planck's constant ($6.626 \times 10^{-34} \text{ J}\cdot\text{s}$) and $c$ is the speed of light.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Photon Energetics Dashboard</span>
+            <div class="grid grid-cols-1 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Burner Status</div>
+                <div id="telemetryStatus" class="text-sm font-bold text-slate-400 font-mono mt-0.5 tracking-widest">OFF</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-3 rounded-xl border border-slate-800 shadow-sm flex flex-col items-center">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Energy per Photon ($E$)</div>
+                <div id="telemetryEnergy" class="text-lg font-bold text-amber-400 font-mono drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">0.00e-19 J</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Electron Transition</div>
+                <div id="telemetryTransition" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5">Ground State</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-9 relative bg-slate-950 overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span id="simStatusText" class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider">Gas Valve Closed</span>
+          </div>
+
+          <div id="spectroscope-overlay" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-11/12 max-w-[600px] bg-slate-900 border-2 border-slate-700 rounded-xl p-3 shadow-2xl flex flex-col gap-2 transition-all duration-300 opacity-0 pointer-events-none z-10">
+             <div class="flex justify-between items-center px-1">
+               <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Emission Spectrum (400nm - 700nm)</span>
+               <span id="spec-element" class="text-[10px] font-bold text-white font-mono">--</span>
+             </div>
+             <div class="h-10 w-full bg-black rounded border border-slate-800 relative overflow-hidden flex">
+                <canvas id="spectrumCanvas" class="w-full h-full"></canvas>
+             </div>
+             <div class="flex justify-between text-[8px] text-slate-500 font-mono px-1">
+               <span>400</span><span>500</span><span>600</span><span>700</span>
+             </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                At an atomic level, what specifically causes the flame to change color?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Thermal energy from the flame excites electrons in the metal cations, causing them to jump to higher energy levels. Because these excited states are unstable, the electrons immediately fall back down to their ground state. The energy difference ($\Delta E$) is emitted as a photon of light with a specific wavelength (color).
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do different elements produce distinctly different colors?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                Energy levels in atoms are <strong>quantized</strong>. Every element has a unique number of protons and electron configuration, meaning the exact energy gaps between its orbitals are unique. Therefore, the specific photons emitted act as a unique "fingerprint" for that element.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why do we test the metal cation (e.g., Na⁺) and not usually the non-metal anion (e.g., Cl⁻)?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                In most common salts (like halides: chlorides, bromides), the non-metal anions require significantly more energy to excite their electrons than a standard Bunsen burner flame provides. Their emission lines fall outside the visible spectrum (often in the UV range).
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which emits higher energy photons: A Potassium flame (Lilac) or a Strontium flame (Crimson)?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                <strong>Potassium (Lilac/Violet).</strong> Energy is inversely proportional to wavelength ($E = hc/\lambda$). Violet light has a shorter wavelength (~400nm) than red light (~650nm), meaning the photons comprising the violet light carry more energy.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Flame colors and spectra are visually simulated representations of true emission lines.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> FLAME TEST PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Flame Test &amp; Emission Spectroscopy Virtual Laboratory</strong>! Explore the quantum world by exciting electrons with thermal energy.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Ignite Burner</strong>: First, turn on the gas and ignite the Bunsen burner to produce a standard blue, non-luminous flame.</li>
+            <li><strong>Select Metal Cation</strong>: Choose a chemical salt from the shelf. Notice you cannot test until the burner is ignited and a sample is selected.</li>
+            <li><strong>Perform Flame Test</strong>: Click to dip the nichrome wire loop into the solution and insert it into the flame. Watch the electrons excite and emit characteristic photons!</li>
+            <li><strong>Spectroscope</strong>: Toggle the spectroscope view to isolate the specific wavelengths (emission lines) emitted by the chosen element.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Database of Spectral Data ---
+    const ELEMENTS = {
+      none: { color: 'Blue', hex: '#3b82f6', wavelength: 0, lines: [] },
+      na: { 
+        name: 'Sodium (Na)', color: 'Intense Yellow', hex: '#eab308', glow: 'rgba(234,179,8,0.4)', wavelength: 589, 
+        lines: [589.0, 589.6] // Yellow doublet
+      },
+      k: { 
+        name: 'Potassium (K)', color: 'Lilac (Pale Violet)', hex: '#d946ef', glow: 'rgba(217,70,239,0.4)', wavelength: 404, 
+        lines: [404.4, 404.7, 766.5, 769.9] // Violet and deep red
+      },
+      li: { 
+        name: 'Lithium (Li)', color: 'Carmine (Deep Red)', hex: '#be123c', glow: 'rgba(190,18,60,0.4)', wavelength: 670, 
+        lines: [610.3, 670.8] 
+      },
+      ca: { 
+        name: 'Calcium (Ca)', color: 'Brick Red / Orange', hex: '#ea580c', glow: 'rgba(234,88,12,0.4)', wavelength: 622, 
+        lines: [422.7, 558.9, 616.2, 622.0] 
+      },
+      sr: { 
+        name: 'Strontium (Sr)', color: 'Crimson', hex: '#e11d48', glow: 'rgba(225,29,72,0.4)', wavelength: 605, 
+        lines: [407.8, 460.7, 604.5, 640.8] 
+      },
+      ba: { 
+        name: 'Barium (Ba)', color: 'Pale Green', hex: '#84cc16', glow: 'rgba(132,204,22,0.4)', wavelength: 524, 
+        lines: [455.4, 493.4, 524.2, 553.5] 
+      },
+      cu: { 
+        name: 'Copper (Cu)', color: 'Blue-Green', hex: '#10b981', glow: 'rgba(16,185,129,0.4)', wavelength: 510, 
+        lines: [402.2, 406.2, 510.5, 515.3, 521.8] 
+      }
+    };
+
+    // --- State Variables ---
+    let isBurnerOn = false;
+    let isTesting = false;
+    let selectedMetal = 'none';
+    let testTimer = 0;
+
+    // Planck Constants
+    const h = 6.626e-34; // J*s
+    const c = 3.0e8;     // m/s
+
+    // --- DOM Elements ---
+    const btnIgnite = document.getElementById('btn-ignite');
+    const btnExtinguish = document.getElementById('btn-extinguish');
+    const btnTest = document.getElementById('btn-test');
+    
+    const selectMetal = document.getElementById('select-metal');
+    const chkSpectroscope = document.getElementById('chk-spectroscope');
+    const specOverlay = document.getElementById('spectroscope-overlay');
+    const specElement = document.getElementById('spec-element');
+    
+    const subCard = document.getElementById('substance-card');
+    const lblColor = document.getElementById('label-color-name');
+    const lblWave = document.getElementById('label-wavelength');
+
+    const telStatus = document.getElementById('telemetryStatus');
+    const telEnergy = document.getElementById('telemetryEnergy');
+    const telTrans = document.getElementById('telemetryTransition');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const specCanvas = document.getElementById('spectrumCanvas');
+    const specCtx = specCanvas.getContext('2d');
+
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    // --- Core Logic ---
+    function updateUIState() {
+      // Burner state
+      if (isBurnerOn) {
+        btnIgnite.classList.remove('bg-indigo-600', 'text-white');
+        btnIgnite.classList.add('bg-slate-200', 'text-slate-700');
+        btnExtinguish.classList.remove('bg-slate-200', 'text-slate-700');
+        btnExtinguish.classList.add('bg-rose-600', 'text-white');
+        
+        statusText.innerText = "Burner Ignited";
+        statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+        telStatus.innerText = "IGNITED (Blue Flame)";
+        telStatus.className = "text-sm font-bold text-emerald-400 font-mono mt-0.5 tracking-widest";
+      } else {
+        btnIgnite.classList.add('bg-indigo-600', 'text-white');
+        btnIgnite.classList.remove('bg-slate-200', 'text-slate-700');
+        btnExtinguish.classList.add('bg-slate-200', 'text-slate-700');
+        btnExtinguish.classList.remove('bg-rose-600', 'text-white');
+        
+        statusText.innerText = "Gas Valve Closed";
+        statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+        telStatus.innerText = "OFF";
+        telStatus.className = "text-sm font-bold text-slate-500 font-mono mt-0.5 tracking-widest";
+        isTesting = false; // Cannot test if off
+      }
+
+      // Test Button availability
+      if (isBurnerOn && selectedMetal !== 'none') {
+        btnTest.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+      } else {
+        btnTest.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+      }
+
+      // Card & Info Updates
+      if (selectedMetal !== 'none') {
+        subCard.classList.remove('opacity-50');
+        const elem = ELEMENTS[selectedMetal];
+        lblColor.innerText = elem.color;
+        lblColor.style.color = elem.hex;
+        lblWave.innerText = elem.wavelength + " nm";
+      } else {
+        subCard.classList.add('opacity-50');
+        lblColor.innerText = "--";
+        lblColor.style.color = "";
+        lblWave.innerText = "-- nm";
+      }
+
+      // Spectroscope Visibility
+      if (chkSpectroscope.checked && isTesting && selectedMetal !== 'none') {
+        specOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        specElement.innerText = ELEMENTS[selectedMetal].name;
+        drawSpectrum();
+      } else {
+        specOverlay.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    // --- Input Handlers ---
+    btnIgnite.addEventListener('click', () => { isBurnerOn = true; updateUIState(); });
+    btnExtinguish.addEventListener('click', () => { isBurnerOn = false; updateUIState(); });
+    
+    selectMetal.addEventListener('change', (e) => { 
+      selectedMetal = e.target.value; 
+      isTesting = false; // reset test on change
+      updateUIState(); 
+    });
+
+    chkSpectroscope.addEventListener('change', updateUIState);
+
+    btnTest.addEventListener('click', () => {
+      isTesting = true;
+      testTimer = 0; // Starts the wire dipping animation
+      
+      const elem = ELEMENTS[selectedMetal];
+      // Calculate Energy: E = hc/λ
+      let lambda_m = elem.wavelength * 1e-9;
+      let E = (h * c) / lambda_m;
+      
+      telEnergy.innerText = E.toExponential(2).replace('e', 'e') + " J";
+      telTrans.innerText = "Excited ➔ Ground";
+      telTrans.className = "text-sm font-bold text-amber-400 font-mono mt-0.5 animate-pulse";
+      
+      updateUIState();
+    });
+
+
+    // --- Canvas Rendering (Flame Engine) ---
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Spectrum drawing logic
+    function drawSpectrum() {
+      const w = specCanvas.width = specCanvas.offsetWidth * (window.devicePixelRatio || 1);
+      const h = specCanvas.height = specCanvas.offsetHeight * (window.devicePixelRatio || 1);
+      
+      specCtx.clearRect(0, 0, w, h);
+      
+      const lines = ELEMENTS[selectedMetal].lines;
+      
+      lines.forEach(wl => {
+         // Map 400-700nm to 0-width
+         if (wl >= 400 && wl <= 700) {
+            let x = ((wl - 400) / 300) * w;
+            
+            // Approximate color from wavelength
+            let r=0, g=0, b=0;
+            if (wl < 440) { r=1; b=1; }
+            else if (wl < 490) { g=(wl-440)/50; b=1; }
+            else if (wl < 510) { g=1; b=1-(wl-490)/20; }
+            else if (wl < 580) { r=(wl-510)/70; g=1; }
+            else if (wl < 645) { r=1; g=1-(wl-580)/65; }
+            else { r=1; }
+
+            specCtx.fillStyle = `rgb(${r*255}, ${g*255}, ${b*255})`;
+            specCtx.fillRect(x - 1.5, 0, 3, h);
+            
+            // Glow
+            specCtx.shadowColor = `rgb(${r*255}, ${g*255}, ${b*255})`;
+            specCtx.shadowBlur = 10;
+            specCtx.fillRect(x - 1, 0, 2, h);
+            specCtx.shadowBlur = 0;
+         }
+      });
+    }
+
+    let lastTime = performance.now();
+    let timeAcc = 0;
+
+    function renderLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+      timeAcc += dt * 5.0; // animation speed
+
+      const W = canvas.width / window.devicePixelRatio;
+      const H = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, W, H);
+
+      const cX = W / 2;
+      const baseY = H - 50;
+
+      // 1. Draw Burner Body
+      ctx.fillStyle = '#64748b'; // Stem
+      ctx.fillRect(cX - 15, baseY - 150, 30, 150);
+      
+      ctx.fillStyle = '#334155'; // Base
+      ctx.beginPath();
+      ctx.moveTo(cX - 15, baseY);
+      ctx.lineTo(cX - 40, baseY + 40);
+      ctx.lineTo(cX + 40, baseY + 40);
+      ctx.lineTo(cX + 15, baseY);
+      ctx.fill();
+
+      // Gas intake tube
+      ctx.fillRect(cX + 10, baseY - 40, 40, 12);
+      ctx.fillStyle = '#ef4444'; // Valve
+      ctx.fillRect(cX + 30, baseY - 45, 10, 22);
+
+      // 2. Draw Flame
+      if (isBurnerOn) {
+        const flameBaseY = baseY - 150;
+        let flameH = 180;
+        let flameW = 40;
+
+        // Base Blue Flame (Inner cone)
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.6)';
+        ctx.beginPath();
+        ctx.moveTo(cX - 15, flameBaseY);
+        ctx.quadraticCurveTo(cX, flameBaseY - 60, cX + 15, flameBaseY);
+        ctx.fill();
+
+        // Main Flame Body
+        let baseColor = '#2563eb'; // Deep blue normally
+        let glowColor = 'rgba(37,99,235,0.3)';
+
+        if (isTesting && selectedMetal !== 'none') {
+           const elem = ELEMENTS[selectedMetal];
+           baseColor = elem.hex;
+           glowColor = elem.glow;
+           flameH = 220; // Tests flare up larger
+           flameW = 60;
+        }
+
+        // Animate flame flicker using Sine waves
+        let flicker1 = Math.sin(timeAcc) * 10;
+        let flicker2 = Math.cos(timeAcc * 1.5) * 8;
+        let flicker3 = Math.sin(timeAcc * 0.8) * 15;
+
+        // Outer Flame Glow
+        const gradient = ctx.createRadialGradient(cX, flameBaseY - 50, 10, cX, flameBaseY - 50, flameH);
+        gradient.addColorStop(0, glowColor);
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(cX - flameH, flameBaseY - flameH*1.5, flameH*2, flameH*1.5);
+
+        // Solid Flame Shape
+        ctx.fillStyle = baseColor;
+        ctx.globalCompositeOperation = 'screen';
+        
+        ctx.beginPath();
+        ctx.moveTo(cX - 15, flameBaseY);
+        // Left curve
+        ctx.bezierCurveTo(
+           cX - flameW + flicker1, flameBaseY - flameH/3,
+           cX - flameW/2 + flicker2, flameBaseY - flameH*(2/3),
+           cX + flicker3, flameBaseY - flameH
+        );
+        // Right curve
+        ctx.bezierCurveTo(
+           cX + flameW/2 + flicker2, flameBaseY - flameH*(2/3),
+           cX + flameW + flicker1, flameBaseY - flameH/3,
+           cX + 15, flameBaseY
+        );
+        ctx.fill();
+        ctx.globalCompositeOperation = 'source-over';
+      }
+
+      // 3. Draw Nichrome Wire Loop (if testing)
+      if (isTesting && isBurnerOn) {
+         testTimer += dt;
+         // Animate sliding in from the right
+         let wireX = cX + 150;
+         let wireY = baseY - 200;
+         
+         if (testTimer < 0.5) {
+            // Slide in
+            wireX = cX + 150 - (testTimer / 0.5) * 150;
+         } else if (testTimer > 3.5) {
+            // Test complete, turn off test state
+            isTesting = false;
+            telEnergy.innerText = "0.00e-19 J";
+            telTrans.innerText = "Ground State";
+            telTrans.className = "text-sm font-bold text-fuchsia-400 font-mono mt-0.5";
+            updateUIState();
+         } else {
+            // Hold in flame
+            wireX = cX;
+         }
+
+         ctx.strokeStyle = '#94a3b8'; // Metal rod
+         ctx.lineWidth = 4;
+         ctx.beginPath();
+         ctx.moveTo(wireX + 20, wireY);
+         ctx.lineTo(wireX + 150, wireY);
+         ctx.stroke();
+
+         ctx.strokeStyle = '#cbd5e1'; // Nichrome wire
+         ctx.lineWidth = 2;
+         ctx.beginPath();
+         ctx.moveTo(wireX + 20, wireY);
+         ctx.lineTo(wireX + 8, wireY);
+         ctx.arc(wireX + 4, wireY, 4, 0, Math.PI * 2);
+         ctx.stroke();
+         
+         // Glowing loop tip
+         if (testTimer >= 0.5) {
+            ctx.fillStyle = '#fde047';
+            ctx.beginPath();
+            ctx.arc(wireX + 4, wireY, 4, 0, Math.PI * 2);
+            ctx.fill();
+         }
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+
+    document.getElementById('btn-open-guide').addEventListener('click', () => {
+      userGuideModal.classList.remove('hidden');
+    });
+
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    userGuideModal.addEventListener('click', (e) => {
+      if (e.target === userGuideModal) closeGuide();
+    });
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      updateUIState();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

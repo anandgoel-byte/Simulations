@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Punnett Square Dihybrid Cross Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    /* Lab Stage Background */
+    .lab-stage {
+      background-color: #f8fafc !important;
+      background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px) !important;
+      background-size: 20px 20px !important;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Punnett Square Dihybrid Cross</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Mendelian Genetics &amp; Independent Assortment Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Genetics Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Classic Cross Presets:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="hetero">Double Heterozygous (YyRr x YyRr)</option>
+          <option value="testcross">Test Cross (YyRr x yyrr)</option>
+          <option value="homo">Pure Breeding (YYRR x yyrr)</option>
+          <option value="custom">Custom Configuration</option>
+        </select>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Mendelian Trait Key</span>
+            
+            <div class="flex items-center justify-between text-xs font-bold pt-1">
+              <span class="text-amber-600 bg-amber-100 px-2 py-0.5 rounded border border-amber-300">Y = Yellow</span>
+              <span class="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">y = Green</span>
+            </div>
+            <div class="flex items-center justify-between text-xs font-bold pt-1">
+              <span class="text-slate-700 bg-slate-200 px-2 py-0.5 rounded border border-slate-300">R = Round</span>
+              <span class="text-slate-700 bg-slate-200 px-2 py-0.5 rounded border border-slate-300">r = Wrinkled</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <span class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider block mb-3 border-b border-blue-100 pb-1 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500 block"></span> Parent 1 Genotype (Top)
+            </span>
+            
+            <div class="grid grid-cols-2 gap-3 mb-2">
+              <div class="space-y-1">
+                <label class="text-[9px] font-bold text-slate-400 uppercase">Seed Color</label>
+                <div class="flex gap-1">
+                  <select id="p1-y1" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="Y">Y</option><option value="y">y</option>
+                  </select>
+                  <select id="p1-y2" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="Y">Y</option><option value="y" selected>y</option>
+                  </select>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[9px] font-bold text-slate-400 uppercase">Seed Shape</label>
+                <div class="flex gap-1">
+                  <select id="p1-r1" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="R">R</option><option value="r">r</option>
+                  </select>
+                  <select id="p1-r2" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-blue-500">
+                    <option value="R">R</option><option value="r" selected>r</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="bg-blue-50 text-blue-800 text-[10px] font-mono font-bold p-1.5 rounded border border-blue-200 text-center uppercase tracking-widest mt-3" id="p1-pheno">
+              Yellow, Round
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
+            <span class="text-[11px] font-extrabold text-rose-500 uppercase tracking-wider block mb-3 border-b border-rose-100 pb-1 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-500 block"></span> Parent 2 Genotype (Side)
+            </span>
+            
+            <div class="grid grid-cols-2 gap-3 mb-2">
+              <div class="space-y-1">
+                <label class="text-[9px] font-bold text-slate-400 uppercase">Seed Color</label>
+                <div class="flex gap-1">
+                  <select id="p2-y1" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-rose-500">
+                    <option value="Y">Y</option><option value="y">y</option>
+                  </select>
+                  <select id="p2-y2" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-rose-500">
+                    <option value="Y">Y</option><option value="y" selected>y</option>
+                  </select>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label class="text-[9px] font-bold text-slate-400 uppercase">Seed Shape</label>
+                <div class="flex gap-1">
+                  <select id="p2-r1" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-rose-500">
+                    <option value="R">R</option><option value="r">r</option>
+                  </select>
+                  <select id="p2-r2" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold font-mono rounded px-2 py-1 outline-none focus:ring-1 focus:ring-rose-500">
+                    <option value="R">R</option><option value="r" selected>r</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="bg-rose-50 text-rose-800 text-[10px] font-mono font-bold p-1.5 rounded border border-rose-200 text-center uppercase tracking-widest mt-3" id="p2-pheno">
+              Yellow, Round
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center min-h-[500px] border-8 border-white p-4">
+        
+        <div class="relative w-full h-full flex items-center justify-center">
+            <canvas id="simCanvas" class="bg-white rounded-xl shadow-lg border border-slate-300 max-h-full max-w-full"></canvas>
+        </div>
+        
+        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-indigo-600 tracking-wider uppercase">F1 Generation Matrix</span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Phenotypic Tally Dashboard</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="w-6 h-6 rounded-full bg-amber-400 border-2 border-amber-500 shadow-sm mb-1"></div>
+              <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Yellow, Round</div>
+              <div class="text-xl font-bold font-mono text-amber-600" id="tally-yr">9</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center relative overflow-hidden">
+              <div class="absolute inset-0 bg-transparent" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(245,158,11,0.1) 2px, rgba(245,158,11,0.1) 4px);"></div>
+              <div class="w-6 h-6 rounded-full bg-amber-400 border-2 border-amber-500 shadow-sm mb-1" style="clip-path: polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%);"></div>
+              <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-0.5 relative z-10">Yellow, Wrink</div>
+              <div class="text-xl font-bold font-mono text-amber-600 relative z-10" id="tally-yw">3</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-emerald-600 shadow-sm mb-1"></div>
+              <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Green, Round</div>
+              <div class="text-xl font-bold font-mono text-emerald-600" id="tally-gr">3</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center relative overflow-hidden">
+              <div class="absolute inset-0 bg-transparent" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(16,185,129,0.1) 2px, rgba(16,185,129,0.1) 4px);"></div>
+              <div class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-emerald-600 shadow-sm mb-1" style="clip-path: polygon(10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%);"></div>
+              <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-0.5 relative z-10">Green, Wrink</div>
+              <div class="text-xl font-bold font-mono text-emerald-600 relative z-10" id="tally-gw">1</div>
+            </div>
+
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 mt-1">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Overall Phenotypic Ratio</div>
+              <div class="text-xl font-bold font-mono tracking-widest text-indigo-400" id="tel-ratio">9 : 3 : 3 : 1</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What does Mendel's Law of Independent Assortment state?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In a standard Mendelian Dihybrid Cross (YyRr x YyRr), what proportion of offspring will be recessive for BOTH traits (green & wrinkled)?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the purpose of performing a "Test Cross"?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which of the following describes a Genotype vs a Phenotype?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> DIHYBRID CROSS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Mendelian Genetics Laboratory</strong>! Construct and analyze genetic probabilities through 4x4 matrices.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Cross Presets</strong>: Instantly load classic genetic scenarios like the Heterozygous Cross (9:3:3:1 ratio) or the Test Cross.</li>
+            <li><strong>Parent Controls</strong>: Manually alter the alleles (Y/y and R/r) for Parent 1 and Parent 2. The system automatically calculates their possible gametes using the FOIL method.</li>
+            <li><strong>The Punnett Square</strong>: Watch as the canvas automatically fills the 16 grid squares with the combined genotypes. It then translates that genetic code into physical phenotypes (the actual drawing of the seed!).</li>
+            <li><strong>Telemetry</strong>: The right panel acts as your lab notebook, automatically tallying the physical results and calculating the final phenotypic ratio.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "What does Mendel's Law of Independent Assortment state?",
+        options: [
+          { text: "Dominant alleles always suppress recessive alleles.", isCorrect: false, exp: "Incorrect. This describes the Law of Dominance." },
+          { text: "Alleles for different traits sort into gametes completely independently of one another.", isCorrect: true, exp: "Correct! The allele a gamete receives for seed color (Y or y) has zero effect on the allele it receives for seed shape (R or r). This is why a YyRr parent makes 4 distinct gametes (YR, Yr, yR, yr) in equal proportions." },
+          { text: "Organisms inherit two copies of every gene.", isCorrect: false, exp: "Incorrect. This is part of the Law of Segregation." },
+          { text: "Recessive traits disappear in the F1 generation.", isCorrect: false, exp: "Incorrect. This is an observation of dominance, not independent assortment." }
+        ]
+      },
+      q2: {
+        question: "In a standard Mendelian Dihybrid Cross (YyRr x YyRr), what proportion of offspring will be recessive for BOTH traits (green & wrinkled)?",
+        options: [
+          { text: "9 / 16", isCorrect: false, exp: "Incorrect. 9/16 represents offspring dominant for BOTH traits." },
+          { text: "3 / 16", isCorrect: false, exp: "Incorrect. 3/16 represents offspring dominant for one trait and recessive for the other." },
+          { text: "1 / 16", isCorrect: true, exp: "Correct! In the classic 9:3:3:1 ratio, only 1 out of the 16 combinations (yyrr) will exhibit both recessive phenotypes." },
+          { text: "4 / 16", isCorrect: false, exp: "Incorrect. That would only be possible in a test cross." }
+        ]
+      },
+      q3: {
+        question: "What is the purpose of performing a 'Test Cross'?",
+        options: [
+          { text: "To determine if a plant with a dominant phenotype is homozygous or heterozygous.", isCorrect: true, exp: "Correct! If you have a Yellow Round pea, it could be YYRR, YyRR, YYRr, or YyRr. By crossing it with a fully recessive plant (yyrr), the offspring ratios will immediately reveal the unknown parent's exact genotype." },
+          { text: "To create new, mutated alleles.", isCorrect: false, exp: "Incorrect. Breeding does not create new mutations." },
+          { text: "To force a plant to self-pollinate.", isCorrect: false, exp: "Incorrect. A test cross specifically requires crossing with a recessive tester plant." },
+          { text: "To determine if a trait is dominant or recessive.", isCorrect: false, exp: "Incorrect. Dominance is established by crossing two pure-breeding lines, not via a test cross." }
+        ]
+      },
+      q4: {
+        question: "Which of the following describes a Genotype vs a Phenotype?",
+        options: [
+          { text: "Genotype is physical appearance; Phenotype is genetic makeup.", isCorrect: false, exp: "Incorrect. It is the exact opposite." },
+          { text: "Genotype is the genetic letter code (e.g., YyRr); Phenotype is the physical physical trait expressed (e.g., Yellow, Round).", isCorrect: true, exp: "Correct! The Genotype is the unseen genetic blueprint stored in the DNA. The Phenotype is how that blueprint physically manifests in the real world." },
+          { text: "Genotype applies to plants; Phenotype applies to animals.", isCorrect: false, exp: "Incorrect. Both terms apply universally to all genetics." },
+          { text: "There is no difference.", isCorrect: false, exp: "Incorrect. They are fundamentally different concepts." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- GENETICS ENGINE ---
+    const selPreset = document.getElementById('select-preset');
+
+    const p1y1 = document.getElementById('p1-y1'); const p1y2 = document.getElementById('p1-y2');
+    const p1r1 = document.getElementById('p1-r1'); const p1r2 = document.getElementById('p1-r2');
+    const p2y1 = document.getElementById('p2-y1'); const p2y2 = document.getElementById('p2-y2');
+    const p2r1 = document.getElementById('p2-r1'); const p2r2 = document.getElementById('p2-r2');
+
+    const p1Pheno = document.getElementById('p1-pheno');
+    const p2Pheno = document.getElementById('p2-pheno');
+
+    const tallyYR = document.getElementById('tally-yr');
+    const tallyYW = document.getElementById('tally-yw');
+    const tallyGR = document.getElementById('tally-gr');
+    const tallyGW = document.getElementById('tally-gw');
+    const telRatio = document.getElementById('tel-ratio');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Helper: Determine phenotype from allele string (e.g. YyRr)
+    function getPhenotype(geno) {
+        let isYellow = geno.includes('Y');
+        let isRound = geno.includes('R');
+        return { isYellow, isRound };
+    }
+
+    function formatPhenoText(p) {
+        let c = p.isYellow ? 'Yellow' : 'Green';
+        let s = p.isRound ? 'Round' : 'Wrinkled';
+        return `${c}, ${s}`;
+    }
+
+    // Helper: Calculate 4 gametes using FOIL
+    function getGametes(y1, y2, r1, r2) {
+        return [
+            y1 + r1, // First
+            y1 + r2, // Outer
+            y2 + r1, // Inner
+            y2 + r2  // Last
+        ];
+    }
+
+    // Helper: Sort alleles properly (Caps first, Y before R)
+    function sortGenotype(g1, g2) {
+        let ys = [g1[0], g2[0]].sort().reverse(); // Y before y
+        let rs = [g1[1], g2[1]].sort().reverse(); // R before r
+        return ys[0] + ys[1] + rs[0] + rs[1];
+    }
+
+    function updateGenetics() {
+        selPreset.value = 'custom'; // Custom by default unless preset triggered
+
+        let g1 = [p1y1.value, p1y2.value, p1r1.value, p1r2.value];
+        let g2 = [p2y1.value, p2y2.value, p2r1.value, p2r2.value];
+
+        let ph1 = getPhenotype(g1.join(''));
+        let ph2 = getPhenotype(g2.join(''));
+
+        p1Pheno.innerText = formatPhenoText(ph1);
+        p2Pheno.innerText = formatPhenoText(ph2);
+
+        // Styling parent labels
+        p1Pheno.className = `text-[10px] font-mono font-bold p-1.5 rounded border text-center uppercase tracking-widest mt-3 ${ph1.isYellow ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'}`;
+        p2Pheno.className = `text-[10px] font-mono font-bold p-1.5 rounded border text-center uppercase tracking-widest mt-3 ${ph2.isYellow ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'}`;
+
+        // Get Gametes
+        let gametes1 = getGametes(g1[0], g1[1], g1[2], g1[3]); // Top
+        let gametes2 = getGametes(g2[0], g2[1], g2[2], g2[3]); // Side
+
+        // Calculate Square & Tallies
+        let counts = { yr: 0, yw: 0, gr: 0, gw: 0 };
+        let matrix = [];
+
+        for(let r=0; r<4; r++) {
+            let row = [];
+            for(let c=0; c<4; c++) {
+                let geno = sortGenotype(gametes1[c], gametes2[r]);
+                let pheno = getPhenotype(geno);
+                
+                if (pheno.isYellow && pheno.isRound) counts.yr++;
+                else if (pheno.isYellow && !pheno.isRound) counts.yw++;
+                else if (!pheno.isYellow && pheno.isRound) counts.gr++;
+                else if (!pheno.isYellow && !pheno.isRound) counts.gw++;
+
+                row.push({ geno, pheno });
+            }
+            matrix.push(row);
+        }
+
+        // Update Telemetry
+        tallyYR.innerText = counts.yr;
+        tallyYW.innerText = counts.yw;
+        tallyGR.innerText = counts.gr;
+        tallyGW.innerText = counts.gw;
+        
+        telRatio.innerText = `${counts.yr} : ${counts.yw} : ${counts.gr} : ${counts.gw}`;
+
+        // Redraw Canvas
+        drawPunnettSquare(gametes1, gametes2, matrix);
+    }
+
+    // Bind inputs
+    [p1y1, p1y2, p1r1, p1r2, p2y1, p2y2, p2r1, p2r2].forEach(el => {
+        el.addEventListener('change', updateGenetics);
+    });
+
+    selPreset.addEventListener('change', e => {
+        let val = e.target.value;
+        if (val === 'hetero') {
+            p1y1.value = 'Y'; p1y2.value = 'y'; p1r1.value = 'R'; p1r2.value = 'r';
+            p2y1.value = 'Y'; p2y2.value = 'y'; p2r1.value = 'R'; p2r2.value = 'r';
+        } else if (val === 'testcross') {
+            p1y1.value = 'Y'; p1y2.value = 'y'; p1r1.value = 'R'; p1r2.value = 'r';
+            p2y1.value = 'y'; p2y2.value = 'y'; p2r1.value = 'r'; p2r2.value = 'r';
+        } else if (val === 'homo') {
+            p1y1.value = 'Y'; p1y2.value = 'Y'; p1r1.value = 'R'; p1r2.value = 'R';
+            p2y1.value = 'y'; p2y2.value = 'y'; p2r1.value = 'r'; p2r2.value = 'r';
+        }
+        if (val !== 'custom') updateGenetics();
+    });
+
+    // --- Canvas Drawing Logic ---
+    function drawSeed(cx, cy, radius, pheno) {
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        // Color
+        let color = pheno.isYellow ? '#facc15' : '#10b981'; // Amber 400 or Emerald 500
+        let strokeColor = pheno.isYellow ? '#ca8a04' : '#047857'; // Darker shades
+        
+        ctx.fillStyle = color;
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 3;
+
+        // Shape
+        ctx.beginPath();
+        if (pheno.isRound) {
+            // Perfect circle
+            ctx.arc(0, 0, radius, 0, Math.PI*2);
+        } else {
+            // Wrinkled (wavy polygon)
+            let points = 12;
+            for(let i=0; i<=points; i++) {
+                let a = (i/points) * Math.PI * 2;
+                // Add specific deterministic waviness based on angle
+                let rOffset = Math.sin(a * 4) * (radius * 0.15);
+                let r = radius - rOffset - (radius*0.05);
+                let x = Math.cos(a) * r;
+                let y = Math.sin(a) * r;
+                if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+            }
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Adding a subtle 3D highlight
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.beginPath();
+        if(pheno.isRound) {
+            ctx.ellipse(-radius*0.3, -radius*0.3, radius*0.3, radius*0.15, Math.PI/4, 0, Math.PI*2);
+        } else {
+            ctx.ellipse(-radius*0.2, -radius*0.2, radius*0.2, radius*0.1, Math.PI/4, 0, Math.PI*2);
+        }
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    function drawPunnettSquare(gametesTop, gametesSide, matrix) {
+        const dpr = window.devicePixelRatio || 1;
+        // Fixed internal resolution for crisp scaling
+        const W = 600;
+        const H = 600;
+        
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        ctx.scale(dpr, dpr);
+        
+        ctx.clearRect(0, 0, W, H);
+
+        const pad = 80; // Space for headers
+        const sqW = (W - pad) / 4;
+        const sqH = (H - pad) / 4;
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#cbd5e1'; // Slate 300
+
+        // Draw grid lines
+        for(let i=0; i<=4; i++) {
+            // Verticals
+            ctx.beginPath(); ctx.moveTo(pad + i*sqW, pad); ctx.lineTo(pad + i*sqW, H); ctx.stroke();
+            // Horizontals
+            ctx.beginPath(); ctx.moveTo(pad, pad + i*sqH); ctx.lineTo(W, pad + i*sqH); ctx.stroke();
+        }
+
+        ctx.font = 'bold 24px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Draw Headers (Gametes)
+        ctx.fillStyle = '#3b82f6'; // Blue for Top Parent
+        for(let c=0; c<4; c++) {
+            ctx.fillText(gametesTop[c], pad + c*sqW + sqW/2, pad/2);
+        }
+        
+        ctx.fillStyle = '#f43f5e'; // Rose for Side Parent
+        for(let r=0; r<4; r++) {
+            ctx.fillText(gametesSide[r], pad/2, pad + r*sqH + sqH/2);
+        }
+
+        // Draw Cells
+        for(let r=0; r<4; r++) {
+            for(let c=0; c<4; c++) {
+                let cx = pad + c*sqW + sqW/2;
+                let cy = pad + r*sqH + sqH/2;
+                let cellData = matrix[r][c];
+
+                // Determine background color based on phenotype for visual scanning
+                if (cellData.pheno.isYellow && cellData.pheno.isRound) {
+                    ctx.fillStyle = 'rgba(251, 191, 36, 0.1)'; // Amber tint
+                } else if (cellData.pheno.isYellow && !cellData.pheno.isRound) {
+                    ctx.fillStyle = 'rgba(251, 191, 36, 0.05)'; 
+                } else if (!cellData.pheno.isYellow && cellData.pheno.isRound) {
+                    ctx.fillStyle = 'rgba(16, 185, 129, 0.1)'; // Emerald tint
+                } else {
+                    ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+                }
+                ctx.fillRect(pad + c*sqW + 1, pad + r*sqH + 1, sqW - 2, sqH - 2);
+
+                // Draw Seed Graphic
+                drawSeed(cx, cy - 10, sqW*0.25, cellData.pheno);
+
+                // Draw Genotype Text
+                ctx.fillStyle = '#1e293b'; // Slate 800
+                ctx.font = 'bold 18px monospace';
+                ctx.fillText(cellData.geno, cx, cy + sqH*0.3);
+            }
+        }
+        
+        // Corner label
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillText("Gametes", pad/2, pad/2 - 10);
+        ctx.beginPath(); ctx.moveTo(10, 10); ctx.lineTo(pad-10, pad-10); ctx.stroke();
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      // Force Custom to load hetero by default visually
+      selPreset.value = 'hetero';
+      selPreset.dispatchEvent(new Event('change'));
+    });
+  </script>
+</body>
+</html>

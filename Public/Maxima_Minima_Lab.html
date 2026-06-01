@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maxima & Minima Curve Analyser Virtual Lab</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Maxima & Minima Curve Analyser</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Differential Calculus &amp; First/Second Derivative Tests</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Calculus Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-reset" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Function
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-critical" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Highlight Critical Points</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-tangent" checked class="rounded border-slate-300 text-amber-500 focus:ring-amber-500 h-4.5 w-4.5">
+          <span>Show Tangent Line</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm space-y-1.5 border border-indigo-200">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-indigo-200 pb-1">Cubic Function Model</span>
+            <div class="text-[12px] font-mono text-center py-1">
+              $$f(x) = Ax^3 + Bx^2 + Cx + D$$
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-3 border-b border-slate-100 pb-1">Adjust Coefficients</span>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">A</span>
+                <input type="range" id="sl-A" min="-2" max="2" step="0.1" value="1" class="w-full">
+                <span id="lbl-A" class="font-mono text-[10px] font-bold w-6 text-right">1.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">B</span>
+                <input type="range" id="sl-B" min="-5" max="5" step="0.1" value="0" class="w-full">
+                <span id="lbl-B" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">C</span>
+                <input type="range" id="sl-C" min="-5" max="5" step="0.1" value="-3" class="w-full">
+                <span id="lbl-C" class="font-mono text-[10px] font-bold w-6 text-right">-3.0</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 w-4">D</span>
+                <input type="range" id="sl-D" min="-5" max="5" step="0.1" value="0" class="w-full">
+                <span id="lbl-D" class="font-mono text-[10px] font-bold w-6 text-right">0.0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-amber-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500 block"></span> <span class="uppercase">Analysis Point ($x$)</span></span>
+              <span id="lbl-x" class="font-mono text-amber-600 text-sm">-1.5</span>
+            </div>
+            <input type="range" id="sl-x" min="-4" max="4" step="0.05" value="-1.5" class="w-full mt-2">
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider">Cartesian Function Plane</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-cyan-400 block"></span> Function $f(x)$</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-amber-400 block"></span> Tangent Line</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> Local Maximum</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Local Minimum</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Calculus Telemetry Dashboard</span>
+          
+          <div class="grid grid-cols-1 gap-2">
+            
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Value $f(x)$</div>
+              <div class="text-sm font-bold font-mono text-cyan-600" id="tel-fx">1.13</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-amber-200 shadow-sm flex justify-between items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Slope $f'(x)$</div>
+              <div class="text-sm font-bold font-mono text-amber-500" id="tel-fpx">3.75</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-fuchsia-200 shadow-sm flex justify-between items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Concavity $f''(x)$</div>
+              <div class="text-sm font-bold font-mono text-fuchsia-500" id="tel-fppx">-9.00</div>
+            </div>
+
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Current Point Status</div>
+            <div class="text-lg font-bold font-mono text-white tracking-widest" id="tel-status">Increasing / Concave Down</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What makes a point a "Critical Point"?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                A critical point occurs wherever the first derivative $f'(x) = 0$ (or is undefined). Geometrically, this means the tangent line to the curve is perfectly horizontal. These points are the only candidates for being local maxima or minima.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">How does the Second Derivative Test work?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                Evaluate $f''(x)$ at a critical point. If $f''(x) > 0$, the curve is Concave Up ($\cup$), making the point a local minimum. If $f''(x) < 0$, it is Concave Down ($\cap$), making it a local maximum. If $f''(x) = 0$, the test is inconclusive.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What happens if $A = 0$ in the cubic equation?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                The function downgrades from a cubic to a quadratic (a parabola): $f(x) = Bx^2 + Cx + D$. A parabola only has one critical point (its vertex), meaning it will only ever have one global maximum OR one global minimum, but never both.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> DERIVATIVE PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Calculus Laboratory</strong>! Visualize the mechanics of finding peaks and valleys on a curve.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Coefficient Sliders ($A, B, C, D$)</strong>: Alter the shape of the polynomial. Notice how changing the $A$ term radically alters the "hills" of the function.</li>
+            <li><strong>Analysis Point ($x$)</strong>: Slide this point along the curve. The yellow tangent line represents the first derivative (slope). Watch the telemetry update live as you move it!</li>
+            <li><strong>Critical Points</strong>: Colored dots will appear automatically where the tangent is perfectly flat (slope = 0), identifying local maxima and minima.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let A = 1.0, B = 0.0, C = -3.0, D = 0.0;
+    let xTest = -1.5;
+
+    const X_MIN = -5, X_MAX = 5;
+    const Y_MIN = -10, Y_MAX = 10;
+
+    // --- DOM Elements ---
+    const slA = document.getElementById('sl-A'); const lblA = document.getElementById('lbl-A');
+    const slB = document.getElementById('sl-B'); const lblB = document.getElementById('lbl-B');
+    const slC = document.getElementById('sl-C'); const lblC = document.getElementById('lbl-C');
+    const slD = document.getElementById('sl-D'); const lblD = document.getElementById('lbl-D');
+    
+    const slX = document.getElementById('sl-x'); const lblX = document.getElementById('lbl-x');
+
+    const chkCritical = document.getElementById('chk-critical');
+    const chkTangent = document.getElementById('chk-tangent');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telFx = document.getElementById('tel-fx');
+    const telFpx = document.getElementById('tel-fpx');
+    const telFppx = document.getElementById('tel-fppx');
+    const telStatus = document.getElementById('tel-status');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Math Functions ---
+    function f(x) { return A*x*x*x + B*x*x + C*x + D; }
+    function df(x) { return 3*A*x*x + 2*B*x + C; }
+    function ddf(x) { return 6*A*x + 2*B; }
+
+    function getCriticalPoints() {
+        let roots = [];
+        // Solve 3Ax^2 + 2Bx + C = 0
+        let aQuad = 3*A, bQuad = 2*B, cQuad = C;
+        
+        if (Math.abs(aQuad) > 0.0001) {
+            let delta = bQuad*bQuad - 4*aQuad*cQuad;
+            if (delta >= 0) {
+                roots.push((-bQuad + Math.sqrt(delta)) / (2*aQuad));
+                if (delta > 0) {
+                    roots.push((-bQuad - Math.sqrt(delta)) / (2*aQuad));
+                }
+            }
+        } else if (Math.abs(bQuad) > 0.0001) {
+            roots.push(-cQuad / bQuad);
+        }
+        return roots.filter(r => r >= X_MIN && r <= X_MAX);
+    }
+
+    // --- Core Logic & Telemetry ---
+    function calculate() {
+       let fx = f(xTest);
+       let slope = df(xTest);
+       let concavity = ddf(xTest);
+
+       telFx.innerText = fx.toFixed(2);
+       telFpx.innerText = slope.toFixed(2);
+       telFppx.innerText = concavity.toFixed(2);
+
+       let statusStr = "";
+       if (Math.abs(slope) < 0.01) statusStr += "Critical Point";
+       else if (slope > 0) statusStr += "Increasing";
+       else statusStr += "Decreasing";
+
+       statusStr += " / ";
+
+       if (Math.abs(concavity) < 0.01) statusStr += "Inflection (Linear)";
+       else if (concavity > 0) statusStr += "Concave Up";
+       else statusStr += "Concave Down";
+
+       telStatus.innerText = statusStr;
+
+       // Colorize Status
+       if (Math.abs(slope) < 0.01) {
+           telStatus.className = "text-base font-bold font-mono text-facc15 tracking-widest text-amber-400";
+       } else {
+           telStatus.className = "text-base font-bold font-mono text-white tracking-widest";
+       }
+    }
+
+    // --- Input Handlers ---
+    function sync(val, sl, lbl, setter) {
+        val = parseFloat(val);
+        sl.value = val;
+        lbl.innerText = val.toFixed(1);
+        setter(val);
+        calculate();
+    }
+
+    slA.addEventListener('input', e => sync(e.target.value, slA, lblA, v => A = v));
+    slB.addEventListener('input', e => sync(e.target.value, slB, lblB, v => B = v));
+    slC.addEventListener('input', e => sync(e.target.value, slC, lblC, v => C = v));
+    slD.addEventListener('input', e => sync(e.target.value, slD, lblD, v => D = v));
+    
+    slX.addEventListener('input', e => {
+       xTest = parseFloat(e.target.value);
+       lblX.innerText = xTest.toFixed(2);
+       calculate();
+    });
+
+    btnReset.addEventListener('click', () => {
+       sync(1.0, slA, lblA, v => A = v);
+       sync(0.0, slB, lblB, v => B = v);
+       sync(-3.0, slC, lblC, v => C = v);
+       sync(0.0, slD, lblD, v => D = v);
+       xTest = -1.5; slX.value = -1.5; lblX.innerText = "-1.50";
+       calculate();
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Dynamic dimension check
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      // Map mathematical coords to canvas pixels
+      const xRange = X_MAX - X_MIN;
+      const yRange = Y_MAX - Y_MIN;
+      const scaleX = W / xRange; 
+      const scaleY = H / yRange;
+      const cx = W / 2;
+      const cy = H / 2;
+
+      const mapX = (x) => cx + x * scaleX;
+      const mapY = (y) => cy - y * scaleY; // Invert Y for screen coords
+
+      // 1. Draw Cartesian Grid & Axes
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let x = X_MIN; x <= X_MAX; x+=1) { ctx.moveTo(mapX(x), 0); ctx.lineTo(mapX(x), H); }
+      for(let y = Y_MIN; y <= Y_MAX; y+=2) { ctx.moveTo(0, mapY(y)); ctx.lineTo(W, mapY(y)); }
+      ctx.stroke();
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, mapY(0)); ctx.lineTo(W, mapY(0));
+      ctx.moveTo(mapX(0), 0); ctx.lineTo(mapX(0), H);
+      ctx.stroke();
+
+      // 2. Draw Function f(x)
+      ctx.strokeStyle = '#22d3ee'; // Cyan
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for(let x = X_MIN; x <= X_MAX; x += 0.05) {
+          let px = mapX(x);
+          let py = mapY(f(x));
+          if (x === X_MIN) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // 3. Draw Critical Points
+      if (chkCritical.checked) {
+          let criticals = getCriticalPoints();
+          criticals.forEach(c => {
+              let cy_val = f(c);
+              let concavity = ddf(c);
+              
+              ctx.beginPath();
+              ctx.arc(mapX(c), mapY(cy_val), 6, 0, Math.PI*2);
+              
+              if (Math.abs(concavity) < 0.01) {
+                  ctx.fillStyle = '#a855f7'; // Purple (Inflection)
+              } else if (concavity > 0) {
+                  ctx.fillStyle = '#10b981'; // Emerald (Min)
+              } else {
+                  ctx.fillStyle = '#f43f5e'; // Rose (Max)
+              }
+              
+              ctx.shadowColor = ctx.fillStyle;
+              ctx.shadowBlur = 10;
+              ctx.fill();
+              ctx.shadowBlur = 0;
+          });
+      }
+
+      // 4. Draw Tangent Line at xTest
+      let testY = f(xTest);
+      if (chkTangent.checked) {
+          let slope = df(xTest);
+          let tanLength = 2.5; // mathematical length
+
+          let dx = tanLength / Math.sqrt(1 + slope*slope);
+          let dy = slope * dx;
+
+          let x1 = xTest - dx; let y1 = testY - dy;
+          let x2 = xTest + dx; let y2 = testY + dy;
+
+          ctx.strokeStyle = '#fbbf24'; // Amber
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(mapX(x1), mapY(y1));
+          ctx.lineTo(mapX(x2), mapY(y2));
+          ctx.stroke();
+      }
+
+      // Draw Test Point
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(mapX(xTest), mapY(testY), 5, 0, Math.PI*2); ctx.fill();
+
+      // Draw Dashed line down to X axis
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(xTest), mapY(testY));
+      ctx.lineTo(mapX(xTest), mapY(0));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initialize
+    window.addEventListener('load', () => {
+      calculate();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

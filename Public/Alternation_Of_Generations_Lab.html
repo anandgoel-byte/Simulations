@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alternation of Generations Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Alternation of Generations Visualiser</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Plant Life Cycles &amp; Evolutionary Ploidy Shifts</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Plant Division:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="moss">Bryophytes (Moss) - Gametophyte Dominant</option>
+          <option value="fern">Pteridophytes (Fern) - Sporophyte Dominant</option>
+          <option value="angio">Angiosperms (Flowering) - Sporophyte Dominant</option>
+        </select>
+        <button id="btn-play" class="px-4 py-1.5 ml-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm">
+          ▶ Auto-Play Cycle
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-ploidy" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Highlight Ploidy Zones (n vs 2n)</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Evolutionary Shift</span>
+            <div class="text-[11px] font-medium leading-relaxed" id="evo-desc">
+              In primitive plants like mosses, the haploid Gametophyte is the main plant. As plants evolved towards Angiosperms, the diploid Sporophyte became completely dominant, reducing the Gametophyte to microscopic pollen and embryo sacs.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-2">
+              <span class="uppercase">Cycle Timeline</span>
+              <span id="lbl-progress" class="font-mono text-indigo-600 text-sm">0%</span>
+            </div>
+            <input type="range" id="sl-progress" min="0" max="100" step="0.5" value="0" class="w-full">
+            <div class="grid grid-cols-2 gap-2 mt-4">
+               <button class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 rounded transition-all" onclick="jumpTo(25)">Gametophyte (n)</button>
+               <button class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 rounded transition-all" onclick="jumpTo(50)">Fertilization</button>
+               <button class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 rounded transition-all" onclick="jumpTo(75)">Sporophyte (2n)</button>
+               <button class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 py-1.5 rounded transition-all" onclick="jumpTo(100)">Meiosis</button>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+             <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block border-b border-slate-100 pb-1">Absolute Botanical Rules</span>
+             <div class="flex items-start gap-2">
+               <span class="text-rose-500 text-sm mt-0.5">●</span>
+               <span class="text-[11px] font-medium text-slate-700"><strong>Sporophytes (2n)</strong> ALWAYS produce <strong>Spores (n)</strong> via <strong>Meiosis</strong>.</span>
+             </div>
+             <div class="flex items-start gap-2">
+               <span class="text-blue-500 text-sm mt-0.5">●</span>
+               <span class="text-[11px] font-medium text-slate-700"><strong>Gametophytes (n)</strong> ALWAYS produce <strong>Gametes (n)</strong> via <strong>Mitosis</strong>.</span>
+             </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Active Specimen: Bryophyte</span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Life Stage Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Current Ploidy</div>
+              <div class="text-lg font-bold font-mono text-indigo-500" id="tel-ploidy">Haploid (n)</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Dominant Phase</div>
+              <div class="text-xs font-bold font-mono text-emerald-500 uppercase mt-1" id="tel-dominant">Gametophyte</div>
+            </div>
+
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2 mt-1">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Active Biological Process</div>
+              <div class="text-sm font-bold font-mono tracking-widest text-amber-400" id="tel-process">Mitosis (Growth)</div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Current Physical Structure</div>
+              <div class="text-sm font-bold text-slate-700" id="tel-structure">Leafy Moss Plant</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In plants, what cellular process produces Gametes (sperm and egg)?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which plant group has a life cycle where the Haploid Gametophyte is the dominant, visible plant?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What does a Sporophyte specifically produce, and by what process?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In Angiosperms (flowering plants), what physical structure represents the male gametophyte?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> ALTERNATION OF GENERATIONS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Plant Evolution Laboratory</strong>! Trace the shifting life cycles of the plant kingdom.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Plant Division Selector</strong>: Switch between Mosses, Ferns, and Angiosperms. Notice how the dominant (largest) stage shifts from the top half of the circle (Haploid) to the bottom half (Diploid) as plants evolve!</li>
+            <li><strong>Timeline Slider</strong>: Drag the slider to move the tracker particle around the life cycle. Watch the telemetry panel to see exactly what biological process is occurring at any given moment.</li>
+            <li><strong>Auto-Play</strong>: Click Auto-Play to watch the cycle progress naturally. Pay close attention to when Meiosis and Fertilization occur—they are the strict boundaries between $n$ and $2n$!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "In plants, what cellular process produces Gametes (sperm and egg)?",
+        options: [
+          { text: "Meiosis", isCorrect: false, exp: "Incorrect. Animals use meiosis to make gametes, but plants do not." },
+          { text: "Mitosis", isCorrect: true, exp: "Correct! In plants, the Gametophyte is ALREADY haploid (n). Therefore, it must use Mitosis to produce haploid (n) gametes without reducing the chromosome number further." },
+          { text: "Fertilization", isCorrect: false, exp: "Incorrect. Fertilization fuses gametes together; it doesn't produce them." },
+          { text: "Binary Fission", isCorrect: false, exp: "Incorrect. That is how bacteria reproduce." }
+        ]
+      },
+      q2: {
+        question: "Which plant group has a life cycle where the Haploid Gametophyte is the dominant, visible plant?",
+        options: [
+          { text: "Bryophytes (Mosses)", isCorrect: true, exp: "Correct! In mosses, the green, leafy mat you see on the forest floor is the haploid gametophyte. The diploid sporophyte is just a temporary brown stalk that grows on top of it." },
+          { text: "Pteridophytes (Ferns)", isCorrect: false, exp: "Incorrect. The large leafy fern is the diploid sporophyte." },
+          { text: "Gymnosperms (Conifers)", isCorrect: false, exp: "Incorrect. The massive pine tree is a diploid sporophyte." },
+          { text: "Angiosperms (Flowering Plants)", isCorrect: false, exp: "Incorrect. The tree or flower is a diploid sporophyte." }
+        ]
+      },
+      q3: {
+        question: "What does a Sporophyte specifically produce, and by what process?",
+        options: [
+          { text: "Diploid Gametes via Mitosis", isCorrect: false, exp: "Incorrect. Gametes are never diploid." },
+          { text: "Haploid Spores via Meiosis", isCorrect: true, exp: "Correct! The Sporophyte (2n) undergoes Meiosis to cut the chromosome number in half, producing haploid (n) Spores. These spores blow away and grow into the next generation." },
+          { text: "Diploid Spores via Mitosis", isCorrect: false, exp: "Incorrect. Plant spores are universally haploid." },
+          { text: "Haploid Gametes via Meiosis", isCorrect: false, exp: "Incorrect. Remember: Sporophytes make Spores, Gametophytes make Gametes!" }
+        ]
+      },
+      q4: {
+        question: "In Angiosperms (flowering plants), what physical structure represents the male gametophyte?",
+        options: [
+          { text: "The Anther", isCorrect: false, exp: "Incorrect. The anther is part of the diploid sporophyte parent plant." },
+          { text: "The Seed", isCorrect: false, exp: "Incorrect. The seed contains the next generation's diploid sporophyte embryo." },
+          { text: "The Pollen Grain", isCorrect: true, exp: "Correct! In highly evolved angiosperms, the male gametophyte has been reduced to just 2 or 3 cells packaged inside a protective shell: the pollen grain!" },
+          { text: "The Petal", isCorrect: false, exp: "Incorrect. Petals are diploid sporophyte tissue." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS / BIO ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const selPreset = document.getElementById('select-preset');
+    const slProgress = document.getElementById('sl-progress');
+    const lblProgress = document.getElementById('lbl-progress');
+    const btnPlay = document.getElementById('btn-play');
+    const chkPloidy = document.getElementById('chk-ploidy');
+    const evoDesc = document.getElementById('evo-desc');
+    const hud = document.getElementById('canvas-hud');
+
+    const telPloidy = document.getElementById('tel-ploidy');
+    const telDominant = document.getElementById('tel-dominant');
+    const telProcess = document.getElementById('tel-process');
+    const telStructure = document.getElementById('tel-structure');
+
+    // State
+    let plantMode = 'moss'; // moss, fern, angio
+    let progress = 0; // 0 to 100
+    let isPlaying = false;
+    let animId = null;
+
+    const DATA = {
+        moss: {
+            title: "Bryophyte (Moss)", dom: "Gametophyte",
+            evo: "In primitive plants like mosses, the haploid Gametophyte is the dominant, leafy plant. The diploid Sporophyte is just a temporary brown stalk completely dependent on the Gametophyte.",
+            structs: [
+                { p: 0, n: "Spore (n)", pr: "Meiosis Output" },
+                { p: 25, n: "Leafy Moss Plant (n)", pr: "Mitosis (Growth)" },
+                { p: 45, n: "Antheridia/Archegonia", pr: "Gamete Production (Mitosis)" },
+                { p: 50, n: "Zygote (2n)", pr: "Fertilization (Syngamy)" },
+                { p: 75, n: "Stalk & Capsule (2n)", pr: "Mitosis (Growth)" },
+                { p: 95, n: "Sporangium Tissue", pr: "Meiosis (Reduction)" },
+                { p: 100, n: "Spore (n)", pr: "Meiosis Output" }
+            ]
+        },
+        fern: {
+            title: "Pteridophyte (Fern)", dom: "Sporophyte",
+            evo: "Ferns represent a massive evolutionary shift. The diploid Sporophyte becomes the dominant, independent leafy plant. The Gametophyte shrinks to a tiny, heart-shaped prothallus on the forest floor.",
+            structs: [
+                { p: 0, n: "Spore (n)", pr: "Meiosis Output" },
+                { p: 25, n: "Prothallus (n)", pr: "Mitosis (Growth)" },
+                { p: 45, n: "Sperm/Egg", pr: "Gamete Production (Mitosis)" },
+                { p: 50, n: "Zygote (2n)", pr: "Fertilization (Syngamy)" },
+                { p: 75, n: "Leafy Fern Frond (2n)", pr: "Mitosis (Growth)" },
+                { p: 95, n: "Sori / Sporangium", pr: "Meiosis (Reduction)" },
+                { p: 100, n: "Spore (n)", pr: "Meiosis Output" }
+            ]
+        },
+        angio: {
+            title: "Angiosperm (Flowering Plant)", dom: "Sporophyte",
+            evo: "In highly evolved Angiosperms, the Sporophyte is the massive tree or flower. The Gametophyte is reduced to microscopic, dependent structures: the Pollen Grain (male) and Embryo Sac (female).",
+            structs: [
+                { p: 0, n: "Microspore/Megaspore (n)", pr: "Meiosis Output" },
+                { p: 25, n: "Pollen / Embryo Sac (n)", pr: "Mitosis (Micro-growth)" },
+                { p: 45, n: "Sperm Nuclei / Egg", pr: "Gamete Maturation" },
+                { p: 50, n: "Zygote (2n)", pr: "Double Fertilization" },
+                { p: 75, n: "Tree / Flower (2n)", pr: "Mitosis (Growth)" },
+                { p: 95, n: "Anther / Ovary Tissue", pr: "Meiosis (Reduction)" },
+                { p: 100, n: "Microspore/Megaspore (n)", pr: "Meiosis Output" }
+            ]
+        }
+    };
+
+    function jumpTo(val) {
+        progress = val;
+        slProgress.value = val;
+        updateBiology();
+    }
+
+    function togglePlay() {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            btnPlay.innerHTML = "⏸ Pause Cycle";
+            btnPlay.className = "px-4 py-1.5 ml-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm";
+        } else {
+            btnPlay.innerHTML = "▶ Auto-Play Cycle";
+            btnPlay.className = "px-4 py-1.5 ml-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm";
+        }
+    }
+
+    btnPlay.addEventListener('click', togglePlay);
+
+    slProgress.addEventListener('input', e => {
+        progress = parseFloat(e.target.value);
+        if (isPlaying) togglePlay();
+        updateBiology();
+    });
+
+    selPreset.addEventListener('change', e => {
+        plantMode = e.target.value;
+        hud.innerText = `Active Specimen: ${DATA[plantMode].title}`;
+        evoDesc.innerText = DATA[plantMode].evo;
+        updateBiology();
+    });
+
+    function updateBiology() {
+        lblProgress.innerText = `${Math.round(progress)}%`;
+        
+        let d = DATA[plantMode];
+        telDominant.innerText = d.dom;
+
+        // Ploidy
+        if (progress >= 50 && progress < 100) {
+            telPloidy.innerText = "Diploid (2n)";
+            telPloidy.className = "text-lg font-bold font-mono text-rose-500";
+        } else {
+            telPloidy.innerText = "Haploid (n)";
+            telPloidy.className = "text-lg font-bold font-mono text-blue-500";
+        }
+
+        // Interpolate structure
+        let currentStruct = d.structs[0];
+        for(let i=0; i<d.structs.length; i++) {
+            if (progress >= d.structs[i].p) currentStruct = d.structs[i];
+        }
+        
+        telProcess.innerText = currentStruct.pr;
+        telStructure.innerText = currentStruct.n;
+    }
+
+    // --- Drawing Engine ---
+    function renderLoop() {
+      // Failsafe Dimensions
+      const container = canvas.parentElement;
+      let cw = Math.max(container.clientWidth, 100);
+      let ch = Math.max(container.clientHeight, 100);
+      const dpr = window.devicePixelRatio || 1;
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      
+      if (isPlaying) {
+          progress += 0.2;
+          if (progress > 100) progress = 0;
+          slProgress.value = progress;
+          updateBiology();
+      }
+
+      const cx = cw / 2;
+      const cy = ch / 2 + 10;
+      const radius = Math.min(cw, ch) * 0.35;
+
+      // 1. Draw Ploidy Background Halves
+      if (chkPloidy.checked) {
+          ctx.globalCompositeOperation = "source-over";
+          
+          // Haploid Half (Top)
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.1)'; // Blue
+          ctx.beginPath(); ctx.arc(cx, cy, radius + 40, Math.PI, 0); ctx.fill();
+          
+          // Diploid Half (Bottom)
+          ctx.fillStyle = 'rgba(244, 63, 94, 0.1)'; // Rose
+          ctx.beginPath(); ctx.arc(cx, cy, radius + 40, 0, Math.PI); ctx.fill();
+
+          ctx.font = 'bold 16px sans-serif';
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+          ctx.textAlign = 'center';
+          ctx.fillText("HAPLOID (n)", cx, cy - radius - 20);
+          
+          ctx.fillStyle = 'rgba(244, 63, 94, 0.4)';
+          ctx.fillText("DIPLOID (2n)", cx, cy + radius + 30);
+          
+          // Divider lines
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; ctx.lineWidth = 2; ctx.setLineDash([5,5]);
+          ctx.beginPath(); ctx.moveTo(cx - radius - 50, cy); ctx.lineTo(cx - radius + 20, cy); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cx + radius - 20, cy); ctx.lineTo(cx + radius + 50, cy); ctx.stroke();
+          ctx.setLineDash([]);
+          
+          ctx.fillStyle = '#fff'; ctx.font = '10px sans-serif';
+          ctx.fillText("MEIOSIS", cx - radius - 60, cy + 4);
+          ctx.fillText("FERTILIZATION", cx + radius + 60, cy + 4);
+      }
+
+      // 2. Draw Cycle Ring
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 6;
+      ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI*2); ctx.stroke();
+
+      // 3. Draw Nodes
+      const drawNode = (angle, color, label) => {
+          let nx = cx + Math.cos(angle) * radius;
+          let ny = cy + Math.sin(angle) * radius;
+          ctx.fillStyle = '#0f172a'; ctx.strokeStyle = color; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.arc(nx, ny, 12, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          
+          ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 11px sans-serif';
+          let align = nx > cx ? 'left' : 'right';
+          if (Math.abs(nx - cx) < 10) align = 'center';
+          ctx.textAlign = align;
+          
+          let ly = ny;
+          let lx = nx + (align === 'left' ? 20 : (align === 'right' ? -20 : 0));
+          if (align === 'center') ly = ny > cy ? ny + 25 : ny - 20;
+          
+          ctx.fillText(label, lx, ly);
+      };
+
+      // Spores (Top Left)
+      drawNode(Math.PI * 1.25, '#3b82f6', "Spores (n)");
+      // Gametophyte (Top)
+      drawNode(Math.PI * 1.5, '#3b82f6', "Gametophyte (n)");
+      // Gametes (Top Right)
+      drawNode(Math.PI * 1.75, '#3b82f6', "Gametes (n)");
+      // Zygote (Bottom Right)
+      drawNode(Math.PI * 0.25, '#f43f5e', "Zygote (2n)");
+      // Sporophyte (Bottom)
+      drawNode(Math.PI * 0.5, '#f43f5e', "Sporophyte (2n)");
+      // Sporangium (Bottom Left)
+      drawNode(Math.PI * 0.75, '#f43f5e', "Sporangium (2n)");
+
+      // 4. Draw Tracker Particle
+      // Map 0-100 to angle Pi to 3Pi
+      let angle = Math.PI + (progress / 100) * Math.PI * 2;
+      let tx = cx + Math.cos(angle) * radius;
+      let ty = cy + Math.sin(angle) * radius;
+
+      let tColor = progress >= 50 && progress < 100 ? '#f43f5e' : '#3b82f6';
+      
+      ctx.fillStyle = tColor;
+      ctx.shadowColor = tColor; ctx.shadowBlur = 15;
+      ctx.beginPath(); ctx.arc(tx, ty, 8, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Pulse ring
+      ctx.strokeStyle = tColor; ctx.lineWidth = 2;
+      let pulse = 8 + Math.sin(Date.now()/200)*4;
+      ctx.beginPath(); ctx.arc(tx, ty, pulse, 0, Math.PI*2); ctx.stroke();
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      updateBiology();
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

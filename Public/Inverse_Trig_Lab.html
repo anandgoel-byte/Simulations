@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inverse Trigonometry Domain & Range Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <svg class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Inverse Trig Domain & Range Simulator</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Principal Value Branches & Geometric Reflections</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Trigonometry Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Function Pair:</span>
+        <select id="select-func" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="sin">Sine ↔ Arcsine</option>
+          <option value="cos">Cosine ↔ Arccosine</option>
+          <option value="tan">Tangent ↔ Arctangent</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-fullwave" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Full Unrestricted Wave</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-mirror" checked class="rounded border-slate-300 text-amber-500 focus:ring-amber-500 h-4.5 w-4.5">
+          <span>Show Mirror Line ($y = x$)</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-3 border-b border-indigo-100 pb-1">Coordinate Explorer</span>
+            
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span>Position ($t$) on Restricted Domain</span>
+            </div>
+            <input type="range" id="sl-t" min="0" max="100" step="0.1" value="50" class="w-full mt-2">
+            <div class="text-center text-[10px] font-bold text-slate-400 mt-2">Drags the point across the Principal Branch</div>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Mathematical Mapping</span>
+            <div class="text-[12px] font-mono text-center py-2 space-y-2" id="formula-display">
+              $$f(x) = \sin(x)$$
+              $$f^{-1}(x) = \arcsin(x)$$
+              $$y = f(x) \iff x = f^{-1}(y)$$
+            </div>
+          </div>
+
+        </div>
+
+        <div class="bg-blue-50 text-blue-900 p-4 rounded-xl border border-blue-200 shadow-sm text-center">
+           <div class="text-[10px] font-bold uppercase tracking-wider mb-2">Geometric Law</div>
+           <div class="text-xs font-semibold">An inverse function $f^{-1}(x)$ is the exact reflection of the restricted function $f(x)$ across the line $y = x$. Every coordinate $(a,b)$ maps perfectly to $(b,a)$.</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider">Cartesian Phase Plane ($-\pi \dots \pi$)</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-cyan-400 block"></span> Restricted Original Function</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block"></span> Inverse Function</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-amber-400 block border-t border-dashed border-amber-400 bg-transparent"></span> Mirror Line ($y = x$)</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-slate-500 block border-t border-dashed border-slate-500 bg-transparent"></span> Reflection Mapping</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Domain & Range Telemetry</span>
+          
+          <div class="bg-white p-3 rounded-xl border border-cyan-200 shadow-sm flex flex-col justify-center items-center text-center">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1" id="tel-orig-title">Original $\sin(x)$ (Restricted)</div>
+            <div class="w-full flex justify-between px-2 text-[10px] font-bold text-slate-600 border-b border-slate-100 pb-1 mb-1">
+               <span>Domain:</span> <span id="tel-orig-dom" class="font-mono text-cyan-600">$[-\pi/2, \pi/2]$</span>
+            </div>
+            <div class="w-full flex justify-between px-2 text-[10px] font-bold text-slate-600">
+               <span>Range:</span> <span id="tel-orig-ran" class="font-mono text-cyan-600">$[-1, 1]$</span>
+            </div>
+            <div class="mt-2 text-sm font-bold font-mono text-cyan-500 bg-slate-50 px-3 py-1 rounded w-full" id="tel-orig-pt">(0.00, 0.00)</div>
+          </div>
+
+          <div class="flex justify-center text-slate-400"><span class="transform rotate-90 inline-block font-bold">⇄</span></div>
+
+          <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center text-center">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1" id="tel-inv-title">Inverse $\arcsin(x)$</div>
+            <div class="w-full flex justify-between px-2 text-[10px] font-bold text-slate-600 border-b border-slate-100 pb-1 mb-1">
+               <span>Domain:</span> <span id="tel-inv-dom" class="font-mono text-rose-500">$[-1, 1]$</span>
+            </div>
+            <div class="w-full flex justify-between px-2 text-[10px] font-bold text-slate-600">
+               <span>Range:</span> <span id="tel-inv-ran" class="font-mono text-rose-500">$[-\pi/2, \pi/2]$</span>
+            </div>
+            <div class="mt-2 text-sm font-bold font-mono text-rose-500 bg-slate-50 px-3 py-1 rounded w-full" id="tel-inv-pt">(0.00, 0.00)</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-2">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do we have to "restrict" the domain of the original functions?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                A function must pass the <strong>Horizontal Line Test</strong> to be invertible (meaning every y-value maps to exactly one x-value). Since trigonometric waves repeat infinitely, we must cut off a single, unique "slice" of the wave—called the Principal Value Branch—to make the inverse mathematically valid.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why does Arctangent ($\arctan$) have horizontal asymptotes?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                The original tangent function has <em>vertical</em> asymptotes at $x = -\pi/2$ and $x = \pi/2$ because the slope goes to infinity. When we mirror the function across $y=x$ to create the inverse, all $x$ and $y$ values swap. Therefore, vertical asymptotes become <strong>horizontal</strong> asymptotes at $y = -\pi/2$ and $y = \pi/2$.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Can you calculate $\arcsin(2)$?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                No, it is undefined! The domain of $\arcsin(x)$ is strictly $[-1, 1]$ because the range of the original $\sin(x)$ function never exceeds those bounds. There is no real angle whose sine is $2$.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> INVERSE TRIG PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Trigonometry Laboratory</strong>! Visualize the geometric mechanics behind inverse functions.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Function Dropdown</strong>: Switch between the primary trigonometric pairs ($\sin, \cos, \tan$). Notice how their restricted domains vary entirely!</li>
+            <li><strong>Position Slider ($t$)</strong>: Slide this to move the coordinate point across the restricted domain. Watch how the coordinate $(x, y)$ on the cyan curve is perfectly swapped to $(y, x)$ on the red inverse curve.</li>
+            <li><strong>Full Wave Toggle</strong>: Turn this on to see the original, repeating trigonometric wave in the background, illustrating visually why the restriction is required to pass the horizontal line test.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Math Definitions ---
+    const FUNC_DEF = {
+        sin: {
+            f: Math.sin, inv: Math.asin,
+            texF: "\\sin(x)", texInv: "\\arcsin(x)",
+            domainR: [-Math.PI/2, Math.PI/2], rangeR: [-1, 1],
+            domTex: "[-\\pi/2, \\pi/2]", ranTex: "[-1, 1]"
+        },
+        cos: {
+            f: Math.cos, inv: Math.acos,
+            texF: "\\cos(x)", texInv: "\\arccos(x)",
+            domainR: [0, Math.PI], rangeR: [-1, 1],
+            domTex: "[0, \\pi]", ranTex: "[-1, 1]"
+        },
+        tan: {
+            f: Math.tan, inv: Math.atan,
+            texF: "\\tan(x)", texInv: "\\arctan(x)",
+            domainR: [-1.45, 1.45], rangeR: [-10, 10], // Cut off before pi/2 to avoid massive asymptotes drawing
+            domTex: "(-\\pi/2, \\pi/2)", ranTex: "(-\\infty, \\infty)"
+        }
+    };
+
+    // --- State Variables ---
+    let currentMode = 'sin';
+    let p_val = 0.5; // Normalized parameter 0.0 to 1.0 (from slider 0 to 100)
+
+    const COORD_MAX = 4; // Viewport from -4 to 4
+
+    // --- DOM Elements ---
+    const selFunc = document.getElementById('select-func');
+    const slT = document.getElementById('sl-t');
+    const chkFullwave = document.getElementById('chk-fullwave');
+    const chkMirror = document.getElementById('chk-mirror');
+    const btnReset = document.getElementById('btn-reset');
+
+    const formDisp = document.getElementById('formula-display');
+    const telOrigTitle = document.getElementById('tel-orig-title');
+    const telOrigDom = document.getElementById('tel-orig-dom');
+    const telOrigRan = document.getElementById('tel-orig-ran');
+    const telOrigPt = document.getElementById('tel-orig-pt');
+    
+    const telInvTitle = document.getElementById('tel-inv-title');
+    const telInvDom = document.getElementById('tel-inv-dom');
+    const telInvRan = document.getElementById('tel-inv-ran');
+    const telInvPt = document.getElementById('tel-inv-pt');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Logic & Telemetry ---
+    function updateTelemetry() {
+       let def = FUNC_DEF[currentMode];
+       
+       formDisp.innerHTML = `$$f(x) = ${def.texF}$$\n$$f^{-1}(x) = ${def.texInv}$$\n$$y = f(x) \\iff x = f^{-1}(y)$$`;
+       
+       telOrigTitle.innerText = `Original ${def.texF.replace('\\', '')} (Restricted)`;
+       telOrigDom.innerText = `$${def.domTex}$`;
+       telOrigRan.innerText = `$${def.ranTex}$`;
+
+       telInvTitle.innerText = `Inverse ${def.texInv.replace('\\', '')}`;
+       telInvDom.innerText = `$${def.ranTex}$`;
+       telInvRan.innerText = `$${def.domTex}$`;
+       
+       // Calculate current point
+       let rangeDomain = def.domainR[1] - def.domainR[0];
+       let currentX = def.domainR[0] + (p_val * rangeDomain);
+       let currentY = def.f(currentX);
+
+       telOrigPt.innerText = `(${currentX.toFixed(2)}, ${currentY.toFixed(2)})`;
+       telInvPt.innerText = `(${currentY.toFixed(2)}, ${currentX.toFixed(2)})`; // exactly swapped!
+
+       if (window.MathJax) MathJax.typesetPromise([formDisp, telOrigDom, telOrigRan, telInvDom, telInvRan]);
+    }
+
+    // --- Input Handlers ---
+    slT.addEventListener('input', e => {
+        p_val = parseFloat(e.target.value) / 100.0;
+        updateTelemetry();
+    });
+
+    selFunc.addEventListener('change', e => {
+        currentMode = e.target.value;
+        updateTelemetry();
+    });
+
+    btnReset.addEventListener('click', () => {
+       selFunc.value = 'sin'; currentMode = 'sin';
+       slT.value = 50; p_val = 0.5;
+       chkFullwave.checked = true; chkMirror.checked = true;
+       updateTelemetry();
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Dynamic dimension check
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      // Map mathematical coords to canvas pixels
+      const scale = Math.min(W, H) / (COORD_MAX * 2);
+      const cx = W / 2;
+      const cy = H / 2;
+
+      const mapX = (x) => cx + x * scale;
+      const mapY = (y) => cy - y * scale; // Invert Y
+
+      // 1. Draw Grid & Axes
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      // Use PI/2 grid blocks for trig
+      let step = Math.PI / 2;
+      for(let x = 0; x <= COORD_MAX; x+=step) { 
+          ctx.moveTo(mapX(x), 0); ctx.lineTo(mapX(x), H); 
+          ctx.moveTo(mapX(-x), 0); ctx.lineTo(mapX(-x), H); 
+      }
+      for(let y = 0; y <= COORD_MAX; y+=step) { 
+          ctx.moveTo(0, mapY(y)); ctx.lineTo(W, mapY(y)); 
+          ctx.moveTo(0, mapY(-y)); ctx.lineTo(W, mapY(-y)); 
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+      ctx.stroke();
+
+      // Labels (π/2, π)
+      ctx.fillStyle = '#64748b';
+      ctx.font = '11px sans-serif';
+      ctx.fillText("π/2", mapX(Math.PI/2) + 5, cy + 15);
+      ctx.fillText("-π/2", mapX(-Math.PI/2) + 5, cy + 15);
+      ctx.fillText("π", mapX(Math.PI) + 5, cy + 15);
+      ctx.fillText("-π", mapX(-Math.PI) + 5, cy + 15);
+      
+      ctx.fillText("π/2", cx + 5, mapY(Math.PI/2) - 5);
+      ctx.fillText("-π/2", cx + 5, mapY(-Math.PI/2) - 5);
+
+      let def = FUNC_DEF[currentMode];
+
+      // 2. Draw Mirror Line y = x
+      if (chkMirror.checked) {
+          ctx.strokeStyle = '#fbbf24'; // Amber
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 6]);
+          ctx.beginPath();
+          ctx.moveTo(mapX(-COORD_MAX), mapY(-COORD_MAX));
+          ctx.lineTo(mapX(COORD_MAX), mapY(COORD_MAX));
+          ctx.stroke();
+          ctx.setLineDash([]);
+      }
+
+      // 3. Draw Full Unrestricted Wave
+      if (chkFullwave.checked) {
+          ctx.strokeStyle = 'rgba(34, 211, 238, 0.2)'; // Faded Cyan
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          
+          let prevY = 0;
+          for(let x = -COORD_MAX; x <= COORD_MAX; x += 0.05) {
+              let y = def.f(x);
+              // Break line for tan asymptotes
+              if (currentMode === 'tan' && Math.abs(y - prevY) > 5) {
+                  ctx.moveTo(mapX(x), mapY(y));
+              } else {
+                  if (x === -COORD_MAX) ctx.moveTo(mapX(x), mapY(y));
+                  else ctx.lineTo(mapX(x), mapY(y));
+              }
+              prevY = y;
+          }
+          ctx.stroke();
+      }
+
+      // 4. Draw Restricted Original Function
+      ctx.strokeStyle = '#22d3ee'; // Cyan
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      for(let x = def.domainR[0]; x <= def.domainR[1]; x += 0.02) {
+          let y = def.f(x);
+          if (x === def.domainR[0]) ctx.moveTo(mapX(x), mapY(y));
+          else ctx.lineTo(mapX(x), mapY(y));
+      }
+      ctx.stroke();
+
+      // 5. Draw Inverse Function
+      ctx.strokeStyle = '#f43f5e'; // Rose
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      // To draw inverse, we just swap x and y from the restricted domain loop
+      for(let x = def.domainR[0]; x <= def.domainR[1]; x += 0.02) {
+          let y = def.f(x);
+          // Plotting (y, x) instead of (x, y) geometrically reflects it across y=x
+          if (x === def.domainR[0]) ctx.moveTo(mapX(y), mapY(x));
+          else ctx.lineTo(mapX(y), mapY(x));
+      }
+      ctx.stroke();
+
+      // Draw Asymptotes for Arctan
+      if (currentMode === 'tan') {
+         ctx.strokeStyle = 'rgba(244, 63, 94, 0.4)';
+         ctx.setLineDash([4,4]);
+         ctx.beginPath();
+         ctx.moveTo(0, mapY(Math.PI/2)); ctx.lineTo(W, mapY(Math.PI/2));
+         ctx.moveTo(0, mapY(-Math.PI/2)); ctx.lineTo(W, mapY(-Math.PI/2));
+         ctx.stroke();
+         ctx.setLineDash([]);
+      }
+
+      // 6. Draw Interactive Points and Mapping Line
+      let rangeDomain = def.domainR[1] - def.domainR[0];
+      let ptX = def.domainR[0] + (p_val * rangeDomain);
+      let ptY = def.f(ptX);
+
+      // Dash line connecting the two reflected points
+      ctx.strokeStyle = '#94a3b8'; // Slate
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(ptX), mapY(ptY));
+      ctx.lineTo(mapX(ptY), mapY(ptX));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Point on Original
+      ctx.fillStyle = '#22d3ee';
+      ctx.beginPath(); ctx.arc(mapX(ptX), mapY(ptY), 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.font = '10px sans-serif';
+      ctx.fillText("(x, y)", mapX(ptX) + 10, mapY(ptY));
+
+      // Point on Inverse
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath(); ctx.arc(mapX(ptY), mapY(ptX), 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText("(y, x)", mapX(ptY) + 10, mapY(ptX));
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initialize
+    window.addEventListener('load', () => {
+      updateTelemetry();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

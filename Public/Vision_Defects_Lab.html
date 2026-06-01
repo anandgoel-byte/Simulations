@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defects of Vision Corrector Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-rose::-webkit-slider-thumb {
+      background-color: #f43f5e;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px) !important;
+      background-size: 20px 20px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Defects of Vision Corrector Simulator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Geometrical Optics &amp; Human Anatomy Lab</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Optics Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Eye Condition:</span>
+        <select id="select-condition" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="normal">Normal Vision (Emmetropia)</option>
+          <option value="myopia" selected>Myopia (Nearsightedness)</option>
+          <option value="hypermetropia">Hypermetropia (Farsightedness)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm">
+          <span>🔄</span> Reset Optics
+        </button>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Lens Power Formula</span>
+            <div class="text-[14px] font-mono text-center py-1 font-bold">
+              $$P = \frac{1}{f (\text{in } m)}$$
+            </div>
+            <div class="text-[9px] font-semibold text-slate-600 leading-tight">
+              Power is measured in Diopters ($D$). Concave lenses have negative power (diverging), Convex lenses have positive power (converging).
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Target Object Distance</span></span>
+              <span id="lbl-dist" class="font-mono text-blue-600 text-sm">100 cm</span>
+            </div>
+            <input type="range" id="sl-dist" min="20" max="250" step="1" value="100" class="w-full mt-2" style="accent-color: #3b82f6;">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>Near (20cm)</span>
+              <span>Far (250cm)</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> <span class="uppercase text-rose-700">Corrective Lens Power</span></span>
+              <span id="lbl-power" class="font-mono text-rose-600 text-sm">0.0 D</span>
+            </div>
+            <input type="range" id="sl-power" min="-5" max="5" step="0.25" value="0" class="w-full mt-2 slider-rose">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>-5D (Concave)</span>
+              <span>+5D (Convex)</span>
+            </div>
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-rose-50 p-2 rounded border border-rose-100 text-center" id="desc-power">
+              Adjust the lens power to shift the focal point exactly onto the Retina line.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-sky-400 tracking-wider uppercase" id="canvas-hud">Geometrical Optics Analyzer</span>
+        </div>
+
+        <div class="absolute bottom-4 right-4 bg-black/90 backdrop-blur-md p-3 rounded-xl border-2 border-slate-700 shadow-xl flex flex-col items-center select-none z-20 w-48">
+          <span class="text-[9px] font-bold text-slate-400 tracking-widest uppercase mb-2">Simulated Retina View</span>
+          <div class="w-full h-24 bg-white rounded overflow-hidden relative flex items-center justify-center">
+             <div id="retina-image" class="text-4xl transition-all duration-100" style="filter: blur(0px);">🌲</div>
+          </div>
+          <div class="mt-2 text-[10px] font-bold font-mono tracking-widest uppercase text-emerald-400" id="lbl-blur">Perfectly Clear</div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Diagnostic Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Rays Convergence Point</div>
+              <div class="text-xl font-bold font-mono tracking-widest text-emerald-400" id="tel-focus">Exactly On Retina</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Required Defect Correction</div>
+              <div class="text-sm font-bold font-mono text-indigo-600 leading-tight uppercase mt-1" id="tel-req-lens">None</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Prescription Power</div>
+              <div class="text-sm font-bold font-mono text-rose-500 leading-tight mt-1" id="tel-req-power">0.0 D</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Where do light rays converge in a Myopic (nearsighted) eye when viewing a distant object?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which type of lens is used to correct Hypermetropia (farsightedness)?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What does a negative lens power (e.g., -2.5 D) on an eyeglasses prescription indicate?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the condition called where the eye loses its ability to accommodate (focus on near objects) due to aging?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> VISION OPTICS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Optics & Human Anatomy Laboratory</strong>! Treat and correct structural eye defects using physical lenses.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Condition Selector</strong>: Choose between a Normal Eye, a Myopic Eye (too long, focuses early), or a Hypermetropic Eye (too short, focuses late).</li>
+            <li><strong>Object Distance</strong>: Slide the tree closer to or further from the eye. Notice that a Myopic eye can actually see near objects perfectly well, but completely blurs distant objects!</li>
+            <li><strong>Lens Power</strong>: Act as the optometrist. Dial in a negative (Concave) or positive (Convex) diopter value to physically bend the incoming light rays. Your goal is to get the red rays to intersect exactly on the back wall of the eye (the Retina).</li>
+            <li><strong>Simulated Retina View</strong>: Watch the live HUD in the bottom right. The blurriness physically corresponds to the mathematical distance between the focal point and the retina!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "Where do light rays converge in a Myopic (nearsighted) eye when viewing a distant object?",
+        options: [
+          { text: "Exactly on the retina.", isCorrect: false, exp: "Incorrect. That represents a normal (emmetropic) eye." },
+          { text: "Behind the retina.", isCorrect: false, exp: "Incorrect. That describes Hypermetropia." },
+          { text: "In front of the retina.", isCorrect: true, exp: "Correct! In myopia, the eyeball is elongated or the lens is too highly curved. The light rays converge too quickly, meeting at a point floating in the vitreous humor BEFORE they hit the retina screen, resulting in a blurry projection." },
+          { text: "On the cornea.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        question: "Which type of lens is used to correct Hypermetropia (farsightedness)?",
+        options: [
+          { text: "Concave (Diverging) Lens", isCorrect: false, exp: "Incorrect. A concave lens is used for Myopia to push the focal point back." },
+          { text: "Convex (Converging) Lens", isCorrect: true, exp: "Correct! In hypermetropia, rays focus *behind* the retina because the eye's converging power is too weak. A convex lens adds extra converging power in front of the eye, bending the rays inward sooner so they focus directly on the retina." },
+          { text: "Cylindrical Lens", isCorrect: false, exp: "Incorrect. Cylindrical lenses are used to correct Astigmatism." },
+          { text: "Bifocal Lens", isCorrect: false, exp: "Incorrect. Bifocals are used for Presbyopia." }
+        ]
+      },
+      q3: {
+        question: "What does a negative lens power (e.g., -2.5 D) on an eyeglasses prescription indicate?",
+        options: [
+          { text: "The patient is prescribed a Converging lens.", isCorrect: false, exp: "Incorrect. Converging lenses have positive power." },
+          { text: "The patient has Hypermetropia.", isCorrect: false, exp: "Incorrect. Hypermetropia requires positive power lenses." },
+          { text: "The patient is prescribed a Diverging (Concave) lens.", isCorrect: true, exp: "Correct! By definition, concave (diverging) lenses have a virtual principal focus, giving them a negative focal length. Therefore, P = 1/f yields a negative Diopter value." },
+          { text: "The patient is legally blind.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "What is the condition called where the eye loses its ability to accommodate (focus on near objects) due to aging?",
+        options: [
+          { text: "Astigmatism", isCorrect: false, exp: "Incorrect. This is caused by an irregular cornea shape." },
+          { text: "Presbyopia", isCorrect: true, exp: "Correct! As humans age, the crystalline lens loses its elasticity and the ciliary muscles weaken. This makes it difficult to bulge the lens enough to focus on nearby objects (like reading a book). It is often corrected with reading glasses (convex lenses)." },
+          { text: "Cataract", isCorrect: false, exp: "Incorrect. A cataract is the clouding of the lens." },
+          { text: "Glaucoma", isCorrect: false, exp: "Incorrect. Glaucoma is damage to the optic nerve, often from high pressure." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const selCondition = document.getElementById('select-condition');
+    const slDist = document.getElementById('sl-dist');
+    const lblDist = document.getElementById('lbl-dist');
+    const slPower = document.getElementById('sl-power');
+    const lblPower = document.getElementById('lbl-power');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telFocus = document.getElementById('tel-focus');
+    const telReqLens = document.getElementById('tel-req-lens');
+    const telReqPower = document.getElementById('tel-req-power');
+    
+    const retinaImage = document.getElementById('retina-image');
+    const lblBlur = document.getElementById('lbl-blur');
+
+    // State Variables
+    let condition = 'myopia'; // normal, myopia, hypermetropia
+    let objDist = 100; // 20 to 250
+    let lensPower = 0.0; // Diopters -5 to +5
+
+    // Physical Canvas Locations
+    // Let Eye Lens be at X = 550, Retina be at X = 650
+    const EYE_LENS_X = 550;
+    const RETINA_X = 650;
+    const EYE_Y = 250;
+    
+    // Abstracting optical calculations for smooth interactive visual
+    // Normal eye perfectly changes its internal focal length to hit Retina_X.
+    // Defective eyes have limits on their internal focal length.
+    
+    let focusX = RETINA_X; 
+
+    function updatePhysics() {
+        // Calculate where the light rays will actually converge (focusX)
+        // Baseline: The eye tries to put focusX exactly at RETINA_X (650)
+        
+        let baseFocus = RETINA_X;
+        let requiredPower = 0.0;
+
+        if (condition === 'myopia') {
+            // Myopia: good at near, bad at far. Focuses early if objDist > 30
+            if (objDist > 30) {
+                // Focus shifts left (early)
+                baseFocus = RETINA_X - (objDist - 30) * 0.4;
+            }
+            requiredPower = -((objDist - 30) * 0.4) / 10; // rough approximation for prescribed diopters
+            if(requiredPower > 0) requiredPower = 0; // cant be positive
+        } else if (condition === 'hypermetropia') {
+            // Hypermetropia: good at far, bad at near. Focuses late if objDist < 100
+            if (objDist < 100) {
+                // Focus shifts right (behind retina)
+                baseFocus = RETINA_X + (100 - objDist) * 0.8;
+            }
+            requiredPower = ((100 - objDist) * 0.8) / 10;
+            if(requiredPower < 0) requiredPower = 0;
+        }
+
+        // Apply external lens correction
+        // Positive power (Convex) pulls focus LEFT (closer to lens)
+        // Negative power (Concave) pushes focus RIGHT (further from lens)
+        // We use a visual multiplier '10' to make the slider feel impactful on canvas
+        focusX = baseFocus - (lensPower * 10);
+
+        // Update UI Telemetry
+        let errDist = Math.abs(focusX - RETINA_X);
+
+        if (errDist < 3) {
+            telFocus.innerText = "Exactly On Retina";
+            telFocus.className = "text-xl font-bold font-mono tracking-widest text-emerald-500";
+            
+            lblBlur.innerText = "Perfectly Clear";
+            lblBlur.className = "mt-2 text-[10px] font-bold font-mono tracking-widest uppercase text-emerald-400";
+        } else if (focusX < RETINA_X) {
+            telFocus.innerText = "In Front of Retina";
+            telFocus.className = "text-xl font-bold font-mono tracking-widest text-rose-500";
+            
+            lblBlur.innerText = "Blurry";
+            lblBlur.className = "mt-2 text-[10px] font-bold font-mono tracking-widest uppercase text-rose-400";
+        } else {
+            telFocus.innerText = "Behind Retina";
+            telFocus.className = "text-xl font-bold font-mono tracking-widest text-amber-500";
+
+            lblBlur.innerText = "Blurry";
+            lblBlur.className = "mt-2 text-[10px] font-bold font-mono tracking-widest uppercase text-amber-400";
+        }
+
+        // Apply pure CSS Blur to HUD based on error distance
+        let blurPx = Math.min(10, errDist * 0.15); // Cap blur at 10px
+        retinaImage.style.filter = `blur(${blurPx}px)`;
+
+        // Prescriptions
+        if (condition === 'normal') {
+            telReqLens.innerText = "None (Emmetropic)";
+            telReqPower.innerText = "0.00 D";
+        } else if (condition === 'myopia') {
+            telReqLens.innerText = "Concave Lens";
+            telReqPower.innerText = requiredPower.toFixed(2) + " D";
+        } else {
+            telReqLens.innerText = "Convex Lens";
+            telReqPower.innerText = "+" + requiredPower.toFixed(2) + " D";
+        }
+    }
+
+    slDist.addEventListener('input', e => {
+        objDist = parseInt(e.target.value);
+        lblDist.innerText = `${objDist} cm`;
+        updatePhysics();
+    });
+
+    slPower.addEventListener('input', e => {
+        lensPower = parseFloat(e.target.value);
+        lblPower.innerText = `${lensPower > 0 ? '+' : ''}${lensPower.toFixed(2)} D`;
+        updatePhysics();
+    });
+
+    selCondition.addEventListener('change', e => {
+        condition = e.target.value;
+        // Reset power when changing condition
+        lensPower = 0.0;
+        slPower.value = 0;
+        lblPower.innerText = "0.00 D";
+        updatePhysics();
+    });
+
+    btnReset.addEventListener('click', () => {
+        condition = 'myopia'; selCondition.value = 'myopia';
+        objDist = 100; slDist.value = 100; lblDist.innerText = "100 cm";
+        lensPower = 0; slPower.value = 0; lblPower.innerText = "0.00 D";
+        updatePhysics();
+    });
+
+    // --- CANVAS RENDERING ---
+    function renderCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderCanvas); return; }
+
+      // We anchor the drawing to the right side of the canvas
+      let rightPad = 150;
+      let rX = cw - rightPad; // Retina X
+      let eX = rX - 100; // Eye Lens X
+      let ey = ch / 2; // Principal axis Y
+
+      // 1. Draw Human Eye Anatomy
+      // Sclera / Eyeball shape
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.lineWidth = 3;
+      
+      ctx.beginPath();
+      // Start at top of lens
+      ctx.moveTo(eX, ey - 50);
+      // Curve back to retina
+      ctx.bezierCurveTo(eX + 50, ey - 60, rX, ey - 60, rX, ey);
+      // Curve from retina back to bottom of lens
+      ctx.bezierCurveTo(rX, ey + 60, eX + 50, ey + 60, eX, ey + 50);
+      // Cornea bulge
+      ctx.bezierCurveTo(eX - 30, ey + 40, eX - 30, ey - 40, eX, ey - 50);
+      ctx.fill(); ctx.stroke();
+
+      // Crystalline Lens
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.3)'; // Sky blue tint
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(eX, ey, 8, 35, 0, 0, Math.PI*2);
+      ctx.fill(); ctx.stroke();
+
+      // Retina indicator (thick red line at back)
+      ctx.strokeStyle = '#ef4444'; // Red
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.arc(rX - 35, ey, 35, -Math.PI/4, Math.PI/4); // arc at back
+      ctx.stroke();
+
+      // Principal Axis
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)'; // Slate dashed
+      ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, ey); ctx.lineTo(cw, ey); ctx.stroke(); ctx.setLineDash([]);
+
+      // 2. Draw Object (Tree)
+      // Map objDist [20, 250] to canvas X
+      // Say min dist = eX - 100, max dist = eX - 400
+      let objX = eX - 50 - (objDist * 1.5); 
+      let objY = ey;
+      
+      ctx.font = '40px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText("🌲", objX, objY + 15);
+
+      // 3. Draw Corrective Lens (If power != 0)
+      let lensX = eX - 40;
+      if (Math.abs(lensPower) > 0.1) {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+          ctx.beginPath();
+          if (lensPower < 0) {
+              // Concave (hourglass shape profile)
+              ctx.moveTo(lensX - 5, ey - 40);
+              ctx.lineTo(lensX + 5, ey - 40);
+              ctx.quadraticCurveTo(lensX, ey, lensX + 5, ey + 40);
+              ctx.lineTo(lensX - 5, ey + 40);
+              ctx.quadraticCurveTo(lensX, ey, lensX - 5, ey - 40);
+          } else {
+              // Convex (oval)
+              ctx.ellipse(lensX, ey, 8, 40, 0, 0, Math.PI*2);
+          }
+          ctx.fill(); ctx.stroke();
+      }
+
+      // 4. Ray Tracing
+      // 3 rays from top of object (say Y offset -30)
+      let rayStartY = objY - 30;
+
+      // Calculate where rays hit the Corrective Lens (or Eye Lens directly if no corrective lens)
+      let hitY_top = ey - 20;
+      let hitY_mid = ey;
+      let hitY_bot = ey + 20;
+
+      // Internal focus X based on physics calculations
+      let fX_mapped = rX + (focusX - RETINA_X);
+
+      ctx.lineWidth = 2;
+
+      const drawLightRay = (startY, midY) => {
+          let currentX = objX;
+          let currentY = startY;
+
+          ctx.beginPath(); ctx.moveTo(currentX, currentY);
+
+          if (Math.abs(lensPower) > 0.1) {
+              // Ray hits Corrective Lens first
+              ctx.lineTo(lensX, midY);
+              
+              // Ray bends at corrective lens. 
+              // Convex (+ power) bends inward towards axis. Concave (- power) bends outward.
+              // To simulate, we calculate a virtual hit on the Eye lens that is narrower or wider.
+              let bendFactor = lensPower * 1.5; // Visual scalar
+              let eyeHitY = midY - (midY - ey) * (bendFactor * 0.1); 
+              
+              ctx.lineTo(eX, eyeHitY);
+              // From eye lens to focus
+              ctx.lineTo(fX_mapped, ey);
+          } else {
+              // Straight to eye lens
+              ctx.lineTo(eX, midY);
+              // From eye lens to focus
+              ctx.lineTo(fX_mapped, ey);
+          }
+          
+          // Continue ray past focus if it crosses early
+          if (fX_mapped < rX + 20) {
+              // Extend ray beyond focus point
+              let extendFactor = 2.0;
+              let extX = fX_mapped + (fX_mapped - eX)*extendFactor;
+              let finalY;
+              if (Math.abs(lensPower) > 0.1) {
+                  let eyeHitY = midY - (midY - ey) * (lensPower * 1.5 * 0.1); 
+                  finalY = ey + (ey - eyeHitY)*extendFactor;
+              } else {
+                  finalY = ey + (ey - midY)*extendFactor;
+              }
+              ctx.lineTo(extX, finalY);
+          }
+
+          ctx.stroke();
+      };
+
+      // Draw rays
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)'; // Sky blue
+      drawLightRay(rayStartY, hitY_top);
+      drawLightRay(rayStartY, hitY_mid);
+      drawLightRay(rayStartY, hitY_bot);
+
+      // Draw Focus Point Dot
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath(); ctx.arc(fX_mapped, ey, 4, 0, Math.PI*2); ctx.fill();
+
+      // Labels
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText("Retina", rX, ey + 75);
+      ctx.fillText("Eye Lens", eX, ey + 75);
+      if (Math.abs(lensPower) > 0.1) ctx.fillText("Corrective Lens", lensX, ey - 50);
+
+      requestAnimationFrame(renderCanvas);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      updatePhysics();
+      requestAnimationFrame(renderCanvas);
+    });
+  </script>
+</body>
+</html>

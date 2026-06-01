@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>p-n Junction Diode I-V Curve Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+    <img
+        src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+        alt="Sparkl Alpha Logo"
+        class="h-11 w-auto object-contain"
+    />
+</div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">p-n Junction Diode I-V Characteristics</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Semiconductor Physics &amp; Shockley Equation Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Circuit Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>⚡</span> Power Supply ON
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🛑</span> Power OFF
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Zero
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-carriers" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Animate Majority Carriers</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        
+        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div>
+              <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-2">Semiconductor Material</span>
+              <select id="select-material" class="w-full bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+                <option value="si">Silicon (Si) - Standard</option>
+                <option value="ge">Germanium (Ge) - Low Barrier</option>
+              </select>
+            </div>
+            
+            <div id="spec-card" class="bg-indigo-50 rounded-xl p-3 border border-indigo-200 shadow-sm space-y-2 transition-all">
+               <div class="flex items-center justify-between text-[10px] font-bold">
+                 <span class="text-slate-600 uppercase">Knee/Cut-in Voltage</span>
+                 <span id="label-knee" class="text-indigo-700 font-mono text-sm">0.7 V</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold border-t border-indigo-100 pt-1 mt-1">
+                 <span class="text-slate-600 uppercase">Breakdown Voltage (Zener)</span>
+                 <span id="label-breakdown" class="text-rose-600 font-mono">-10.0 V</span>
+               </div>
+               <div class="flex items-center justify-between text-[10px] font-bold border-t border-indigo-100 pt-1 mt-1">
+                 <span class="text-slate-600 uppercase">Reverse Saturation Current</span>
+                 <span id="label-is" class="text-slate-600 font-mono">10⁻¹² A</span>
+               </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Bias Voltage ($V_D$)</span>
+                <div class="flex items-center space-x-1">
+                  <input type="number" id="num-voltage" step="0.05" min="-12.0" max="1.5" value="0.0" class="w-16 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
+                  <span class="text-[10px] text-slate-400 font-semibold">V</span>
+                </div>
+              </div>
+              <input type="range" id="slider-voltage" min="-12.0" max="1.2" step="0.01" value="0.0" class="w-full">
+              <div class="flex justify-between text-[9px] font-bold mt-1">
+                <span class="text-rose-500">Reverse Bias (-12V)</span>
+                <span class="text-emerald-500">Forward Bias (+1.2V)</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Shockley Diode Equation</span>
+              <div class="text-[12px] font-mono text-center py-2 space-y-1.5">
+                $$I_D = I_S \left( e^{\frac{qV_D}{n k_B T}} - 1 \right)$$
+                <div class="text-[9px] text-slate-400 font-sans mt-2 text-left">Describes the exponential increase in current during forward bias and the tiny saturation current during reverse bias.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Live Multimeter Telemetry</span>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Diode Current ($I_D$)</div>
+                <div id="telemetryCurrent" class="text-lg font-bold text-amber-400 font-mono mt-0.5 tracking-widest">0.00 mA</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Bias Region</div>
+                <div id="telemetryRegion" class="text-sm font-bold text-slate-400 font-mono mt-0.5">UNBIASED</div>
+              </div>
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Depletion Width</div>
+                <div id="telemetryWidth" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5">Normal</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span id="simStatusText" class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider">Circuit Open</span>
+          </div>
+
+          <div class="absolute bottom-4 left-0 w-full flex justify-between px-10 pointer-events-none select-none z-10">
+             <div class="text-center w-1/2">
+                <span class="text-sm font-extrabold text-blue-400 uppercase tracking-widest block">P-Type</span>
+                <span class="text-[9px] text-slate-400 font-mono">Majority: Holes (+)</span>
+             </div>
+             <div class="text-center w-1/2">
+                <span class="text-sm font-extrabold text-rose-400 uppercase tracking-widest block">N-Type</span>
+                <span class="text-[9px] text-slate-400 font-mono">Majority: Electrons (-)</span>
+             </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does current increase exponentially during Forward Bias?
+              </h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Scientific Verification</span>
+                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                Applying a positive voltage to the P-type side opposes the built-in potential barrier. This drastically narrows the depletion region, lowering the energy hill. Because the energy distribution of charge carriers follows Maxwell-Boltzmann statistics, lowering the barrier allows an exponentially larger number of majority carriers to diffuse across the junction.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does the Depletion Region widen during Reverse Bias?
+              </h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Scientific Verification</span>
+                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                In reverse bias, the positive battery terminal is connected to the N-side and the negative to the P-side. This pulls the free electrons and holes away from the junction. The removal of mobile carriers leaves behind uncovered, fixed ionic charges (donors/acceptors), physically widening the insulating depletion layer and increasing the barrier voltage.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What causes the sudden massive current during Breakdown (e.g., at -10V)?
+              </h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Scientific Verification</span>
+                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-amber-500">
+                At high reverse voltages, the electric field across the depletion region becomes immense. In <strong>Zener Breakdown</strong>, the field is strong enough to physically rip electrons out of their covalent bonds via quantum tunneling. In <strong>Avalanche Breakdown</strong>, fast-moving minority carriers collide with atoms, knocking loose more electrons in a cascading chain reaction.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does Germanium (Ge) conduct at a lower voltage than Silicon (Si)?
+              </h4>
+              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-4">Show Scientific Verification</span>
+                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                Germanium has a smaller bandgap energy ($\approx 0.67 \text{ eV}$) compared to Silicon ($\approx 1.1 \text{ eV}$). Because the electrons are less tightly bound to the nucleus in the larger Germanium atom, the built-in potential barrier is lower ($\approx 0.3 \text{V}$ vs $0.7 \text{V}$ for Si), requiring less forward voltage to overcome it.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* The I-V Curve plots the Shockley Diode equation mapped logarithmically near breakdown for visual clarity.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> DIODE CHARACTERISTICS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>p-n Junction Diode Virtual Laboratory</strong>! Explore the non-linear relationship between voltage and current in semiconductors.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Power Supply ON</strong>: Activates the circuit and allows the voltage slider to dictate current flow.</li>
+            <li><strong>Bias Voltage Slider</strong>: Drag right to apply Forward Bias (reducing the barrier). Drag left to apply Reverse Bias (widening the depletion region).</li>
+            <li><strong>Material Selection</strong>: Compare standard Silicon (0.7V knee) with Germanium (0.3V knee). Watch how the entire I-V curve shifts!</li>
+            <li><strong>Dual Viewport</strong>: The left side of the canvas illustrates the physical semiconductor lattice and the central depletion region. The right side plots the mathematical I-V curve in real-time.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Database of Materials ---
+    // Parameters heavily scaled/approximated to make visual graphing clean and understandable within a single canvas
+    const MATERIALS = {
+      'si': { 
+        id: 'si', name: 'Silicon', vKnee: 0.7, vBreak: 10.0, Is: 4e-9, n: 1.5, 
+        color: '#3b82f6', labelKnee: '0.7 V', labelBreak: '-10.0 V', labelIs: '10⁻¹² A' 
+      },
+      'ge': { 
+        id: 'ge', name: 'Germanium', vKnee: 0.3, vBreak: 8.0, Is: 1.2e-5, n: 1.5, 
+        color: '#8b5cf6', labelKnee: '0.3 V', labelBreak: '-8.0 V', labelIs: '10⁻⁶ A' 
+      }
+    };
+
+    // --- Application State ---
+    let currentMaterial = MATERIALS['si'];
+    let isPowered = false;
+    let voltage = 0.0;
+    let current = 0.0; // in mA
+    
+    const kT_q = 0.026; // Thermal voltage at ~300K
+
+    // Particle Animation State
+    let particles = [];
+    const NUM_PARTICLES = 60;
+
+    // --- DOM Elements ---
+    const selMaterial = document.getElementById('select-material');
+    const sliderVoltage = document.getElementById('slider-voltage');
+    const numVoltage = document.getElementById('num-voltage');
+    const chkCarriers = document.getElementById('chk-carriers');
+
+    const lblKnee = document.getElementById('label-knee');
+    const lblBreakdown = document.getElementById('label-breakdown');
+    const lblIs = document.getElementById('label-is');
+    
+    const telCurrent = document.getElementById('telemetryCurrent');
+    const telRegion = document.getElementById('telemetryRegion');
+    const telWidth = document.getElementById('telemetryWidth');
+
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    // --- Core Math Logic ---
+    function calculateCurrent(v, mat) {
+      let I = 0; // Return in mA
+      
+      if (v > 0) {
+        // Forward Bias: Shockley Eq.
+        // I = Is * (e^(V / nVt) - 1). Convert A to mA (* 1000)
+        let I_A = mat.Is * (Math.exp(v / (mat.n * kT_q)) - 1);
+        I = I_A * 1000;
+        // Clamp for graphing purposes to 15mA max visually
+        if (I > 20) I = 20 + (I-20)*0.1; 
+      } else if (v > -mat.vBreak) {
+        // Reverse Bias: Saturation Current (-Is)
+        I = -mat.Is * 1000;
+      } else {
+        // Zener/Avalanche Breakdown
+        // Exponential spike downwards
+        let overVoltage = Math.abs(v) - mat.vBreak;
+        I = (-mat.Is * 1000) - (0.5 * Math.exp(overVoltage / 0.2));
+      }
+      return I;
+    }
+
+    function updateState() {
+      if (!isPowered) {
+         current = 0;
+         telRegion.innerText = "POWER OFF";
+         telRegion.className = "text-sm font-bold text-slate-500 font-mono mt-0.5";
+      } else {
+         current = calculateCurrent(voltage, currentMaterial);
+         
+         if (voltage > 0.1) {
+            telRegion.innerText = "FORWARD BIAS";
+            telRegion.className = "text-sm font-bold text-emerald-400 font-mono mt-0.5 tracking-widest";
+         } else if (voltage < -currentMaterial.vBreak) {
+            telRegion.innerText = "BREAKDOWN";
+            telRegion.className = "text-sm font-bold text-rose-500 font-mono mt-0.5 tracking-widest animate-pulse";
+         } else if (voltage < -0.1) {
+            telRegion.innerText = "REVERSE BIAS";
+            telRegion.className = "text-sm font-bold text-blue-400 font-mono mt-0.5 tracking-widest";
+         } else {
+            telRegion.innerText = "UNBIASED";
+            telRegion.className = "text-sm font-bold text-slate-400 font-mono mt-0.5";
+         }
+      }
+
+      // Depletion Width string
+      if (voltage > currentMaterial.vKnee) telWidth.innerText = "Negligible (Overcome)";
+      else if (voltage > 0) telWidth.innerText = "Narrowing";
+      else if (voltage < -0.5) telWidth.innerText = "Widened";
+      else telWidth.innerText = "Equilibrium";
+
+      // Current string
+      let cStr = current.toFixed(3);
+      telCurrent.innerText = cStr + " mA";
+      if (Math.abs(current) > 5) telCurrent.className = "text-lg font-bold text-rose-400 font-mono mt-0.5 tracking-widest";
+      else telCurrent.className = "text-lg font-bold text-amber-400 font-mono mt-0.5 tracking-widest";
+    }
+
+    // --- Input Handlers ---
+    selMaterial.addEventListener('change', () => { 
+      currentMaterial = MATERIALS[selMaterial.value];
+      lblKnee.innerText = currentMaterial.labelKnee;
+      lblBreakdown.innerText = currentMaterial.labelBreak;
+      lblIs.innerText = currentMaterial.labelIs;
+      updateState(); 
+    });
+
+    function syncVoltage(val) {
+      val = parseFloat(val);
+      voltage = val;
+      sliderVoltage.value = val;
+      numVoltage.value = val.toFixed(2);
+      updateState();
+    }
+    sliderVoltage.addEventListener('input', e => syncVoltage(e.target.value));
+    numVoltage.addEventListener('change', e => {
+       let val = Math.max(-12.0, Math.min(1.5, parseFloat(e.target.value)));
+       syncVoltage(val);
+    });
+
+    btnRun.addEventListener('click', () => {
+      isPowered = true;
+      btnRun.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      btnPause.classList.remove('bg-indigo-600', 'text-white');
+      statusText.innerText = "Circuit Powered";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+      updateState();
+    });
+
+    btnPause.addEventListener('click', () => {
+      isPowered = false;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      statusText.innerText = "Circuit Open";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500";
+      updateState();
+    });
+
+    btnReset.addEventListener('click', () => {
+      syncVoltage(0.0);
+    });
+
+
+    // --- Canvas Rendering Helpers ---
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function initParticles() {
+      particles = [];
+      for(let i=0; i<NUM_PARTICLES; i++) {
+         // Randomly assign as P (holes) or N (electrons)
+         let isHole = i < NUM_PARTICLES/2;
+         particles.push({
+            isHole: isHole,
+            x: Math.random(), // 0 to 1 relative to their zone
+            y: Math.random(),
+            speed: (Math.random() * 0.5 + 0.5)
+         });
+      }
+    }
+
+    let lastTime = performance.now();
+
+    function renderLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      const W = canvas.width / window.devicePixelRatio;
+      const H = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, W, H);
+
+      // Layout: Left 45% = P-N Junction Diagram, Right 55% = I-V Graph
+      const splitX = W * 0.45;
+
+      // ==========================================
+      // 1. P-N JUNCTION PHYSICAL MODEL (LEFT)
+      // ==========================================
+      const jY = H / 2 - 20;
+      const jW = splitX - 60; // Total width of diode
+      const jH = 140;
+      const jX = 30; // Left padding
+      
+      const centerJ = jX + jW/2;
+      
+      // Calculate Depletion Width based on Voltage
+      // W = W0 * sqrt(Vbi - V). Max out reverse bias widening.
+      let v_eff = isPowered ? voltage : 0;
+      if (v_eff > currentMaterial.vKnee) v_eff = currentMaterial.vKnee; // Clamp forward bias collapse
+      let depWidthRatio = Math.sqrt(Math.max(0.01, currentMaterial.vKnee - v_eff)) / Math.sqrt(currentMaterial.vKnee);
+      let depW = 40 * depWidthRatio; // Base width 40px
+
+      if (v_eff < -currentMaterial.vBreak) depW = 40 * Math.sqrt(currentMaterial.vKnee + currentMaterial.vBreak); // Breakdown clamp
+
+      const pRight = centerJ - depW/2;
+      const nLeft = centerJ + depW/2;
+
+      // Draw P-Region (Blueish)
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.2)'; // Blue 500 alpha
+      ctx.fillRect(jX, jY - jH/2, pRight - jX, jH);
+      
+      // Draw N-Region (Reddish)
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.2)'; // Rose 500 alpha
+      ctx.fillRect(nLeft, jY - jH/2, (jX + jW) - nLeft, jH);
+
+      // Draw Depletion Region (Yellowish/Neutral)
+      const grad = ctx.createLinearGradient(pRight, 0, nLeft, 0);
+      grad.addColorStop(0, 'rgba(59, 130, 246, 0.05)');
+      grad.addColorStop(0.5, 'rgba(250, 204, 21, 0.15)'); // Amber
+      grad.addColorStop(1, 'rgba(244, 63, 94, 0.05)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(pRight, jY - jH/2, depW, jH);
+
+      // Draw fixed ions in depletion region
+      ctx.font = '10px monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for(let i=0; i<3; i++) {
+         let y = (jY - jH/2) + 25 + i*45;
+         // Acceptor ions (Negative) on P side
+         ctx.fillStyle = 'rgba(255,255,255,0.4)';
+         ctx.beginPath(); ctx.arc(pRight + depW*0.25, y, 10, 0, Math.PI*2); ctx.fill();
+         ctx.fillStyle = '#0f172a'; ctx.fillText('-', pRight + depW*0.25, y+1);
+         
+         // Donor ions (Positive) on N side
+         ctx.fillStyle = 'rgba(255,255,255,0.4)';
+         ctx.beginPath(); ctx.arc(nLeft - depW*0.25, y, 10, 0, Math.PI*2); ctx.fill();
+         ctx.fillStyle = '#0f172a'; ctx.fillText('+', nLeft - depW*0.25, y+1);
+      }
+
+      // Draw Outline
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(jX, jY - jH/2, jW, jH);
+      
+      // Draw Metal Contacts
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(jX-10, jY-jH/2, 10, jH); // Anode
+      ctx.fillRect(jX+jW, jY-jH/2, 10, jH); // Cathode
+
+      // Draw Particles (Carriers)
+      if (chkCarriers.checked) {
+         let driftSpeed = 0;
+         if (isPowered && voltage > 0) driftSpeed = Math.pow(voltage, 2) * 50; // Accelerate in forward
+         else if (isPowered && voltage < -currentMaterial.vBreak) driftSpeed = -100; // Avalanche breakdown reverse
+
+         for(let i=0; i<NUM_PARTICLES; i++) {
+            let p = particles[i];
+            
+            // Kinetic Jitter
+            p.x += (Math.random()-0.5) * 0.02;
+            p.y += (Math.random()-0.5) * 0.05;
+
+            // Drift
+            if (p.isHole) p.x += (driftSpeed * p.speed * dt) / jW; // Holes move Right (+)
+            else p.x -= (driftSpeed * p.speed * dt) / jW; // Electrons move Left (-)
+
+            // Wrap around logic to simulate continuous circuit flow
+            if (p.x > 1.0) p.x = 0;
+            if (p.x < 0) p.x = 1.0;
+            if (p.y > 1.0) p.y = 0;
+            if (p.y < 0) p.y = 1.0;
+
+            // Map relative coordinates to pixel coordinates
+            // Holes originate in P, Electrons in N.
+            let px, py;
+            py = (jY - jH/2 + 10) + p.y * (jH - 20);
+            
+            if (p.isHole) {
+               px = jX + p.x * (pRight - jX);
+               // If drifting, let them cross the junction
+               if (driftSpeed > 0) px = jX + p.x * jW; 
+               else if (driftSpeed < 0 && p.x > 0.8) px = pRight + (p.x-0.8)*depW; // Pulled into depletion during breakdown
+            } else {
+               px = nLeft + p.x * ((jX+jW) - nLeft);
+               if (driftSpeed > 0) px = jX + (1-p.x) * jW; 
+               else if (driftSpeed < 0 && p.x > 0.8) px = nLeft - (p.x-0.8)*depW;
+            }
+
+            // Draw Carrier
+            if (p.isHole) {
+               ctx.strokeStyle = '#60a5fa'; // Blue Outline for Hole
+               ctx.fillStyle = '#0f172a'; // Empty center
+               ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            } else {
+               ctx.fillStyle = '#fb7185'; // Solid Red for Electron
+               ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI*2); ctx.fill();
+            }
+         }
+      }
+
+      // Draw Battery / Circuit Lines
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 3;
+      // Wires down
+      ctx.beginPath(); ctx.moveTo(jX-5, jY+jH/2); ctx.lineTo(jX-5, jY+jH/2+40); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(jX+jW+5, jY+jH/2); ctx.lineTo(jX+jW+5, jY+jH/2+40); ctx.stroke();
+      // Wires across
+      ctx.beginPath(); ctx.moveTo(jX-5, jY+jH/2+40); ctx.lineTo(centerJ-20, jY+jH/2+40); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(centerJ+20, jY+jH/2+40); ctx.lineTo(jX+jW+5, jY+jH/2+40); ctx.stroke();
+      
+      // Variable Battery Symbol
+      let batY = jY+jH/2+40;
+      ctx.lineWidth = 2;
+      // If V > 0, long line on left. If V < 0, long line on right.
+      if (voltage >= 0) {
+         ctx.beginPath(); ctx.moveTo(centerJ-15, batY-15); ctx.lineTo(centerJ-15, batY+15); ctx.stroke(); // Positive
+         ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(centerJ-5, batY-8); ctx.lineTo(centerJ-5, batY+8); ctx.stroke(); // Negative
+         ctx.fillStyle = '#64748b'; ctx.font='10px sans-serif'; ctx.fillText('+', centerJ-22, batY-10);
+      } else {
+         ctx.beginPath(); ctx.moveTo(centerJ-5, batY-15); ctx.lineTo(centerJ-5, batY+15); ctx.stroke(); // Positive right
+         ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(centerJ-15, batY-8); ctx.lineTo(centerJ-15, batY+8); ctx.stroke(); // Negative left
+         ctx.fillStyle = '#64748b'; ctx.font='10px sans-serif'; ctx.fillText('-', centerJ-22, batY-10);
+      }
+      // Arrow across battery to show variable
+      ctx.strokeStyle = '#facc15'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(centerJ-25, batY+10); ctx.lineTo(centerJ+5, batY-10); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(centerJ+5, batY-10); ctx.lineTo(centerJ-2, batY-10); ctx.lineTo(centerJ+5, batY-3); ctx.fill();
+
+
+      // ==========================================
+      // 2. I-V CURVE GRAPH (RIGHT)
+      // ==========================================
+      const gX = splitX + 40;
+      const gY = 40;
+      const gW = W - gX - 40;
+      const gH = H - 80;
+      
+      // Graph Origin (0,0). Let's put X=0 at 75% width (mostly reverse bias), Y=0 at 50% height.
+      const oX = gX + gW * 0.8; 
+      const oY = gY + gH * 0.6;
+
+      // Draw Grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      // Horizontals
+      for(let y = gY; y <= gY+gH; y += gH/10) { ctx.moveTo(gX, y); ctx.lineTo(gX+gW, y); }
+      // Verticals
+      for(let x = gX; x <= gX+gW; x += gW/10) { ctx.moveTo(x, gY); ctx.lineTo(x, gY+gH); }
+      ctx.stroke();
+
+      // Draw Axes
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(gX, oY); ctx.lineTo(gX+gW, oY); // X-axis (Voltage)
+      ctx.moveTo(oX, gY); ctx.lineTo(oX, gY+gH); // Y-axis (Current)
+      ctx.stroke();
+
+      // Axis Labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'right'; ctx.fillText("V_D (V)", gX+gW, oY - 10);
+      ctx.textAlign = 'left'; ctx.fillText("I_D (mA)", oX + 10, gY + 10);
+      
+      // Ticks
+      ctx.font = '10px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText("-12V", gX + 10, oY + 15);
+      ctx.fillText("0V", oX + 10, oY + 15);
+      ctx.fillText("+1V", gX+gW - 10, oY + 15);
+
+      // --- Draw Mathematical Curve Path (Background) ---
+      // We map V: -12 to +1.2. 
+      const vMin = -12.0;
+      const vMax = 1.5;
+      const iMax = 15.0; // mA top axis
+      const iMin = -15.0; // mA bottom axis
+
+      function mapGraph(v, i) {
+         let px = oX + (v / vMax) * (gW - (oX - gX)); // Forward scale
+         if (v < 0) px = oX - (v / vMin) * (oX - gX); // Reverse scale
+
+         let py = oY - (i / iMax) * (oY - gY); // Positive current up
+         if (i < 0) py = oY + (i / iMin) * ((gY+gH) - oY); // Negative current down
+         
+         // Hard clamp Y to not draw outside graph box
+         py = Math.max(gY, Math.min(gY+gH, py));
+         return {x: px, y: py};
+      }
+
+      ctx.strokeStyle = currentMaterial.color;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      
+      for(let testV = vMin; testV <= vMax; testV += 0.05) {
+         let testI = calculateCurrent(testV, currentMaterial);
+         let pt = mapGraph(testV, testI);
+         if(testV === vMin) ctx.moveTo(pt.x, pt.y);
+         else ctx.lineTo(pt.x, pt.y);
+      }
+      ctx.stroke();
+
+      // --- Draw Live Operating Point ---
+      if (isPowered) {
+         let pt = mapGraph(voltage, current);
+         
+         // Dotted trace lines to axes
+         ctx.strokeStyle = 'rgba(24acc15, 0.5)'; // Amber
+         ctx.lineWidth = 1;
+         ctx.setLineDash([4, 4]);
+         ctx.beginPath();
+         ctx.moveTo(pt.x, oY); ctx.lineTo(pt.x, pt.y);
+         ctx.moveTo(oX, pt.y); ctx.lineTo(pt.x, pt.y);
+         ctx.stroke();
+         ctx.setLineDash([]);
+
+         // Glow dot
+         ctx.fillStyle = '#facc15';
+         ctx.beginPath(); ctx.arc(pt.x, pt.y, 6, 0, Math.PI*2); ctx.fill();
+         ctx.shadowColor = '#facc15'; ctx.shadowBlur = 10;
+         ctx.fill(); ctx.shadowBlur = 0;
+
+         // Coordinate Label
+         ctx.fillStyle = '#ffffff';
+         ctx.font = 'bold 11px monospace';
+         ctx.textAlign = voltage >= 0 ? 'right' : 'left';
+         let lblX = voltage >= 0 ? pt.x - 10 : pt.x + 10;
+         ctx.fillText(`(${voltage.toFixed(2)}V, ${current.toFixed(2)}mA)`, lblX, pt.y - 10);
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Scientific Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Scientific Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      initParticles();
+      resizeCanvas();
+      selMaterial.dispatchEvent(new Event('change'));
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

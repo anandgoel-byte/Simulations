@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Continuity & Limits Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+    }
+    input[type="range"].slider-left::-webkit-slider-thumb {
+      background-color: #3b82f6; /* Blue */
+      box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+    }
+    input[type="range"].slider-right::-webkit-slider-thumb {
+      background-color: #f43f5e; /* Rose */
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Continuity Check at Point</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Differential Calculus &amp; Limit Evaluation Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Calculus Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Function Topology:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="continuous">Strictly Continuous</option>
+          <option value="removable">Removable Discontinuity (Hole)</option>
+          <option value="jump">Jump Discontinuity</option>
+          <option value="infinite">Infinite Discontinuity (Asymptote)</option>
+        </select>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Points
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Cartesian Grid</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Mathematical Function</span>
+            <div class="text-[12px] font-mono text-center py-2 min-h-[80px] flex items-center justify-center overflow-x-auto" id="formula-display">
+              $$f(x) = \frac{1}{2}x^2 - 1$$
+            </div>
+            <div class="text-[10px] text-slate-400 font-bold text-center border-t border-slate-700 pt-1.5 mt-1 uppercase tracking-wider">
+              Evaluating at <span class="text-amber-400" id="formula-c">x = 2</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-blue-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-blue-600 uppercase tracking-wider block mb-3 border-b border-blue-100 pb-1">Left-Hand Approach ($x \to c^-$)</span>
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5">Test Point ($x_L$)</span>
+              <span id="lbl-xL" class="font-mono text-blue-600 text-sm">-1.00</span>
+            </div>
+            <input type="range" id="sl-xL" min="-1.0" max="2.0" step="0.01" value="-1.0" class="w-full mt-2 slider-left">
+            <div class="text-[9px] font-bold text-slate-400 mt-1 text-center">Slide completely to the right to find LHL</div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-rose-500 uppercase tracking-wider block mb-3 border-b border-rose-100 pb-1">Right-Hand Approach ($x \to c^+$)</span>
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5">Test Point ($x_R$)</span>
+              <span id="lbl-xR" class="font-mono text-rose-600 text-sm">5.00</span>
+            </div>
+            <input type="range" id="sl-xR" min="2.0" max="5.0" step="0.01" value="5.0" class="w-full mt-2 slider-right">
+            <div class="text-[9px] font-bold text-slate-400 mt-1 text-center">Slide completely to the left to find RHL</div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider">Cartesian Function Plane</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-cyan-400 block"></span> Curve $f(x)$</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Exact Value $f(c)$</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> Left Approach Point</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> Right Approach Point</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Limits & Continuity Analysis</span>
+          
+          <div class="grid grid-cols-1 gap-2">
+            
+            <div class="bg-white p-3 rounded-xl border border-blue-200 shadow-sm flex justify-between items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">LHL $\lim_{x \to c^-} f(x)$</div>
+              <div class="text-base font-bold font-mono text-blue-600" id="tel-lhl">-0.50</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex justify-between items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">RHL $\lim_{x \to c^+} f(x)$</div>
+              <div class="text-base font-bold font-mono text-rose-500" id="tel-rhl">11.50</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex justify-between items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Exact Value $f(c)$</div>
+              <div class="text-base font-bold font-mono text-emerald-500" id="tel-fc">1.00</div>
+            </div>
+
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Conclusion at $x=c$</div>
+            <div class="text-lg font-bold font-mono text-emerald-400 tracking-widest uppercase" id="tel-status">Continuous</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What are the three strict conditions for continuity at a point?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                1. The function is defined at the point: $f(c)$ exists.<br>
+                2. The overall limit exists: $\lim_{x \to c} f(x)$ exists (meaning LHL = RHL).<br>
+                3. The limit equals the function value: $\lim_{x \to c} f(x) = f(c)$.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What is the visual difference between a Jump and a Removable discontinuity?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                A <strong>Removable</strong> discontinuity (hole) occurs when the LHL and RHL perfectly match, but $f(c)$ is either undefined or displaced elsewhere. A <strong>Jump</strong> discontinuity occurs when the LHL and RHL evaluate to two completely different finite numbers, physically breaking the curve.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Can a function have limits from both sides but still be discontinuous?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                Yes, absolutely! If LHL and RHL exist but do not equal each other, it's a Jump discontinuity. If they DO equal each other but do not equal $f(c)$, it's a Removable discontinuity. The existence of limits alone does not guarantee continuity.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> CONTINUITY & LIMITS PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Calculus Limits Laboratory</strong>! Explore how functions behave as they approach critical boundary points.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Function Topology</strong>: Select between the four classic edge cases of calculus: Continuous, Removable (Hole), Jump, and Infinite (Asymptote).</li>
+            <li><strong>Approach Sliders</strong>: Use the Left ($x_L$) and Right ($x_R$) sliders to independently drag the test points closer and closer to $c$.</li>
+            <li><strong>The Snap</strong>: Drag the sliders completely to their bounds to evaluate the exact limit. Watch the Telemetry dashboard to see if the LHL matches the RHL!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Physics / Math Definitions ---
+    const PRESETS = {
+        continuous: {
+            c: 2,
+            fL: (x) => 0.5 * x * x - 1,
+            fR: (x) => 0.5 * x * x - 1,
+            fc: 1.0,
+            lhl: 1.0,
+            rhl: 1.0,
+            tex: `f(x) = \\frac{1}{2}x^2 - 1`,
+            status: "Continuous",
+            color: "text-emerald-400"
+        },
+        removable: {
+            c: 0,
+            fL: (x) => -x * x + 3,
+            fR: (x) => -x * x + 3,
+            fc: -1.0,
+            lhl: 3.0,
+            rhl: 3.0,
+            tex: `f(x) = \\begin{cases} -x^2 + 3, & x \\neq 0 \\\\ -1, & x = 0 \\end{cases}`,
+            status: "Discontinuous (Removable)",
+            color: "text-amber-400"
+        },
+        jump: {
+            c: 1,
+            fL: (x) => x,
+            fR: (x) => x * x + 1,
+            fc: 2.0,
+            lhl: 1.0,
+            rhl: 2.0,
+            tex: `f(x) = \\begin{cases} x, & x < 1 \\\\ x^2 + 1, & x \\geq 1 \\end{cases}`,
+            status: "Discontinuous (Jump)",
+            color: "text-rose-500"
+        },
+        infinite: {
+            c: -1,
+            fL: (x) => 1 / ((x+1)*(x+1)),
+            fR: (x) => 1 / ((x+1)*(x+1)),
+            fc: null, // Undefined
+            lhl: Infinity,
+            rhl: Infinity,
+            tex: `f(x) = \\frac{1}{(x+1)^2}`,
+            status: "Discontinuous (Infinite)",
+            color: "text-fuchsia-400"
+        }
+    };
+
+    // --- State Variables ---
+    let currentMode = 'continuous';
+    let pObj = PRESETS[currentMode];
+    let xL = -1.0;
+    let xR = 5.0;
+
+    const X_MIN = -5, X_MAX = 5;
+    const Y_MIN = -5, Y_MAX = 6;
+
+    // --- DOM Elements ---
+    const selPreset = document.getElementById('select-preset');
+    const slXL = document.getElementById('sl-xL'); const lblXL = document.getElementById('lbl-xL');
+    const slXR = document.getElementById('sl-xR'); const lblXR = document.getElementById('lbl-xR');
+    
+    const formDisp = document.getElementById('formula-display');
+    const formC = document.getElementById('formula-c');
+    
+    const telLHL = document.getElementById('tel-lhl');
+    const telRHL = document.getElementById('tel-rhl');
+    const telFC = document.getElementById('tel-fc');
+    const telStatus = document.getElementById('tel-status');
+
+    const chkGrid = document.getElementById('chk-grid');
+    const btnReset = document.getElementById('btn-reset');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Logic & Telemetry ---
+    function formatValue(val) {
+        if (val === null || val === undefined) return "Undefined";
+        if (val === Infinity) return "+∞";
+        if (val === -Infinity) return "-∞";
+        return val.toFixed(2);
+    }
+
+    function calculate() {
+       pObj = PRESETS[currentMode];
+       
+       formDisp.innerHTML = `$$${pObj.tex}$$`;
+       formC.innerText = `x = ${pObj.c}`;
+
+       // Left calculation
+       let lVal = (Math.abs(xL - pObj.c) < 0.005) ? pObj.lhl : pObj.fL(xL);
+       // Right calculation
+       let rVal = (Math.abs(xR - pObj.c) < 0.005) ? pObj.rhl : pObj.fR(xR);
+
+       telLHL.innerText = formatValue(lVal);
+       telRHL.innerText = formatValue(rVal);
+       telFC.innerText = formatValue(pObj.fc);
+
+       // Status check based on current slider positions
+       if (Math.abs(xL - pObj.c) < 0.005 && Math.abs(xR - pObj.c) < 0.005) {
+           telStatus.innerText = pObj.status;
+           telStatus.className = `text-lg font-bold font-mono tracking-widest uppercase ${pObj.color}`;
+       } else {
+           telStatus.innerText = "Evaluating Limits...";
+           telStatus.className = "text-lg font-bold font-mono text-slate-400 tracking-widest uppercase";
+       }
+
+       if (window.MathJax) MathJax.typesetPromise([formDisp]);
+    }
+
+    // --- Input Handlers ---
+    function initSliders() {
+        let c = pObj.c;
+        // Left slider domain: [c-3, c]
+        slXL.min = c - 3; slXL.max = c; slXL.step = 0.01;
+        xL = c - 2.5; slXL.value = xL; lblXL.innerText = xL.toFixed(2);
+        
+        // Right slider domain: [c, c+3]
+        slXR.min = c; slXR.max = c + 3; slXR.step = 0.01;
+        xR = c + 2.5; slXR.value = xR; lblXR.innerText = xR.toFixed(2);
+    }
+
+    slXL.addEventListener('input', e => {
+        xL = parseFloat(e.target.value);
+        lblXL.innerText = xL.toFixed(2);
+        calculate();
+    });
+
+    slXR.addEventListener('input', e => {
+        xR = parseFloat(e.target.value);
+        lblXR.innerText = xR.toFixed(2);
+        calculate();
+    });
+
+    selPreset.addEventListener('change', e => {
+        currentMode = e.target.value;
+        pObj = PRESETS[currentMode];
+        initSliders();
+        calculate();
+    });
+
+    btnReset.addEventListener('click', () => {
+        initSliders();
+        calculate();
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Dynamic dimension check
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      // Map mathematical coords to canvas pixels
+      const xRange = X_MAX - X_MIN;
+      const yRange = Y_MAX - Y_MIN;
+      const scaleX = W / xRange; 
+      const scaleY = H / yRange;
+      const cx = (0 - X_MIN) * scaleX; // X pixel origin
+      const cy = H - (0 - Y_MIN) * scaleY; // Y pixel origin (inverted)
+
+      const mapX = (x) => cx + x * scaleX;
+      const mapY = (y) => cy - y * scaleY;
+
+      // 1. Draw Cartesian Grid & Axes
+      if (chkGrid.checked) {
+          ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          for(let x = X_MIN; x <= X_MAX; x+=1) { ctx.moveTo(mapX(x), 0); ctx.lineTo(mapX(x), H); }
+          for(let y = Y_MIN; y <= Y_MAX; y+=1) { ctx.moveTo(0, mapY(y)); ctx.lineTo(W, mapY(y)); }
+          ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+      ctx.stroke();
+
+      // Axis label C
+      ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 12px monospace';
+      ctx.fillText("c", mapX(pObj.c) - 4, cy + 18);
+      
+      // Vertical boundary line at C
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.2)';
+      ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(mapX(pObj.c), 0); ctx.lineTo(mapX(pObj.c), H); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 2. Draw Function Branches
+      ctx.strokeStyle = '#22d3ee'; // Cyan
+      ctx.lineWidth = 3;
+      
+      // Left Branch
+      ctx.beginPath();
+      for(let x = X_MIN; x <= pObj.c - 0.02; x += 0.05) {
+          let y = pObj.fL(x);
+          if (y > Y_MAX+5 || y < Y_MIN-5) continue; // infinite cap
+          if (x === X_MIN) ctx.moveTo(mapX(x), mapY(y));
+          else ctx.lineTo(mapX(x), mapY(y));
+      }
+      if(pObj.lhl !== Infinity) ctx.lineTo(mapX(pObj.c), mapY(pObj.lhl));
+      ctx.stroke();
+
+      // Right Branch
+      ctx.beginPath();
+      if(pObj.rhl !== Infinity) ctx.moveTo(mapX(pObj.c), mapY(pObj.rhl));
+      for(let x = pObj.c + 0.02; x <= X_MAX; x += 0.05) {
+          let y = pObj.fR(x);
+          if (y > Y_MAX+5 || y < Y_MIN-5) continue;
+          ctx.lineTo(mapX(x), mapY(y));
+      }
+      ctx.stroke();
+
+      // 3. Draw Boundary Features (Holes and Dots)
+      if (currentMode === 'removable') {
+          // Hole
+          ctx.fillStyle = '#0b0f19'; ctx.strokeStyle = '#22d3ee'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(mapX(pObj.c), mapY(pObj.lhl), 5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          // Solid dot f(c)
+          ctx.fillStyle = '#10b981'; ctx.beginPath(); ctx.arc(mapX(pObj.c), mapY(pObj.fc), 6, 0, Math.PI*2); ctx.fill();
+      } 
+      else if (currentMode === 'jump') {
+          // Open hole at RHL (since f(x)>=1 uses bottom piece, wait LHL is open, RHL is solid)
+          ctx.fillStyle = '#0b0f19'; ctx.strokeStyle = '#22d3ee'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(mapX(pObj.c), mapY(pObj.lhl), 5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          // Solid dot at RHL
+          ctx.fillStyle = '#10b981'; ctx.beginPath(); ctx.arc(mapX(pObj.c), mapY(pObj.rhl), 6, 0, Math.PI*2); ctx.fill();
+      }
+
+      // 4. Draw Interaction Points (xL and xR)
+      const drawLimitPoint = (xVal, isL) => {
+          if (Math.abs(xVal - pObj.c) < 0.005) return; // Don't draw if exactly at c
+          let yVal = isL ? pObj.fL(xVal) : pObj.fR(xVal);
+          if (yVal > Y_MAX+2 || yVal < Y_MIN-2) return; // Skip if offscreen (infinite)
+
+          let color = isL ? '#3b82f6' : '#f43f5e'; // Blue or Rose
+          
+          // Dashed lines to axes
+          ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(mapX(xVal), cy); ctx.lineTo(mapX(xVal), mapY(yVal)); // to X
+          ctx.lineTo(cx, mapY(yVal)); // to Y
+          ctx.stroke(); ctx.setLineDash([]);
+
+          // Point
+          ctx.fillStyle = color;
+          ctx.beginPath(); ctx.arc(mapX(xVal), mapY(yVal), 5, 0, Math.PI*2); ctx.fill();
+          
+          // Label
+          ctx.fillStyle = '#fff'; ctx.font = '10px monospace';
+          ctx.fillText(isL ? "x_L" : "x_R", mapX(xVal) + 8, mapY(yVal) - 8);
+      };
+
+      drawLimitPoint(xL, true);
+      drawLimitPoint(xR, false);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initialize
+    window.addEventListener('load', () => {
+      initSliders();
+      calculate();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

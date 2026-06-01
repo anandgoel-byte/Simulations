@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Natural Selection Frequency Simulator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+    }
+    input[type="range"].slider-slate::-webkit-slider-thumb {
+      background-color: #64748b;
+      box-shadow: 0 0 6px rgba(100, 116, 139, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Natural Selection Frequency Simulator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Evolution &amp; Population Genetics Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Math Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-play" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5">
+          ▶ Auto-Progress Generations
+        </button>
+        <button id="btn-step" class="px-4 py-1.5 ml-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded transition-all shadow-sm">
+          Step 1 Generation
+        </button>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm">
+          <span>🔄</span> Reset Population
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-hardy" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Hardy-Weinberg Graph</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Hardy-Weinberg Equations</span>
+            <div class="text-[11px] font-mono text-center py-1 font-bold">
+              $$p + q = 1$$
+              $$p^2 + 2pq + q^2 = 1$$
+            </div>
+            <div class="text-[9px] font-semibold flex justify-between border-t border-indigo-100 pt-1.5">
+              <span>$p$ = Dark Allele (D)</span>
+              <span>$q$ = Light Allele (d)</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="uppercase">Environmental Background</span>
+            </div>
+            <input type="range" id="sl-env" min="0" max="100" step="1" value="50" class="w-full mt-2 slider-slate">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>Light (Birch)</span>
+              <span>Dark (Soot)</span>
+            </div>
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-slate-50 p-2 rounded border border-slate-100">
+              Determines which phenotype is camouflaged. High contrast individuals are eaten by predators.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="uppercase text-emerald-700">Predator Selective Pressure</span>
+              <span id="lbl-pred" class="font-mono text-emerald-600 text-sm">Moderate</span>
+            </div>
+            <input type="range" id="sl-pred" min="0" max="100" step="1" value="50" class="w-full mt-2 slider-emerald">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>0% (H-W Eq)</span>
+              <span>100% (Lethal)</span>
+            </div>
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-emerald-50 p-2 rounded border border-emerald-100">
+              At 0%, no selection occurs (Hardy-Weinberg Equilibrium is maintained). At 100%, the contrasting phenotype is rapidly eradicated.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative overflow-hidden flex flex-col border-8 border-slate-900 min-h-[500px]">
+        
+        <div class="relative w-full flex-1 lab-stage transition-colors duration-700" id="env-bg" style="background-color: rgb(150,150,150);">
+            <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+            
+            <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+              <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Generation: 1</span>
+            </div>
+        </div>
+
+        <div class="h-[180px] bg-slate-950 border-t-2 border-slate-800 relative z-20" id="graph-container">
+            <canvas id="graphCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+            <div class="absolute top-2 left-3 text-[9px] font-bold tracking-widest text-slate-400 uppercase">Allele Frequencies over Time</div>
+            <div class="absolute top-2 right-3 flex gap-3 text-[9px] font-bold uppercase">
+                <span class="text-indigo-400">P (Dark)</span>
+                <span class="text-rose-400">Q (Light)</span>
+            </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Population Genetics Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Allele $p$ (Dark)</div>
+              <div class="text-2xl font-bold font-mono text-indigo-400" id="tel-p">0.50</div>
+            </div>
+
+            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Allele $q$ (Light)</div>
+              <div class="text-2xl font-bold font-mono text-rose-400" id="tel-q">0.50</div>
+            </div>
+
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Genotype Frequencies</div>
+              <div class="w-full flex justify-between px-4 font-mono font-bold text-xs">
+                <span class="text-indigo-700" id="tel-p2">DD: 25%</span>
+                <span class="text-emerald-600" id="tel-2pq">Dd: 50%</span>
+                <span class="text-rose-600" id="tel-q2">dd: 25%</span>
+              </div>
+            </div>
+
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Visible Phenotypes</div>
+              <div class="w-full flex justify-between px-8 font-mono font-bold text-sm">
+                <span class="text-slate-800" id="tel-dark">Dark: 75%</span>
+                <span class="text-slate-400" id="tel-light">Light: 25%</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the predator selection pressure is set to 0%, what happens to the allele frequencies over time?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why is it incredibly difficult for natural selection to completely eliminate a harmful RECESSIVE allele ($q$) from a population?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If the environment turns completely dark, favoring dark moths over light moths, what type of selection is occurring?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In this simulation, Biological Fitness is strictly determined by:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> NATURAL SELECTION PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Evolution & Population Genetics Lab</strong>! Observe how environmental pressures physically alter the genetic makeup of a population over time.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Environmental Background</strong>: Slide from a light birch forest to a soot-covered dark forest. Notice how the canvas background physically changes color.</li>
+            <li><strong>Predator Pressure</strong>: This dictates how aggressively birds eat the moths that stand out. If set to 0%, no one is eaten, and Hardy-Weinberg equilibrium is perfectly maintained!</li>
+            <li><strong>The Graph & Telemetry</strong>: As you step through generations, watch the real-time line graph plotting the frequency of the Dark Allele ($p$) versus the Light Allele ($q$). Notice how the physical phenotype frequencies (Dark vs Light) are fundamentally tied to the underlying $p^2$, $2pq$, and $q^2$ genotypes!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "If the predator selection pressure is set to 0%, what happens to the allele frequencies over time?",
+        options: [
+          { text: "The dominant allele will eventually take over 100% of the population.", isCorrect: false, exp: "Incorrect. Dominance does not mean an allele inherently increases in frequency." },
+          { text: "They will fluctuate wildly due to genetic drift.", isCorrect: false, exp: "Incorrect. While drift happens in tiny populations, ideally with 0 pressure they stabilize." },
+          { text: "They will remain perfectly constant generation after generation.", isCorrect: true, exp: "Correct! This is the definition of Hardy-Weinberg Equilibrium. Without a selective pressure, mutation, or migration, allele frequencies do not change." },
+          { text: "The recessive allele will naturally die out.", isCorrect: false, exp: "Incorrect. Recessive alleles remain stable unless selected against." }
+        ]
+      },
+      q2: {
+        question: "Why is it incredibly difficult for natural selection to completely eliminate a harmful RECESSIVE allele (q) from a population?",
+        options: [
+          { text: "Because predators prefer to eat dominant individuals.", isCorrect: false, exp: "Incorrect. Predators eat based on visible phenotype, not genotype." },
+          { text: "Because the recessive allele can 'hide' safely inside heterozygous (Dd) individuals who exhibit the dominant phenotype.", isCorrect: true, exp: "Correct! Even if the environment violently kills every single light moth (dd), the light allele (d) survives completely hidden inside the dark heterozygous moths (Dd). It will continually reappear in future generations." },
+          { text: "Because recessive alleles spontaneously mutate back into existence.", isCorrect: false, exp: "Incorrect. While mutation occurs, it is not the primary reason recessive traits persist." },
+          { text: "Because recessive alleles are physically stronger than dominant ones.", isCorrect: false, exp: "Incorrect. Dominance refers to expression, not physical strength." }
+        ]
+      },
+      q3: {
+        question: "If the environment turns completely dark, favoring dark moths over light moths, what type of selection is occurring?",
+        options: [
+          { text: "Stabilizing Selection", isCorrect: false, exp: "Incorrect. Stabilizing selection favors the average intermediate phenotype." },
+          { text: "Disruptive Selection", isCorrect: false, exp: "Incorrect. Disruptive selection favors BOTH extreme phenotypes over the average." },
+          { text: "Directional Selection", isCorrect: true, exp: "Correct! Directional selection occurs when conditions favor one extreme phenotype over all others, causing the allele frequency curve to shift strictly in one direction (towards Dark)." },
+          { text: "Artificial Selection", isCorrect: false, exp: "Incorrect. This is happening naturally via predators, not human breeding." }
+        ]
+      },
+      q4: {
+        question: "In this simulation, Biological Fitness is strictly determined by:",
+        options: [
+          { text: "How well an organism's physical phenotype blends into the current environmental background.", isCorrect: true, exp: "Correct! Fitness is not about being the 'strongest' or 'fastest', it is about survival. Here, survival is entirely dictated by camouflage against the environment." },
+          { text: "How fast the moth can fly away from the predator.", isCorrect: false, exp: "Incorrect. Flight speed is not a variable in this specific model." },
+          { text: "Whether the moth possesses the dominant or recessive allele.", isCorrect: false, exp: "Incorrect. Dominance does not inherently equal fitness. In a light environment, the dominant Dark allele is highly unfit!" },
+          { text: "The size of the moth.", isCorrect: false, exp: "Incorrect. Size is not modeled here." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- POPULATION GENETICS ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const gCanvas = document.getElementById('graphCanvas');
+    const gCtx = gCanvas.getContext('2d');
+
+    // UI Elements
+    const slEnv = document.getElementById('sl-env');
+    const envBg = document.getElementById('env-bg');
+    const slPred = document.getElementById('sl-pred');
+    const lblPred = document.getElementById('lbl-pred');
+    
+    const btnPlay = document.getElementById('btn-play');
+    const btnStep = document.getElementById('btn-step');
+    const btnReset = document.getElementById('btn-reset');
+    const chkHardy = document.getElementById('chk-hardy');
+    const graphContainer = document.getElementById('graph-container');
+
+    const telP = document.getElementById('tel-p');
+    const telQ = document.getElementById('tel-q');
+    const telP2 = document.getElementById('tel-p2');
+    const tel2PQ = document.getElementById('tel-2pq');
+    const telQ2 = document.getElementById('tel-q2');
+    const telDark = document.getElementById('tel-dark');
+    const telLight = document.getElementById('tel-light');
+    const canvasHud = document.getElementById('canvas-hud');
+
+    // State Variables
+    let envDarkness = 0.5; // 0 (Light) to 1 (Dark)
+    let predPressure = 0.5; // 0 to 1
+    
+    let p = 0.5; // Freq of D
+    let q = 0.5; // Freq of d
+    let generation = 1;
+    let historyP = [0.5];
+    let historyQ = [0.5];
+
+    let isPlaying = false;
+    let playTimer = null;
+
+    let moths = []; // Array of physical entities on screen
+
+    function updateColors() {
+        let l = Math.floor(240 - (envDarkness * 200)); // 240 (light) down to 40 (dark)
+        envBg.style.backgroundColor = `rgb(${l},${l},${l})`;
+
+        if (predPressure === 0) lblPred.innerText = "0% (H-W Eq)";
+        else if (predPressure < 0.3) lblPred.innerText = "Low";
+        else if (predPressure < 0.7) lblPred.innerText = "Moderate";
+        else if (predPressure < 1.0) lblPred.innerText = "High";
+        else lblPred.innerText = "100% (Lethal)";
+    }
+
+    slEnv.addEventListener('input', e => {
+        envDarkness = parseFloat(e.target.value) / 100;
+        updateColors();
+    });
+
+    slPred.addEventListener('input', e => {
+        predPressure = parseFloat(e.target.value) / 100;
+        updateColors();
+    });
+
+    chkHardy.addEventListener('change', e => {
+        if(e.target.checked) graphContainer.classList.remove('hidden');
+        else graphContainer.classList.add('hidden');
+    });
+
+    function spawnMoths() {
+        moths = [];
+        const N = 100; // Sample population
+        
+        // Expected Genotypes based on p and q (Hardy-Weinberg proportions)
+        let numDD = Math.round(p * p * N);
+        let numDd = Math.round(2 * p * q * N);
+        let numdd = N - numDD - numDd; // remainder to 100
+
+        const addMoth = (geno, isDark) => {
+            moths.push({
+                x: Math.random() * 100, // percentage positioning
+                y: Math.random() * 100,
+                geno: geno,
+                isDark: isDark,
+                status: 'alive', // alive, eaten
+                flapOff: Math.random() * Math.PI*2
+            });
+        };
+
+        for(let i=0; i<numDD; i++) addMoth('DD', true);
+        for(let i=0; i<numDd; i++) addMoth('Dd', true);
+        for(let i=0; i<numdd; i++) addMoth('dd', false);
+
+        // Update Telemetry directly from perfect math
+        telP.innerText = p.toFixed(2);
+        telQ.innerText = q.toFixed(2);
+        telP2.innerText = `DD: ${(p*p*100).toFixed(1)}%`;
+        tel2PQ.innerText = `Dd: ${(2*p*q*100).toFixed(1)}%`;
+        telQ2.innerText = `dd: ${(q*q*100).toFixed(1)}%`;
+        telDark.innerText = `Dark: ${((p*p + 2*p*q)*100).toFixed(1)}%`;
+        telLight.innerText = `Light: ${(q*q*100).toFixed(1)}%`;
+        
+        canvasHud.innerText = `Generation: ${generation}`;
+        drawGraph();
+    }
+
+    function calculateNextGeneration() {
+        // Step 1: Calculate fitness (W) for each phenotype based on environment
+        // The closer a moth's color is to the environment, the higher its fitness.
+        // Dark moths thrive when envDarkness = 1. Light moths thrive when envDarkness = 0.
+        
+        // Base survival is 1.0. Predation pressure scales the lethality of standing out.
+        let contrastDark = 1.0 - envDarkness; // If env=1 (dark), contrast is 0.
+        let contrastLight = envDarkness;      // If env=1 (dark), contrast is 1.
+
+        let W_dark = 1.0 - (contrastDark * predPressure);
+        let W_light = 1.0 - (contrastLight * predPressure);
+
+        // Ensure nobody gets negative fitness
+        W_dark = Math.max(0.01, W_dark);
+        W_light = Math.max(0.01, W_light);
+
+        // Visually "kill" some moths on screen to show the action
+        moths.forEach(m => {
+            let survivalChance = m.isDark ? W_dark : W_light;
+            if (Math.random() > survivalChance) {
+                m.status = 'eaten';
+            }
+        });
+
+        // We could calculate new p and q strictly from the survivors in the array (stochastic/drift), 
+        // but for a clean educational simulation, we will use the exact deterministic population genetics formulas.
+        
+        // Average fitness of the population: W_bar = p^2*W_dark + 2pq*W_dark + q^2*W_light
+        let W_bar = (p*p * W_dark) + (2*p*q * W_dark) + (q*q * W_light);
+        
+        // New allele frequency p' = (p^2*W_dark + pq*W_dark) / W_bar
+        let newP = ((p*p * W_dark) + (p*q * W_dark)) / W_bar;
+        
+        p = newP;
+        q = 1.0 - p;
+        
+        // Clamp to prevent complete math wipeout 0 or 1 causing errors
+        p = Math.max(0.001, Math.min(0.999, p));
+        q = 1.0 - p;
+
+        generation++;
+        historyP.push(p);
+        historyQ.push(q);
+        
+        // Wait a split second so user sees the dead moths, then spawn new gen
+        setTimeout(spawnMoths, 400);
+    }
+
+    function togglePlay() {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            btnPlay.innerHTML = "⏸ Pause Auto-Progress";
+            btnPlay.className = "px-5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
+            btnStep.disabled = true; btnStep.classList.add('opacity-50');
+            playTimer = setInterval(calculateNextGeneration, 1500); // 1.5s per gen
+        } else {
+            btnPlay.innerHTML = "▶ Auto-Progress Generations";
+            btnPlay.className = "px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
+            btnStep.disabled = false; btnStep.classList.remove('opacity-50');
+            clearInterval(playTimer);
+        }
+    }
+
+    btnPlay.addEventListener('click', togglePlay);
+    btnStep.addEventListener('click', calculateNextGeneration);
+    btnReset.addEventListener('click', () => {
+        if(isPlaying) togglePlay();
+        p = 0.5; q = 0.5; generation = 1;
+        historyP = [0.5]; historyQ = [0.5];
+        spawnMoths();
+    });
+
+    // --- CANVAS RENDERING ---
+    let animTime = 0;
+    function renderCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      animTime += 0.05;
+
+      // Draw Moths
+      moths.forEach(m => {
+          let px = (m.x / 100) * cw;
+          let py = (m.y / 100) * ch;
+
+          // Padding so they don't draw off edge
+          px = Math.max(20, Math.min(cw-20, px));
+          py = Math.max(20, Math.min(ch-20, py));
+
+          if (m.status === 'eaten') {
+              // Draw red X
+              ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 4;
+              ctx.beginPath(); ctx.moveTo(px-10, py-10); ctx.lineTo(px+10, py+10); ctx.stroke();
+              ctx.beginPath(); ctx.moveTo(px+10, py-10); ctx.lineTo(px-10, py+10); ctx.stroke();
+          } else {
+              // Draw Moth
+              let color = m.isDark ? '#1e293b' : '#f8fafc'; // Slate-800 or Slate-50
+              ctx.fillStyle = color;
+              ctx.strokeStyle = m.isDark ? '#0f172a' : '#cbd5e1';
+              ctx.lineWidth = 1;
+
+              let flap = Math.sin(animTime * 5 + m.flapOff) * 4; // wing flap
+              
+              ctx.save();
+              ctx.translate(px, py);
+              // Body
+              ctx.beginPath(); ctx.ellipse(0, 0, 3, 10, 0, 0, Math.PI*2); ctx.fill();
+              // Left Wing
+              ctx.beginPath(); ctx.moveTo(-2, 0); ctx.quadraticCurveTo(-15, -15 - flap, -12, 0); ctx.lineTo(-2, 5); ctx.fill(); ctx.stroke();
+              // Right Wing
+              ctx.beginPath(); ctx.moveTo(2, 0); ctx.quadraticCurveTo(15, -15 - flap, 12, 0); ctx.lineTo(2, 5); ctx.fill(); ctx.stroke();
+              ctx.restore();
+          }
+      });
+
+      requestAnimationFrame(renderCanvas);
+    }
+
+    function drawGraph() {
+        let cw = gCanvas.parentElement.clientWidth;
+        let ch = gCanvas.parentElement.clientHeight;
+        const dpr = window.devicePixelRatio || 1;
+        
+        gCanvas.width = cw * dpr;
+        gCanvas.height = ch * dpr;
+        gCtx.scale(dpr, dpr);
+
+        gCtx.clearRect(0, 0, cw, ch);
+
+        const padTop = 30, padBot = 20, padLeft = 40, padRight = 20;
+        const plotW = cw - padLeft - padRight;
+        const plotH = ch - padTop - padBot;
+
+        // Grid
+        gCtx.strokeStyle = 'rgba(255,255,255,0.1)'; gCtx.lineWidth = 1;
+        for(let i=0; i<=4; i++) {
+            let y = padTop + (i/4)*plotH;
+            gCtx.beginPath(); gCtx.moveTo(padLeft, y); gCtx.lineTo(padLeft + plotW, y); gCtx.stroke();
+        }
+
+        // Axes Labels
+        gCtx.fillStyle = '#64748b'; gCtx.font = '10px monospace'; gCtx.textAlign = 'right';
+        gCtx.fillText("1.0", padLeft - 5, padTop + 4);
+        gCtx.fillText("0.5", padLeft - 5, padTop + plotH/2 + 4);
+        gCtx.fillText("0.0", padLeft - 5, padTop + plotH + 4);
+
+        gCtx.textAlign = 'center';
+        gCtx.fillText("Generation", padLeft + plotW/2, padTop + plotH + 15);
+
+        // Plot Lines
+        const drawLine = (data, color) => {
+            gCtx.strokeStyle = color; gCtx.lineWidth = 3;
+            gCtx.beginPath();
+            
+            let maxGen = Math.max(10, generation); // Minimum x-axis scale is 10
+            let stepX = plotW / maxGen;
+
+            for(let i=0; i<data.length; i++) {
+                let x = padLeft + i * stepX;
+                let y = padTop + plotH - (data[i] * plotH);
+                if (i===0) gCtx.moveTo(x,y); else gCtx.lineTo(x,y);
+            }
+            gCtx.stroke();
+        };
+
+        drawLine(historyP, '#818cf8'); // Indigo-400 for p
+        drawLine(historyQ, '#fb7185'); // Rose-400 for q
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      updateColors();
+      spawnMoths();
+      requestAnimationFrame(renderCanvas);
+      
+      // Handle graph resize
+      window.addEventListener('resize', () => {
+         if(!chkHardy.checked) return;
+         drawGraph();
+      });
+    });
+  </script>
+</body>
+</html>

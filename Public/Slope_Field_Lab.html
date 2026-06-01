@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slope Field & Solution Curve Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Slope Field & Solution Curve Plotter</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Differential Equations &amp; RK4 Numerical Integration Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Calculus Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-reset" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Origin
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-field" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Slope Field ($\frac{dy}{dx}$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-curve" checked class="rounded border-slate-300 text-rose-500 focus:ring-rose-500 h-4.5 w-4.5">
+          <span>Show Solution Curve ($y$)</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-3 border-b border-slate-100 pb-1">Differential Equation ($y'$)</span>
+            <select id="select-ode" class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
+              <option value="linear">y' = x - y (Linear)</option>
+              <option value="circle">y' = -x / y (Circular Orbits)</option>
+              <option value="logistic">y' = y(1 - y/4) (Logistic Growth)</option>
+              <option value="trig">y' = sin(x) + cos(y) (Wave Interference)</option>
+              <option value="saddle">y' = y - x² (Saddle / Parabolic)</option>
+            </select>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-blue-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase">Initial Condition ($x_0$)</span></span>
+              <span id="lbl-x0" class="font-mono text-blue-600 text-sm">0.0</span>
+            </div>
+            <input type="range" id="sl-x0" min="-8" max="8" step="0.1" value="0.0" class="w-full mt-2">
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> <span class="uppercase">Initial Condition ($y_0$)</span></span>
+              <span id="lbl-y0" class="font-mono text-rose-600 text-sm">2.0</span>
+            </div>
+            <input type="range" id="sl-y0" min="-8" max="8" step="0.1" value="2.0" class="w-full mt-2">
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Current Formulation</span>
+            <div class="text-[12px] font-mono text-center py-2 space-y-1.5" id="formula-display">
+              $$\frac{dy}{dx} = x - y$$
+            </div>
+            <div class="text-[9px] text-slate-400 font-sans mt-2 text-center border-t border-slate-700 pt-2" id="ic-display">
+              $y(0.0) = 2.0$
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block cursor-crosshair"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider">Cartesian Phase Plane ($x, y$)</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-blue-500 block"></span> Vector Field $\frac{dy}{dx}$</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block"></span> Specific Solution Curve</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-amber-400 block"></span> Initial Condition ($x_0, y_0$)</div>
+        </div>
+        
+        <div class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10 text-[9px] font-bold text-amber-400 uppercase tracking-widest">
+          🖱️ Click canvas to set $(x_0, y_0)$
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Numerical Telemetry</span>
+          
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Instantaneous Slope at IC</div>
+            <div class="text-xl font-bold font-mono text-blue-600" id="tel-slope">-2.00</div>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Integration Engine</div>
+            <div class="text-sm font-bold font-mono text-emerald-600 tracking-widest">RK4 (Runge-Kutta)</div>
+            <div class="text-[9px] font-mono text-slate-400 mt-1">Step Size ($dt$) = 0.05</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-2">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do the slope lines form a pattern but never cross each other?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                Because $f(x,y)$ evaluates to a single, unique value for any specific coordinate $(x,y)$. A point cannot have two different slopes at the exact same time. This is a visual representation of the Uniqueness Theorem for differential equations!
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What role does the Initial Condition $(x_0, y_0)$ play?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                The general differential equation represents a whole "family" of infinite parallel curves. The initial condition acts as an anchor—it specifies exactly which one of those infinite curves we are looking at by forcing the solution to pass through that specific point.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What does a completely horizontal slope line ($\frac{dy}{dx} = 0$) indicate?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                A slope of zero means the function is not changing ($y$ is constant). If there is a continuous horizontal line of zero slopes across the graph, it represents an <strong>Equilibrium Solution</strong> (e.g., $y=4$ in Logistic Growth where the population maxes out).
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> ODE PLOTTER PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Differential Equations Laboratory</strong>! Visualize the hidden currents of mathematics.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Equation Dropdown</strong>: Select a classic differential equation. Notice how $y' = -x/y$ creates a swirling whirlpool of circular orbits!</li>
+            <li><strong>Initial Condition Sliders</strong>: Adjust $x_0$ and $y_0$ to drop a point into the vector field. The red solution curve will dynamically recalculate using RK4 integration to trace the flow forward and backward in time.</li>
+            <li><strong>Canvas Interaction</strong>: You can click anywhere directly on the dark canvas to instantly move the initial condition point to that location!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Math Definitions ---
+    const ODE_REGISTRY = {
+        linear: { fn: (x, y) => x - y, tex: "x - y" },
+        circle: { fn: (x, y) => (Math.abs(y) < 0.01) ? (x > 0 ? -999 : 999) : -x / y, tex: "-\\frac{x}{y}" }, // prevent division by zero
+        logistic: { fn: (x, y) => y * (1 - y / 4), tex: "y \\left(1 - \\frac{y}{4}\\right)" },
+        trig: { fn: (x, y) => Math.sin(x) + Math.cos(y), tex: "\\sin(x) + \\cos(y)" },
+        saddle: { fn: (x, y) => y - x*x, tex: "y - x^2" }
+    };
+
+    // --- State Variables ---
+    let currentMode = 'linear';
+    let f = ODE_REGISTRY[currentMode].fn;
+    let x0 = 0.0;
+    let y0 = 2.0;
+
+    // Viewport bounds
+    const X_MIN = -10; const X_MAX = 10;
+    const Y_MIN = -10; const Y_MAX = 10;
+
+    // --- DOM Elements ---
+    const selODE = document.getElementById('select-ode');
+    const slX0 = document.getElementById('sl-x0'); const lblX0 = document.getElementById('lbl-x0');
+    const slY0 = document.getElementById('sl-y0'); const lblY0 = document.getElementById('lbl-y0');
+    
+    const formulaDisplay = document.getElementById('formula-display');
+    const icDisplay = document.getElementById('ic-display');
+    const telSlope = document.getElementById('tel-slope');
+
+    const chkField = document.getElementById('chk-field');
+    const chkCurve = document.getElementById('chk-curve');
+    const btnReset = document.getElementById('btn-reset');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Math Logic & Telemetry ---
+    function updateTelemetry() {
+       f = ODE_REGISTRY[currentMode].fn;
+       
+       formulaDisplay.innerHTML = `$$\\frac{dy}{dx} = ${ODE_REGISTRY[currentMode].tex}$$`;
+       icDisplay.innerHTML = `$y(${x0.toFixed(1)}) = ${y0.toFixed(1)}$`;
+       
+       let initialSlope = f(x0, y0);
+       // Handle infs safely for display
+       if(Math.abs(initialSlope) > 100) telSlope.innerText = "Undefined (Vertical)";
+       else telSlope.innerText = initialSlope.toFixed(2);
+       
+       if (window.MathJax) MathJax.typesetPromise([formulaDisplay, icDisplay]);
+    }
+
+    // Runge-Kutta 4th Order Integrator
+    function rk4Step(x, y, dx) {
+        let k1 = dx * f(x, y);
+        let k2 = dx * f(x + dx/2, y + k1/2);
+        let k3 = dx * f(x + dx/2, y + k2/2);
+        let k4 = dx * f(x + dx, y + k3);
+        return y + (k1 + 2*k2 + 2*k3 + k4) / 6;
+    }
+
+    // --- Input Handlers ---
+    function sync(val, sl, lbl, setter) {
+        val = parseFloat(val);
+        sl.value = val;
+        lbl.innerText = val.toFixed(1);
+        setter(val);
+        updateTelemetry();
+    }
+
+    slX0.addEventListener('input', e => sync(e.target.value, slX0, lblX0, v => x0 = v));
+    slY0.addEventListener('input', e => sync(e.target.value, slY0, lblY0, v => y0 = v));
+
+    selODE.addEventListener('change', e => {
+        currentMode = e.target.value;
+        updateTelemetry();
+    });
+
+    btnReset.addEventListener('click', () => {
+       sync(0.0, slX0, lblX0, v => x0 = v);
+       sync(2.0, slY0, lblY0, v => y0 = v);
+       selODE.value = 'linear';
+       currentMode = 'linear';
+       updateTelemetry();
+    });
+
+    // Interactive Canvas Clicking
+    canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const cw = canvas.width / dpr;
+        const ch = canvas.height / dpr;
+        
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        // Inverse map coordinates
+        const xRange = X_MAX - X_MIN;
+        const yRange = Y_MAX - Y_MIN;
+        const scaleX = cw / xRange;
+        const scaleY = ch / yRange;
+        const cx = cw / 2;
+        const cy = ch / 2;
+
+        let newX = (mx - cx) / scaleX;
+        let newY = -(my - cy) / scaleY;
+
+        // Clamp values to sliders
+        newX = Math.max(-8, Math.min(8, newX));
+        newY = Math.max(-8, Math.min(8, newY));
+
+        sync(newX, slX0, lblX0, v => x0 = v);
+        sync(newY, slY0, lblY0, v => y0 = v);
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Dynamic dimension check
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      // Map mathematical coords [-10, 10] to canvas pixels
+      const xRange = X_MAX - X_MIN;
+      const yRange = Y_MAX - Y_MIN;
+      const scaleX = W / xRange; 
+      const scaleY = H / yRange;
+      const cx = W / 2;
+      const cy = H / 2;
+
+      const mapX = (x) => cx + x * scaleX;
+      const mapY = (y) => cy - y * scaleY; // Invert Y for screen coords
+
+      // 1. Draw Cartesian Grid & Axes
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let x = X_MIN; x <= X_MAX; x+=2) { ctx.moveTo(mapX(x), 0); ctx.lineTo(mapX(x), H); }
+      for(let y = Y_MIN; y <= Y_MAX; y+=2) { ctx.moveTo(0, mapY(y)); ctx.lineTo(W, mapY(y)); }
+      ctx.stroke();
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, mapY(0)); ctx.lineTo(W, mapY(0));
+      ctx.moveTo(mapX(0), 0); ctx.lineTo(mapX(0), H);
+      ctx.stroke();
+
+      // 2. Draw Slope Field
+      if (chkField.checked) {
+          ctx.strokeStyle = '#3b82f6'; // Blue
+          ctx.lineWidth = 1.5;
+          const segmentLen = 0.4; // mathematical length of segments
+
+          ctx.beginPath();
+          // Loop over grid points to sample slopes
+          for(let x = X_MIN + 0.5; x <= X_MAX; x += 1) {
+              for(let y = Y_MIN + 0.5; y <= Y_MAX; y += 1) {
+                  let slope = f(x, y);
+                  // Guard against infinity/NaN
+                  if (Math.abs(slope) > 100) slope = Math.sign(slope)*100;
+                  
+                  // Calculate angle of slope
+                  let theta = Math.atan(slope);
+                  
+                  // Find endpoints of the small segment
+                  let dx = (segmentLen/2) * Math.cos(theta);
+                  let dy = (segmentLen/2) * Math.sin(theta);
+                  
+                  let x1 = x - dx; let y1 = y - dy;
+                  let x2 = x + dx; let y2 = y + dy;
+
+                  ctx.moveTo(mapX(x1), mapY(y1));
+                  ctx.lineTo(mapX(x2), mapY(y2));
+              }
+          }
+          ctx.stroke();
+      }
+
+      // 3. Draw Solution Curve (RK4 Integration)
+      if (chkCurve.checked) {
+          ctx.strokeStyle = '#f43f5e'; // Rose
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          
+          let stepSize = 0.05;
+          
+          // Integrate Forward
+          let cx_f = x0; let cy_f = y0;
+          ctx.moveTo(mapX(cx_f), mapY(cy_f));
+          for(let i=0; i<400; i++) { // cap iterations
+              if(cx_f > X_MAX || Math.abs(cy_f) > Y_MAX * 2) break; // out of bounds
+              cy_f = rk4Step(cx_f, cy_f, stepSize);
+              cx_f += stepSize;
+              ctx.lineTo(mapX(cx_f), mapY(cy_f));
+          }
+          
+          // Integrate Backward
+          let cx_b = x0; let cy_b = y0;
+          ctx.moveTo(mapX(cx_b), mapY(cy_b));
+          for(let i=0; i<400; i++) { 
+              if(cx_b < X_MIN || Math.abs(cy_b) > Y_MAX * 2) break;
+              cy_b = rk4Step(cx_b, cy_b, -stepSize); // negative step
+              cx_b -= stepSize;
+              ctx.lineTo(mapX(cx_b), mapY(cy_b));
+          }
+          ctx.stroke();
+      }
+
+      // 4. Draw Initial Condition Point
+      ctx.fillStyle = '#facc15'; // Amber
+      ctx.shadowColor = '#facc15';
+      ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(mapX(x0), mapY(y0), 6, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0; // reset
+      
+      // Draw crosshair at IC
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(mapX(x0)-3, mapY(y0)); ctx.lineTo(mapX(x0)+3, mapY(y0));
+      ctx.moveTo(mapX(x0), mapY(y0)-3); ctx.lineTo(mapX(x0), mapY(y0)+3);
+      ctx.stroke();
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      updateTelemetry();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

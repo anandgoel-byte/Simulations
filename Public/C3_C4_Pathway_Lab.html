@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C3 vs C4 Pathway Comparator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"].slider-rose::-webkit-slider-thumb {
+      background-color: #f43f5e;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">C3 vs C4 Pathway Comparator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Photorespiration &amp; Kranz Anatomy Virtual Lab</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Plant Species Specimen:</span>
+        <button id="btn-mode-c3" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm">
+          C3 Plant (e.g., Wheat, Rice)
+        </button>
+        <button id="btn-mode-c4" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm">
+          C4 Plant (e.g., Corn, Sugarcane)
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-molecules" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Visualize Molecular Gas Flow</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Carbon Fixation Enzymes</span>
+            <div class="text-[11px] font-semibold flex justify-between">
+              <span>Rubisco</span>
+              <span class="text-rose-600">Binds $CO_2$ AND $O_2$</span>
+            </div>
+            <div class="text-[11px] font-semibold flex justify-between border-t border-indigo-100 pt-1">
+              <span>PEP Carboxylase</span>
+              <span class="text-emerald-600">Binds $CO_2$ ONLY</span>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> <span class="uppercase text-rose-700">Environment Temperature</span></span>
+              <span id="lbl-temp" class="font-mono text-rose-600 text-sm">25°C</span>
+            </div>
+            <input type="range" id="sl-temp" min="15" max="45" step="1" value="25" class="w-full mt-2 slider-rose">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>15°C (Cool)</span>
+              <span>45°C (Scorching)</span>
+            </div>
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-rose-50 p-2 rounded border border-rose-100">
+              High temperatures force the plant to close its stomata to prevent dehydration.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center">
+            <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-2">Stomatal Guard Cells</span>
+            <div class="relative w-16 h-16 flex items-center justify-center">
+              <div id="stomata-left" class="w-6 h-14 bg-emerald-500 rounded-[50%] absolute left-1 transition-all duration-300 transform -rotate-12 origin-bottom"></div>
+              <div id="stomata-right" class="w-6 h-14 bg-emerald-500 rounded-[50%] absolute right-1 transition-all duration-300 transform rotate-12 origin-bottom"></div>
+              <div class="absolute inset-0 border-2 border-slate-200 rounded-full pointer-events-none"></div>
+            </div>
+            <span id="lbl-stomata" class="text-sm font-bold font-mono text-emerald-600 mt-2 uppercase tracking-widest">Fully Open</span>
+            <div class="text-[10px] text-slate-500 mt-1 text-center font-semibold" id="lbl-gas-flow">
+              $CO_2$ enters, $O_2$ and $H_2O$ exit freely.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-indigo-400 tracking-wider uppercase" id="canvas-hud">C3 Leaf Cross-Section Anatomy</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-slate-400"></span> $CO_2$ (Carbon Dioxide)</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-sky-400"></span> $O_2$ (Oxygen Gas)</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Sugar Molecule</div>
+          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Photorespiration Waste</div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Metabolic Efficacy Telemetry</span>
+          
+          <div class="grid grid-cols-1 gap-2">
+            
+            <div class="bg-white p-3 rounded-xl border border-emerald-200 shadow-sm flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Photosynthesis (Carbon Fixed)</div>
+              <div class="text-lg font-bold font-mono text-emerald-500" id="tel-photo">100%</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Photorespiration (Carbon Lost)</div>
+              <div class="text-lg font-bold font-mono text-rose-500" id="tel-waste">0%</div>
+            </div>
+
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-1">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Dominant Intracellular Enzyme</div>
+              <div class="text-sm font-bold font-mono tracking-widest text-indigo-400" id="tel-enzyme">RUBISCO (Carboxylase)</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why is Photorespiration considered highly detrimental to a plant?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Under what environmental conditions does photorespiration peak in C3 plants?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                How does the "Kranz Anatomy" of a C4 plant prevent photorespiration?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why don't all plants simply use the C4 pathway if it is so efficient?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> C3 vs C4 LABORATORY PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Plant Physiology Laboratory</strong>! Compare the metabolic strategies plants use to survive extreme climates.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Specimen Selector</strong>: Toggle between a standard C3 leaf (like wheat) and a specialized C4 leaf (like corn with Kranz Anatomy). Notice how the C4 plant has an extra ring of Bundle Sheath cells tightly surrounding the vascular vein.</li>
+            <li><strong>Temperature Slider</strong>: As you increase the heat, watch the Stomata Guard Cells close up to prevent the plant from drying out.</li>
+            <li><strong>Molecular Flow</strong>: When stomata close, oxygen gas ($O_2$) from light reactions cannot escape. In a C3 plant, watch the Rubisco enzyme choke on this $O_2$ (turning red), causing the Photorespiration rate to skyrocket while sugar production plummets.</li>
+            <li><strong>C4 Survival</strong>: Switch to the C4 plant at high heat. Notice how PEP Carboxylase completely ignores the trapped $O_2$, pumping carbon safely into the inner Bundle Sheath cells where Rubisco can work in peace!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "Why is Photorespiration considered highly detrimental to a plant?",
+        options: [
+          { text: "It consumes oxygen and releases energy.", isCorrect: false, exp: "Incorrect. Normal cellular respiration does this, which is beneficial." },
+          { text: "It wastes ATP and actively loses previously fixed Carbon Dioxide, reducing sugar yield.", isCorrect: true, exp: "Correct! When Rubisco binds to O2 instead of CO2, the plant has to burn ATP to salvage the messy byproduct, and it actually loses a carbon atom in the process. It's a massive metabolic waste." },
+          { text: "It causes the stomata to permanently lock open.", isCorrect: false, exp: "Incorrect. Photorespiration is a *result* of stomata closing, not the cause." },
+          { text: "It destroys the chlorophyll pigment.", isCorrect: false, exp: "Incorrect. It affects the Calvin Cycle, not the light-harvesting pigments." }
+        ]
+      },
+      q2: {
+        question: "Under what environmental conditions does photorespiration peak in C3 plants?",
+        options: [
+          { text: "Cool, damp, and cloudy conditions.", isCorrect: false, exp: "Incorrect. Under these conditions, stomata are open and C3 plants thrive." },
+          { text: "At night when there is no sunlight.", isCorrect: false, exp: "Incorrect. The Calvin Cycle stops at night, so Rubisco isn't actively fixing anything." },
+          { text: "Hot, dry, and sunny conditions.", isCorrect: true, exp: "Correct! Heat and drought force the plant to close its stomata to stop water evaporation. This traps the O2 produced by the light reactions inside the leaf, radically increasing the O2:CO2 ratio and forcing Rubisco to bind O2." },
+          { text: "High CO2 environments.", isCorrect: false, exp: "Incorrect. High CO2 completely suppresses photorespiration." }
+        ]
+      },
+      q3: {
+        question: "How does the 'Kranz Anatomy' of a C4 plant prevent photorespiration?",
+        options: [
+          { text: "It filters out oxygen before it enters the leaf.", isCorrect: false, exp: "Incorrect. Oxygen is still generated inside the leaf by the light reactions." },
+          { text: "It creates a physical barrier, isolating Rubisco in the Bundle Sheath cells away from high oxygen levels.", isCorrect: true, exp: "Correct! The outer Mesophyll cells use PEP Carboxylase (which doesn't bind O2) to trap carbon into a 4-carbon acid. This acid is pumped into the deep, oxygen-shielded Bundle Sheath cells, where it releases a concentrated stream of CO2 directly to Rubisco." },
+          { text: "It mutates Rubisco so it can no longer bind oxygen.", isCorrect: false, exp: "Incorrect. C4 plants use the exact same flawed Rubisco enzyme as C3 plants." },
+          { text: "It keeps stomata open permanently.", isCorrect: false, exp: "Incorrect. C4 plants still close their stomata to save water." }
+        ]
+      },
+      q4: {
+        question: "Why don't all plants simply use the C4 pathway if it is so efficient?",
+        options: [
+          { text: "The C4 pathway requires extra ATP to pump the 4-carbon acids, making it less energy efficient in cool climates.", isCorrect: true, exp: "Correct! The spatial pumping mechanism costs extra ATP. In cool, moist environments where photorespiration isn't a threat, C3 plants are actually more energy efficient and will outcompete C4 plants." },
+          { text: "C4 plants cannot produce glucose.", isCorrect: false, exp: "Incorrect. C4 plants produce glucose perfectly well." },
+          { text: "The C4 pathway requires toxic chemicals.", isCorrect: false, exp: "Incorrect. Malate and Oxaloacetate are normal biological metabolites." },
+          { text: "C4 plants require zero water to survive.", isCorrect: false, exp: "Incorrect. All plants require water." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS / BIO ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const btnC3 = document.getElementById('btn-mode-c3');
+    const btnC4 = document.getElementById('btn-mode-c4');
+    const chkMolecules = document.getElementById('chk-molecules');
+    const hud = document.getElementById('canvas-hud');
+
+    const slTemp = document.getElementById('sl-temp');
+    const lblTemp = document.getElementById('lbl-temp');
+    
+    const stomataLeft = document.getElementById('stomata-left');
+    const stomataRight = document.getElementById('stomata-right');
+    const lblStomata = document.getElementById('lbl-stomata');
+    const lblGasFlow = document.getElementById('lbl-gas-flow');
+
+    const telPhoto = document.getElementById('tel-photo');
+    const telWaste = document.getElementById('tel-waste');
+    const telEnzyme = document.getElementById('tel-enzyme');
+
+    // State
+    let plantMode = 'c3'; // 'c3' or 'c4'
+    let currentTemp = 25; // Celsius
+    
+    let stomataOpenness = 1.0; // 0 to 1
+    let internalO2 = 0.2; // Ratio 0 to 1
+    let internalCO2 = 0.8; // Ratio 0 to 1
+    
+    let photoRate = 100;
+    let wasteRate = 0;
+
+    let particles = [];
+    let time = 0;
+
+    function setMode(mode) {
+        plantMode = mode;
+        if (mode === 'c3') {
+            btnC3.className = "px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm";
+            btnC4.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
+            hud.innerText = "C3 Leaf Anatomy (Standard)";
+            telEnzyme.innerText = "RUBISCO (In Mesophyll)";
+            telEnzyme.className = "text-sm font-bold font-mono tracking-widest text-indigo-400";
+        } else {
+            btnC4.className = "px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition-all shadow-sm";
+            btnC3.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
+            hud.innerText = "C4 Leaf Anatomy (Kranz)";
+            telEnzyme.innerText = "PEP CARBOXYLASE (In Mesophyll)";
+            telEnzyme.className = "text-sm font-bold font-mono tracking-widest text-emerald-400";
+        }
+        particles = []; // clear screen
+        updateBiology();
+    }
+
+    btnC3.addEventListener('click', () => setMode('c3'));
+    btnC4.addEventListener('click', () => setMode('c4'));
+
+    slTemp.addEventListener('input', e => {
+        currentTemp = parseFloat(e.target.value);
+        lblTemp.innerText = `${currentTemp}°C`;
+        updateBiology();
+    });
+
+    function updateBiology() {
+        // Temperature curves
+        // 15 - 25 is ideal. > 28 stomata start closing. > 35 mostly closed.
+        if (currentTemp <= 25) stomataOpenness = 1.0;
+        else if (currentTemp >= 40) stomataOpenness = 0.1;
+        else stomataOpenness = 1.0 - ((currentTemp - 25) / 15);
+
+        // Update UI Stomata Visuals
+        let angle = stomataOpenness * 12; // 0 to 12 degrees
+        stomataLeft.style.transform = `rotate(${-angle}deg)`;
+        stomataRight.style.transform = `rotate(${angle}deg)`;
+
+        if (stomataOpenness > 0.8) { lblStomata.innerText = "Fully Open"; lblStomata.className = "text-sm font-bold font-mono text-emerald-600 mt-2 uppercase tracking-widest"; lblGasFlow.innerText = "CO2 enters, O2 and H2O exit freely."; }
+        else if (stomataOpenness > 0.3) { lblStomata.innerText = "Partially Closed"; lblStomata.className = "text-sm font-bold font-mono text-amber-500 mt-2 uppercase tracking-widest"; lblGasFlow.innerText = "Gas exchange restricted. O2 building up."; }
+        else { lblStomata.innerText = "Tightly Closed"; lblStomata.className = "text-sm font-bold font-mono text-rose-500 mt-2 uppercase tracking-widest"; lblGasFlow.innerText = "Water saved, but O2 trapped inside. CO2 blocked."; }
+
+        // Gas levels inside leaf
+        // As stomata close, O2 builds up (light rxns) and CO2 drops (consumed)
+        internalO2 = 0.2 + (1.0 - stomataOpenness) * 0.8;
+        internalCO2 = 1.0 - (1.0 - stomataOpenness) * 0.9; // Never hits 0 completely due to respiration
+
+        // Rates
+        if (plantMode === 'c3') {
+            // Rubisco competes. High O2 -> high photorespiration
+            // Temp directly increases Rubisco's affinity for O2 further
+            let tempPenalty = (currentTemp > 25) ? (currentTemp - 25) * 2 : 0;
+            
+            wasteRate = (internalO2 / (internalO2 + internalCO2)) * 100 + tempPenalty;
+            wasteRate = Math.min(100, wasteRate * (1 - stomataOpenness)); // Scale by closure
+            
+            photoRate = 100 - wasteRate;
+            if (stomataOpenness < 0.15) photoRate = Math.min(photoRate, 10); // starve
+        } else {
+            // C4 Plant. PEP Carboxylase ignores O2.
+            wasteRate = 0; // Virtually no photorespiration
+            // But if stomata close completely, it runs out of CO2 entirely
+            photoRate = stomataOpenness * 100 + 20; // 20 is internal recycling buffer
+            photoRate = Math.min(100, photoRate);
+        }
+
+        telPhoto.innerText = `${Math.round(photoRate)}%`;
+        telWaste.innerText = `${Math.round(wasteRate)}%`;
+        
+        if (wasteRate > 50) telWaste.className = "text-2xl font-extrabold font-mono text-rose-600 animate-pulse";
+        else telWaste.className = "text-lg font-bold font-mono text-rose-500";
+
+        if (photoRate > 80) telPhoto.className = "text-2xl font-extrabold font-mono text-emerald-500";
+        else telPhoto.className = "text-lg font-bold font-mono text-emerald-600 opacity-60";
+    }
+
+    // --- Particle System ---
+    function spawnParticles(W, H) {
+        if (!chkMolecules.checked) return;
+
+        // Base spawn rates based on stomata
+        if (Math.random() < stomataOpenness * 0.3) {
+            // CO2 entering from bottom (stomata)
+            particles.push({ type: 'co2', x: W/2 + (Math.random()*40-20), y: H, tx: W/2 + (Math.random()*100-50), ty: H/2, speed: 1.5 });
+        }
+
+        // Inside leaf activity
+        if (plantMode === 'c3') {
+            // C3: Mesophyll does everything
+            if (Math.random() * 100 < photoRate * 0.1) {
+                // Sugar produced
+                particles.push({ type: 'sugar', x: W*0.3 + Math.random()*W*0.4, y: H*0.4 + Math.random()*H*0.2, tx: W*0.8, ty: H, speed: 1 });
+            }
+            if (Math.random() * 100 < wasteRate * 0.2) {
+                // Waste (Photorespiration)
+                particles.push({ type: 'waste', x: W*0.3 + Math.random()*W*0.4, y: H*0.4 + Math.random()*H*0.2, tx: W*0.1, ty: 0, speed: 1.5 });
+            }
+            // O2 build up (visually bouncing around if stomata closed)
+            if (Math.random() * 100 < internalO2 * 10) {
+                 particles.push({ type: 'o2', x: W*0.3 + Math.random()*W*0.4, y: H*0.4 + Math.random()*H*0.2, 
+                                  tx: stomataOpenness > 0.5 ? W/2 : (Math.random()*W), 
+                                  ty: stomataOpenness > 0.5 ? H : (Math.random()*H), 
+                                  speed: stomataOpenness > 0.5 ? 2 : 0.5 }); // Escapes if open, bounces if closed
+            }
+        } else {
+            // C4: CO2 turns to Malate (C4 acid) in Mesophyll, moves to Bundle Sheath
+            if (Math.random() * 100 < photoRate * 0.2) {
+                // C4 Acid moving from outer mesophyll to inner bundle sheath
+                let angle = Math.random() * Math.PI*2;
+                let mx = W/2 + Math.cos(angle)*120;
+                let my = H/2 + Math.sin(angle)*120;
+                particles.push({ type: 'c4acid', x: mx, y: my, tx: W/2, ty: H/2, speed: 2 });
+            }
+            if (Math.random() * 100 < photoRate * 0.1) {
+                // Sugar produced in Bundle Sheath, moves to vascular tissue
+                particles.push({ type: 'sugar', x: W/2 + (Math.random()*40-20), y: H/2 + (Math.random()*40-20), tx: W/2, ty: H/2, speed: 0.5 });
+            }
+            // O2 bounces safely in mesophyll, away from Bundle Sheath
+            if (Math.random() * 100 < internalO2 * 10) {
+                 let angle = Math.random() * Math.PI*2;
+                 particles.push({ type: 'o2', x: W/2 + Math.cos(angle)*150, y: H/2 + Math.sin(angle)*150, 
+                                  tx: stomataOpenness > 0.5 ? W/2 : (W/2 + Math.cos(angle+1)*150), 
+                                  ty: stomataOpenness > 0.5 ? H : (H/2 + Math.sin(angle+1)*150), 
+                                  speed: stomataOpenness > 0.5 ? 2 : 0.5 }); 
+            }
+        }
+    }
+
+    function drawParticles(W, H) {
+        for(let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            
+            // Move
+            let dx = p.tx - p.x;
+            let dy = p.ty - p.y;
+            let dist = Math.hypot(dx, dy);
+            
+            if (dist < 5) {
+                particles.splice(i, 1);
+                continue;
+            }
+
+            p.x += (dx/dist) * p.speed;
+            p.y += (dy/dist) * p.speed;
+
+            // Draw
+            if (p.type === 'co2') {
+                ctx.fillStyle = '#94a3b8'; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill();
+            } else if (p.type === 'o2') {
+                ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x+4, p.y-2, 3, 0, Math.PI*2); ctx.fill();
+            } else if (p.type === 'sugar') {
+                ctx.fillStyle = '#10b981'; ctx.shadowColor = '#10b981'; ctx.shadowBlur = 5;
+                ctx.beginPath();
+                for(let a=0; a<6; a++) {
+                    let hx = p.x + 5 * Math.cos(a * Math.PI/3);
+                    let hy = p.y + 5 * Math.sin(a * Math.PI/3);
+                    if(a===0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+                }
+                ctx.closePath(); ctx.fill(); ctx.shadowBlur = 0;
+            } else if (p.type === 'waste') {
+                ctx.fillStyle = '#f43f5e'; ctx.shadowColor = '#f43f5e'; ctx.shadowBlur = 5;
+                ctx.beginPath(); ctx.moveTo(p.x-4, p.y-4); ctx.lineTo(p.x+4, p.y+4); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(p.x+4, p.y-4); ctx.lineTo(p.x-4, p.y+4); ctx.stroke();
+                ctx.shadowBlur = 0;
+            } else if (p.type === 'c4acid') {
+                ctx.fillStyle = '#8b5cf6'; ctx.beginPath(); ctx.rect(p.x-3, p.y-3, 6, 6); ctx.fill();
+            }
+        }
+    }
+
+    // --- Main Render Loop ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      if (cw > 0 && ch > 0 && (canvas.width !== cw * dpr || canvas.height !== ch * dpr)) {
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.resetTransform();
+          ctx.scale(dpr, dpr);
+      }
+
+      const W = cw; const H = ch;
+      ctx.clearRect(0, 0, W, H);
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      time += 0.05;
+
+      // Draw Air Space (Stomatal cavity at bottom)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+      ctx.beginPath(); ctx.arc(W/2, H, W*0.3, Math.PI, 0); ctx.fill();
+
+      if (plantMode === 'c3') {
+          // --- C3 Anatomy ---
+          // Palisade Mesophyll (tightly packed at top)
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.15)'; // Emerald
+          ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+          for(let i=0; i<W; i+= 60) {
+              ctx.beginPath(); ctx.roundRect(i + 10, 50, 40, 100, 10); ctx.fill(); ctx.stroke();
+              // Chloroplasts
+              ctx.fillStyle = '#059669';
+              for(let c=0; c<6; c++) {
+                 ctx.beginPath(); ctx.ellipse(i + 30 + Math.sin(c)*10, 80 + c*12, 4, 2, 0, 0, Math.PI*2); ctx.fill();
+              }
+              ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+          }
+
+          // Spongy Mesophyll (loose in middle)
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+          for(let i=0; i<8; i++) {
+              let mx = W*0.2 + (i*80)%W + Math.sin(i*2)*20;
+              let my = 200 + (i*30)%150;
+              ctx.beginPath(); ctx.arc(mx, my, 35, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+              
+              // Highlight Rubisco choking if hot
+              if (wasteRate > 20) {
+                  ctx.fillStyle = `rgba(244, 63, 94, ${wasteRate/100 * 0.4})`; // Red glow
+                  ctx.beginPath(); ctx.arc(mx, my, 25, 0, Math.PI*2); ctx.fill();
+              }
+              ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+          }
+
+          // Labels
+          ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText("Mesophyll Cells (Rubisco is exposed to Air Space)", W/2, 180);
+
+      } else {
+          // --- C4 Kranz Anatomy ---
+          // Vascular Bundle (Vein in center)
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.1)'; ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(W/2, H*0.4, 40, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          
+          // Bundle Sheath Cells (Tight ring around vein)
+          ctx.fillStyle = 'rgba(251, 191, 36, 0.2)'; // Amber
+          ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+          for(let a=0; a<Math.PI*2; a+=Math.PI/4) {
+              let bx = W/2 + Math.cos(a)*65;
+              let by = H*0.4 + Math.sin(a)*65;
+              ctx.save(); ctx.translate(bx, by); ctx.rotate(a);
+              ctx.beginPath(); ctx.roundRect(-20, -15, 40, 30, 8); ctx.fill(); ctx.stroke();
+              ctx.restore();
+          }
+
+          // Mesophyll Cells (Outer ring)
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.15)'; ctx.strokeStyle = '#10b981'; ctx.lineWidth = 2;
+          for(let a=0; a<Math.PI*2; a+=Math.PI/6) {
+              let mx = W/2 + Math.cos(a)*120;
+              let my = H*0.4 + Math.sin(a)*120;
+              ctx.beginPath(); ctx.arc(mx, my, 30, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          }
+
+          // Labels
+          ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText("Bundle Sheath Cells (Rubisco protected inside)", W/2, H*0.4 - 100);
+          ctx.fillText("Mesophyll Cells (PEP Carboxylase outer ring)", W/2, H*0.4 - 160);
+      }
+
+      spawnParticles(W, H);
+      drawParticles(W, H);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      updateBiology();
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

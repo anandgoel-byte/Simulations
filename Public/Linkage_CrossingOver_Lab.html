@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linkage & Crossing Over Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Linkage &amp; Crossing Over Simulator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Genetic Recombination &amp; Chromosome Mapping Lab</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Genetics Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Linkage Presets:</span>
+        <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="complete">Complete Linkage (0 cM)</option>
+          <option value="moderate" selected>Moderate Linkage (20 cM)</option>
+          <option value="unlinked">Unlinked / Independent Assortment (50 cM)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <button id="btn-meiosis" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5">
+          ⚡ Trigger Meiosis (Prophase I)
+        </button>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all shadow-sm">
+          <span>🔄</span> Reset Chromosomes
+        </button>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Morgan's Recombination Formula</span>
+            <div class="text-[11px] font-mono text-center py-2 font-bold" id="formula-display">
+              $$\text{Map Distance (cM)} = \text{RF (\%)} = \left( \frac{\text{Recombinants}}{\text{Total Offspring}} \right) \times 100$$
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Gene A & B Distance</span></span>
+              <span id="lbl-dist" class="font-mono text-blue-600 text-sm">20 cM</span>
+            </div>
+            <input type="range" id="sl-dist" min="0" max="50" step="1" value="20" class="w-full mt-2" style="accent-color: #3b82f6;">
+            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+              <span>0 cM (Linked)</span>
+              <span>50 cM (Unlinked)</span>
+            </div>
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100">
+              The physical distance between Gene A and Gene B determines the probability that a chiasma (crossover) will form between them.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+             <span class="text-[9px] font-extrabold uppercase tracking-widest text-slate-500 block border-b border-slate-100 pb-1">Homologous Chromosome Legend</span>
+             <div class="flex items-center gap-2">
+               <span class="w-3 h-3 bg-blue-500 rounded-sm"></span>
+               <span class="text-[11px] font-bold text-slate-700">Paternal Chromosome (A, B)</span>
+             </div>
+             <div class="flex items-center gap-2">
+               <span class="w-3 h-3 bg-rose-500 rounded-sm"></span>
+               <span class="text-[11px] font-bold text-slate-700">Maternal Chromosome (a, b)</span>
+             </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-indigo-400 tracking-wider uppercase" id="canvas-hud">Prophase I: Tetrad Formation</span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Gamete Output Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Recombination Probability</div>
+              <div class="text-2xl font-bold font-mono tracking-widest text-amber-500" id="tel-prob">20.0%</div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+                <div class="bg-amber-400 h-1.5 rounded-full transition-all duration-300" id="bar-prob" style="width: 20%"></div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-blue-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Parental Gametes</div>
+              <div class="text-lg font-bold font-mono text-blue-600" id="tel-parental">80%</div>
+              <div class="text-[9px] text-slate-500 font-bold mt-1">(AB, ab)</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Recombinant Gametes</div>
+              <div class="text-lg font-bold font-mono text-rose-500" id="tel-recombinant">20%</div>
+              <div class="text-[9px] text-slate-500 font-bold mt-1">(Ab, aB)</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                During which specific phase of cell division does Crossing Over occur?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                What is the physical connection point called where two chromatids exchange genetic material?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why does the Recombination Frequency never exceed 50%?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                If Gene A and Gene B are 5 cM apart, what does this indicate about their linkage?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> LINKAGE & RECOMBINATION PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Genetics Laboratory</strong>! Explore how distance affects the inheritance of linked genes.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Gene Distance Slider</strong>: Adjust the physical distance between Gene A and Gene B on the chromosome. Notice how moving them further apart increases the probability of a chiasma forming between them!</li>
+            <li><strong>Trigger Meiosis</strong>: Click the button to watch Prophase I. The inner sister chromatids will cross over. The final result splits into 4 separate haploid gametes (sperm/egg).</li>
+            <li><strong>The 50% Rule</strong>: Notice that even at maximum distance (50 cM), the recombination frequency maxes out at 50%. This is because the outer two chromatids never participate in the crossover, ensuring at least 50% of the gametes are always "Parental".</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "During which specific phase of cell division does Crossing Over occur?",
+        options: [
+          { text: "Metaphase II of Meiosis", isCorrect: false, exp: "Incorrect. By Metaphase II, chromosomes are already recombined and separating." },
+          { text: "Prophase of Mitosis", isCorrect: false, exp: "Incorrect. Homologous chromosomes do not pair up or cross over in Mitosis." },
+          { text: "Prophase I of Meiosis", isCorrect: true, exp: "Correct! During Prophase I, homologous chromosomes physically pair up to form tetrads (bivalents). This intimate contact allows non-sister chromatids to exchange genetic material." },
+          { text: "Anaphase I of Meiosis", isCorrect: false, exp: "Incorrect. Chromosomes are separating in Anaphase, not crossing over." }
+        ]
+      },
+      q2: {
+        question: "What is the physical connection point called where two chromatids exchange genetic material?",
+        options: [
+          { text: "Centromere", isCorrect: false, exp: "Incorrect. The centromere holds sister chromatids together." },
+          { text: "Chiasma", isCorrect: true, exp: "Correct! A chiasma (plural: chiasmata) is the physical, X-shaped structural intersection where two non-sister chromatids break and rejoin, swapping alleles." },
+          { text: "Kinetochore", isCorrect: false, exp: "Incorrect. The kinetochore is where spindle fibers attach." },
+          { text: "Telomere", isCorrect: false, exp: "Incorrect. Telomeres are the protective caps at the ends of chromosomes." }
+        ]
+      },
+      q3: {
+        question: "Why does the Recombination Frequency never exceed 50%?",
+        options: [
+          { text: "Because the outer two chromatids in the tetrad do not participate in the crossover.", isCorrect: true, exp: "Correct! Even if a crossover happens 100% of the time between two genes, only the two inner non-sister chromatids swap DNA. The two outer chromatids remain untouched, guaranteeing that at least 50% of the resulting gametes will always have the original Parental genotype." },
+          { text: "Because the cell runs out of ATP to break the DNA.", isCorrect: false, exp: "Incorrect. It is a structural limitation, not an energy one." },
+          { text: "Because genes further than 50 cM fall off the chromosome.", isCorrect: false, exp: "Incorrect." },
+          { text: "Because 50% is a lethal mutation threshold.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        question: "If Gene A and Gene B are 5 cM apart, what does this indicate about their linkage?",
+        options: [
+          { text: "They are perfectly unlinked and assort independently.", isCorrect: false, exp: "Incorrect. Independent assortment requires 50 cM distance." },
+          { text: "They are highly linked and will rarely be separated by crossing over.", isCorrect: true, exp: "Correct! A distance of 5 Centimorgans (cM) means there is only a 5% chance of a crossover occurring between them. They will be inherited together as a parental package 95% of the time." },
+          { text: "They are on completely different chromosomes.", isCorrect: false, exp: "Incorrect. cM measures distance on the same chromosome." },
+          { text: "They will crossover exactly 50% of the time.", isCorrect: false, exp: "Incorrect. They crossover 5% of the time." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS / BIO ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const slDist = document.getElementById('sl-dist');
+    const lblDist = document.getElementById('lbl-dist');
+    const selPreset = document.getElementById('select-preset');
+    
+    const btnMeiosis = document.getElementById('btn-meiosis');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telProb = document.getElementById('tel-prob');
+    const barProb = document.getElementById('bar-prob');
+    const telParental = document.getElementById('tel-parental');
+    const telRecombinant = document.getElementById('tel-recombinant');
+    const canvasHud = document.getElementById('canvas-hud');
+
+    // State
+    let distanceCM = 20; // 0 to 50
+    let isAnimating = false;
+    let animProgress = 0; // 0 to 1
+    let didCrossover = false; // Randomly determined based on distance
+
+    function updateTelemetry() {
+        telProb.innerText = `${distanceCM.toFixed(1)}%`;
+        barProb.style.width = `${distanceCM}%`;
+
+        let rec = distanceCM;
+        let par = 100 - rec;
+
+        telParental.innerText = `${par.toFixed(1)}%`;
+        telRecombinant.innerText = `${rec.toFixed(1)}%`;
+    }
+
+    function sync(val) {
+        if (isAnimating) return; // lock during animation
+        distanceCM = parseFloat(val);
+        slDist.value = distanceCM;
+        lblDist.innerText = `${distanceCM} cM`;
+        updateTelemetry();
+    }
+
+    slDist.addEventListener('input', e => sync(e.target.value));
+
+    selPreset.addEventListener('change', e => {
+        let val = e.target.value;
+        if (val === 'complete') sync(0);
+        else if (val === 'moderate') sync(20);
+        else if (val === 'unlinked') sync(50);
+    });
+
+    btnMeiosis.addEventListener('click', () => {
+        if (isAnimating) return;
+        
+        // Determine if crossover happens this specific round
+        // probability = distanceCM / 100
+        // Wait, distance is max 50cM. At 50cM, RF is 50%.
+        // But remember, a crossover event between inner chromatids creates 2 recombinants and 2 parentals.
+        // So a 100% chance of a chiasma yields 50% RF.
+        // Therefore, chiasma probability = distanceCM * 2 / 100
+        
+        let chiasmaProb = (distanceCM * 2) / 100;
+        didCrossover = Math.random() < chiasmaProb;
+
+        isAnimating = true;
+        animProgress = 0;
+        canvasHud.innerText = "Meiosis in Progress...";
+        canvasHud.className = "text-[10px] font-bold text-amber-400 tracking-wider uppercase";
+    });
+
+    btnReset.addEventListener('click', () => {
+        isAnimating = false;
+        animProgress = 0;
+        didCrossover = false;
+        canvasHud.innerText = "Prophase I: Tetrad Formation";
+        canvasHud.className = "text-[10px] font-bold text-indigo-400 tracking-wider uppercase";
+    });
+
+    // --- CANVAS RENDERING ---
+    function drawChromatid(cx, cy, height, color, isRecombinant, crossY, leftSide) {
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 16;
+        
+        if (!isRecombinant) {
+            ctx.strokeStyle = color;
+            ctx.beginPath(); ctx.moveTo(cx, cy - height/2); ctx.lineTo(cx, cy + height/2); ctx.stroke();
+        } else {
+            // Draw split color
+            let topColor = color;
+            let botColor = color === '#3b82f6' ? '#f43f5e' : '#3b82f6'; // Swap blue and rose
+
+            // The crossover point
+            ctx.strokeStyle = topColor;
+            ctx.beginPath(); ctx.moveTo(cx, cy - height/2); ctx.lineTo(cx, cy + crossY); ctx.stroke();
+
+            // To avoid gap, draw bottom from slightly above crossY
+            ctx.strokeStyle = botColor;
+            ctx.beginPath(); ctx.moveTo(cx, cy + crossY - 1); ctx.lineTo(cx, cy + height/2); ctx.stroke();
+        }
+
+        // Draw Genes (A on top, B on bottom)
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        
+        // Gene A is fixed at top
+        let geneA = color === '#3b82f6' ? 'A' : 'a';
+        ctx.fillText(geneA, cx, cy - height/2 + 20);
+
+        // Gene B moves down based on distance slider
+        // Map 0cM to 50cM into a physical Y offset
+        let bOffset = (distanceCM / 50) * (height/2 - 40); // 0 to max offset
+        let geneBy = cy - height/2 + 40 + bOffset;
+
+        // Determine allele for Gene B based on recombination
+        let geneB = color === '#3b82f6' ? 'B' : 'b';
+        if (isRecombinant && (geneBy > (cy + crossY))) {
+            // If Gene B is below the crossover point, it swapped
+            geneB = color === '#3b82f6' ? 'b' : 'B';
+        }
+        ctx.fillText(geneB, cx, geneBy);
+    }
+
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 10);
+      let ch = Math.max(container.clientHeight, 10);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderLoop); return; }
+
+      if (isAnimating) {
+          animProgress += 0.005; // 0 to 1
+          if (animProgress > 1) {
+              animProgress = 1;
+              canvasHud.innerText = "Gametes Produced (4x n)";
+              canvasHud.className = "text-[10px] font-bold text-emerald-400 tracking-wider uppercase";
+          }
+      }
+
+      const cx = cw / 2;
+      const cy = ch / 2;
+      const height = ch * 0.6;
+
+      // Base positions
+      let x1 = cx - 40; // Paternal 1 (Outer)
+      let x2 = cx - 15; // Paternal 2 (Inner)
+      let x3 = cx + 15; // Maternal 1 (Inner)
+      let x4 = cx + 40; // Maternal 2 (Outer)
+
+      // Crossover Y coordinate (Always between A and B if it happens)
+      // A is at cy - height/2 + 20
+      // B is at cy - height/2 + 40 + bOffset
+      let bOffset = (distanceCM / 50) * (height/2 - 40);
+      let crossY = -height/2 + 30 + bOffset/2; // Middle point between genes
+
+      if (animProgress === 0) {
+          // Resting Tetrad
+          drawChromatid(x1, cy, height, '#3b82f6', false, 0, true);
+          drawChromatid(x2, cy, height, '#3b82f6', false, 0, true);
+          drawChromatid(x3, cy, height, '#f43f5e', false, 0, false);
+          drawChromatid(x4, cy, height, '#f43f5e', false, 0, false);
+      } 
+      else if (animProgress < 0.4) {
+          // Crossing over phase (inner chromatids bend towards each other)
+          let t = Math.sin((animProgress/0.4) * Math.PI); // 0 -> 1 -> 0
+          
+          let bendX2 = x2 + t*15;
+          let bendX3 = x3 - t*15;
+
+          drawChromatid(x1, cy, height, '#3b82f6', false, 0, true);
+          drawChromatid(x4, cy, height, '#f43f5e', false, 0, false);
+
+          if (didCrossover) {
+              // Draw bent crossing chromatids
+              ctx.lineWidth = 16; ctx.lineCap = 'round';
+              
+              // Blue inner
+              ctx.strokeStyle = '#3b82f6';
+              ctx.beginPath(); ctx.moveTo(x2, cy - height/2); ctx.quadraticCurveTo(bendX2, cy + crossY, bendX2, cy + crossY); ctx.stroke();
+              // Rose inner
+              ctx.strokeStyle = '#f43f5e';
+              ctx.beginPath(); ctx.moveTo(x3, cy - height/2); ctx.quadraticCurveTo(bendX3, cy + crossY, bendX3, cy + crossY); ctx.stroke();
+              
+              // Bottom halves (swapped)
+              // From bend point to bottom, color swapped
+              ctx.strokeStyle = '#f43f5e'; // Blue gets rose bottom
+              ctx.beginPath(); ctx.moveTo(bendX2, cy + crossY); ctx.quadraticCurveTo(bendX2, cy + height/2, x2, cy + height/2); ctx.stroke();
+              
+              ctx.strokeStyle = '#3b82f6'; // Rose gets blue bottom
+              ctx.beginPath(); ctx.moveTo(bendX3, cy + crossY); ctx.quadraticCurveTo(bendX3, cy + height/2, x3, cy + height/2); ctx.stroke();
+
+              // Draw Genes for bent state (simplified visual)
+              ctx.fillStyle = '#fff'; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+              ctx.fillText('A', x2, cy - height/2 + 20); ctx.fillText('a', x3, cy - height/2 + 20);
+              
+              let geneBy = cy - height/2 + 40 + bOffset;
+              // Swapped alleles
+              ctx.fillText('b', x2, geneBy); ctx.fillText('B', x3, geneBy);
+
+          } else {
+              // No crossover, just bending
+              ctx.strokeStyle = '#3b82f6';
+              ctx.beginPath(); ctx.moveTo(x2, cy - height/2); ctx.quadraticCurveTo(bendX2, cy, x2, cy + height/2); ctx.stroke();
+              ctx.strokeStyle = '#f43f5e';
+              ctx.beginPath(); ctx.moveTo(x3, cy - height/2); ctx.quadraticCurveTo(bendX3, cy, x3, cy + height/2); ctx.stroke();
+
+              ctx.fillStyle = '#fff'; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+              ctx.fillText('A', x2, cy - height/2 + 20); ctx.fillText('a', x3, cy - height/2 + 20);
+              let geneBy = cy - height/2 + 40 + bOffset;
+              ctx.fillText('B', x2, geneBy); ctx.fillText('b', x3, geneBy);
+          }
+      } 
+      else {
+          // Splitting into 4 gametes
+          // Map 0.4 to 1.0 -> Separation spread
+          let t = (animProgress - 0.4) / 0.6;
+          
+          let spread = t * (cw * 0.25);
+          
+          drawChromatid(x1 - spread*1.5, cy, height, '#3b82f6', false, crossY, true);
+          drawChromatid(x2 - spread*0.5, cy, height, '#3b82f6', didCrossover, crossY, true);
+          drawChromatid(x3 + spread*0.5, cy, height, '#f43f5e', didCrossover, crossY, false);
+          drawChromatid(x4 + spread*1.5, cy, height, '#f43f5e', false, crossY, false);
+
+          if (t === 1) {
+              // Draw Gamete Cell boundaries
+              ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 2;
+              let gR = height * 0.6;
+              ctx.beginPath(); ctx.arc(x1 - spread*1.5, cy, gR, 0, Math.PI*2); ctx.stroke();
+              ctx.beginPath(); ctx.arc(x2 - spread*0.5, cy, gR, 0, Math.PI*2); ctx.stroke();
+              ctx.beginPath(); ctx.arc(x3 + spread*0.5, cy, gR, 0, Math.PI*2); ctx.stroke();
+              ctx.beginPath(); ctx.arc(x4 + spread*1.5, cy, gR, 0, Math.PI*2); ctx.stroke();
+              
+              // Labels
+              ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+              ctx.fillText("Parental", x1 - spread*1.5, cy + gR + 20);
+              ctx.fillText(didCrossover ? "Recombinant" : "Parental", x2 - spread*0.5, cy + gR + 20);
+              ctx.fillText(didCrossover ? "Recombinant" : "Parental", x3 + spread*0.5, cy + gR + 20);
+              ctx.fillText("Parental", x4 + spread*1.5, cy + gR + 20);
+          }
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      updateTelemetry();
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

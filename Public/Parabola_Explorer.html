@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parabola Focus-Directrix Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
+       alt="Sparkl Alpha Logo"
+       class="h-8 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Parabola Focus-Directrix Explorer</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Precision Coordinate Geometry &amp; Geometric Locus Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">2D Math Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-reset" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Parameters
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-distance" checked class="rounded border-slate-300 text-amber-500 focus:ring-amber-500 h-4.5 w-4.5">
+          <span>Verify Equal Distances ($PF = PD$)</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-slate-500 focus:ring-slate-500 h-4.5 w-4.5">
+          <span>Show Cartesian Grid</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+        
+        <div class="lg:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-6">
+
+            <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> <span class="uppercase">Focal Length ($a$)</span></span>
+                <span id="lbl-a" class="font-mono text-indigo-600 text-lg">2.0</span>
+              </div>
+              <input type="range" id="sl-a" min="-5" max="5" step="0.1" value="2.0" class="w-full mt-3">
+              <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-2 uppercase tracking-wider">
+                <span>Opens Down</span>
+                <span>Opens Up</span>
+              </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> <span class="uppercase">Point Position ($t$)</span></span>
+                <span id="lbl-t" class="font-mono text-emerald-600 text-lg">1.5</span>
+              </div>
+              <input type="range" id="sl-t" min="-3" max="3" step="0.1" value="1.5" class="w-full mt-3">
+              <div class="text-center text-[10px] font-bold text-slate-400 mt-2">Drags point $P$ along the curve</div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Geometric Definition</span>
+              <div class="text-[11px] font-mono text-center py-2 space-y-1.5">
+                $$x^2 = 4ay$$
+                $$P(x,y) \implies (2at, at^2)$$
+                <div class="text-[9px] text-slate-400 font-sans mt-2 text-left">
+                  A parabola is the locus of a point $P$ whose distance from a fixed point (Focus $F$) equals its distance from a fixed line (Directrix $D$).
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pt-4 border-t border-slate-200 space-y-3">
+            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Coordinate Telemetry</span>
+            
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-white p-2.5 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Focus ($F$)</div>
+                <div class="text-sm font-bold font-mono text-amber-500" id="tel-f">$(0, 2.0)$</div>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center">
+                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Directrix ($D$)</div>
+                <div class="text-sm font-bold font-mono text-rose-500" id="tel-d">$y = -2.0$</div>
+              </div>
+              
+              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between items-center px-4 mt-1">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Distance Status</div>
+                <div class="text-sm font-bold font-mono text-emerald-400 tracking-widest" id="tel-dist">PF = PD = 4.25</div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="lg:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span class="text-[10px] font-bold text-slate-300 tracking-wider">Cartesian Coordinate Plane</span>
+          </div>
+
+          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-cyan-400 block"></span> Parabola Curve</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-amber-400 block"></span> Focus ($F$)</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-rose-500 block border-t border-dashed border-rose-500 bg-transparent"></span> Directrix Line</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-emerald-400 block border-t border-dashed border-emerald-400 bg-transparent"></span> Distance Measurements</div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why does the parabola open downwards when $a$ is negative?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
+                In the equation $x^2 = 4ay$, since $x^2$ must always be positive (or zero), the sign of $y$ must match the sign of $a$. If $a$ is negative, $y$ must also be negative, restricting the curve to the lower half of the coordinate plane.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What happens to the curve as $a$ gets larger?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
+                As the focal length $a$ increases, the Focus moves further from the Vertex. Geometrically, this causes the parabola to become wider or "flatter." A small $a$ results in a very narrow, "sharp" parabola.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What is the "Latus Rectum"?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
+              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
+                The latus rectum is the line segment that passes through the Focus, parallel to the Directrix, with both endpoints on the parabola. Its length is exactly $|4a|$. It provides a quick measure of how wide the parabola opens.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* The coordinate system auto-scales to ensure the entire geometric relationship remains visible.</span>
+    </footer>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> PARABOLA GEOMETRY PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Focus-Directrix Laboratory</strong>! Explore the fundamental geometric property that defines a parabola.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Focal Length ($a$)</strong>: Adjust the position of the Focus and Directrix simultaneously. Watch the curve automatically widen or narrow to maintain the distance equality rule.</li>
+            <li><strong>Point Position ($t$)</strong>: Drag this slider to physically move point $P$ along the curve.</li>
+            <li><strong>Distance Verification</strong>: Leave this toggled on to draw dynamic measurement lines proving that the distance to the Focus ($PF$) is always equal to the perpendicular distance to the Directrix ($PD$).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let param_a = 2.0;
+    let param_t = 1.5;
+
+    // --- DOM Elements ---
+    const slA = document.getElementById('sl-a');
+    const lblA = document.getElementById('lbl-a');
+    
+    const slT = document.getElementById('sl-t');
+    const lblT = document.getElementById('lbl-t');
+
+    const chkDistance = document.getElementById('chk-distance');
+    const chkGrid = document.getElementById('chk-grid');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telF = document.getElementById('tel-f');
+    const telD = document.getElementById('tel-d');
+    const telDist = document.getElementById('tel-dist');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Math Logic & Telemetry ---
+    function updateTelemetry() {
+       telF.innerText = `(0, ${param_a.toFixed(1)})`;
+       telD.innerText = `y = ${(-param_a).toFixed(1)}`;
+
+       // Calculate distance. P(x, y) = (2at, at^2)
+       let px = 2 * param_a * param_t;
+       let py = param_a * param_t * param_t;
+       
+       // Focus F(0, a)
+       let dxF = px - 0;
+       let dyF = py - param_a;
+       let distPF = Math.sqrt(dxF*dxF + dyF*dyF);
+
+       telDist.innerText = `PF = PD = ${distPF.toFixed(2)}`;
+    }
+
+    // --- Input Handlers ---
+    slA.addEventListener('input', ev => {
+       let val = parseFloat(ev.target.value);
+       if (Math.abs(val) < 0.1) val = 0.1; // Prevent completely flat line (division by zero geometry issues)
+       param_a = val;
+       lblA.innerText = param_a.toFixed(1);
+       updateTelemetry();
+    });
+
+    slT.addEventListener('input', ev => {
+       param_t = parseFloat(ev.target.value);
+       lblT.innerText = param_t.toFixed(1);
+       updateTelemetry();
+    });
+
+    btnReset.addEventListener('click', () => {
+       param_a = 2.0; slA.value = 2.0; lblA.innerText = "2.0";
+       param_t = 1.5; slT.value = 1.5; lblT.innerText = "1.5";
+       updateTelemetry();
+    });
+
+    // --- Canvas Rendering ---
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      
+      // Dynamic dimension check
+      if (cw > 0 && ch > 0) {
+          if (canvas.width !== cw * dpr || canvas.height !== ch * dpr) {
+              canvas.width = cw * dpr;
+              canvas.height = ch * dpr;
+              ctx.resetTransform();
+              ctx.scale(dpr, dpr);
+          }
+      }
+
+      const W = cw;
+      const H = ch;
+      ctx.clearRect(0, 0, W, H);
+
+      if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+      const cx = W / 2;
+      const cy = H / 2;
+
+      // Dynamic Scaling: ensure Focus and Directrix are always visible.
+      // We want `a` to take up about 15% of the half-height
+      const scale = (H/2 * 0.15) / Math.max(0.5, Math.abs(param_a));
+
+      const mapX = (x) => cx + x * scale;
+      const mapY = (y) => cy - y * scale; // Y inverted
+
+      // 1. Draw Cartesian Grid & Axes
+      if (chkGrid.checked) {
+         ctx.strokeStyle = '#1e293b';
+         ctx.lineWidth = 1;
+         ctx.beginPath();
+         // Step size visually: try to keep grid squares reasonable
+         let step = scale > 20 ? 1 : (scale > 10 ? 2 : 5);
+         
+         // To avoid infinite loops, calculate pixel limits
+         let gridLimitX = W / scale;
+         let gridLimitY = H / scale;
+
+         for(let i = 0; i < gridLimitX; i+=step) {
+            ctx.moveTo(mapX(i), 0); ctx.lineTo(mapX(i), H);
+            ctx.moveTo(mapX(-i), 0); ctx.lineTo(mapX(-i), H);
+         }
+         for(let i = 0; i < gridLimitY; i+=step) {
+            ctx.moveTo(0, mapY(i)); ctx.lineTo(W, mapY(i));
+            ctx.moveTo(0, mapY(-i)); ctx.lineTo(W, mapY(-i));
+         }
+         ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
+      ctx.stroke();
+
+      // 2. Draw Directrix Line (y = -a)
+      let dirY = mapY(-param_a);
+      ctx.strokeStyle = '#f43f5e'; // Rose
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 8]);
+      ctx.beginPath();
+      ctx.moveTo(0, dirY); ctx.lineTo(W, dirY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      ctx.fillStyle = '#f43f5e';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText("Directrix (D)", cx + 20, dirY - 10);
+
+      // 3. Draw Parabola Curve
+      ctx.strokeStyle = '#22d3ee'; // Cyan
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      
+      // Plot curve parametrically from t = -10 to 10
+      for(let t = -10; t <= 10; t += 0.1) {
+          let px = 2 * param_a * t;
+          let py = param_a * t * t;
+          if (t === -10) ctx.moveTo(mapX(px), mapY(py));
+          else ctx.lineTo(mapX(px), mapY(py));
+      }
+      ctx.stroke();
+
+      // 4. Draw Focus Point
+      let fx = 0;
+      let fy = param_a;
+      ctx.fillStyle = '#fbbf24'; // Amber
+      ctx.shadowColor = '#fbbf24';
+      ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(mapX(fx), mapY(fy), 5, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillText("F", mapX(fx) + 10, mapY(fy) - 5);
+
+      // 5. Draw Dynamic Point P and Distance Verification
+      let px = 2 * param_a * param_t;
+      let py = param_a * param_t * param_t;
+
+      if (chkDistance.checked) {
+         ctx.strokeStyle = '#34d399'; // Emerald
+         ctx.lineWidth = 2;
+         ctx.setLineDash([5, 5]);
+         ctx.beginPath();
+         // PF line
+         ctx.moveTo(mapX(px), mapY(py)); ctx.lineTo(mapX(fx), mapY(fy));
+         // PD line (perpendicular to directrix)
+         ctx.moveTo(mapX(px), mapY(py)); ctx.lineTo(mapX(px), mapY(-param_a));
+         ctx.stroke();
+         ctx.setLineDash([]);
+
+         // Draw Directrix Intersection Point
+         ctx.fillStyle = '#f43f5e';
+         ctx.beginPath(); ctx.arc(mapX(px), mapY(-param_a), 4, 0, Math.PI*2); ctx.fill();
+
+         // Labels for distances
+         let distVal = Math.sqrt(Math.pow(px-fx, 2) + Math.pow(py-fy, 2));
+         ctx.fillStyle = '#34d399';
+         ctx.font = 'bold 11px monospace';
+         
+         // Midpoints for labels
+         let midPFx = (mapX(px) + mapX(fx)) / 2;
+         let midPFy = (mapY(py) + mapY(fy)) / 2;
+         ctx.fillText(`d=${distVal.toFixed(1)}`, midPFx + 10, midPFy);
+
+         let midPDx = mapX(px);
+         let midPDy = (mapY(py) + mapY(-param_a)) / 2;
+         ctx.fillText(`d=${distVal.toFixed(1)}`, midPDx - 40, midPDy);
+      }
+
+      // Draw Point P
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(mapX(px), mapY(py), 5, 0, Math.PI*2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillText("P", mapX(px) + 10, mapY(py) - 10);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Initialize
+    window.addEventListener('load', () => {
+      updateTelemetry();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

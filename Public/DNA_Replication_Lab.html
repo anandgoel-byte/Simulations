@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNA Replication Fork Animator Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Range Slider Styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    /* 3D Blueprint Background */
+    .lab-stage {
+      background-color: #020617 !important;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
+      background-size: 24px 24px !important;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">DNA Replication Fork Animator</h1>
+          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Molecular Genetics &amp; Enzymatic Catalysis Lab</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button id="btn-play" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5">
+          ⏸ Pause Replication
+        </button>
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all shadow-sm">
+          <span>🔄</span> Reset Fork
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-bases" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Nitrogenous Bases</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-labels" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Enzyme Labels</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-6">
+
+          <div class="bg-white p-4 rounded-xl border border-indigo-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> <span class="uppercase text-indigo-700">Enzyme Catalysis Rate</span></span>
+              <span id="lbl-speed" class="font-mono text-indigo-600 text-sm">1.0x</span>
+            </div>
+            <input type="range" id="sl-speed" min="0.1" max="3" step="0.1" value="1" class="w-full mt-2" style="accent-color: #4f46e5;">
+            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-indigo-50 p-2 rounded border border-indigo-100">
+              Slow down the reaction to observe the discontinuous synthesis on the lagging strand.
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <span class="text-[11px] font-extrabold text-slate-600 uppercase tracking-wider block mb-1 border-b border-slate-100 pb-1">Enzyme Roster Key</span>
+            
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-amber-400 border border-amber-600"></span>
+              <span class="text-[11px] font-bold text-slate-700">Helicase <span class="font-medium text-slate-500">(Unzips DNA)</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-emerald-400 rounded-full border border-emerald-600"></span>
+              <span class="text-[11px] font-bold text-slate-700">Topoisomerase <span class="font-medium text-slate-500">(Relaxes coil)</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-purple-500 border border-purple-700 rounded-sm"></span>
+              <span class="text-[11px] font-bold text-slate-700">DNA Pol III <span class="font-medium text-slate-500">(Builds new strand)</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-rose-500 rounded-full border border-rose-700"></span>
+              <span class="text-[11px] font-bold text-slate-700">Primase <span class="font-medium text-slate-500">(Lays RNA primer)</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-cyan-400 border border-cyan-600 rounded-sm"></span>
+              <span class="text-[11px] font-bold text-slate-700">DNA Pol I <span class="font-medium text-slate-500">(Replaces primer)</span></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 bg-fuchsia-400 rounded-full border border-fuchsia-600"></span>
+              <span class="text-[11px] font-bold text-slate-700">Ligase <span class="font-medium text-slate-500">(Seals Okazaki gaps)</span></span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-indigo-400 tracking-wider uppercase" id="canvas-hud">Replisome Complex</span>
+        </div>
+
+        <div class="absolute bottom-4 left-4 z-20 pointer-events-none">
+          <div class="bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1">
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-4 h-1 bg-slate-400"></span> Parent DNA Strand</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-4 h-1 bg-blue-400"></span> Newly Synthesized DNA</div>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-4 h-1 bg-rose-400"></span> RNA Primer</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Replication Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Base Pairs Replicated</div>
+              <div class="text-3xl font-bold font-mono tracking-widest text-emerald-400" id="tel-bp">0</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Synthesis Direction</div>
+              <div class="text-[11px] font-bold font-mono text-indigo-600 leading-tight uppercase mt-1">5' &rarr; 3'</div>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Error Rate</div>
+              <div class="text-[11px] font-bold font-mono text-slate-600 leading-tight mt-1">1 in 10 Billion</div>
+            </div>
+
+            <div class="bg-white p-2.5 rounded-xl border border-amber-200 shadow-sm col-span-2 flex justify-between items-center px-4 mt-1">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Okazaki Fragments</div>
+              <div class="text-[14px] font-bold font-mono text-amber-600 tracking-widest" id="tel-frag">0</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which enzyme is responsible for unzipping the DNA double helix?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                In which strict direction can DNA Polymerase III build a new strand?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Why must the lagging strand be synthesized discontinuously in Okazaki fragments?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+                Which enzyme seals the final phosphodiester gaps between Okazaki fragments?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> DNA REPLICATION PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Molecular Genetics Laboratory</strong>! Observe the real-time mechanics of the replisome.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Enzyme Speed Slider</strong>: Control the playback speed. Slow it down to watch how the lagging strand polymerase has to continually jump backward to lay down new segments!</li>
+            <li><strong>Leading vs Lagging</strong>: The top strand (Leading) is built continuously as the Helicase unzips the DNA. The bottom strand (Lagging) must be built in chunks (Okazaki Fragments) because it runs in the opposite direction.</li>
+            <li><strong>Primer Replacement</strong>: Watch the Primase lay down red RNA primers. Then watch DNA Pol I swap them out, followed by Ligase sealing the gaps!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        question: "Which enzyme is responsible for unzipping the DNA double helix?",
+        options: [
+          { text: "DNA Polymerase", isCorrect: false, exp: "Incorrect. Polymerase builds new DNA; it does not unzip the double helix." },
+          { text: "Helicase", isCorrect: true, exp: "Correct! Helicase acts like a wedge, breaking the hydrogen bonds between nitrogenous bases to separate the two parent strands." },
+          { text: "Ligase", isCorrect: false, exp: "Incorrect. Ligase acts as glue to seal gaps." },
+          { text: "Topoisomerase", isCorrect: false, exp: "Incorrect. Topoisomerase relaxes supercoiling ahead of the fork, but doesn't unzip the bases." }
+        ]
+      },
+      q2: {
+        question: "In which strict direction can DNA Polymerase III build a new strand?",
+        options: [
+          { text: "3' to 5'", isCorrect: false, exp: "Incorrect. It cannot build in this direction." },
+          { text: "5' to 3'", isCorrect: true, exp: "Correct! DNA Polymerase can only add free nucleotides to the 3' OH end of a growing chain. Thus, the new strand always grows in the 5' to 3' direction." },
+          { text: "Both directions simultaneously", isCorrect: false, exp: "Incorrect. DNA Polymerase is strictly unidirectional." },
+          { text: "N to C terminus", isCorrect: false, exp: "Incorrect. That refers to protein synthesis, not DNA." }
+        ]
+      },
+      q3: {
+        question: "Why must the lagging strand be synthesized discontinuously in Okazaki fragments?",
+        options: [
+          { text: "Because the cell runs out of ATP.", isCorrect: false, exp: "Incorrect. It's a structural limitation, not an energy one." },
+          { text: "Because the parent strand is pointing the 'wrong' way, and Pol III can only build 5' to 3'.", isCorrect: true, exp: "Correct! As the fork opens, the lagging strand exposes its 5' to 3' template. Since Pol III must build 5' to 3' (antiparallel), it has to work backwards away from the fork, detach, jump forward, and start again." },
+          { text: "Because Helicase frequently breaks.", isCorrect: false, exp: "Incorrect. Helicase operates smoothly." },
+          { text: "Because RNA primers are toxic.", isCorrect: false, exp: "Incorrect. Primers are necessary for initiation." }
+        ]
+      },
+      q4: {
+        question: "Which enzyme seals the final phosphodiester gaps between Okazaki fragments?",
+        options: [
+          { text: "Primase", isCorrect: false, exp: "Incorrect. Primase creates the RNA primer." },
+          { text: "DNA Pol I", isCorrect: false, exp: "Incorrect. DNA Pol I replaces RNA with DNA, but leaves a small unsealed gap." },
+          { text: "Ligase", isCorrect: true, exp: "Correct! After Pol I replaces the RNA primers with DNA, DNA Ligase comes in like glue to form the final phosphodiester bond, making the strand continuous." },
+          { text: "Helicase", isCorrect: false, exp: "Incorrect. Helicase separates strands." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        
+        optionsContainer.innerHTML = '';
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
+          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.add('cursor-not-allowed');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+              } else {
+                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS / BIO ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const btnPlay = document.getElementById('btn-play');
+    const btnReset = document.getElementById('btn-reset');
+    const slSpeed = document.getElementById('sl-speed');
+    const lblSpeed = document.getElementById('lbl-speed');
+    const chkBases = document.getElementById('chk-bases');
+    const chkLabels = document.getElementById('chk-labels');
+
+    const telBp = document.getElementById('tel-bp');
+    const telFrag = document.getElementById('tel-frag');
+
+    // State
+    let isPlaying = true;
+    let animSpeed = 1.0;
+    
+    // Virtual coordinates
+    // We will keep the fork stationary in the middle of the screen to prevent it from moving off edge
+    // and instead have the DNA strands move to the left.
+    let globalOffset = 0; // Moves left continuously
+    let bpCount = 0;
+    let fragmentCount = 0;
+
+    let fragments = []; // {startX, endX, state: 'primer'|'dna'|'sealed'}
+
+    btnPlay.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            btnPlay.innerHTML = "⏸ Pause Replication";
+            btnPlay.className = "px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
+        } else {
+            btnPlay.innerHTML = "▶ Resume Replication";
+            btnPlay.className = "px-5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
+        }
+    });
+
+    btnReset.addEventListener('click', () => {
+        globalOffset = 0;
+        bpCount = 0;
+        fragmentCount = 0;
+        fragments = [];
+        telBp.innerText = "0";
+        telFrag.innerText = "0";
+    });
+
+    slSpeed.addEventListener('input', e => {
+        animSpeed = parseFloat(e.target.value);
+        lblSpeed.innerText = `${animSpeed.toFixed(1)}x`;
+    });
+
+    // --- Drawing Engine ---
+    function drawEnzyme(x, y, shape, color, label, w=30, h=30) {
+        ctx.fillStyle = color;
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.shadowColor = color; ctx.shadowBlur = 10;
+        
+        ctx.beginPath();
+        if (shape === 'wedge') {
+            ctx.moveTo(x - w/2, y - h/2); ctx.lineTo(x + w/2, y); ctx.lineTo(x - w/2, y + h/2);
+        } else if (shape === 'circle') {
+            ctx.arc(x, y, w/2, 0, Math.PI*2);
+        } else if (shape === 'rect') {
+            ctx.roundRect(x - w/2, y - h/2, w, h, 4);
+        }
+        ctx.fill(); ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        if (chkLabels.checked) {
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(label, x, y - h/2 - 8);
+        }
+    }
+
+    function renderLoop() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      let cw = Math.max(container.clientWidth, 100);
+      let ch = Math.max(container.clientHeight, 100);
+      
+      if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+          ctx.resetTransform();
+          canvas.width = cw * dpr;
+          canvas.height = ch * dpr;
+          ctx.scale(dpr, dpr);
+      }
+
+      ctx.clearRect(0, 0, cw, ch);
+      
+      if (isPlaying) {
+          globalOffset += 1.5 * animSpeed;
+          bpCount += 0.2 * animSpeed;
+          telBp.innerText = Math.floor(bpCount).toLocaleString();
+      }
+
+      const forkX = cw * 0.6; // Fork stays at 60% of screen
+      const cy = ch * 0.5;
+      const strandSep = 60; // Distance between split strands
+
+      // --- 1. Draw Parent DNA (Right side, unzipping at fork) ---
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#94a3b8'; // Slate 400
+      
+      // Top Parent Strand (3' to 5')
+      ctx.beginPath();
+      ctx.moveTo(0, cy - strandSep);
+      ctx.lineTo(forkX - 40, cy - strandSep);
+      // Curve to center
+      ctx.bezierCurveTo(forkX, cy - strandSep, forkX, cy, forkX + 40, cy);
+      // Helix continuing right
+      for(let x = forkX + 40; x < cw; x+=5) {
+          let wave = Math.sin((x + globalOffset)*0.05) * 15;
+          ctx.lineTo(x, cy + wave);
+      }
+      ctx.stroke();
+
+      // Bottom Parent Strand (5' to 3')
+      ctx.beginPath();
+      ctx.moveTo(0, cy + strandSep);
+      ctx.lineTo(forkX - 40, cy + strandSep);
+      ctx.bezierCurveTo(forkX, cy + strandSep, forkX, cy, forkX + 40, cy);
+      for(let x = forkX + 40; x < cw; x+=5) {
+          let wave = -Math.sin((x + globalOffset)*0.05) * 15; // opposite phase
+          ctx.lineTo(x, cy + wave);
+      }
+      ctx.stroke();
+
+      // --- 2. Draw Bases ---
+      if (chkBases.checked) {
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+          
+          // Zipped bases (Right of fork)
+          for(let x = forkX + 40; x < cw; x+=12) {
+              let xx = x - (globalOffset % 12);
+              if (xx > forkX + 40) {
+                  let y1 = cy + Math.sin((xx + globalOffset)*0.05) * 15;
+                  let y2 = cy - Math.sin((xx + globalOffset)*0.05) * 15;
+                  ctx.beginPath(); ctx.moveTo(xx, y1); ctx.lineTo(xx, y2); ctx.stroke();
+              }
+          }
+
+          // Unzipped bases (Left of fork)
+          for(let x = 0; x < forkX - 40; x+=12) {
+              let xx = x - (globalOffset % 12);
+              if (xx > 0 && xx < forkX - 40) {
+                  // Top parent bases sticking down
+                  ctx.beginPath(); ctx.moveTo(xx, cy - strandSep); ctx.lineTo(xx, cy - strandSep + 8); ctx.stroke();
+                  // Bottom parent bases sticking up
+                  ctx.beginPath(); ctx.moveTo(xx, cy + strandSep); ctx.lineTo(xx, cy + strandSep - 8); ctx.stroke();
+              }
+          }
+      }
+
+      // 5' / 3' Labels
+      ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 12px monospace'; ctx.textAlign = 'right';
+      ctx.fillText("3'", 20, cy - strandSep - 10);
+      ctx.fillText("5'", 20, cy + strandSep + 20);
+
+      // --- 3. Draw Leading Strand (Continuous) ---
+      // Top strand grows 5' to 3' towards the fork
+      let leadX = forkX - 40; 
+      ctx.strokeStyle = '#60a5fa'; // Blue 400
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(0, cy - strandSep + 12); ctx.lineTo(leadX, cy - strandSep + 12); ctx.stroke();
+      
+      // Leading bases
+      if (chkBases.checked) {
+          ctx.lineWidth = 2; ctx.strokeStyle = '#60a5fa';
+          for(let x = 0; x <= leadX; x+=12) {
+              let xx = x - (globalOffset % 12);
+              if(xx > 0 && xx <= leadX) { ctx.beginPath(); ctx.moveTo(xx, cy - strandSep + 12); ctx.lineTo(xx, cy - strandSep + 4); ctx.stroke(); }
+          }
+      }
+
+      // --- 4. Draw Lagging Strand (Okazaki Fragments) ---
+      // Lagging strand grows 5' to 3' away from the fork (Right to Left on the bottom strand)
+      // Since the DNA moves left, fragments are essentially fixed in absolute space while the parent moves,
+      // But we spawn them near the fork and let them drift left with globalOffset.
+      
+      // Manage Fragment Logic
+      let cycle = globalOffset % 200; // fragment length cycle
+      if (cycle < 1.5 * animSpeed && isPlaying) {
+          // Spawn new fragment
+          fragments.push({ startOff: globalOffset, state: 'primer' });
+          fragmentCount++;
+          telFrag.innerText = fragmentCount;
+      }
+
+      for (let i = 0; i < fragments.length; i++) {
+          let f = fragments[i];
+          // Calculate physical position based on offset
+          let currentBaseX = (forkX - 40) - (globalOffset - f.startOff);
+          let fragLength = Math.min(180, globalOffset - f.startOff); // Grows to 180 length
+
+          let startX = currentBaseX; // Left edge
+          let endX = currentBaseX + fragLength; // Right edge (where Pol III is)
+
+          // State progression
+          if (fragLength >= 180 && f.state === 'primer') f.state = 'dna'; // Pol I replaced
+          if ((globalOffset - f.startOff) > 300 && f.state === 'dna') f.state = 'sealed'; // Ligase sealed
+
+          // Draw Fragment
+          if (endX > 0) {
+              ctx.lineWidth = 4;
+              // Draw RNA primer part (Right edge of fragment, since it was laid down first)
+              if (f.state === 'primer') {
+                  ctx.strokeStyle = '#fb7185'; // Red RNA
+                  ctx.beginPath(); ctx.moveTo(endX - 20, cy + strandSep - 12); ctx.lineTo(endX, cy + strandSep - 12); ctx.stroke();
+                  ctx.strokeStyle = '#60a5fa'; // Blue DNA
+                  ctx.beginPath(); ctx.moveTo(startX, cy + strandSep - 12); ctx.lineTo(endX - 20, cy + strandSep - 12); ctx.stroke();
+              } else {
+                  // Fully DNA
+                  ctx.strokeStyle = '#60a5fa'; // Blue DNA
+                  ctx.beginPath(); ctx.moveTo(startX, cy + strandSep - 12); ctx.lineTo(endX, cy + strandSep - 12); ctx.stroke();
+              }
+              
+              // Draw unsealed gap if not sealed
+              if (f.state !== 'sealed' && i > 0) {
+                  // Gap between this fragment's startX and previous fragment's endX
+                  // Kept slightly open visually
+              }
+
+              // Lagging bases
+              if (chkBases.checked) {
+                  ctx.lineWidth = 2; ctx.strokeStyle = '#60a5fa';
+                  for(let x = startX; x <= endX; x+=12) {
+                      let xx = x - (startX % 12); // align
+                      if(xx >= startX && xx <= endX) { ctx.beginPath(); ctx.moveTo(xx, cy + strandSep - 12); ctx.lineTo(xx, cy + strandSep - 4); ctx.stroke(); }
+                  }
+              }
+          }
+      }
+
+      // Clean up old fragments off screen
+      fragments = fragments.filter(f => ((forkX - 40) - (globalOffset - f.startOff) + 180) > -50);
+
+
+      // --- 5. Draw Enzymes ---
+      
+      // Topoisomerase (Ahead of fork)
+      drawEnzyme(forkX + 60, cy, 'circle', '#34d399', 'Topoisomerase', 25, 25);
+      
+      // Helicase (At fork)
+      drawEnzyme(forkX, cy, 'wedge', '#fbbf24', 'Helicase', 35, 40);
+
+      // Leading Pol III
+      drawEnzyme(leadX, cy - strandSep + 6, 'rect', '#a855f7', 'Pol III (Lead)', 25, 25);
+
+      // Lagging Enzmes based on active fragment
+      if (fragments.length > 0) {
+          let activeF = fragments[fragments.length - 1]; // most recently spawned
+          let endX = (forkX - 40) - (globalOffset - activeF.startOff) + Math.min(180, globalOffset - activeF.startOff);
+          
+          if (endX < forkX - 40) {
+              // Primase laying down at start of fragment
+              if (globalOffset - activeF.startOff < 40) {
+                  drawEnzyme(endX, cy + strandSep - 6, 'rect', '#f43f5e', 'Primase', 20, 20);
+              } 
+              // Pol III extending fragment (moving left relative to parent, but parent moves left faster, so it looks like it's holding mostly still or drifting left)
+              else if (globalOffset - activeF.startOff < 180) {
+                  drawEnzyme(startX, cy + strandSep - 6, 'rect', '#a855f7', 'Pol III (Lag)', 25, 25);
+              }
+          }
+
+          // Pol I and Ligase follow behind
+          if (fragments.length > 1) {
+              let f2 = fragments[fragments.length - 2];
+              let endX2 = (forkX - 40) - (globalOffset - f2.startOff) + 180;
+              
+              if (f2.state === 'primer') {
+                  drawEnzyme(endX2 - 10, cy + strandSep - 6, 'circle', '#22d3ee', 'Pol I', 20, 20);
+              } else if (f2.state === 'dna' && (globalOffset - f2.startOff) < 300) {
+                  drawEnzyme(endX2, cy + strandSep - 6, 'circle', '#e879f9', 'Ligase', 20, 20);
+              }
+          }
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Boot Sequence ---
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+      const closeGuide = () => userGuideModal.classList.add('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

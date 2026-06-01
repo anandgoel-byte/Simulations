@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prokaryote vs Eukaryote Virtual Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Prokaryote vs Eukaryote Comparator</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Cellular Architecture &amp; Organelle Function Visualizer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Select Cell Type:</span>
+        <select id="select-cell" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+          <option value="prokaryote">Prokaryote (Bacterium)</option>
+          <option value="animal">Eukaryote (Animal Cell)</option>
+          <option value="plant">Eukaryote (Plant Cell)</option>
+        </select>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-labels" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Structural Labels</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3 shadow-sm space-y-1.5 border border-indigo-200">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-indigo-200 pb-1">Component Isolator</span>
+          <div class="text-[11px] font-medium text-center py-1">
+            Toggle specific organelles on or off to study their presence and location.
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+              <span class="text-xs font-bold text-slate-700">Genetic Material (DNA)</span>
+            </div>
+            <input type="checkbox" id="tgl-dna" checked class="w-4 h-4 rounded text-indigo-600">
+          </div>
+
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+              <span class="text-xs font-bold text-slate-700">Cell Wall &amp; Envelope</span>
+            </div>
+            <input type="checkbox" id="tgl-wall" checked class="w-4 h-4 rounded text-indigo-600">
+          </div>
+
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between opacity-100 transition-opacity" id="row-organelles">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+              <span class="text-xs font-bold text-slate-700">Membrane Organelles</span>
+            </div>
+            <input type="checkbox" id="tgl-organelles" checked class="w-4 h-4 rounded text-indigo-600">
+          </div>
+
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+              <span class="text-xs font-bold text-slate-700">Ribosomes</span>
+            </div>
+            <input type="checkbox" id="tgl-ribosomes" checked class="w-4 h-4 rounded text-indigo-600">
+          </div>
+
+          <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between opacity-100 transition-opacity" id="row-appendages">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-slate-500"></div>
+              <span class="text-xs font-bold text-slate-700">Flagella / Appendages</span>
+            </div>
+            <input type="checkbox" id="tgl-appendages" checked class="w-4 h-4 rounded text-indigo-600">
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col items-center justify-between border-8 border-slate-900 min-h-[500px]">
+        
+        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-[10px] font-bold text-slate-300 tracking-wider uppercase" id="canvas-hud">Prokaryotic Cell Render</span>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Biological Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Typical Size</div>
+              <div class="text-sm font-bold font-mono text-indigo-600" id="tel-size">1.0 µm</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Ribosome Type</div>
+              <div class="text-sm font-bold font-mono text-amber-600" id="tel-ribo">70S</div>
+            </div>
+            <div class="bg-slate-100 p-2.5 rounded-xl border border-slate-300 shadow-sm col-span-2 flex justify-between items-center px-4">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Genetic Architecture</div>
+              <div class="text-sm font-bold font-mono text-slate-700 tracking-widest" id="tel-dna">Circular Nucleoid</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-2">
+            <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">True Nucleus Presence</div>
+            <div class="text-lg font-bold font-mono text-rose-400 tracking-widest uppercase" id="tel-nuc">ABSENT</div>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-3 shadow-sm mt-4">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">What is the primary defining difference between a Prokaryote and a Eukaryote?</h4>
+              <button onclick="toggleVerification(1)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-1" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-indigo-500">
+                The defining feature is the <strong>Nucleus</strong>. Eukaryotes (Eu = true, karyon = kernel/nucleus) trap their linear DNA inside a double-membrane lipid envelope. Prokaryotes (Pro = before) lack a nucleus; their circular DNA floats freely in a region called the nucleoid.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Do all Eukaryotes lack a Cell Wall?</h4>
+              <button onclick="toggleVerification(2)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-2" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-emerald-500">
+                No. While <em>Animal</em> cells lack a cell wall, <em>Plant</em> cells have a rigid cell wall made of cellulose, and <em>Fungi</em> have walls made of chitin. Prokaryotes almost always have cell walls made of peptidoglycan.
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 hover:border-indigo-300 transition-all shadow-sm">
+            <div class="space-y-2">
+              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do antibiotics kill bacteria but not human cells?</h4>
+              <button onclick="toggleVerification(3)" class="w-full text-left text-[10px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
+                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
+              </button>
+            </div>
+            <div id="viva-panel-3" class="hidden mt-2 pt-2 border-t border-slate-100 text-[10px] text-slate-600">
+              <div class="bg-slate-50 p-2 rounded font-mono border-l-2 border-rose-500">
+                Many antibiotics target structures unique to prokaryotes. For example, Penicillin targets the peptidoglycan cell wall (which human cells lack). Tetracycline targets the smaller <strong>70S Ribosomes</strong> of bacteria, leaving the larger 80S ribosomes of human cells completely untouched.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📘</span> CELL COMPARATOR PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+      </div>
+      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Cellular Biology Laboratory</strong>! Compare the fundamental structures of life.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Cell Type Dropdown</strong>: Instantly morph the canvas between a simple Bacterium, a complex Animal Cell, and a rigid Plant cell.</li>
+            <li><strong>Component Isolator</strong>: Use the checkboxes to strip away specific parts of the cell. Notice how toggling "Membrane Organelles" removes mitochondria and chloroplasts from Eukaryotes, but doesn't affect Prokaryotes because they never had them!</li>
+            <li><strong>Telemetry Check</strong>: Observe the right-hand panel. See how the ribosome type shifts from 70S to 80S, and the DNA structure changes from Circular to Linear.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let currentCell = 'prokaryote';
+    let time = 0;
+
+    const DATA = {
+        prokaryote: {
+            title: "Prokaryotic Cell Render", size: "1.0 - 5.0 µm", ribo: "70S",
+            dna: "Circular Nucleoid", nuc: "ABSENT", nucColor: "text-rose-500",
+            hasOrganelles: false, hasAppendages: true
+        },
+        animal: {
+            title: "Eukaryotic Cell (Animal)", size: "10 - 30 µm", ribo: "80S",
+            dna: "Linear (in Nucleus)", nuc: "PRESENT", nucColor: "text-emerald-500",
+            hasOrganelles: true, hasAppendages: false
+        },
+        plant: {
+            title: "Eukaryotic Cell (Plant)", size: "10 - 100 µm", ribo: "80S",
+            dna: "Linear (in Nucleus)", nuc: "PRESENT", nucColor: "text-emerald-500",
+            hasOrganelles: true, hasAppendages: false
+        }
+    };
+
+    // --- DOM Elements ---
+    const selCell = document.getElementById('select-cell');
+    
+    const tglDna = document.getElementById('tgl-dna');
+    const tglWall = document.getElementById('tgl-wall');
+    const tglOrg = document.getElementById('tgl-organelles');
+    const tglRibo = document.getElementById('tgl-ribosomes');
+    const tglApp = document.getElementById('tgl-appendages');
+    const chkLabels = document.getElementById('chk-labels');
+
+    const rowOrg = document.getElementById('row-organelles');
+    const rowApp = document.getElementById('row-appendages');
+
+    const telSize = document.getElementById('tel-size');
+    const telRibo = document.getElementById('tel-ribo');
+    const telDna = document.getElementById('tel-dna');
+    const telNuc = document.getElementById('tel-nuc');
+    const hud = document.getElementById('canvas-hud');
+
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --- Core Logic ---
+    function updateUI() {
+        let d = DATA[currentCell];
+        hud.innerText = d.title;
+        telSize.innerText = d.size;
+        telRibo.innerText = d.ribo;
+        telDna.innerText = d.dna;
+        telNuc.innerText = d.nuc;
+        telNuc.className = `text-lg font-bold font-mono tracking-widest uppercase ${d.nucColor}`;
+
+        // Disable irrelevant toggles visually
+        rowOrg.style.opacity = d.hasOrganelles ? '1' : '0.4';
+        tglOrg.disabled = !d.hasOrganelles;
+
+        rowApp.style.opacity = d.hasAppendages ? '1' : '0.4';
+        tglApp.disabled = !d.hasAppendages;
+    }
+
+    selCell.addEventListener('change', e => {
+        currentCell = e.target.value;
+        updateUI();
+    });
+
+    // --- Drawing Helpers ---
+    function drawLabel(x, y, text) {
+        if (!chkLabels.checked) return;
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, x, y);
+    }
+
+    function drawWavyPath(cx, cy, radius, frequency, amplitude, offset) {
+        ctx.beginPath();
+        for(let i=0; i<=Math.PI*2; i+=0.1) {
+            let r = radius + Math.sin(i * frequency + offset) * amplitude;
+            let x = cx + Math.cos(i) * r;
+            let y = cy + Math.sin(i) * r;
+            if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.closePath();
+    }
+
+    // --- Main Render Loop ---
+    function renderLoop() {
+        const container = canvas.parentElement;
+        const dpr = window.devicePixelRatio || 1;
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+        
+        if (cw > 0 && ch > 0 && (canvas.width !== cw * dpr || canvas.height !== ch * dpr)) {
+            canvas.width = cw * dpr;
+            canvas.height = ch * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+        }
+
+        const W = cw; const H = ch;
+        ctx.clearRect(0, 0, W, H);
+        if (W === 0 || H === 0) { requestAnimationFrame(renderLoop); return; }
+
+        time += 0.05;
+        const cx = W / 2;
+        const cy = H / 2;
+
+        if (currentCell === 'prokaryote') {
+            // PROKARYOTE RENDER
+            const pW = 280; const pH = 120;
+
+            // Flagellum
+            if (tglApp.checked) {
+                ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx + pW/2, cy);
+                for(let i=0; i<150; i+=5) {
+                    ctx.lineTo(cx + pW/2 + i, cy + Math.sin(i*0.05 - time)*15);
+                }
+                ctx.stroke();
+                drawLabel(cx + pW/2 + 80, cy - 25, "Flagellum");
+            }
+
+            // Capsule & Cell Wall
+            if (tglWall.checked) {
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.2)'; // Emerald
+                ctx.strokeStyle = '#10b981'; ctx.lineWidth = 6;
+                ctx.beginPath(); ctx.roundRect(cx - pW/2 - 10, cy - pH/2 - 10, pW + 20, pH + 20, 60);
+                ctx.fill(); ctx.stroke();
+                drawLabel(cx, cy - pH/2 - 20, "Capsule & Cell Wall");
+            }
+
+            // Plasma Membrane
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.1)'; // Cyan
+            ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.roundRect(cx - pW/2, cy - pH/2, pW, pH, 50);
+            ctx.fill(); ctx.stroke();
+            drawLabel(cx - pW/2 + 20, cy + pH/2 + 20, "Plasma Membrane");
+
+            // Ribosomes (70S)
+            if (tglRibo.checked) {
+                ctx.fillStyle = '#f59e0b'; // Amber
+                for(let i=0; i<40; i++) {
+                    let rx = cx - pW/2 + 20 + (i * 53) % (pW - 40);
+                    let ry = cy - pH/2 + 20 + (i * 37) % (pH - 40);
+                    ctx.beginPath(); ctx.arc(rx, ry, 2.5, 0, Math.PI*2); ctx.fill();
+                }
+                drawLabel(cx + pW/4, cy + pH/4, "70S Ribosomes");
+            }
+
+            // Nucleoid DNA
+            if (tglDna.checked) {
+                ctx.strokeStyle = '#a855f7'; // Purple
+                ctx.lineWidth = 2;
+                ctx.save();
+                ctx.translate(cx - 30, cy);
+                drawWavyPath(0, 0, 30, 8, 10, time);
+                ctx.stroke();
+                ctx.restore();
+                drawLabel(cx - 30, cy + 50, "Nucleoid (Circular DNA)");
+            }
+
+        } else if (currentCell === 'animal') {
+            // ANIMAL CELL RENDER
+            const radius = 140;
+
+            // Plasma Membrane
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.15)'; // Cyan
+            ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 4;
+            drawWavyPath(cx, cy, radius, 5, 5, 0); // Slight wobble
+            ctx.fill(); ctx.stroke();
+            if (tglWall.checked) {
+               drawLabel(cx, cy - radius - 15, "No Cell Wall");
+            } else {
+               drawLabel(cx, cy - radius - 15, "Plasma Membrane");
+            }
+
+            // Nucleus & DNA
+            if (tglDna.checked) {
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.2)'; // Purple
+                ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(cx - 30, cy - 20, 45, 0, Math.PI*2);
+                ctx.fill(); ctx.stroke();
+                
+                // Nucleolus
+                ctx.fillStyle = '#a855f7';
+                ctx.beginPath(); ctx.arc(cx - 40, cy - 30, 15, 0, Math.PI*2); ctx.fill();
+
+                // Chromatin
+                ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 1;
+                for(let i=0; i<5; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx - 20 + i*5, cy - 10);
+                    ctx.lineTo(cx - 10 + i*3, cy + 10);
+                    ctx.stroke();
+                }
+                drawLabel(cx - 30, cy - 75, "Nucleus & Linear DNA");
+            }
+
+            // Organelles
+            if (tglOrg.checked) {
+                // Mitochondria
+                ctx.fillStyle = '#f43f5e'; ctx.strokeStyle = '#fda4af'; ctx.lineWidth = 2;
+                ctx.save(); ctx.translate(cx + 60, cy + 40); ctx.rotate(Math.PI/4);
+                ctx.beginPath(); ctx.ellipse(0, 0, 25, 12, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(-15, 0); ctx.lineTo(15, 0); ctx.stroke();
+                ctx.restore();
+
+                ctx.save(); ctx.translate(cx - 60, cy + 60); ctx.rotate(-Math.PI/6);
+                ctx.beginPath(); ctx.ellipse(0, 0, 20, 10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                ctx.restore();
+                drawLabel(cx + 60, cy + 80, "Mitochondria");
+
+                // ER / Golgi
+                ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.arc(cx + 40, cy - 40, 20, Math.PI, Math.PI*1.5); ctx.stroke();
+                ctx.beginPath(); ctx.arc(cx + 50, cy - 50, 25, Math.PI, Math.PI*1.5); ctx.stroke();
+                drawLabel(cx + 50, cy - 80, "Golgi / ER");
+            }
+
+            // Ribosomes (80S)
+            if (tglRibo.checked) {
+                ctx.fillStyle = '#f59e0b';
+                for(let i=0; i<50; i++) {
+                    let angle = i * 0.5;
+                    let r = 60 + (i*17) % 60;
+                    ctx.beginPath(); ctx.arc(cx + Math.cos(angle)*r, cy + Math.sin(angle)*r, 3, 0, Math.PI*2); ctx.fill();
+                }
+                drawLabel(cx, cy + radius + 15, "80S Ribosomes");
+            }
+
+        } else if (currentCell === 'plant') {
+            // PLANT CELL RENDER
+            const pW = 220; const pH = 300;
+
+            // Cell Wall
+            if (tglWall.checked) {
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.2)'; // Emerald
+                ctx.strokeStyle = '#10b981'; ctx.lineWidth = 8;
+                ctx.beginPath(); ctx.rect(cx - pW/2, cy - pH/2, pW, pH);
+                ctx.fill(); ctx.stroke();
+                drawLabel(cx, cy - pH/2 - 15, "Cellulose Cell Wall");
+            } else {
+                ctx.fillStyle = 'rgba(14, 165, 233, 0.1)';
+                ctx.fillRect(cx - pW/2 + 4, cy - pH/2 + 4, pW - 8, pH - 8);
+            }
+
+            // Plasma Membrane
+            ctx.strokeStyle = '#0ea5e9'; ctx.lineWidth = 2;
+            ctx.strokeRect(cx - pW/2 + 4, cy - pH/2 + 4, pW - 8, pH - 8);
+
+            // Organelles
+            if (tglOrg.checked) {
+                // Central Vacuole (Huge)
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.3)'; ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.roundRect(cx - pW/2 + 20, cy - pH/2 + 20, pW - 40, pH/2, 20);
+                ctx.fill(); ctx.stroke();
+                drawLabel(cx, cy - pH/4, "Large Central Vacuole");
+
+                // Chloroplasts
+                ctx.fillStyle = '#22c55e'; ctx.strokeStyle = '#86efac'; ctx.lineWidth = 2;
+                const chloros = [[cx - 60, cy + 60], [cx + 60, cy + 80], [cx + 30, cy + 120]];
+                chloros.forEach(pos => {
+                    ctx.beginPath(); ctx.ellipse(pos[0], pos[1], 18, 10, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                    ctx.fillStyle = '#166534';
+                    ctx.beginPath(); ctx.arc(pos[0]-5, pos[1], 3, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(pos[0]+5, pos[1], 3, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#22c55e';
+                });
+                drawLabel(cx + 60, cy + 110, "Chloroplasts");
+
+                // Mitochondria
+                ctx.fillStyle = '#f43f5e'; ctx.strokeStyle = '#fda4af';
+                ctx.beginPath(); ctx.ellipse(cx - 40, cy + 110, 15, 8, Math.PI/4, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            }
+
+            // Nucleus & DNA (Pushed to side by vacuole)
+            if (tglDna.checked) {
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.2)'; 
+                ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(cx, cy + 80, 35, 0, Math.PI*2);
+                ctx.fill(); ctx.stroke();
+                
+                ctx.fillStyle = '#a855f7';
+                ctx.beginPath(); ctx.arc(cx - 10, cy + 80, 12, 0, Math.PI*2); ctx.fill();
+                drawLabel(cx, cy + 135, "Nucleus");
+            }
+
+            // Ribosomes
+            if (tglRibo.checked) {
+                ctx.fillStyle = '#f59e0b';
+                for(let i=0; i<30; i++) {
+                    ctx.beginPath(); ctx.arc(cx - 80 + Math.random()*160, cy + 40 + Math.random()*90, 3, 0, Math.PI*2); ctx.fill();
+                }
+            }
+        }
+
+        requestAnimationFrame(renderLoop);
+    }
+
+    // Toggle Scientific Verification cards
+    function toggleVerification(id) {
+      const panel = document.getElementById(`viva-panel-${id}`);
+      const btnText = document.getElementById(`btn-text-${id}`);
+      const btnArrow = document.getElementById(`btn-arrow-${id}`);
+      
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        btnText.textContent = "Hide Verification";
+        btnArrow.style.transform = "rotate(180deg)";
+        if (window.MathJax) MathJax.typesetPromise([panel]);
+      } else {
+        panel.classList.add('hidden');
+        btnText.textContent = "Show Verification";
+        btnArrow.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    // Initialize
+    window.addEventListener('load', () => {
+      updateUI();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>
