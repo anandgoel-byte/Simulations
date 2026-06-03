@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concyclicity & Arc Angles Virtual Lab</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Custom Range Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #334155;
+            border-radius: 9999px;
+            height: 6px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -5px;
+            background-color: #06b6d4;
+            border-radius: 9999px;
+            height: 16px;
+            width: 16px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 8px #06b6d4;
+            transition: 0.2s;
+        }
+
+        input[type="range"].slider-pink::-webkit-slider-thumb {
+            background-color: #ec4899;
+            box-shadow: 0 0 8px #ec4899;
+        }
+
+        input[type="range"].slider-emerald::-webkit-slider-thumb {
+            background-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* Holographic Radar Grid Background */
+        .lab-stage {
+            background-color: #020617 !important;
+            background-image:
+                radial-gradient(rgba(6, 182, 212, 0.2) 1px, transparent 1px),
+                linear-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px, 40px 40px, 40px 40px;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 1);
+        }
+
+        /* Neon Text Gradients */
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-emerald {
+            background: linear-gradient(to right, #10b981, #34d399);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-amber {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div
+                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Concyclicity & Arc Angles
+                    </h1>
+                    <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">CBSE Class 9 Geometry
+                        Laboratory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> User Guide
+                </button>
+                <div
+                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Engine
+                        Active</span>
+                </div>
+            </div>
+        </header>
+
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button onclick="resetSim()"
+                    class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Reset Geometry
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-center" checked
+                        class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
+                    <span>Show Central Angle ($\angle AOB$)</span>
+                </label>
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-circle" checked
+                        class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
+                    <span>Show Circumcircle</span>
+                </label>
+            </div>
+        </div>
+
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <span
+                        class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Dynamic
+                        Parameters</span>
+
+                    <div>
+                        <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+                            <span class="text-pink-600 flex items-center gap-1">■ Base Arc AB Size</span>
+                            <span id="val-arc" class="font-mono">80°</span>
+                        </div>
+                        <input type="range" id="slider-arc" min="30" max="330" value="80" class="slider-pink">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+                            <span class="text-cyan-600 flex items-center gap-1">■ Move Point C</span>
+                            <span id="val-c" class="font-mono">P1</span>
+                        </div>
+                        <input type="range" id="slider-c" min="10" max="90" value="30">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+                            <span class="text-emerald-600 flex items-center gap-1">■ Move Point D</span>
+                            <span id="val-d" class="font-mono">P2</span>
+                        </div>
+                        <input type="range" id="slider-d" min="10" max="90" value="70" class="slider-emerald">
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block mb-2">Live Angle
+                        Telemetry</span>
+
+                    <div class="flex flex-col gap-2">
+
+                        <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800"
+                            id="box-center">
+                            <div
+                                class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span
+                                    class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] block"></span>
+                                Central $\angle AOB$
+                            </div>
+                            <div class="text-2xl font-bold font-mono tracking-widest grad-amber uppercase drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]"
+                                id="tel-aob">80°</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-1">
+                            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800 transition-all"
+                                id="box-c">
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">
+                                    Inscribed $\angle ACB$</div>
+                                <div class="text-xl font-bold font-mono tracking-widest text-cyan-400" id="tel-acb">40°
+                                </div>
+                            </div>
+
+                            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800 transition-all"
+                                id="box-d">
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">
+                                    Inscribed $\angle ADB$</div>
+                                <div class="text-xl font-bold font-mono tracking-widest text-emerald-400" id="tel-adb">
+                                    40°</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0f172a] border border-indigo-500/50 p-2.5 rounded-xl text-center mt-1">
+                            <span class="text-xs font-bold text-indigo-300 tracking-wide" id="tel-status">Points A, B,
+                                C, D are Concyclic!</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-slate-100 rounded-xl p-5 shadow-sm space-y-4">
+                    <span
+                        class="text-sm font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Class
+                        9 Theorems</span>
+                    <div class="space-y-3">
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-2 border-pink-500">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-pink-400 font-extrabold text-sm uppercase tracking-wider">Central
+                                    Angle Theorem</span>
+                                <span
+                                    class="bg-pink-500/20 text-pink-300 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-widest border border-pink-500/30">Theorem
+                                    10.8</span>
+                            </div>
+                            <span class="text-base font-semibold text-slate-100 leading-relaxed block">
+                                The angle subtended by an arc at the center is <strong>double</strong> the angle
+                                subtended by it at any remaining part of the circle.
+                            </span>
+                            <div
+                                class="mt-3 text-lg font-extrabold text-pink-100 bg-slate-950/70 p-3 rounded-lg border border-pink-500/20">
+                                Relationship: $\angle AOB = 2\angle ACB$
+                            </div>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-2 border-cyan-500">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-cyan-400 font-extrabold text-sm uppercase tracking-wider">Angles in
+                                    Same Segment</span>
+                                <span
+                                    class="bg-cyan-500/20 text-cyan-300 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-widest border border-cyan-500/30">Theorem
+                                    10.9</span>
+                            </div>
+                            <span class="text-base font-semibold text-slate-100 leading-relaxed block">
+                                Angles in the same segment of a circle are <strong>equal</strong>.
+                            </span>
+                            <div
+                                class="mt-3 text-lg font-extrabold text-cyan-100 bg-slate-950/70 p-3 rounded-lg border border-cyan-500/20">
+                                Relationship: $\angle ACB = \angle ADB$
+                            </div>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg border-l-2 border-amber-500">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-amber-400 font-extrabold text-sm uppercase tracking-wider">Cyclic
+                                    Quadrilateral</span>
+                                <span
+                                    class="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-widest border border-amber-500/30">Theorem
+                                    10.11</span>
+                            </div>
+                            <span class="text-base font-semibold text-slate-100 leading-relaxed block">
+                                The sum of either pair of opposite angles of a cyclic quadrilateral is
+                                <strong>$180^\circ$</strong>.
+                            </span>
+                            <div
+                                class="mt-3 text-lg font-extrabold text-amber-100 bg-slate-950/70 p-3 rounded-lg border border-amber-500/20">
+                                Relationship: $\angle A + \angle C = 180^\circ$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section
+                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]">
+                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+
+                <div
+                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+                <div
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
+                        Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-sm font-bold tracking-tight">Conceptual Assessment</h2>
+                        <span id="viva-score"
+                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
+                            0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-4">
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE
+                                2018]</span>
+                            <h4 class="text-base font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-pink-800"
+                                id="q1-text">
+                                If the angle subtended by an arc at the center is 110°, what is the angle subtended by
+                                the same arc at any point on the remaining part of the circle?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+                            <p id="q1-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE
+                                2019]</span>
+                            <h4 class="text-base font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-cyan-800"
+                                id="q2-text">
+                                Points A, B, C, and D lie on a circle. If $\angle ACB = 45^\circ$, then what is the
+                                value of $\angle ADB$?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+                            <p id="q2-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT
+                                Ex]</span>
+                            <h4 class="text-base font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-emerald-800"
+                                id="q3-text">
+                                If a line segment joining two points subtends equal angles at two other points lying on
+                                the same side of the line, then the four points are:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+                            <p id="q3-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE
+                                2020]</span>
+                            <h4 class="text-base font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-amber-800"
+                                id="q4-text">
+                                In a cyclic quadrilateral ABCD, if $\angle A = 80^\circ$, what is the measure of $\angle
+                                C$?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+                            <p id="q4-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span>📘</span> CONCYCLICITY LAB PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>Concyclicity & Arc Angles Virtual Laboratory</strong>! Explore the geometric
+                    relations between central angles, inscribed angles, segment segments, and concyclic systems.</p>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core
+                        Sandbox Controls</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Base Arc Size</strong>: Resize the pink arc AB symmetrically using the top range
+                            slider or by dragging Points A or B directly on the canvas.</li>
+                        <li><strong>Drag Points C & D</strong>: Move these points anywhere along the major arc. Notice
+                            that the inscribed angles ($\angle ACB$ and $\angle ADB$) remain constant, proving they are
+                            always equal in the same segment.</li>
+                        <li><strong>Toggles</strong>: Use the checkboxes at the top to toggle the circumcircle outline
+                            and the central angle ($\angle AOB$) vectors.</li>
+                        <li><strong>Holographic Zoom</strong>: Use the zoom controls (+, -, RST) in the top right to
+                            scale the physics canvas.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">📊
+                        Telemetry Dashboard</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Central Angle</strong>: Displays the exact angle $\angle AOB$ subtended by the arc
+                            at the center.</li>
+                        <li><strong>Inscribed Angles</strong>: Tracks $\angle ACB$ and $\angle ADB$. Verify that the
+                            central angle is always exactly <strong>double</strong> the inscribed angle.</li>
+                        <li><strong>Concyclic State</strong>: Confirms that points A, B, C, and D lie on a single
+                            circular path, making them concyclic.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">📝
+                        Conceptual Assessment</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Test your understanding at the **Viva Voce Lab Desk** with CBSE Class 9 questions on circle
+                            theorems, with interactive feedback.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Acknowledge & Start
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VIVA MCQS DECK STATE & DATA ---
+        const appState = {
+            vivaScore: 0,
+            answers: { q1: null, q2: null, q3: null, q4: null }
+        };
+
+        const vivaData = {
+            q1: {
+                options: [
+                    { text: "110°", isCorrect: false, exp: "Incorrect. The angle is not equal to the central angle." },
+                    { text: "55°", isCorrect: true, exp: "Correct! The angle subtended by an arc at the center is double the angle subtended at any remaining part of the circle. So, $110 / 2 = 55^\\circ$." },
+                    { text: "220°", isCorrect: false, exp: "Incorrect. It is half, not double." },
+                    { text: "70°", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q2: {
+                options: [
+                    { text: "90°", isCorrect: false, exp: "Incorrect." },
+                    { text: "45°", isCorrect: true, exp: "Correct! Angles in the same segment of a circle are equal. Since A, B, C, D are concyclic and C and D lie on the same side of chord AB, $\\angle ADB = \\angle ACB = 45^\\circ$." },
+                    { text: "135°", isCorrect: false, exp: "Incorrect. This would be true if D was in the minor segment (cyclic quad)." },
+                    { text: "22.5°", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q3: {
+                options: [
+                    { text: "Collinear", isCorrect: false, exp: "Incorrect. Collinear means lying on a straight line." },
+                    { text: "Concentric", isCorrect: false, exp: "Incorrect. Concentric refers to circles with the same center." },
+                    { text: "Concyclic", isCorrect: true, exp: "Correct! If a line segment (AB) subtends equal angles at two other points (C and D) on the same side, then A, B, C, D lie on a circle. They are concyclic." },
+                    { text: "Parallel", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q4: {
+                options: [
+                    { text: "80°", isCorrect: false, exp: "Incorrect." },
+                    { text: "100°", isCorrect: true, exp: "Correct! The sum of either pair of opposite angles of a cyclic quadrilateral is 180°. Therefore, $\\angle C = 180^\\circ - \\angle A = 180^\\circ - 80^\\circ = 100^\\circ$." },
+                    { text: "180°", isCorrect: false, exp: "Incorrect." },
+                    { text: "280°", isCorrect: false, exp: "Incorrect." }
+                ]
+            }
+        };
+
+        function renderQuestions() {
+            const scoreLabel = document.getElementById('viva-score');
+
+            Object.keys(vivaData).forEach(qKey => {
+                const data = vivaData[qKey];
+                const optionsContainer = document.getElementById(`${qKey}-options`);
+                const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+                if (!optionsContainer || !feedbackContainer) return;
+                optionsContainer.innerHTML = '';
+
+                data.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "relative text-left p-3 rounded-lg text-base transition-all duration-300 transform hover:scale-[1.08] hover:-translate-y-1.5 border leading-snug font-bold bg-white hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-xl hover:z-10 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+
+                    let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                    btn.innerHTML = `<span class="font-extrabold text-cyan-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+
+                    btn.addEventListener('click', () => {
+                        if (appState.answers[qKey] !== null) return;
+
+                        appState.answers[qKey] = idx;
+                        if (opt.isCorrect) appState.vivaScore++;
+                        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                        const buttons = optionsContainer.querySelectorAll('button');
+                        buttons.forEach((b, i) => {
+                            b.disabled = true;
+                            b.classList.remove('bg-white', 'hover:bg-cyan-50', 'hover:border-cyan-400', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm', 'hover:scale-[1.08]', 'hover:-translate-y-1.5', 'hover:shadow-xl', 'hover:z-10', 'hover:text-base');
+                            b.classList.add('cursor-not-allowed', 'shadow-none');
+
+                            if (appState.answers[qKey] === i) {
+                                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                            } else if (data.options[i].isCorrect) {
+                                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                            } else {
+                                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                            }
+                        });
+
+                        feedbackContainer.innerHTML = opt.exp;
+                        feedbackContainer.classList.remove('hidden');
+                        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    });
+                    optionsContainer.appendChild(btn);
+                });
+            });
+
+            if (window.MathJax) {
+                setTimeout(() => { MathJax.typesetPromise(); }, 50);
+            }
+        }
+
+        // --- GEOMETRY & CANVAS LOGIC ---
+        const simCanvas = document.getElementById('simCanvas');
+        const ctx = simCanvas.getContext('2d');
+        let zoomLevel = 1.4;
+
+        // Controls
+        const slArc = document.getElementById('slider-arc');
+        const slC = document.getElementById('slider-c');
+        const slD = document.getElementById('slider-d');
+        const chkCenter = document.getElementById('chk-center');
+        const chkCircle = document.getElementById('chk-circle');
+
+        // Telemetry
+        const valArc = document.getElementById('val-arc');
+        const valC = document.getElementById('val-c');
+        const valD = document.getElementById('val-d');
+        const telAOB = document.getElementById('tel-aob');
+        const telACB = document.getElementById('tel-acb');
+        const telADB = document.getElementById('tel-adb');
+
+        // Geometric State
+        const R = 160; // Radius
+        let centralAngle = 80; // degrees
+        let posC_percent = 30; // 0 to 100 along the major arc
+        let posD_percent = 70;
+
+        // Cache coordinates globally for dragging
+        let ax = 0, ay = 0, bx = 0, by = 0, cx = 0, cy = 0, dx = 0, dy = 0;
+        let isDragging = false;
+        let activePoint = null; // 'A', 'B', 'C', 'D'
+        let hoveredPoint = null; // 'A', 'B', 'C', 'D'
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.2); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.5, zoomLevel - 0.2); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.4; });
+
+        slArc.addEventListener('input', (e) => { centralAngle = parseInt(e.target.value); });
+        slC.addEventListener('input', (e) => { posC_percent = parseInt(e.target.value); });
+        slD.addEventListener('input', (e) => { posD_percent = parseInt(e.target.value); });
+
+        function resetSim() {
+            slArc.value = 80; centralAngle = 80;
+            slC.value = 30; posC_percent = 30;
+            slD.value = 70; posD_percent = 70;
+            zoomLevel = 1.4;
+        }
+
+        function resizeCanvas() {
+            const container = simCanvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+            simCanvas.width = container.clientWidth * dpr;
+            simCanvas.height = container.clientHeight * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // Interactive dragging event handlers
+        function getMousePos(e) {
+            const rect = simCanvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (simCanvas.width / rect.width) / window.devicePixelRatio;
+            const mouseY = (e.clientY - rect.top) * (simCanvas.height / rect.height) / window.devicePixelRatio;
+
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+
+            const localX = (mouseX - W / 2) / zoomLevel;
+            const localY = (mouseY - H / 2) / zoomLevel;
+
+            return { x: localX, y: localY };
+        }
+
+        simCanvas.addEventListener('mousedown', (e) => {
+            const pos = getMousePos(e);
+            const threshold = 18;
+            if (Math.hypot(pos.x - ax, pos.y - ay) < threshold) { activePoint = 'A'; isDragging = true; }
+            else if (Math.hypot(pos.x - bx, pos.y - by) < threshold) { activePoint = 'B'; isDragging = true; }
+            else if (Math.hypot(pos.x - cx, pos.y - cy) < threshold) { activePoint = 'C'; isDragging = true; }
+            else if (Math.hypot(pos.x - dx, pos.y - dy) < threshold) { activePoint = 'D'; isDragging = true; }
+        });
+
+        simCanvas.addEventListener('mousemove', (e) => {
+            const pos = getMousePos(e);
+
+            // Hover cursor effect
+            const threshold = 18;
+            if (Math.hypot(pos.x - ax, pos.y - ay) < threshold) hoveredPoint = 'A';
+            else if (Math.hypot(pos.x - bx, pos.y - by) < threshold) hoveredPoint = 'B';
+            else if (Math.hypot(pos.x - cx, pos.y - cy) < threshold) hoveredPoint = 'C';
+            else if (Math.hypot(pos.x - dx, pos.y - dy) < threshold) hoveredPoint = 'D';
+            else hoveredPoint = null;
+
+            simCanvas.style.cursor = hoveredPoint ? 'pointer' : 'default';
+
+            if (!isDragging || !activePoint) return;
+
+            let angleRad = Math.atan2(pos.y, pos.x);
+            let angleDeg = angleRad * 180 / Math.PI;
+            if (angleDeg < 0) angleDeg += 360;
+
+            if (activePoint === 'A' || activePoint === 'B') {
+                let diffDeg = Math.abs(angleDeg - 90);
+                if (diffDeg > 180) diffDeg = 360 - diffDeg;
+                centralAngle = Math.max(30, Math.min(330, Math.round(diffDeg * 2)));
+                slArc.value = centralAngle;
+            } else {
+                let halfCentral = centralAngle / 2;
+                let angleA = 90 + halfCentral;
+                let majorArcSweep = 360 - centralAngle;
+
+                let offset = angleDeg - (angleA + 5);
+                while (offset < 0) offset += 360;
+                while (offset > 360) offset -= 360;
+
+                let percent = (offset / (majorArcSweep - 10)) * 100;
+                let finalVal = Math.max(10, Math.min(90, Math.round(percent)));
+
+                if (activePoint === 'C') {
+                    posC_percent = finalVal;
+                    slC.value = posC_percent;
+                } else if (activePoint === 'D') {
+                    posD_percent = finalVal;
+                    slD.value = posD_percent;
+                }
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            activePoint = null;
+        });
+
+        // Touch support for mobile/tablets
+        simCanvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                const pos = getMousePos(touch);
+                const threshold = 22; // larger tap target
+                if (Math.hypot(pos.x - ax, pos.y - ay) < threshold) { activePoint = 'A'; isDragging = true; e.preventDefault(); }
+                else if (Math.hypot(pos.x - bx, pos.y - by) < threshold) { activePoint = 'B'; isDragging = true; e.preventDefault(); }
+                else if (Math.hypot(pos.x - cx, pos.y - cy) < threshold) { activePoint = 'C'; isDragging = true; e.preventDefault(); }
+                else if (Math.hypot(pos.x - dx, pos.y - dy) < threshold) { activePoint = 'D'; isDragging = true; e.preventDefault(); }
+            }
+        }, { passive: false });
+
+        simCanvas.addEventListener('touchmove', (e) => {
+            if (isDragging && activePoint && e.touches.length === 1) {
+                const touch = e.touches[0];
+                const pos = getMousePos(touch);
+
+                let angleRad = Math.atan2(pos.y, pos.x);
+                let angleDeg = angleRad * 180 / Math.PI;
+                if (angleDeg < 0) angleDeg += 360;
+
+                if (activePoint === 'A' || activePoint === 'B') {
+                    let diffDeg = Math.abs(angleDeg - 90);
+                    if (diffDeg > 180) diffDeg = 360 - diffDeg;
+                    centralAngle = Math.max(30, Math.min(330, Math.round(diffDeg * 2)));
+                    slArc.value = centralAngle;
+                } else {
+                    let halfCentral = centralAngle / 2;
+                    let angleA = 90 + halfCentral;
+                    let majorArcSweep = 360 - centralAngle;
+
+                    let offset = angleDeg - (angleA + 5);
+                    while (offset < 0) offset += 360;
+                    while (offset > 360) offset -= 360;
+
+                    let percent = (offset / (majorArcSweep - 10)) * 100;
+                    let finalVal = Math.max(10, Math.min(90, Math.round(percent)));
+
+                    if (activePoint === 'C') {
+                        posC_percent = finalVal;
+                        slC.value = posC_percent;
+                    } else if (activePoint === 'D') {
+                        posD_percent = finalVal;
+                        slD.value = posD_percent;
+                    }
+                }
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        simCanvas.addEventListener('touchend', () => {
+            isDragging = false;
+            activePoint = null;
+        });
+
+        // Helpers
+        function degToRad(deg) { return deg * Math.PI / 180; }
+
+        function drawPoint(x, y, color, label, isHighlighted = false) {
+            ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#0f172a'; ctx.fill();
+            ctx.lineWidth = 2; ctx.strokeStyle = color; ctx.stroke();
+
+            if (isHighlighted) {
+                ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2);
+                ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+                ctx.shadowColor = color; ctx.shadowBlur = 10;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = 'bold 16px JetBrains Mono';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+            // Push label outward from center
+            let dist = Math.hypot(x, y);
+            let lx = x, ly = y;
+            if (dist > 0) {
+                lx += (x / dist) * (isHighlighted ? 26 : 22);
+                ly += (y / dist) * (isHighlighted ? 26 : 22);
+            }
+            ctx.fillText(label, lx, ly);
+        }
+
+        function drawLine(x1, y1, x2, y2, color, isDashed = false) {
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+            ctx.strokeStyle = color; ctx.lineWidth = 2;
+            ctx.shadowColor = color; ctx.shadowBlur = 8;
+            if (isDashed) ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]); ctx.shadowBlur = 0;
+        }
+
+        function drawAngleArc(cx, cy, p1x, p1y, p2x, p2y, radius, color, label) {
+            let a1 = Math.atan2(p1y - cy, p1x - cx);
+            let a2 = Math.atan2(p2y - cy, p2x - cx);
+
+            // Ensure we draw the smaller angle
+            let diff = a2 - a1;
+            while (diff <= -Math.PI) diff += 2 * Math.PI;
+            while (diff > Math.PI) diff -= 2 * Math.PI;
+
+            ctx.beginPath();
+            if (diff > 0) ctx.arc(cx, cy, radius, a1, a1 + diff);
+            else ctx.arc(cx, cy, radius, a2, a2 - diff);
+
+            ctx.strokeStyle = color; ctx.lineWidth = 2;
+            ctx.shadowColor = color; ctx.shadowBlur = 5;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Text
+            let midAngle = a1 + diff / 2;
+            let tx = cx + Math.cos(midAngle) * (radius + 15);
+            let ty = cy + Math.sin(midAngle) * (radius + 15);
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px JetBrains Mono';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(label, tx, ty);
+        }
+
+        function simulationLoop() {
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+            ctx.clearRect(0, 0, W, H);
+
+            ctx.save();
+            ctx.translate(W / 2, H / 2);
+            ctx.scale(zoomLevel, zoomLevel);
+
+            // Math Setup
+            // Base Arc AB at bottom (centered around 90 degrees / Math.PI/2)
+            let halfCentral = centralAngle / 2;
+            let angleA = 90 + halfCentral; // degrees
+            let angleB = 90 - halfCentral; // degrees
+
+            ax = R * Math.cos(degToRad(angleA)); ay = R * Math.sin(degToRad(angleA));
+            bx = R * Math.cos(degToRad(angleB)); by = R * Math.sin(degToRad(angleB));
+
+            // Major Arc covers from angleA back around to angleB
+            let majorArcSweep = 360 - centralAngle;
+
+            // Point C and D mapping (pos% mapped to majorArcSweep)
+            // + 5 degrees padding so they don't sit exactly on A or B
+            let angleC = angleA + 5 + (posC_percent / 100) * (majorArcSweep - 10);
+            let angleD = angleA + 5 + (posD_percent / 100) * (majorArcSweep - 10);
+
+            cx = R * Math.cos(degToRad(angleC)); cy = R * Math.sin(degToRad(angleC));
+            dx = R * Math.cos(degToRad(angleD)); dy = R * Math.sin(degToRad(angleD));
+
+            let inscribedAngle = centralAngle / 2;
+
+            // Update UI
+            valArc.innerText = `${centralAngle}°`;
+            telAOB.innerText = `${centralAngle}°`;
+            telACB.innerText = `${inscribedAngle}°`;
+            telADB.innerText = `${inscribedAngle}°`;
+
+            // 1. Draw Circumcircle (Faint Cyan Holographic Pulse)
+            if (chkCircle.checked) {
+                ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
+                let pulse = 8 + Math.sin(Date.now() / 200) * 4;
+                ctx.strokeStyle = `rgba(6, 182, 212, ${0.25 + Math.sin(Date.now() / 200) * 0.08})`;
+                ctx.lineWidth = 3 + Math.sin(Date.now() / 200) * 0.5;
+                ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = pulse;
+                ctx.stroke(); ctx.shadowBlur = 0;
+            }
+
+            // 2. Draw Major & Minor Arcs
+            // Minor Arc (Pink)
+            ctx.beginPath(); ctx.arc(0, 0, R, degToRad(angleB), degToRad(angleA));
+            ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 5;
+            ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 15;
+            ctx.stroke(); ctx.shadowBlur = 0;
+
+            // 3. Central Angle & Lines
+            if (chkCenter.checked) {
+                drawLine(0, 0, ax, ay, 'rgba(245, 158, 11, 0.4)', true);
+                drawLine(0, 0, bx, by, 'rgba(245, 158, 11, 0.4)', true);
+                
+                // Draw central angle arc matching the sweep of the base arc (clockwise from angleB to angleA)
+                ctx.beginPath();
+                ctx.arc(0, 0, 30, degToRad(angleB), degToRad(angleA));
+                ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2;
+                ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 5;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Center of the arc for text placement
+                let midAngleRad = degToRad((angleA + angleB) / 2);
+                let tx = Math.cos(midAngleRad) * 48;
+                let ty = Math.sin(midAngleRad) * 48;
+                ctx.fillStyle = '#f59e0b';
+                ctx.font = 'bold 12px JetBrains Mono';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText(`${centralAngle}°`, tx, ty);
+
+                drawPoint(0, 0, '#f59e0b', 'O');
+            }
+
+            // 4. Draw Inscribed Angles (C and D)
+            // Lines for C (Cyan)
+            drawLine(ax, ay, cx, cy, 'rgba(6, 182, 212, 0.7)');
+            drawLine(bx, by, cx, cy, 'rgba(6, 182, 212, 0.7)');
+            drawAngleArc(cx, cy, ax, ay, bx, by, 35, '#06b6d4', `${inscribedAngle}°`);
+
+            // Lines for D (Emerald)
+            drawLine(ax, ay, dx, dy, 'rgba(16, 185, 129, 0.7)');
+            drawLine(bx, by, dx, dy, 'rgba(16, 185, 129, 0.7)');
+            drawAngleArc(dx, dy, ax, ay, bx, by, 35, '#10b981', `${inscribedAngle}°`);
+
+            // 5. Draw Points (with hover / drag indicator haloes)
+            drawPoint(ax, ay, '#ec4899', 'A', activePoint === 'A' || hoveredPoint === 'A');
+            drawPoint(bx, by, '#ec4899', 'B', activePoint === 'B' || hoveredPoint === 'B');
+            drawPoint(cx, cy, '#06b6d4', 'C', activePoint === 'C' || hoveredPoint === 'C');
+            drawPoint(dx, dy, '#10b981', 'D', activePoint === 'D' || hoveredPoint === 'D');
+
+            ctx.restore();
+            requestAnimationFrame(simulationLoop);
+        }
+
+        // Boot
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            resizeCanvas();
+            document.getElementById('user-guide-modal').classList.remove('hidden');
+
+            document.getElementById('btn-open-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.remove('hidden');
+            });
+            document.getElementById('btn-close-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+            document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+
+            requestAnimationFrame(simulationLoop);
+        });
+    </script>
+</body>
+
+</html>

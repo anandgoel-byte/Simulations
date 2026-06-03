@@ -195,53 +195,53 @@
           <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
         </div>
 
-        <div class="space-y-3">
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">Why do we integrate $f(x) - g(x)$ specifically?</h4>
-              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Verification</span> <span id="btn-arrow-1">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
-                The integral sums up infinitely many vertical slices (rectangles). The height of any individual slice is precisely the top $y$-value minus the bottom $y$-value. Therefore, the height function is $h(x) = f(x) - g(x)$.
-              </div>
-            </div>
-          </div>
+<div class="space-y-3 pb-4">
+  
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 1</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q1-text">
+        Question 1
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+      <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
 
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">What happens to the calculation if the two curves cross each other?</h4>
-              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Verification</span> <span id="btn-arrow-2">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
-                If the curves cross, the "top" and "bottom" functions switch! If you just integrate $f(x) - g(x)$, the area where $g(x) > f(x)$ will evaluate as negative, canceling out actual geometric area. To find true total area, you must split the integral at the intersection points.
-              </div>
-            </div>
-          </div>
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 2</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q2-text">
+        Question 2
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+      <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
 
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">What does the Riemann Rectangles toggle illustrate?</h4>
-              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Verification</span> <span id="btn-arrow-3">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
-                It reveals the fundamental definition of the integral: $\lim_{n \to \infty} \sum_{i=1}^{n} [f(x_i) - g(x_i)]\Delta x$. By breaking the area into discrete rectangles, it visualizes how calculus bridges the gap between finite sums and continuous areas.
-              </div>
-            </div>
-          </div>
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 3</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q3-text">
+        Question 3
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+      <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
 
-        </div>
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 4</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q4-text">
+        Question 4
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+      <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+</div>
       </section>
     </main>
 
@@ -281,6 +281,109 @@
   </div>
 
   <script>
+    const vivaData = {
+  q1: {
+    question: "The area of the region enclosed by the parabolas y² = 4x and x² = 4y is: [JEE Main 2014]",
+    options: [
+      { text: "8/3", isCorrect: false, exp: "Incorrect. Make sure you set up the integral correctly: ∫(Upper Curve - Lower Curve) dx." },
+      { text: "16/3", isCorrect: true, exp: "Correct! The curves intersect at (0,0) and (4,4). The upper curve is y = 2√x and the lower curve is y = x²/4. Area = ∫ from 0 to 4 of (2√x - x²/4) dx = [ (4/3)x^(3/2) - x³/12 ] from 0 to 4 = (32/3) - (64/12) = 16/3." },
+      { text: "32/3", isCorrect: false, exp: "Incorrect. You may have forgotten to subtract the lower curve's area from the upper curve's area." },
+      { text: "4/3", isCorrect: false, exp: "Incorrect. Check your limits of integration and your algebraic expansion." }
+    ]
+  },
+  q2: {
+    question: "The area of the region bounded by the curves y = x² and y = |x| is: [AIEEE 2005]",
+    options: [
+      { text: "1/6", isCorrect: false, exp: "Incorrect. This is the area of just one side (e.g., from x=0 to x=1). You must account for both sides of the y-axis." },
+      { text: "1/3", isCorrect: true, exp: "Correct! Due to symmetry, we can calculate the area in the first quadrant and multiply by 2. In Q1, the line y = x is the upper curve and y = x² is the lower curve. Area = 2 × ∫ from 0 to 1 of (x - x²) dx = 2 × [ x²/2 - x³/3 ] from 0 to 1 = 2 × (1/2 - 1/3) = 2(1/6) = 1/3." },
+      { text: "2/3", isCorrect: false, exp: "Incorrect. Verify your integration of x and x² before multiplying by 2." },
+      { text: "5/6", isCorrect: false, exp: "Incorrect. Ensure you are subtracting the parabola from the absolute value line, not adding them." }
+    ]
+  },
+  q3: {
+    question: "The area bounded by the curve y = sin(x) and the x-axis between x = 0 and x = 2π is: [AIEEE 2002]",
+    options: [
+      { text: "0", isCorrect: false, exp: "Incorrect. While the definite integral ∫sin(x)dx from 0 to 2π is 0, the total physical 'area bounded' must be positive." },
+      { text: "2", isCorrect: false, exp: "Incorrect. 2 is the area of just one lobe (from 0 to π). There is another lobe from π to 2π." },
+      { text: "4", isCorrect: true, exp: "Correct! Area = ∫ from 0 to π of sin(x)dx + | ∫ from π to 2π of sin(x)dx |. This equals [-cos(x)] from 0 to π + | [-cos(x)] from π to 2π | = [1 - (-1)] + | [-1 - 1] | = 2 + 2 = 4." },
+      { text: "1", isCorrect: false, exp: "Incorrect. Remember that the maximum height of sin(x) is 1, but the area under the curve requires integration." }
+    ]
+  },
+  q4: {
+    question: "The area of the region bounded by the curve y² = x and the vertical line x = 4 is: [CBSE 2010]",
+    options: [
+      { text: "16/3", isCorrect: false, exp: "Incorrect. This is the area of only the top half (above the x-axis)." },
+      { text: "32/3", isCorrect: true, exp: "Correct! The parabola y² = x is symmetric about the x-axis. Total Area = 2 × ∫ from 0 to 4 of √x dx = 2 × [ (2/3)x^(3/2) ] from 0 to 4 = 2 × (2/3)(8) = 32/3." },
+      { text: "64/3", isCorrect: false, exp: "Incorrect. You may have squared the limit of 4 incorrectly when applying the exponent 3/2." },
+      { text: "8/3", isCorrect: false, exp: "Incorrect. Check your fundamental theorem of calculus application when evaluating at the upper limit 4." }
+    ]
+  }
+};
+    function renderQuestions() {
+  const scoreLabel = document.getElementById('viva-score');
+  
+  // Inject Question Text statically on render
+  document.getElementById('q1-text').textContent = vivaData.q1.question;
+  document.getElementById('q2-text').textContent = vivaData.q2.question;
+  document.getElementById('q3-text').textContent = vivaData.q3.question;
+  document.getElementById('q4-text').textContent = vivaData.q4.question;
+
+  Object.keys(vivaData).forEach(qKey => {
+    const data = vivaData[qKey];
+    const optionsContainer = document.getElementById(`${qKey}-options`);
+    const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+    
+    if (!optionsContainer || !feedbackContainer) return; 
+    
+    optionsContainer.innerHTML = ''; // Clear container
+    
+    data.options.forEach((opt, idx) => {
+      // Build Button
+      const btn = document.createElement('button');
+      btn.className = "text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white hover:bg-slate-50 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+      
+      // Add A, B, C, D labels
+      let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+      btn.innerHTML = `<span class="font-extrabold text-indigo-500 w-4">${letter}</span> <span>${opt.text}</span>`;
+      
+      // Click Logic
+      btn.addEventListener('click', () => {
+        if (appState.answers[qKey] !== null) return; // Prevent double answering
+        
+        appState.answers[qKey] = idx;
+        if (opt.isCorrect) appState.vivaScore++;
+        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+        
+        // Style all buttons post-click
+        const buttons = optionsContainer.querySelectorAll('button');
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+          b.classList.add('cursor-not-allowed', 'shadow-none');
+          
+          if (appState.answers[qKey] === i) {
+            // The one the user clicked
+            if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+            else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+          } else if (data.options[i].isCorrect) {
+            // Highlight the correct answer faintly if they got it wrong
+            b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+          } else {
+            // Fade out the rest
+            b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+          }
+        });
+        
+        // Show Feedback
+        feedbackContainer.textContent = opt.exp;
+        feedbackContainer.classList.remove('hidden');
+      });
+      optionsContainer.appendChild(btn);
+    });
+  });
+}
+ renderQuestions();
+
     // --- Math Definitions ---
     const functionRegistry = {
         parabolas: {

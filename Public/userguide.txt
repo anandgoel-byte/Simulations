@@ -1,0 +1,1282 @@
+﻿=== 3D_Coordinate_Plotter.html - Grade 11 - 3D Geometry (Intro) ===
+
+📘 3D PLOTTER PROTOCOLS
+×
+Welcome to the 3D Coordinate Laboratory! Explore the geometry of points in three-dimensional space.
+🎯 Core Controls
+- , Y, Z Sliders: Adjust the individual coordinates of point $P$. Watch how it moves relative to the three primary axes!
+- Camera Controls: The 3D canvas is fully interactive. Click and drag to orbit the camera around the origin. Scroll to zoom in and out.
+- Projections Toggle: Generates the dashed "cuboid" connecting the point to the floor and walls, helping you visually grasp its depth and height.
+- Vector Toggle: Draws the direct position vector $\vec{r}$ pointing straight from the origin to the point.
+Acknowledge
+
+========================================
+
+=== 3D_Distance_Section_Lab.html - Grade 11 - 3D Geometry (Intro) ===
+
+📘 3D DISTANCE & SECTION PROTOCOLS
+×
+Welcome to the 3D Coordinate Laboratory! Explore the geometry of lines and ratios in three-dimensional space.
+🎯 Core Controls
+- Coordinate Sliders: Adjust the $,y,z$ positions of Points A and B.
+- Ratio Sliders ($m, n$): Adjust the ratio that determines where Point P splits the line.
+- Division Mode: Toggle between Internal (P is between A and B) and External (P lies outside the segment AB). Notice how the mathematical formula changes!
+- Camera Controls: Click and drag on the 3D canvas to orbit around the line. Scroll to zoom.
+Acknowledge
+
+========================================
+
+=== 3d_Orbital.html - Grade 11 - Chemical Bonding & Molecular Structure ===
+
+📘 QUANTUM MOLECULAR OPERATIONS PROTOCOLS
+×
+Welcome to the 3D Molecular Orbital Hybridization Virtual Lab! Use this workspace to explore hybrid coordinate orbitals, characters, and wave blends:
+🎯 Core Functions
+- Hybrid Presets: Select different hybrid states (sp, sp², sp³, etc.) to immediately re-orient orbital major and minor wave phases along ideal geometric vertices.
+- Interactive Sliders: Finely tune the opacity, auto-rotation speed, and coordinate orbital size. Change them on range inputs or type values directly in adjacent numerical input boxes.
+- Tab Selector Views: Switch between the 3D Sandbox and the educational Paint Bucket Analogy mode to see the intuitive representation of wave blend mathematics.
+🔍 3D Viewport Controls
+- Rotate Viewport: Click, hold, and drag directly inside the dark probability space canvas to rotate the camera.
+- Pinch / Scroll to Zoom: Use your mouse scroll wheel or gesture to zoom in and out of the molecular structure.
+- Toggles: Dynamically show/hide sigma lobes, unhybridized pi dumbbells, or geometric skeleton outlines.
+Initialize Experiments
+
+========================================
+
+=== Acidity_Comparator.html - Grade 11 - Organic Chemistry ===
+
+📘 ACIDITY COMPARATOR PROTOCOLS
+×
+Welcome to the Phenol Acidity Virtual Laboratory! Visualize how resonance forms stabilize conjugate bases and dictate acid strength.
+🎯 Core Controls
+- Select Molecule: Compare Ethanol (no resonance) with Phenols. Pay attention to how pKₐ shifts with EDG vs EWG substituents.
+- Deprotonate: Click to add a Base. Watch it rip the proton (H⁺) away, leaving behind a negatively charged oxygen.
+- Resonance Animation: Once deprotonated, the simulator will automatically cycle through the valid resonance structures. Follow the blue curved arrows to see the electron flow!
+Acknowledge
+
+========================================
+
+=== Action_Potential_Lab.html - Grade 11 - Neuron Dynamics ===
+
+📘 ELECTROPHYSIOLOGY PROTOCOLS
+×
+Welcome to the Neurobiology Laboratory! Observe the electrochemical signals that allow neurons to communicate.
+🎯 Core Controls
+- Electrical Stimulus: Set the injection voltage and press "Apply". If the stimulus is too weak (fails to reach -55mV), the signal dies out. If it is strong enough, a full Action Potential fires!
+- Oscilloscope Trace: Watch the right side of the canvas to see the live recording of the membrane voltage over time, mapping exactly to Depolarization, Repolarization, and Hyperpolarization.
+- Ion Channels: Watch the Blue (Na+) and Green (K+) channels open and close in the membrane. Notice the "ball and chain" mechanism that inactivates the Na+ channel at the peak of the voltage curve.
+- Neurotoxins: Apply TTX to physically plug the Na+ channels. Try firing a stimulusnothing will happen! Apply TEA to block K+ channels and watch how the membrane struggles to return to resting state.
+Acknowledge
+
+========================================
+
+=== Alkali_Metals_Lab.html - Grade 11 - s-Block Elements ===
+
+📘 ALKALI METALS PROTOCOLS
+×
+Welcome to the Alkali Metal Reactivity Laboratory! Safely explore the violent chemistry of Group 1 elements reacting with water.
+🎯 Core Controls
+- Select Metal: Choose an element from Group 1. Notice how the atomic radius increases and the ionization energy decreases as you move down the periodic table.
+- Drop Metal: Click the button to drop a chunk of the selected metal into the beaker.
+- Observe Kinetics: Watch the severity of the reaction scale perfectly with the metal's position on the periodic table. Lithium fizzes; Cesium detonates!
+- Indicator Toggle: Leave Phenolphthalein on to watch the formation of hydroxide ions physically turn the water basic (bright pink).
+Acknowledge
+
+========================================
+
+=== Alternation_Of_Generations_Lab.html - Grade 11 - Plant Kingdom ===
+
+📘 ALTERNATION OF GENERATIONS PROTOCOLS
+×
+Welcome to the Plant Evolution Laboratory! Trace the shifting life cycles of the plant kingdom.
+🎯 Core Controls
+- Plant Division Selector: Switch between Mosses, Ferns, and Angiosperms. Notice how the dominant (largest) stage shifts from the top half of the circle (Haploid) to the bottom half (Diploid) as plants evolve!
+- Timeline Slider: Drag the slider to move the tracker particle around the life cycle. Watch the telemetry panel to see exactly what biological process is occurring at any given moment.
+- Auto-Play: Click Auto-Play to watch the cycle progress naturally. Pay close attention to when Meiosis and Fertilization occurthey are the strict boundaries between $n$ and $2n$!
+Acknowledge
+
+========================================
+
+=== Angle_Between_Planes_Lab.html - Grade 11 - 3D Geometry (Intro) ===
+
+📘 ANGLE BETWEEN PLANES PROTOCOLS
+×
+Welcome to the 3D Geometry Laboratory! Analyze the spatial relationships and intersections of infinite planes.
+🎯 Core Controls
+- Normal Vector Sliders: Adjust the $A, B, C$ coefficients for Plane 1 (Blue) and Plane 2 (Rose). This tilts the planes in 3D space.
+- Preset Dropdown: Instantly jump to mathematically significant states like Orthogonal (90°) or Parallel (0°).
+- Camera Controls: Click and drag on the 3D canvas to orbit around the intersection. Scroll to zoom.
+- Visual Toggles: Turn the Normal Vector arrows and the bright yellow Line of Intersection on or off to clarify the geometry.
+Acknowledge
+
+========================================
+
+=== Area_Between_Curves_Lab.html - Grade 12 - Application of Integrals ===
+
+📘 AREA BETWEEN CURVES PROTOCOLS
+×
+Welcome to the Calculus Laboratory! Explore the geometric meaning of definite integrals.
+🎯 Core Controls
+- Function Pair Dropdown: Select different mathematical scenarios (Parabolas, Lines, Trigonometry).
+- Limits of Integration ($a, b$): Adjust the left and right boundaries of your integration. The simulation will prevent $a$ from crossing over $b$.
+- Riemann Rectangles Toggle: Switch between the smooth, exact analytic area and the discrete rectangular slices ($dx$) that conceptually build the integral.
+- Live Telemetry: Watch the formal mathematical notation and the exact calculated numerical area update instantly as you change parameters!
+Acknowledge
+
+========================================
+
+=== Argand_Plane_Lab.html - Grade 11 - Complex Numbers ===
+
+📘 ARGAND PLANE PROTOCOLS
+×
+Welcome to the Complex Numbers Virtual Laboratory! Visualize the beautiful geometry behind complex arithmetic.
+🎯 Core Controls
+- Z₁ and Z₂ Sliders: Adjust the Real (-axis) and Imaginary (Y-axis) components of your two base vectors.
+- Operation Dropdown: Switch between Addition, Subtraction, Multiplication, and Division.
+- Geometric Guidelines: Leave this checked to see how the math works visually. Addition shows the parallelogram rule; Multiplication shows the rotational addition of angles!
+Acknowledge
+
+========================================
+
+=== Automic.html - Grade 11 - Structure of Atom ===
+
+📘 QUANTUM SPECTROSCOPY - User Guide
+×
+Welcome to the Hydrogen Atom Spectroscopy Virtual Lab! Use this simulation to explore quantum transitions and spectral series emission lines.
+🎯 Core Functions
+- Model Selections: Toggle between Bohr Model, de Broglie Wave, and Schrödinger Probability Cloud to see different interpretations of atomic structure.
+- Light Gun Source: Fire white light containing all wavelengths, or select monochromatic light using the wavelength slider/numeric boxes.
+- Sensors & Graphs: The bottom spectrograph registers all emitted photons, mapping peaks corresponding to UV Lyman, Visible Balmer, and Infrared Paschen series.
+🔍 Canvas Indicators
+- 2D Quantum Orbit: Watch photon wavepackets interact, excite, and collapse orbital paths in real-time.
+- Bohr Energy Levels Chart: Highlights the electron's current energy state, showing dynamic transition arrows.
+- Quick Match Series buttons: Located at the bottom spectrometer, click these to instantly trigger transition series.
+Get Started
+
+========================================
+
+=== AvgSpeed_Velocity_Lab.html - Grade 9 - Motion ===
+
+📘 CYBERGRID PROTOCOLS
+×
+Welcome to the Average Speed vs Average Velocity Cyber Lab! Watch how the passage of time affects scalar and vector rates differently across a 3D city grid.
+🎯 Core Controls
+- Select Drive Route: Try the "Perimeter Defense" route. Notice how Average Speed remains steady, but Average Velocity plummets to 0 m/s as the drone returns to the launch pad!
+- Animation: Click "Launch Drone" to watch the 3D drone fly between the server pillars. The Neon Pink Line traces Distance. The Neon Cyan Arrow tracks Displacement.
+- Formulas in Action: Both metrics divide by Total Time, but Speed uses Path Length while Velocity uses the straight-line Displacement Vector.
+Initialize Systems
+
+========================================
+
+=== Balancing_Equations_Lab.html - Grade 10 - Chemical Reactions & Equations ===
+
+📘 STOICHIOMETRY PROTOCOLS
+×
+Welcome to the Chemistry & Conservation of Mass Lab! Practice adjusting coefficients to satisfy the universe's fundamental laws.
+🎯 Core Controls
+- Coefficient Adjusters: Use the up and down arrows hovering over the chemical equation to change the number of molecules.
+- Visual Scales: Watch the animated balances at the bottom of the canvas. Your goal is to make the Left side (Reactants) exactly level with the Right side (Products) for *every single element*.
+- Atom Inventory: The left-hand panel provides a precise numerical count of the atoms. Red numbers indicate an imbalance. Green numbers indicate perfect balance.
+- Success State: When all atoms are balanced, the entire UI will light up emerald green, indicating the equation is valid!
+Acknowledge
+
+========================================
+
+=== Bohr_Atom.html - Grade 11 - Structure of Atom ===
+
+📘 BOHR ATOM LABORATORY - User Guide
+×
+Welcome to the BOHR ATOM MODEL Virtual Lab! Use this simulation to explore quantum transitions and spectral series emission lines.
+🎯 Core Functions
+- Excitation States Toggles: Click on different quantized orbits ($n=1$ to $n=6$) to force the electron to jump or decay. Emitted photons are immediately logged on the spectrograph.
+- Monochromatic Wave Gun: Move the slider or change the numeric wavelength box to inject a custom photon. If the photon's energy matches a resonant orbital transition gap, it will be absorbed!
+- Guided Laboratory Experiments: Check out the "Guided Tasks" tab to learn how to calculate Rydberg's constant, map visible Balmer lines, or test nuclear attraction scaling.
+🔍 Canvas Indicators
+- De Broglie Standing Wave: Toggle this checkbox to view the electron's wavelength phase loop on its active quantized circumference track.
+- Diagram I (Bohr Levels): Renders a real-time energy chart highlighting electron transitions.
+- Diagram II (Spectrum Line Records): Logs and registers all emitted spectral lines.
+Get Started
+
+========================================
+
+=== Broglie.html - Grade 11 - Structure of Atom ===
+
+📘 DE BROGLIE LAB PROTOCOLS
+×
+Welcome to the Quantum Mechanics Laboratory! Visualize the wave-particle duality of matter.
+🎯 Core Controls
+- Apparatus Mode:
+- Wave Packet: Observe the Gaussian envelope of the matter wave in free space.
+- Double-Slit: Fire particles to see how their probability distributions create an interference pattern on the detector screen.
+- Matter Specimen: Switch between subatomic particles and a macroscopic Baseball. Note how the baseball's velocity switches to m/s!
+- Planck Booster: To see a baseball act like a wave, you must multiply Planck's constant by an enormous factor. Slide the booster to artificially inflate $h$!
+Acknowledge
+
+========================================
+
+=== Buoyancy.html - Grade 11 - Mechanical Properties of Fluids ===
+
+📘 BUOYANCY PROTOCOLS - User Guide
+×
+Welcome to the Buoyancy & Fluid Displacement Virtual Laboratory! Explore the fluid dynamics, Archimedes conditions, and FBD vector parameters.
+🎯 Core Controls
+- Parameter Syncing: Synced sliders or manual inputs control Object Density ($\rho_o$) and Fluid Density ($\rho_f$).
+- Chamber Viscosity: Adjust viscosity to modify drag, altering bob terminal sink rates.
+- FBD Overlay HUD: Toggle to render a live, vector-drawn Free-Body Diagram overlaid directly inside the chamber canvas.
+- Live Telemetry: Track buoyant force ($F_b$), weight ($W$), submerged ratio, and displacement conditions in real time.
+Get Started
+
+========================================
+
+=== C3_C4_Pathway_Lab.html - Grade 11 - Photosynthesis in Higher Plants ===
+
+📘 C3 vs C4 LABORATORY PROTOCOLS
+×
+Welcome to the Plant Physiology Laboratory! Compare the metabolic strategies plants use to survive extreme climates.
+🎯 Core Controls
+- Specimen Selector: Toggle between a standard C3 leaf (like wheat) and a specialized C4 leaf (like corn with Kranz Anatomy). Notice how the C4 plant has an extra ring of Bundle Sheath cells tightly surrounding the vascular vein.
+- Temperature Slider: As you increase the heat, watch the Stomata Guard Cells close up to prevent the plant from drying out.
+- Molecular Flow: When stomata close, oxygen gas ($O_2$) from light reactions cannot escape. In a C3 plant, watch the Rubisco enzyme choke on this $O_2$ (turning red), causing the Photorespiration rate to skyrocket while sugar production plummets.
+- C4 Survival: Switch to the C4 plant at high heat. Notice how PEP Carboxylase completely ignores the trapped $O_2$, pumping carbon safely into the inner Bundle Sheath cells where Rubisco can work in peace!
+Acknowledge
+
+========================================
+
+=== Cell_Division_Lab.html - Grade 11 - Cell Cycle & Cell Division ===
+
+📘 CELL DIVISION PROTOCOLS
+×
+Welcome to the Cellular Biology Laboratory! Observe the precise dance of chromosomes during cellular reproduction.
+🎯 Core Controls
+- Process Dropdown: Select between Mitosis, Meiosis I, or Meiosis II. Notice how the initial arrangement of chromosomes completely changes between processes!
+- Timeline Slider: Drag the slider to manually control time. Watch the nuclear envelope dissolve, chromosomes align at the equator, and eventually split towards the poles.
+- Quick-Jump Buttons: Instantly snap the simulation to the defining hallmarks of Prophase, Metaphase, Anaphase, or Telophase.
+- Telemetry Panel: Keep an eye on the right panel to understand exactly what is happening to the Ploidy Level ($2n \to n$) and DNA Content ($4C \to 2C \to 1C$).
+Acknowledge
+
+========================================
+
+=== Chem_Photoelectric.html - Grade 11 - Structure of Atom ===
+
+📘 USER OPERATIONS GUIDE
+×
+Follow these instructions to run the Photoelectric apparatus:
+- Metal Selector: Sodium, Zinc, or Copper.
+- Frequency Slider: Set the frequency of incident photons in THz.
+- Intensity Slider: Controls photon count rate.
+- Bias Voltage: Apply positive (accelerating) or negative (decelerating) bias voltage to see its effect on photocurrent.
+Get Started
+
+========================================
+
+=== Conics_Eccentricity_Lab.html - Grade 11 - Conic Sections ===
+
+📘 CONIC SECTIONS PROTOCOLS
+×
+Welcome to the Eccentricity Laboratory! Explore how a single parameter dictates the shape of orbits, satellite dishes, and architectural curves.
+🎯 Core Controls
+- Eccentricity Slider ($e$): Drag this to smoothly transform the shape from a perfect Circle ($e=0$) to a stretched Ellipse ($e  1$).
+- Foci ($F$): The focal points. Watch them move outward from the center as eccentricity increases!
+- Directrices: The vertical bounding lines. Watch them snap from infinity down toward the origin.
+- Asymptotes: Only visible when $e > 1$. These are the diagonal lines the hyperbola branches approach at infinity.
+Acknowledge
+
+========================================
+
+=== Continuity_Limits_Lab.html - Grade 11 - Limits & Derivatives ===
+
+📘 CONTINUITY & LIMITS PROTOCOLS
+×
+Welcome to the Calculus Limits Laboratory! Explore how functions behave as they approach critical boundary points.
+🎯 Core Controls
+- Function Topology: Select between the four classic edge cases of calculus: Continuous, Removable (Hole), Jump, and Infinite (Asymptote).
+- Approach Sliders: Use the Left ($x_L$) and Right ($x_R$) sliders to independently drag the test points closer and closer to $c$.
+- The Snap: Drag the sliders completely to their bounds to evaluate the exact limit. Watch the Telemetry dashboard to see if the LHL matches the RHL!
+Acknowledge
+
+========================================
+
+=== Counting_Tree_Lab.html - Grade 11 - Permutations & Combinations ===
+
+📘 COMBINATORICS PROTOCOLS
+×
+Welcome to the Sample Space Visualizer! Explore how sequential choices multiply rapidly to create massive possibility spaces.
+🎯 Core Controls
+- Scenario Dropdown: Changes the context of the variables (e.g., from Restaurant Meals to Coin Flips).
+- $n_1$, $n_2$, $n_3$ Sliders: Adjust the number of possible outcomes at each stage. Watch the tree diagram rebuild itself instantly!
+- Path Tracing: Hover your mouse cursor over the final "leaves" on the right side of the canvas. The engine will illuminate the specific combination path backward to the root.
+Acknowledge
+
+========================================
+
+=== Dihybrid_Cross_Lab.html - Grade 12 - Principles of Inheritance & Variation ===
+
+📘 DIHYBRID CROSS PROTOCOLS
+×
+Welcome to the Mendelian Genetics Laboratory! Construct and analyze genetic probabilities through 4x4 matrices.
+🎯 Core Controls
+- Cross Presets: Instantly load classic genetic scenarios like the Heterozygous Cross (9:3:3:1 ratio) or the Test Cross.
+- Parent Controls: Manually alter the alleles (Y/y and R/r) for Parent 1 and Parent 2. The system automatically calculates their possible gametes using the FOIL method.
+- The Punnett Square: Watch as the canvas automatically fills the 16 grid squares with the combined genotypes. It then translates that genetic code into physical phenotypes (the actual drawing of the seed!).
+- Telemetry: The right panel acts as your lab notebook, automatically tallying the physical results and calculating the final phenotypic ratio.
+Acknowledge
+
+========================================
+
+=== Diode_Lab.html - Grade 12 - Semiconductor Electronics ===
+
+📘 DIODE CHARACTERISTICS PROTOCOLS
+×
+Welcome to the p-n Junction Diode Virtual Laboratory! Explore the non-linear relationship between voltage and current in semiconductors.
+🎯 Core Controls
+- Power Supply ON: Activates the circuit and allows the voltage slider to dictate current flow.
+- Bias Voltage Slider: Drag right to apply Forward Bias (reducing the barrier). Drag left to apply Reverse Bias (widening the depletion region).
+- Material Selection: Compare standard Silicon (0.7V knee) with Germanium (0.3V knee). Watch how the entire I-V curve shifts!
+- Dual Viewport: The left side of the canvas illustrates the physical semiconductor lattice and the central depletion region. The right side plots the mathematical I-V curve in real-time.
+Acknowledge
+
+========================================
+
+=== Distance_Displacement_Lab.html - Grade 9 - Motion ===
+
+📘 KINEMATICS LAB PROTOCOLS
+×
+Welcome to the 3D Distance vs Displacement Laboratory! Explore the fundamental difference between scalar path length and vector displacement.
+🎯 Core Controls
+- Select Path: Choose different scenarios like a Winding Trail, an L-Shape (to test Pythagoras), or a Circular track.
+- Animation: Click "Start Journey" to watch the cyclist navigate the 3D park. The Red Line traces the actual Distance. The Blue Arrow indicates the shortest straight-line Displacement.
+- Live Telemetry: Watch the dark dashboard to see how Distance always increases, while Displacement can increase, decrease, or even return to zero!
+Acknowledge & Start
+
+========================================
+
+=== DNA_Replication_Lab.html - Grade 12 - Molecular Basis of Inheritance ===
+
+📘 DNA REPLICATION PROTOCOLS
+×
+Welcome to the Molecular Genetics Laboratory! Observe the real-time mechanics of the replisome.
+🎯 Core Controls
+- Enzyme Speed Slider: Control the playback speed. Slow it down to watch how the lagging strand polymerase has to continually jump backward to lay down new segments!
+- Leading vs Lagging: The top strand (Leading) is built continuously as the Helicase unzips the DNA. The bottom strand (Lagging) must be built in chunks (Okazaki Fragments) because it runs in the opposite direction.
+- Primer Replacement: Watch the Primase lay down red RNA primers. Then watch DNA Pol I swap them out, followed by Ligase sealing the gaps!
+Acknowledge
+
+========================================
+
+=== Double_Fertilisation_Lab.html - Grade 12 - Sexual Reproduction in Flowering Plants ===
+
+📘 FERTILISATION LAB PROTOCOLS
+×
+Welcome to the Angiosperm Reproduction Laboratory! Observe the simultaneous genetic fusion events required to create a seed.
+🎯 Core Controls
+- Auto-Play Animation: Click play to watch the complete process uninterrupted. The pollen tube will burrow through the style to deliver the two sperm nuclei.
+- Manual Timeline Slider: Pause and manually drag the red slider. Notice exactly when Syngamy occurs (forming the 2n Zygote) and when Triple Fusion occurs (forming the 3n Endosperm).
+- Telemetry Dashboard: Watch the right-hand panel. As the sperm fuse, the ploidy trackers will dynamically shift from unfertilized (n) to their final state (2n and 3n).
+Acknowledge
+
+========================================
+
+=== Elliptical.html - Grade 11 - Gravitation ===
+
+📘 ELLIPTICAL ORBITS & KEPLER'S 2ND LAW - User Guide
+×
+Welcome to the ELLIPTICAL ORBITS & Kepler's 2nd Law Virtual Lab! Use this simulation to explore central-force celestial mechanics.
+🎯 Core Functions
+- Run / Pause / Reset: Use the top bar buttons to control physical time propagation.
+- Interactive Parameters: Adjust the initial orbital distance ($r_0$), tangential launch speed ($v_0$), or Sun mass ($M_S$) to observe different conic sections.
+- Orbit Shape Predictor: Instantly classifies the path as a Circle, Ellipse, Parabola, or Hyperbola based on specific orbital energy state.
+- Kepler's 2nd Law Trace: Enables equal-time wedge sweeps. Notice how the swept areas remain identical regardless of whether the planet is near perihelion (fast, short wide wedges) or aphelion (slow, long narrow wedges).
+🔍 Canvas Controls
+- Zoom In / Out / Recenter: Adjust your spatial coordinate field of view.
+- Drag to Pan: Click and drag anywhere on the canvas to inspect the grid.
+- Show Grid & Axes: Toggle coordinate system axes lines and grid ticks.
+Get Started
+
+========================================
+
+=== EM_Induction_Lab.html - Grade 10 - Magnetic Effects of Current ===
+
+📘 EM INDUCTION PROTOCOLS
+×
+Welcome to the Electromagnetism Laboratory! Explore how physical movement can be converted directly into electrical energy.
+🎯 Core Controls
+- Manual Dragging: You can click and drag the bar magnet horizontally across the canvas. Notice that the faster you drag it through the coil, the wilder the galvanometer needle swings!
+- Auto-Thrust: Click the play button to let the machine oscillate the magnet back and forth at a constant speed (adjustable via slider).
+- Faraday's Multipliers: Increase the Magnet Strength ($B$) or the Coil Turns ($N$). Watch the mathematical readout on the right dynamically multiply the voltage output!
+- Lenz's Law in Action: Flip the Magnet Poles. Notice that pushing the North pole into the coil creates a current in one direction, while pushing the South pole in creates a current in the exact opposite direction.
+Acknowledge
+
+========================================
+
+=== EMW.html - Grade 12 - Electromagnetic Waves ===
+
+📘 ELECTROMAGNETIC WAVES - User Guide
+×
+Explore EM wave dynamics with this interactive 3D laboratory:
+- Rotate View: Click and drag anywhere inside the 3D canvas to rotate your viewing
+perspective. Scroll/pinch to zoom.
+- Sliders: Adjust Wave amplitude, Wavelength ($\lambda$), Frequency ($f$), and vector
+densities.
+- Playback Controls: Use Play/Pause and slow-motion speed toggles.
+Get Started
+
+========================================
+
+=== Equillibrium.html - Grade 11 - Equilibrium ===
+
+📘 CHEMICAL EQUILIBRIUM PROTOCOLS
+×
+Welcome to the Le Chatelier's Principle Virtual Laboratory! Perturb a system at equilibrium and watch it chemically respond to restore balance.
+🎯 Core Controls
+- Temperature ($T$): Heating the system forces it to shift backward to absorb the heat (since it is an exothermic reaction). Watch the $K_c$ drop!
+- Volume ($V$): Compressing the chamber (decreasing Volume) increases pressure. The system shifts toward $\text{N}_2\text{O}_4$ to reduce the total number of gas molecules.
+- Perturb Buttons: Inject concentrated spikes of reactants or products to disrupt the balance. The real-time chart will track the kinetic recovery path.
+- Visual Chamber: The beaker on the left visually represents the mixture. $\text{NO}_2$ is heavily colored brown, while $\text{N}_2\text{O}_4$ is colorless.
+Acknowledge
+
+========================================
+
+=== Feasible_Region_Lab.html - Grade 12 - Linear Programming ===
+
+📘 LINEAR PROGRAMMING PROTOCOLS
+×
+Welcome to the Operations Research Laboratory! Visualize the mechanics of linear optimization.
+🎯 Core Controls
+- Equation Sliders: Adjust the coefficients for the Objective Function ($Z$) and the two constraints. Watch how changing the limits redraws the green Feasible Region in real-time.
+- Top Objective Line Slider: Physically grab and slide the $Z$ value to sweep the dashed objective line across the graph. Try to manually find the highest $Z$ value before the line completely detaches from the green region!
+- Corner Point Evaluation Table: The system automatically calculates all valid intersection points, filters out the invalid ones, and dynamically highlights the geometric optimal solution in green.
+Acknowledge
+
+========================================
+
+=== Flame_Test_Lab.html - Grade 11 - s-Block Elements ===
+
+📘 FLAME TEST PROTOCOLS
+×
+Welcome to the Flame Test & Emission Spectroscopy Virtual Laboratory! Explore the quantum world by exciting electrons with thermal energy.
+🎯 Core Controls
+- Ignite Burner: First, turn on the gas and ignite the Bunsen burner to produce a standard blue, non-luminous flame.
+- Select Metal Cation: Choose a chemical salt from the shelf. Notice you cannot test until the burner is ignited and a sample is selected.
+- Perform Flame Test: Click to dip the nichrome wire loop into the solution and insert it into the flame. Watch the electrons excite and emit characteristic photons!
+- Spectroscope: Toggle the spectroscope view to isolate the specific wavelengths (emission lines) emitted by the chosen element.
+Acknowledge
+
+========================================
+
+=== Flemings_Hand_Rule_Lab.html - Grade 10 - Magnetic Effects of Current ===
+
+📘 FLEMING'S RULE PROTOCOLS
+×
+Welcome to the Motor Effect Laboratory! Explore how perpendicular magnetic fields and electrical currents create physical motion.
+🎯 Core Controls
+- 3D Interaction: Click and drag the dark canvas to orbit the scene. You can view the vectors from any angle to verify they are perfectly $90^\circ$ apart.
+- Vector Reversers: Click "Reverse Current" to flip the polarity of the wire. Watch the Middle Finger flip, and observe how the Red Force Thumb flips in response!
+- The Mathematical Rule: Because of the Cross Product ($\vec{F} = I \times \vec{B}$), if you reverse *both* the magnets and the current at the same time, the Force will remain exactly the same! Try it!
+Acknowledge
+
+========================================
+
+=== Flower_Anatomy_Lab.html - Grade 11 - Morphology of Flowering Plants ===
+
+📘 FLOWER ANATOMY PROTOCOLS
+×
+Welcome to the Botanical 3D Laboratory! Explore the intricate reproductive architecture of angiosperms.
+🎯 Core Controls
+- 3D Interaction: Click and drag anywhere on the dark canvas to orbit the flower. Scroll your mouse wheel to zoom in and out.
+- Biological Scanner: Hover your mouse cursor over any 3D part (Petal, Anther, Ovary, etc.). The part will highlight, and the Scanner Dashboard on the right will reveal its scientific name, whorl, and function.
+- Whorl Isolators: Use the checkboxes on the left to surgically remove layers to see the structures hidden underneath.
+- Cross-Section Slicer: Drag the red slider to dynamically slice the entire 3D flower in half! Look closely inside the swollen green Ovary to spot the tiny unfertilized ovules (seeds).
+Acknowledge
+
+========================================
+
+=== Friction.html - Grade 11 - Laws of Motion ===
+
+📘 FRICTION LAB PROTOCOLS
+×
+Welcome to the Friction & Force Vectors Virtual Laboratory! Explore Newton's laws, resolving force components, and the transition between static and kinetic friction.
+🎯 Core Controls
+- Interactive Sliders: Adjust Tension ($T$), Mass ($m$), and Angle ($\theta$) to immediately see the Free Body Diagram (FBD) vectors react on the box.
+- Friction Coefficients: Play with $\mu_s$ and $\mu_k$ to find the "breaking point" where the box overcomes static friction and begins accelerating.
+- Start/Pause/Reset: Control the timeline to watch the box slide and velocity accumulate dynamically.
+- Lift-Off Warning: If you pull too hard upwards, the Normal force ($N$) will drop to zero, and the box will physically lift into the air!
+Acknowledge
+
+========================================
+
+=== galvanic_cell.html - Grade 12 - Electrochemistry ===
+
+📘 3D GALVANIC CELL PROTOCOLS
+×
+Welcome to the 3D Galvanic Cell Virtual Laboratory! Explore electrochemistry by constructing different batteries and watching them run in real-time 3D.
+🎯 Core Controls
+- Electrode Selection: Mix and match Anodes (Zinc, Iron) and Cathodes (Copper, Silver) to see how Standard Cell Potential ($E^\circ_{cell}$) changes.
+- Concentration Sliders: Alter the molarity of the aqueous solutions. Notice how non-standard conditions shift the voltage via the Nernst Equation!
+- Run Cell: Click ▶ to close the circuit. Watch the Anode geometrically dissolve, the Cathode grow, and concentrations shift dynamically until the battery dies ($E_{cell} = 0$).
+- Camera: Click and drag on the 3D viewport to orbit the apparatus. Scroll to zoom in and out.
+Acknowledge
+
+========================================
+
+=== Gametogenesis_Lab.html - Grade 12 - Human Reproduction ===
+
+📘 GAMETOGENESIS PROTOCOLS
+×
+Welcome to the Human Reproduction Laboratory! Compare the cellular pathways that produce sperm and eggs.
+🎯 Core Controls
+- Pathway Toggle: Switch between the Male (Spermatogenesis) and Female (Oogenesis) pathways. Notice how the visual tree structure drastically changes!
+- Developmental Slider: Drag the slider (or click the phase buttons) to step through Mitosis, Growth, Meiosis I, Meiosis II, and Differentiation.
+- Ploidy Tracking: Watch the Telemetry panel. Note exactly when the cell drops from 46 chromosomes (Diploid) to 23 chromosomes (Haploid).
+- Polar Bodies: In the female pathway, observe the unequal division of cytoplasm. The tiny offshoot cells are Polar Bodies, which exist solely to discard excess chromosomes while saving the nutrients for the Ovum!
+Acknowledge
+
+========================================
+
+=== Gaussian_Elimination_Lab.html - Grade 12 - Matrices & Determinants ===
+
+📘 GAUSSIAN ELIMINATION PROTOCOLS
+×
+Welcome to the Linear Algebra Laboratory! Visualize the mechanics of matrix reduction.
+🎯 Core Controls
+- Matrix Input: Enter your own numbers into the 3x4 grid on the left, or use the "Presets" dropdown to quickly load interesting mathematical edge cases.
+- Compute Button: Generates the sequence of operations. Check the "RREF" toggle to force the algorithm to perform back-substitution.
+- Step Navigation: Use the Previous/Next buttons in the center console to walk through the algorithm.
+- Blue cells represent the active Pivot.
+- Yellow rows represent the current rows being modified or swapped.
+Acknowledge
+
+========================================
+
+=== Glycolysis_Lab.html - Grade 11 - Respiration in Plants ===
+
+📘 GLYCOLYSIS PROTOCOLS
+×
+Welcome to the Biochemistry Laboratory! Trace the exact enzymatic breakdown of a sugar molecule.
+🎯 Core Controls
+- Step Navigation: Use the Previous/Next buttons or the slider to progress through the 10 stages of Glycolysis.
+- Interactive Canvas: Watch the molecular structure morph in real-time. Notice how Phosphates (Yellow P) are attached and detached. At Step 4, watch the molecule literally split in half!
+- Metabolic Bank Account: Keep a close eye on the telemetry panel on the right. It tracks the exact net gain/loss of cellular energy (ATP and NADH) as you progress.
+Acknowledge
+
+========================================
+
+=== Hess_law.html - Grade 11 - Thermodynamics ===
+
+📘 HESS'S LAW PROTOCOLS
+×
+Welcome to the Hess's Law Energy Diagram! Explore the principle of state functions and path independence in thermodynamics.
+🎯 Core Controls
+- Step 1 & 2 Sliders: Adjust the individual enthalpy changes for the intermediate reactions. Watch the energy levels dynamically shift.
+- Trace Path: Click ▶ Trace Path to watch a theoretical particle travel from Reactants $\to$ Intermediates $\to$ Products, proving the net energy change is identical to the direct path.
+- Direct Path Toggle: Turn the overall $\Delta H_{rxn}$ arrow on or off to focus on the individual steps.
+Acknowledge
+
+========================================
+
+=== Ideal_Gas_Law.html - Grade 11 - States of Matter ===
+
+📘 IDEAL GAS LAW PROTOCOLS
+×
+Welcome to the 3D Ideal Gas Law PVT Simulator! Explore the kinetic molecular theory by interacting with a closed thermodynamic system.
+🎯 Core Controls
+- Moles ($n$): Adjusts the total number of gas particles in the chamber.
+- Volume ($V$): Moves the 3D piston up and down, changing the total available space.
+- Temperature ($T$): Modifies the kinetic energy (speed) of the particles and visually alters the thermal heater plate color.
+- Pressure ($P$): This is a dependent variable. Watch the live readout to see how $P$ responds dynamically to changes in $V$, $T$, or $n$ based on $PV=nRT$.
+- Camera Controls: Click and drag on the 3D viewport to orbit around the chamber. Scroll to zoom in and out.
+Acknowledge
+
+========================================
+
+=== IMF_comparator.html - Grade 11 - States of Matter ===
+
+📘 IMF COMPARATOR PROTOCOLS
+×
+Welcome to the Intermolecular Force Comparator! Explore how physical states (Solid, Liquid, Gas) emerge from the microscopic battle between attractive forces and thermal energy.
+🎯 Core Controls
+- Target Substance: Switch between Neon, HCl, and Water. Notice how their boiling points and interaction strengths differ drastically!
+- System Temperature (T): Drag the slider to add heat. Watch the particles vibrate faster until their kinetic energy breaks the intermolecular bonds.
+- Macroscopic Phase: The telemetry panel automatically calculates whether the system is acting as a Solid, Liquid, or Gas based on the density of active bonds.
+Acknowledge
+
+========================================
+
+=== Inverse_Trig_Lab.html - Grade 12 - Inverse Trigonometric Functions ===
+
+📘 INVERSE TRIG PROTOCOLS
+×
+Welcome to the Trigonometry Laboratory! Visualize the geometric mechanics behind inverse functions.
+🎯 Core Controls
+- Function Dropdown: Switch between the primary trigonometric pairs ($\sin, \cos, \tan$). Notice how their restricted domains vary entirely!
+- Position Slider ($t$): Slide this to move the coordinate point across the restricted domain. Watch how the coordinate $(, y)$ on the cyan curve is perfectly swapped to $(y, )$ on the red inverse curve.
+- Full Wave Toggle: Turn this on to see the original, repeating trigonometric wave in the background, illustrating visually why the restriction is required to pass the horizontal line test.
+Acknowledge
+
+========================================
+
+=== Isotope.html - Grade 9 - Structure of the Atom ===
+
+✕
+📖 ISOTOPES virtual laboratory manual
+Explore isotopic structures, nucleon stability limits, and dynamic mixture mass calculations:
+1. Isotope Builder Sandbox
+Select any element from the quick selection bar. Use Protons (+/-), Neutrons (+/-), and Electrons (+/-) steppers to assemble stable or unstable nuclei. Observe the spinning electron shells, nuclear core packed coordinates, and real-time radioactive shaking vibration for unstable isotopes.
+2. Isotope Mixtures & Abundance
+Switch to the Mixtures tab. Here you can add or subtract counts of different isotopes in a sample. Telemetry calculates the weighted average atomic mass of your customized mixture and represents it on a vectors-drawn physical balancing scale, matching it against the standard periodic table value.
+3. Viva Voce Questions
+Answer the 5 multiple choice questions on the right-hand desk. Each selection will lock in color-coded feedback. Click "Show Scientific Verification" at the bottom of each card to expand advanced LaTeX proofs compiled by MathJax!
+Acknowledge & Start Lab
+
+========================================
+
+=== JK_FlipFlop_Lab.html - Grade 12 - Semiconductor Electronics ===
+
+📘 JK FLIP-FLOP PROTOCOLS
+×
+Welcome to the Sequential Logic Virtual Laboratory! Explore how digital circuits store memory and respond to clock signals.
+🎯 Core Controls
+- J & K Inputs: Click the large buttons to toggle the data lines High (1) or Low (0).
+- Clock Frequency: Adjust how fast the system evaluates states. Slower speeds make it easier to see exactly when the edge triggers.
+- Edge Triggering: Notice that changing J or K does not immediately change Q! The output only updates precisely when the Clock transitions from Low to High (Positive Edge).
+- The Oscilloscope: The bottom half of the canvas acts as a digital logic analyzer, plotting the real-time waveforms of all signals.
+Acknowledge
+
+========================================
+
+=== kinematics_graphs.html - General - Science ===
+
+📘 1D Kinematics Matrix — User Guide
+×
+This virtual laboratory visually matches the relationships between position, velocity, and
+acceleration through interactive calculus evaluation modeling.
+🎯 Core Interactive Features
+- Malleable Nodes: Drag any of the 4 colorful circular handle pins inside the
+Velocity Arena view up or down to set unique speed profiles.
+- Boundary Constants: Adjust initial displacement properties ($x_0$) to
+change the position graph's initial offset.
+- Dynamic Integration Overlays: Toggle visual fill bounds to highlight the
+geometric accumulation of position.
+📊 Mathematical Analysis Specs
+- Velocity Slope: Derivative values yield local acceleration vectors.
+- Integral Evaluation: Area tracking computes absolute change in positions
+over time.
+Get Started
+
+========================================
+
+=== kinetic-molecular-theory-lab.html - General - Science ===
+
+📘 GAS LAWS & KMT - User Guide
+×
+Welcome to the Gas Properties & Kinetic Molecular Theory Lab! Explore the mechanical interactions of gas molecules in real-time under standard thermodynamics laws.
+🎯 Core Tabs
+- Ideal Gas Sandbox: Watch multi-particle gas kinetics and toggle parameters freely. Set variable locks to observe Gay-Lussac's, Boyle's, or Charles's gas laws dynamically.
+- Speed Distributions: View average Maxwell-Boltzmann velocity metrics comparing heavy and light species under thermal equilibrium.
+🔒 Hold Constant Locks
+- None (Free): Change Volume or Temperature, and watch Pressure update dynamically.
+- Volume (V): Locking volume disables the Width slider. Adjusting temperature dynamically modifies target pressure.
+- Temperature (T): Locking temperature disables temperature inputs. Adjusting pressure dynamically scales container width.
+- Pressure (P): Locking pressure disables pressure inputs. Adjusting temperature immediately shifts volume to maintain the target pressure.
+
+========================================
+
+=== Lac_Operon_Lab.html - Grade 12 - Molecular Basis of Inheritance ===
+
+📘 GENE REGULATION PROTOCOLS
+×
+Welcome to the Molecular Genetics Laboratory! Explore how bacteria turn genes on and off based on their environment.
+🎯 Core Controls
+- Lactose Slider: Controls the inducer. When lactose is high, watch it bind to the Red Repressor protein, changing its shape and forcing it to release its grip on the DNA Operator.
+- Glucose Slider: Glucose suppresses cAMP. When glucose is LOW, the cell produces cAMP (blue dots), which bind to the CAP protein. Active CAP binds to the DNA and acts as a massive booster for RNA Polymerase.
+- Transcription Rate: The ultimate goal! Watch the purple RNA Polymerase slide down the DNA to create mRNA strands. It is blocked by the Repressor, weak without CAP, and extremely fast when CAP is bound and the Repressor is gone!
+Acknowledge
+
+========================================
+
+=== Line_Plane_Intersection_Lab.html - Grade 12 - Three Dimensional Geometry ===
+
+📘 LINE & PLANE INTERSECTION PROTOCOLS
+×
+Welcome to the 3D Coordinate Geometry Laboratory! Analyze the spatial algebra governing line-plane intersections.
+🎯 Core Controls
+- Plane Sliders ($a, b, c, d$): Modify the normal vector coefficients to tilt the blue plane, and adjust $d$ to translate it through space.
+- Direction Sliders ($v_x, v_y, v_z$): Change the direction vector of the line to alter its orientation.
+- Base Point Sliders ($x_0, y_0, z_0$): Shift the anchor starting position of the line.
+- Camera Interactions: Click and drag inside the 3D canvas window to rotate your viewport perspective. Scroll to zoom in and out.
+Acknowledge
+
+========================================
+
+=== Linkage_CrossingOver_Lab.html - Grade 12 - Principles of Inheritance & Variation ===
+
+📘 LINKAGE & RECOMBINATION PROTOCOLS
+×
+Welcome to the Genetics Laboratory! Explore how distance affects the inheritance of linked genes.
+🎯 Core Controls
+- Gene Distance Slider: Adjust the physical distance between Gene A and Gene B on the chromosome. Notice how moving them further apart increases the probability of a chiasma forming between them!
+- Trigger Meiosis: Click the button to watch Prophase I. The inner sister chromatids will cross over. The final result splits into 4 separate haploid gametes (sperm/egg).
+- The 50% Rule: Notice that even at maximum distance (50 cM), the recombination frequency maxes out at 50%. This is because the outer two chromatids never participate in the crossover, ensuring at least 50% of the gametes are always "Parental".
+Acknowledge
+
+========================================
+
+=== Maxima_Minima_Lab.html - Grade 12 - Application of Derivatives ===
+
+📘 DERIVATIVE PROTOCOLS
+×
+Welcome to the Calculus Laboratory! Visualize the mechanics of finding peaks and valleys on a curve.
+🎯 Core Controls
+- Coefficient Sliders ($A, B, C, D$): Alter the shape of the polynomial. Notice how changing the $A$ term radically alters the "hills" of the function.
+- Analysis Point ($$): Slide this point along the curve. The yellow tangent line represents the first derivative (slope). Watch the telemetry update live as you move it!
+- Critical Points: Colored dots will appear automatically where the tangent is perfectly flat (slope = 0), identifying local maxima and minima.
+Acknowledge
+
+========================================
+
+=== memb.html - Grade 11 - Cell: The Unit of Life ===
+
+📘 CELLULAR MEMBRANE TRANSPORT - User Guide
+×
+Welcome to the Membrane Transport Virtual Lab! Analyze how molecules and ions traverse the selectively permeable cellular lipid bilayer.
+🎯 Simulation Modes
+- Simple Diffusion: Focuses on spontaneous crossing of small, nonpolar molecules ($O_2, CO_2$) down concentration gradients without protein assistance.
+- Facilitated: Solutes require specific channel proteins. Toggle the Glucose channel Open or Closed to analyze saturable carrier transport.
+- Active Transport: Uses metabolic energy (ATP) to pump ions ($Na^+, K^+$) against concentration gradients via electogenic cycles.
+- Playground Sandbox: Combines all mechanics. Experiment freely by adding solute species or modifying thermal levels.
+🔍 Operational Controls
+- Temperature Slider: Syncs with system kinetic energy to control particle velocities.
+- Concentration Dashboard: Provides a live count of particles Inside vs Outside the cytoplasm.
+
+========================================
+
+=== membrane.html - Grade 11 - Cell: The Unit of Life ===
+
+📘 CELLULAR MEMBRANE TRANSPORT - User Guide
+×
+Welcome to the Membrane Transport Virtual Lab! Analyze how molecules and ions traverse the selectively permeable cellular lipid bilayer.
+🎯 Simulation Modes
+- Simple Diffusion: Focuses on spontaneous crossing of small, nonpolar molecules ($O_2, CO_2$) down concentration gradients without protein assistance.
+- Facilitated: Solutes require specific channel proteins. Toggle the Glucose channel Open or Closed to analyze saturable carrier transport.
+- Active Transport: Uses metabolic energy (ATP) to pump ions ($Na^+, K^+$) against concentration gradients via electogenic cycles.
+- Playground Sandbox: Combines all mechanics. Experiment freely by adding solute species or modifying thermal levels.
+🔍 Operational Controls
+- Temperature Slider: Syncs with system kinetic energy to control particle velocities.
+- Concentration Dashboard: Provides a live count of particles Inside vs Outside the cytoplasm.
+
+========================================
+
+=== Mirror_Ray_Diagram_Lab.html - Grade 10 - Light - Reflection & Refraction ===
+
+📘 RAY OPTICS PROTOCOLS
+×
+Welcome to the Geometrical Optics Laboratory! Explore how spherical mirrors manipulate light rays to form images.
+🎯 Core Controls
+- Mirror Type: Switch between Concave (Converging, forms both real and virtual images) and Convex (Diverging, forms only virtual diminished images).
+- Object Distance Slider: Move the blue object arrow. Pay close attention to what happens in a Concave mirror as you cross the Center of Curvature ($C$) and the Focal Point ($F$)!
+- Ray Tracing: The simulator dynamically traces two standard rays: the Parallel Ray (reflects through Focus) and the Pole Ray (reflects symmetrically). Where they intersect is where the image forms!
+- Sign Convention: Notice that objects are on the left ($-$), so $u$ is always negative. Real images form on the left ($-v$), while virtual images form behind the mirror on the right ($+v$).
+Acknowledge
+
+========================================
+
+=== Molarity_Lab.html - Grade 11 - Some Basic Concepts of Chemistry ===
+
+📘 MOLARITY PROTOCOLS
+×
+Welcome to the Molarity & Concentration Virtual Laboratory! Explore the relationship between solute, solvent, and saturation limits.
+🎯 Core Controls
+- Select Solute: Choose different chemical compounds to see their unique colors and specific saturation points.
+- Adjust Parameters: Use the sliders to change the moles of solute added and the total volume of water.
+- Evaporation Engine: Click ▶ Evaporate to actively boil away the water. Watch how the volume drops, driving up the concentration until it hits the saturation ceiling!
+- Saturation Indicator: If you add too much solute or evaporate too much water, the excess solute will precipitate at the bottom of the beaker.
+Acknowledge
+
+========================================
+
+=== MoleConcept.html - Grade 11 - Some Basic Concepts of Chemistry ===
+
+📘 THE MOLE CONCEPT - User Guide
+×
+Welcome to the Mole Concept & Quantum Scaling Virtual Lab! Use this simulation to master the calculations bridging microscopic molecules and macroscopic masses.
+🎯 Core Panels
+- Visual Sandbox: Adjust the sample mass of various chemicals ($H_2O$, $CO_2$, $NaCl$, $O_2$, $H_2$) and swap zoom perspectives between macroscopic beaker views, floating molecular meshes, and single atomic shell grids.
+- The Dozen Analogy: Highlights equivalent scaling comparisons explaining Avogadro's massive numerical constant through sand grains, paper stacks, and cans.
+- Practice Quiz: Evaluates your calculation skills via five progressive stoichiometric challenges.
+🔍 Interactive Parameters
+- Mass Slider & Number Inputs: Modifying either control immediately updates the other, triggering immediate updates across all calculation cards.
+- Interactive Colliders: When zooming into the Molecular tier, drag your mouse inside the viewport canvas to trigger custom momentum impacts on floating molecule models!
+
+========================================
+
+=== Molecules (2).html - Grade 11 - Chemical Bonding & Molecular Structure ===
+
+📘 MOLECULAR GEOMETRY & VSEPR - User Guide
+×
+Welcome to the Molecular Shapes & VSEPR 3D Virtual Lab! Use this simulation to analyze coordinate orbital spatial geometries under electrostatic repulsions.
+🎯 Core Modes
+- Real Molecules: Select actual molecular systems (like $H_2O$, $CO_2$, $ClF_3$, or $XeF_4$) from the top toolbar select menu. View their experimental geometries, hybridized valence models, and scientific explanations.
+- Molecule Builder Sandbox: Click the Sandbox tab to build custom geometries. Dynamically add single, double, triple, or lone electron domains to watch VSEPR adapt in real-time up to the standard steric capacity limit of 6.
+🔍 Spatial Navigation
+- 3D Orbit Rotation: Simply click and drag anywhere inside the black 3D canvas viewport to rotate the molecule. Observe spatial repulsions from any direction.
+- Display Toggles: Toggle "Show Bond Angles", "Show Lone Pairs", and "Show Geometry Labels" dynamically using the top checkboxes to refine your analysis.
+
+========================================
+
+=== Molecules.html - Grade 11 - Chemical Bonding & Molecular Structure ===
+
+📘 MOLECULAR GEOMETRY & VSEPR - User Guide
+×
+Welcome to the Molecular Shapes & VSEPR 3D Virtual Lab! Use this simulation to analyze coordinate orbital spatial geometries under electrostatic repulsions.
+🎯 Core Modes
+- Real Molecules: Select actual molecular systems (like $H_2O$, $CO_2$, $ClF_3$, or $XeF_4$) from the top toolbar select menu. View their experimental geometries, hybridized valence models, and scientific explanations.
+- Molecule Builder Sandbox: Click the Sandbox tab to build custom geometries. Dynamically add single, double, triple, or lone electron domains to watch VSEPR adapt in real-time up to the standard steric capacity limit of 6.
+🔍 Spatial Navigation
+- 3D Orbit Rotation: Simply click and drag anywhere inside the black 3D canvas viewport to rotate the molecule. Observe spatial repulsions from any direction.
+- Display Toggles: Toggle "Show Bond Angles", "Show Lone Pairs", and "Show Geometry Labels" dynamically using the top checkboxes to refine your analysis.
+
+========================================
+
+=== Natural_Selection_Lab.html - Grade 12 - Evolution ===
+
+📘 NATURAL SELECTION PROTOCOLS
+×
+Welcome to the Evolution & Population Genetics Lab! Observe how environmental pressures physically alter the genetic makeup of a population over time.
+🎯 Core Controls
+- Environmental Background: Slide from a light birch forest to a soot-covered dark forest. Notice how the canvas background physically changes color.
+- Predator Pressure: This dictates how aggressively birds eat the moths that stand out. If set to 0%, no one is eaten, and Hardy-Weinberg equilibrium is perfectly maintained!
+- The Graph & Telemetry: As you step through generations, watch the real-time line graph plotting the frequency of the Dark Allele ($p$) versus the Light Allele ($q$). Notice how the physical phenotype frequencies (Dark vs Light) are fundamentally tied to the underlying $p^2$, $2pq$, and $q^2$ genotypes!
+Acknowledge
+
+========================================
+
+=== New-PHoto.html - Grade 11 - Structure of Atom ===
+
+📘 PHOTOELECTRIC EFFECT - User Guide
+×
+Explore particle-wave duality using this simulation:
+- Target cathode: Choose between different emitter metals.
+- Light sliders: Control wavelength ($\lambda$) and intensity. Notice how wavelength determines emission threshold and electron velocities, while intensity controls photo-flux rate.
+- Plate voltage: Control voltage to accelerate or retard electrons.
+- Live Graph Telemetry: Observe real-time data plotting.
+Get Started
+
+========================================
+
+=== nPhotoelectric.html - Grade 12 - Dual Nature of Radiation & Matter ===
+
+📘 PHOTOELECTRIC EFFECT - User Guide
+×
+Explore particle-wave duality using this simulation:
+- Target cathode: Choose between different emitter metals.
+- Light sliders: Control wavelength ($\lambda$) and intensity. Notice how wavelength determines emission threshold and electron velocities, while intensity controls photo-flux rate.
+- Plate voltage: Control voltage to accelerate or retard electrons.
+- Live Graph Telemetry: Observe real-time data plotting.
+Get Started
+
+========================================
+
+=== Nucleic_Acids_Lab.html - Grade 12 - Biomolecules ===
+
+📘 STRUCTURE COMPARATOR PROTOCOLS
+×
+Welcome to the Nucleic Acid Virtual Laboratory! Explore the critical differences between the molecules of life.
+🎯 Core Controls
+- Molecule Toggle: Switch the primary view between DNA and RNA using the top buttons. Watch the macrostructure completely rebuild itself!
+- Focus Level: Use the dropdown to activate the microscope.
+- Macro: View the entire helical polymer.
+- Sugar Backbone: Zooms into the pentose sugar. Pay attention to the 2' Carbon!
+- Unique Base: Zooms into the pyrimidine difference (Thymine vs. Uracil). Notice the Methyl group flag.
+- Camera Controls: Click and drag on the 3D viewport to orbit around the molecules manually.
+Acknowledge
+
+========================================
+
+=== Ohms_Law_Lab.html - Grade 10 - Electricity ===
+
+📘 OHM'S LAW LAB PROTOCOLS
+×
+Welcome to the Electromagnetism Laboratory! Explore the fundamental relationship between Voltage, Current, and Resistance.
+🎯 Core Controls
+- Voltage Slider: Increase the battery voltage to push more electrons through the circuit. Watch the physical speed of the electrons increase!
+- Resistance Slider: Increase the resistance to constrict the flow. You will see the current drop and the electrons slow down.
+- Test Component Toggle: Switch from an ideal Resistor to a Filament Bulb. Notice how the bulb gets hotter as voltage increases, which physically increases its resistance, causing the V-I graph to curve!
+- V-I Graph: Watch the live plotter in the bottom right corner. The slope of this line is directly tied to the resistance.
+Acknowledge
+
+========================================
+
+=== Parabola_Explorer.html - Grade 11 - Conic Sections ===
+
+📘 PARABOLA GEOMETRY PROTOCOLS
+×
+Welcome to the Focus-Directrix Laboratory! Explore the fundamental geometric property that defines a parabola.
+🎯 Core Controls
+- Focal Length ($a$): Adjust the position of the Focus and Directrix simultaneously. Watch the curve automatically widen or narrow to maintain the distance equality rule.
+- Point Position ($t$): Drag this slider to physically move point $P$ along the curve.
+- Distance Verification: Leave this toggled on to draw dynamic measurement lines proving that the distance to the Focus ($PF$) is always equal to the perpendicular distance to the Directrix ($PD$).
+Acknowledge
+
+========================================
+
+=== Pascals_Triangle_Lab.html - Grade 11 - Binomial Theorem ===
+
+📘 PASCAL'S TRIANGLE PROTOCOLS
+×
+Welcome to the Pascal's Triangle Laboratory! Explore the deepest connections in combinatorics and algebra.
+🎯 Core Controls
+- Row Slider ($n$): Adjust the active row. The active row is highlighted in blue, while the rows below it are dimmed out.
+- Combinatorics Toggle: Switch the nodes from displaying integers to displaying their formal $\binom{n}{k}$ mathematical notation.
+- Addition Tracing: Hover your mouse over any active node! If "Highlight Parent Additions" is checked, it will glow yellow and draw lines to its two parent nodes in the row above, proving the addition rule!
+- Binomial Expansion: Watch the mathematical equation at the bottom of the canvas automatically rewrite itself to perfectly match the coefficients of your selected row!
+Acknowledge
+
+========================================
+
+=== pendulum.html - Grade 11 - Oscillations ===
+
+📘 THE PENDULUM PROTOCOLS - User Guide
+×
+Welcome to the Simple Harmonic & Mechanical Energy Virtual Laboratory! Explore swing dynamics, conservation waves, and multi-component vector actions.
+🎯 Core Functions
+- Drag and Release Bob: Click or touch the **Red Bob** directly inside the Physics Arena, drag it to any displacement angle, and let go to swing!
+- Parameter Syncing: Adjust Length ($L$), Gravity ($g$), Damping ($b$), and Mass ($m$) synchronously using sliders or manual numeric inputs.
+- Gravity Fields Presets: Instantly switch between Earth, Moon, or Jupiter environments to observe period changes.
+- Dual Viewport Visualizer: Toggle between **Physics Arena** (pendulum motion with active vector paths) and **Energy Waves** (real-time scrolling KE, PE, and Total mechanical energy trends).
+📊 Vector Displays
+- Forces acting: Displays Gravity ($mg$), Tension ($T$), and net restoring force ($F_{net}$) with textbook variable labels.
+- Acceleration Components: Overlays centripetal ($a_c$) and tangential ($a_t$) acceleration vector arrows.
+- Velocity Vector: Traces the instantaneous tangential velocity arrow ($v$).
+Get Started
+
+========================================
+
+=== pH_Meter_Lab.html - Grade 10 - Acids, Bases & Salts ===
+
+📘 pH & INDICATOR PROTOCOLS
+×
+Welcome to the Colorimetry & pH Laboratory! Explore the logarithmic scale of acidity.
+🎯 Core Controls
+- Test Solutions: Use the top dropdown to swap between everyday liquids. Watch the pH meter calculate the exact value and the solution physically change color based on the active indicator.
+- Manual pH Slider: Want to test the exact transition point of an indicator? Grab the manual slider and sweep it from 0 to 14!
+- Indicators & The Gradient Bar: Different indicators are useful for different tasks. Notice the gradient bar at the bottom of the canvasit provides a map of the current indicator's color profile across all 14 pH levels.
+- Telemetry Panel: Because pH is logarithmic ($-\log[H^+]$), a drop from pH 6 to pH 5 means the $[H^+]$ concentration has increased by a factor of 10! Watch the scientific notation update live.
+Acknowledge
+
+========================================
+
+=== Photosynthesis_Lab.html - Grade 11 - Photosynthesis in Higher Plants ===
+
+📘 PHOTOSYNTHESIS PROTOCOLS
+×
+Welcome to the Biochemistry Laboratory! Discover how plants convert sunlight and air into energy.
+🎯 Core Controls
+- Environment Presets: Quickly switch between Optimal conditions, Drought (no water), and Night time (no light).
+- Input Sliders: Manually adjust Light, Water, and Carbon Dioxide levels. Notice how a lack of water stops oxygen production, and a lack of light stops everything!
+- The Energy Pool: The Calvin Cycle (right side) depends on the ATP/NADPH generated by the Thylakoids (left side). If you turn off the light, watch the energy pool drain until sugar production halts completely.
+Acknowledge
+
+========================================
+
+=== Phytohormone_Lab.html - Grade 11 - Plant Growth & Development ===
+
+📘 PHYTOHORMONE PROTOCOLS
+×
+Welcome to the Botanical Laboratory! Discover how chemical signals shape physical plant architecture.
+🎯 Core Controls
+- Hormone Sliders: Adjust the levels of the 5 major phytohormones. The plant will dynamically redraw itself based on the competing chemical ratios.
+- Auxin vs Cytokinin: Watch how high Auxin creates a tall, single-stem plant with deep roots. Raise Cytokinin to break this dominance and force wide lateral branching!
+- Ethylene & ABA: Increase Ethylene to watch the fruit turn red and the leaves begin to drop. Increase ABA to simulate stress, halting growth and stunting the plant.
+Acknowledge
+
+========================================
+
+=== Plant_Tissue_Lab.html - Grade 11 - Anatomy of Flowering Plants ===
+
+📘 TISSUE VIEWER PROTOCOLS
+×
+Welcome to the Botanical Anatomy Laboratory! Explore the internal cross-sections of plant organs.
+🎯 Core Controls
+- Specimen Selector: Instantly swap between the four major vascular cross-sections. Watch the central structural geometry change entirely between roots and stems.
+- Tissue Isolators: Check and uncheck specific tissues to isolate their locations. Non-applicable tissues (like Pith in a Dicot Root) will be automatically disabled.
+- Visual Features: Notice the "monkey face" vascular bundles in Monocot stems, the solid star-shaped Xylem core in Dicot roots, and the distinct waterproof Endodermis ring only present in roots!
+Acknowledge
+
+========================================
+
+=== Projectile.html - Grade 11 - Motion in a Plane ===
+
+📘 PROJECTILE MOTION - User Guide
+×
+Welcome to the Interactive Projectile Kinematics Laboratory! Explore the flight physics, aerodynamics, and vector visualization of falling objects.
+🎯 Core Controls
+- Fire Cannon Button: Launches a projectile based on current parameter controls.
+- Clear Paths Button: Clears all rendered curves, dots, and telemetry indicators.
+- Parameter Syncing: Use either the range slider or manual numeric input box to adjust Launch Height ($h$), Launch Angle ($\theta$), and Initial Velocity ($v_0$) synchronously.
+- Enable Air Resistance: Add non-linear fluid drag modeled on dynamic parameters (Mass, Diameter, Drag Coefficient) and fluid density.
+🔍 Canvas & Interactive Viewport
+- Camera Zoom & Pan: Zoom in/out via the toolbar buttons, or **click and drag the canvas background** to pan horizontally or vertically! Recenter easily with the reset camera button.
+- Tape Measure: Toggle the ruler, then drag the start (orange square) and end (red crosshairs) to measure exact physical distances and angles.
+- Inspect Tool: Probe specific telemetry details by dragging the inspector crosshairs near any PhET trajectory milestone.
+Get Started
+
+========================================
+
+=== Prokaryote_Eukaryote_Lab.html - Grade 11 - Cell Structure & Function ===
+
+📘 CELL COMPARATOR PROTOCOLS
+×
+Welcome to the Cellular Biology Laboratory! Compare the fundamental structures of life.
+🎯 Core Controls
+- Cell Type Dropdown: Instantly morph the canvas between a simple Bacterium, a complex Animal Cell, and a rigid Plant cell.
+- Component Isolator: Use the checkboxes to strip away specific parts of the cell. Notice how toggling "Membrane Organelles" removes mitochondria and chloroplasts from Eukaryotes, but doesn't affect Prokaryotes because they never had them!
+- Telemetry Check: Observe the right-hand panel. See how the ribosome type shifts from 70S to 80S, and the DNA structure changes from Circular to Linear.
+Acknowledge
+
+========================================
+
+=== Quantum_orbitals.html - Grade 11 - Structure of Atom ===
+
+📘 2D ORBITAL PROTOCOLS
+×
+Welcome to the 2D Quantum Number Virtual Laboratory! Explore the probability densities of atomic orbitals precisely mapped onto 2D slicing planes.
+- Principal (n): Defines the energy shell (Size).
+- Azimuthal (l): Defines the subshell shape (s, p, d, f). Note that $l$ is strictly capped at $n-1$.
+- Magnetic (m_l): Defines orientation. Restricted from $-l$ to $+l$.
+- Slicing Plane: If an orbital appears completely dark, you are likely viewing it cross-sectioned through one of its angular nodes! Change the Slicing Plane to reveal the lobes.
+Acknowledge
+
+========================================
+
+=== Reaction_Classifier_Lab.html - Grade 10 - Chemical Reactions & Equations ===
+
+📘 CLASSIFIER PROTOCOLS
+×
+Welcome to the Molecular Dynamics Laboratory! Observe the physical mechanisms underlying the 5 major types of chemical reactions.
+🎯 Core Controls
+- Reaction Matrix: Select from the 5 classic reaction types. The mathematical stoichiometry on the left will update instantly.
+- Ignite Reaction: Click the 3D button to trigger the physics engine. Watch the reactant molecules violently collide, break their bonds, and re-arrange into entirely new products!
+- Live 3D Telemetry: Keep an eye on the dark, neon-lit dashboard on the right. It dynamically analyzes the reaction to classify its type, its thermodynamic energy profile (Exo/Endothermic), and whether electrons are transferred (Redox).
+Acknowledge & Start
+
+========================================
+
+=== Reactivity_Series_Lab.html - Grade 10 - Metals & Non-Metals ===
+
+📘 REACTIVITY SERIES PROTOCOLS
+×
+Welcome to the Inorganic Chemistry Laboratory! Observe electron transfer through single displacement reactions.
+🎯 Core Controls
+- Setup the Beaker: Select a solid metal strip and an aqueous salt solution from the left panels. Notice their initial colors.
+- Initiate Reaction: Click "Drop Metal". If the solid metal is higher on the reactivity series than the metal in the solution, a reaction will occur!
+- Visual Evidence: Watch the canvas! If a reaction occurs, the solid metal will dissolve (oxidize), and the solution metal will precipitate out as a colored coating on the strip. Simultaneously, the solution color will change as the new ions dissolve!
+- Chemical Telemetry: The right panel will break down the exact balanced chemical equation and split it into its Oxidation and Reduction half-reactions.
+Acknowledge
+
+========================================
+
+=== Refraction.html - Grade 10 - Light - Reflection & Refraction ===
+
+📘 PRISM REFRACTION PROTOCOLS
+×
+Welcome to the Optical Laboratory! Analyze Snell's Law and chromatic dispersion through a glass prism.
+🎯 Core Controls
+- Material Preset: Select predefined materials. Notice how Diamond ($n=2.42$) easily traps light via TIR compared to Water.
+- Angle of Incidence ($i$): Change the entry angle of the laser. Find the point where $i \approx e$ to observe the Minimum Deviation ($D_m$).
+- White Light Dispersion: Toggle this on to simulate what happens when all wavelengths of visible light enter the prism simultaneously, fanning out into a rainbow!
+Acknowledge
+
+========================================
+
+=== relative_velocity.html - Grade 11 - Motion in a Plane ===
+
+📘 RIVER CROSSING PROTOCOLS
+×
+Welcome to the Relative Velocity Virtual Laboratory! Explore how independent velocity vectors combine to produce actual motion paths.
+🎯 Core Controls
+- Parameter Syncing: Synced sliders or manual inputs control River Velocity ($v_r$), Boat Velocity ($v_b$), and Aim Direction ($\theta$).
+- Aim Direction: 0° points straight across (North). Negative angles point upstream (West), and positive angles point downstream (East).
+- Modern Boat Zoom: Use the new Zoom controls in the top-right of the canvas to scale the simulation up or down.
+- Live Telemetry: Track exact drift distance and resultant ground speed in the dark neumorphic dashboard as the boat navigates the current.
+Acknowledge
+
+========================================
+
+=== RLC_Phasor_Lab.html - Grade 12 - Alternating Current ===
+
+📘 RLC PHASOR PROTOCOLS
+×
+Welcome to the AC Circuit Phasor Laboratory! Visualize the phase differences caused by reactive components.
+🎯 Core Controls
+- The Sliders: Adjust Resistance ($R$), Inductance ($L$), Capacitance ($C$), and AC Frequency ($f$).
+- Resonance: Try to match the AC frequency ($f$) to the natural Resonance Frequency ($f_0$) displayed on the dashboard. Watch the phase angle drop to zero and the current spike!
+- Phasor Diagram (Top): Visualizes the signals as rotating vectors. Use the "Freeze Rotation" toggle to pause them and examine the 90° relationships between $V_R$, $V_L$, and $V_C$.
+- Waveform Graph (Bottom): Traces the actual sinusoidal time-domain signals. Notice how the peaks of the Inductor and Capacitor voltages are out of sync with the Current.
+Acknowledge
+
+========================================
+
+=== Series_Parallel_Lab.html - Grade 10 - Electricity ===
+
+📘 CIRCUIT TOPOLOGY PROTOCOLS
+×
+Welcome to the Electrodynamics Laboratory! Explore the fundamental laws governing simple DC circuits.
+🎯 Core Controls
+- Circuit Mode Toggle: Instantly switch between Series and Parallel. Watch the canvas re-wire itself! The MathJax equations on the left will automatically update to reflect the new topology.
+- Series Dynamics: When in Series, increase $R_1$. Notice how the total Resistance increases, the total Current drops, and $R_1$ "hogs" more of the voltage drop compared to $R_2$.
+- Parallel Dynamics: Switch to Parallel. Notice that the total equivalent resistance is actually *lower* than both individual resistors! Watch the electrons split at the junction: the path with the lower resistance will physically show faster electron flow.
+Acknowledge
+
+========================================
+
+=== sets.html - Grade 11 - Sets ===
+
+📘 SET THEORY - User Guide
+×
+Welcome to the Alexandria Sets Theory Virtual Laboratory! Explore chaotic searching, interactive sorting partitions, and formal roster definitions.
+🎯 Core Phases
+- Phase 1 (Scattered Chaos): Start searching the chaotic visualizer floor. Try to click the target book **Calculus Vol. I** as fast as you can. Notice how finding objects in disorganized sets is highly inefficient!
+- Phase 2 (Organizing Sets): Group the books into distinct collections (Math, Science, Literature) by clicking a card in the unsorted tray and then clicking the target shelf to drop it! Sorting builds mathematical sets.
+- Phase 3 (Mathematical Formalism): Inspect roster mathematical forms of your collections, participate in set membership quizzes, and generate customized sets mathematically!
+Get Started
+
+========================================
+
+=== Slope_Field_Lab.html - Grade 12 - Differential Equations ===
+
+📘 ODE PLOTTER PROTOCOLS
+×
+Welcome to the Differential Equations Laboratory! Visualize the hidden currents of mathematics.
+🎯 Core Controls
+- Equation Dropdown: Select a classic differential equation. Notice how $y' = -/y$ creates a swirling whirlpool of circular orbits!
+- Initial Condition Sliders: Adjust $x_0$ and $y_0$ to drop a point into the vector field. The red solution curve will dynamically recalculate using RK4 integration to trace the flow forward and backward in time.
+- Canvas Interaction: You can click anywhere directly on the dark canvas to instantly move the initial condition point to that location!
+Acknowledge
+
+========================================
+
+=== SN1_SN2_Mechanisms.html - Grade 12 - Haloalkanes & Haloarenes ===
+
+📘 REACTION KINETICS PROTOCOLS
+×
+Welcome to the Nucleophilic Substitution Virtual Laboratory! Explore the competitive battle between Sₙ1 and Sₙ2 pathways.
+🎯 Core Controls
+- Substrate: Alter the steric hindrance. Methyl and 1° favor Sₙ2. 3° forces Sₙ1.
+- Nucleophile & Solvent: Tweaking these shifts the balance for Secondary (2°) substrates. Strong Nu/Aprotic pushes Sₙ2. Weak Nu/Protic pushes Sₙ1.
+- Stereochemical Rendering: Notice the proper 3D tetrahedral geometry! Solid lines are in-plane, Thick Wedges point toward you, and Dashes point away.
+- Animation: Watch the physical difference! Sₙ2 flips the molecule like an umbrella in one fluid step (Walden Inversion). Sₙ1 breaks apart, forms a flat $sp^2$ intermediate, and attacks.
+Acknowledge
+
+========================================
+
+=== Titration_Lab.html - Grade 10 - Acids, Bases & Salts ===
+
+📘 TITRATION PROTOCOLS
+×
+Welcome to the Analytical Chemistry Laboratory! Master the delicate art of volumetric analysis.
+🎯 Core Controls
+- Analyte Selection: Choose between a Strong Acid (HCl) or a Weak Acid (Acetic Acid). Notice how the starting pH and the shape of the titration curve fundamentally change!
+- Burette Stopcock Valve: Drag the red slider to open the valve and drop Base (NaOH) into the acid. Use a slow drop rate when you get close to 25 mL, because the pH will spike wildly!
+- Visual Endpoint: The liquid in the flask will change color depending on your chosen Indicator. You must choose an indicator whose color-change range perfectly catches the vertical jump of the Equivalence Point.
+- Live Graph: The Telemetry panel constantly plots your progress. Watch the classic "S" curve of the titration form in real-time.
+Acknowledge
+
+========================================
+
+=== Vector_Operations_Lab.html - Grade 12 - Vector Algebra ===
+
+📘 VECTOR OPERATIONS PROTOCOLS
+×
+Welcome to the Linear Algebra Laboratory! Visualize the mechanics of vectors in 3D space.
+🎯 Core Controls
+- Vector Sliders: Adjust the individual $,y,z$ components of Vectors $\vec{u}$ and $\vec{v}$.
+- Operation Dropdown:
+- Addition: Draws the resultant vector and completing parallelogram.
+- Dot Product: Draws a dashed line showing the geometric projection.
+- Cross Product: Generates the orthogonal vector and shades the spanning area.
+- Camera Controls: Click and drag on the 3D canvas to orbit around the vectors. Scroll to zoom.
+Acknowledge
+
+========================================
+
+=== vector-addition-equations_all.html - Grade 11 - Neuron Dynamics ===
+
+📘 ELECTROPHYSIOLOGY PROTOCOLS - User Guide
+×
+Welcome to the Neuron Action Potential & Electrophysiology Virtual Laboratory! Explore cellular ion flows, channel gates, and refractory balance.
+🎯 Core Operations
+- Inject Stimulus Current: Fires a depolarizing current pulse based on selected intensity ($I_{stim}$).
+- Parameter Syncing: Adjust Stimulus Intensity synchronously using either the slider or manual input box.
+- Myelin Sheath Configuration: Toggle between Unmyelinated and Myelinated axons. Myelin isolates the internode, decreasing capacitance and forcing high-speed saltatory jumps.
+- Tabbed Viewports: Toggle between **Axon Chamber** (shows phospholipid bilayer gates, and ionic particles flows) and **Oscilloscope Plot** (live action potential trace curve).
+Get Started
+
+========================================
+
+=== Vertical_Spring_Energy.html - Grade 11 - Oscillations ===
+
+📘 VERTICAL SPRING PROTOCOLS
+×
+Welcome to the Conservation of Mechanical Energy Virtual Laboratory! Explore the dynamic exchange between kinetic, gravitational, and elastic potential energy.
+🎯 Core Controls
+- Drag the Mass: Click and drag the mass block vertically to set its initial displacement, then let go to watch it oscillate!
+- Parameter Syncing: Adjust Mass ($m$), Spring Constant ($k$), and Damping ($b$) to see their immediate effects on the system's equilibrium.
+- Live Energy Bars: Watch the exact real-time conversion of Total Mechanical Energy ($ME$) between Kinetic ($K$), Gravitational ($U_g$), and Elastic ($U_s$) states.
+Acknowledge
+
+========================================
+
+=== Virus_Bacteria_Lab.html - Grade 11 - Biological Classification ===
+
+📘 PATHOGEN COMPARATOR PROTOCOLS
+×
+Welcome to the Microbiology Laboratory! Explore the stark structural differences between living bacteria and viral agents.
+🎯 Core Controls
+- Scale Zoom Lens: This is the most important tool. At "Normalized" (100%), both pathogens are drawn side-by-side so you can see their internal parts. Slide it to 0% to see their True Relative Size. Notice how the virus becomes a tiny, barely-visible speck!
+- Anatomy Isolator: Toggle specific biological structures on and off. Notice how unchecking "Ribosomes" removes them from the bacteria, but nothing changes on the virus (because viruses don't have ribosomes!).
+- Medical Treatment: Apply an Antibiotic. The simulator will show the bacterial cell wall rupturing while the virus remains completely untouched.
+Acknowledge
+
+========================================
+
+=== Vision_Defects_Lab.html - Grade 10 - Human Eye & Colour World ===
+
+📘 VISION OPTICS PROTOCOLS
+×
+Welcome to the Optics & Human Anatomy Laboratory! Treat and correct structural eye defects using physical lenses.
+🎯 Core Controls
+- Condition Selector: Choose between a Normal Eye, a Myopic Eye (too long, focuses early), or a Hypermetropic Eye (too short, focuses late).
+- Object Distance: Slide the tree closer to or further from the eye. Notice that a Myopic eye can actually see near objects perfectly well, but completely blurs distant objects!
+- Lens Power: Act as the optometrist. Dial in a negative (Concave) or positive (Convex) diopter value to physically bend the incoming light rays. Your goal is to get the red rays to intersect exactly on the back wall of the eye (the Retina).
+- Simulated Retina View: Watch the live HUD in the bottom right. The blurriness physically corresponds to the mathematical distance between the focal point and the retina!
+Acknowledge
+
+========================================
+
+=== Wave_Interference_Lab.html - Grade 11 - Waves ===
+
+📘 WAVE INTERFERENCE - User Guide
+×
+Welcome to the Wave Interference & Superposition Virtual Lab! Use this simulation to explore standard physical superposition principles.
+🎯 Core Functions
+- Ripple Tank Mode: Explore two-point source waves. Drag both sources and watch crests (cyan) and troughs (rose) overlap to form constructive beams and node lines.
+- Double Slit Mode: Observe Thomas Young's classic configuration. Incident plane waves arrive at a solid barrier, radiating through two slits as coherent secondary spherical wavelets.
+- Active ANC Mode: Standard acoustic noise cancellation. Toggle the ANC system to play an inverted "anti-noise" wave, which cancels out engine noise to create a zone of silence at the listener's ear.
+- Draggable Probe: Move the yellow target anywhere on the canvas to inspect precise phase calculations, path difference values, and local interference states.
+Get Started
+
+========================================
+
+=== Young_Double_Slit.html - Grade 12 - Wave Optics ===
+
+📘 YOUNG'S DOUBLE SLIT - User Guide
+×
+Welcome to the Young's Double Slit Interference Virtual Lab! Explore wave optics with these interactive controls:
+🎯 Core Controls
+- Wavelength Slider: Adjust the light color (from blue 400nm to red 700nm) to see how wavelength alters the fringe separation.
+- Slit Spacing Slider: Adjust the separation $d$ between S1 and S2.
+- Drag Screens: Drag Screen A or B horizontally on the canvas to adjust the screen-to-slit propagation distance $D$.
+- Spot Measurement Probe: Hover your mouse cursor over the canvas to dynamically view local path difference, phase difference, and alignment state.
+Get Started
+
+========================================
+

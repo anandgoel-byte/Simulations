@@ -1,0 +1,154 @@
+// changes in the HTML structure to accommodate the quiz questions
+ <div class="space-y-3 pb-4">
+  
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 1</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q1-text">
+        Question 1
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+      <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 2</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q2-text">
+        Question 2
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+      <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 3</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q3-text">
+        Question 3
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+      <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+    <div class="space-y-2">
+      <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 4</span>
+      <h4 class="text-xs font-bold text-slate-800 leading-snug" id="q4-text">
+        Question 4
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+      <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+</div>
+
+ // changes in the JS structure to accommodate the quiz questions(ADD AT THE TOP OF SCRIPT)
+  
+ const appState = {
+  vivaScore: 0,
+  answers: { q1: null, q2: null, q3: null, q4: null }
+};
+
+const vivaData = {
+  q1: {
+    question: "Your question text here?",
+    options: [
+      { text: "Incorrect Option A", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Correct Option B", isCorrect: true, exp: "Correct! Explanation of why this is right." },
+      { text: "Incorrect Option C", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Incorrect Option D", isCorrect: false, exp: "Explanation of why this is wrong." }
+    ]
+  },
+  q2: {
+    question: "Your question text here?",
+    options: [
+      { text: "Incorrect Option A", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Correct Option B", isCorrect: true, exp: "Correct! Explanation of why this is right." },
+      { text: "Incorrect Option C", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Incorrect Option D", isCorrect: false, exp: "Explanation of why this is wrong." }
+    ]
+  },
+  q3: {
+    question: "Your question text here?",
+    options: [
+      { text: "Incorrect Option A", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Correct Option B", isCorrect: true, exp: "Correct! Explanation of why this is right." },
+      { text: "Incorrect Option C", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Incorrect Option D", isCorrect: false, exp: "Explanation of why this is wrong." }
+    ]
+  },
+  q4: {
+    question: "Your question text here?",
+    options: [
+      { text: "Incorrect Option A", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Correct Option B", isCorrect: true, exp: "Correct! Explanation of why this is right." },
+      { text: "Incorrect Option C", isCorrect: false, exp: "Explanation of why this is wrong." },
+      { text: "Incorrect Option D", isCorrect: false, exp: "Explanation of why this is wrong." }
+    ]
+  }
+};
+    
+
+// --- 2. VIVA MCQS RENDERING ENGINE ---
+function renderQuestions() {
+  const scoreLabel = document.getElementById('viva-score');
+  
+  Object.keys(vivaData).forEach(qKey => {
+    const data = vivaData[qKey];
+    const optionsContainer = document.getElementById(`${qKey}-options`);
+    const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+    
+    if (!optionsContainer || !feedbackContainer) return; 
+    
+    optionsContainer.innerHTML = ''; // Clear container
+    
+    data.options.forEach((opt, idx) => {
+      // Build Button
+      const btn = document.createElement('button');
+      btn.className = "text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white hover:bg-slate-50 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+      
+      // Add A, B, C, D labels
+      let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+      btn.innerHTML = `<span class="font-extrabold text-indigo-500 w-4">${letter}</span> <span>${opt.text}</span>`;
+      
+      // Click Logic
+      btn.addEventListener('click', () => {
+        if (appState.answers[qKey] !== null) return; // Prevent double answering
+        
+        appState.answers[qKey] = idx;
+        if (opt.isCorrect) appState.vivaScore++;
+        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+        
+        // Style all buttons post-click
+        const buttons = optionsContainer.querySelectorAll('button');
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+          b.classList.add('cursor-not-allowed', 'shadow-none');
+          
+          if (appState.answers[qKey] === i) {
+            // The one the user clicked
+            if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+            else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+          } else if (data.options[i].isCorrect) {
+            // Highlight the correct answer faintly if they got it wrong
+            b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+          } else {
+            // Fade out the rest
+            b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+          }
+        });
+        
+        // Show Feedback
+        feedbackContainer.textContent = opt.exp;
+        feedbackContainer.classList.remove('hidden');
+      });
+      optionsContainer.appendChild(btn);
+    });
+  });
+}

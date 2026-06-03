@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avg Speed vs Avg Velocity: CyberGrid Lab</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Sci-Fi CyberGrid Background */
+    .lab-stage {
+      background-color: #020617 !important; /* Deepest black */
+      background-image: 
+        linear-gradient(rgba(6, 182, 212, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.15) 1px, transparent 1px);
+      background-size: 50px 50px;
+      box-shadow: inset 0 0 80px rgba(0,0,0,1);
+    }
+
+    /* Neon Text Gradients */
+    .grad-pink { background: linear-gradient(to right, #ec4899, #f43f5e); -webkit-background-clip: text; color: transparent; }
+    .grad-cyan { background: linear-gradient(to right, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent; }
+    .grad-emerald { background: linear-gradient(to right, #10b981, #34d399); -webkit-background-clip: text; color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-8 object-contain" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Avg Speed vs Avg Velocity</h1>
+          <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">CyberGrid Drone Navigation Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+          <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Network Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+          <span>🛸</span> Launch Drone
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
+          <span>⏸</span> Pause
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
+          <span>🔄</span> Abort
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-displacement" checked class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
+          <span>Show Displacement Vector</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block mb-2">Select Drone Flight Path</span>
+          <select id="select-path" class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm">
+            <option value="manhattan" selected>Manhattan Grid (City Blocks)</option>
+            <option value="perimeter">Perimeter Defense (Square)</option>
+            <option value="scan">Sector Scan (Zig-Zag)</option>
+            <option value="linear">Direct Intercept (Straight)</option>
+          </select>
+        </div>
+
+        <div class="space-y-3">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block mb-2">Live Flight Telemetry</span>
+          
+          <div class="flex flex-col gap-2">
+            
+            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+              <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span> Average Speed
+              </div>
+              <div class="text-2xl font-bold font-mono tracking-widest grad-pink uppercase drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]" id="tel-speed">0.0 m/s</div>
+            </div>
+            
+            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+              <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span> Avg Velocity
+              </div>
+              <div class="text-2xl font-bold font-mono tracking-widest grad-cyan uppercase drop-shadow-[0_0_8px_rgba(6,184,212,0.4)]" id="tel-vel">0.0 m/s</div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mt-1">
+              <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Distance</div>
+                <div class="text-lg font-bold font-mono tracking-widest text-pink-400" id="tel-dist">0.0m</div>
+              </div>
+              <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Displacement</div>
+                <div class="text-lg font-bold font-mono tracking-widest text-cyan-400" id="tel-disp">0.0m</div>
+              </div>
+              <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Time</div>
+                <div class="text-lg font-bold font-mono tracking-widest text-emerald-400" id="tel-time">0.0s</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200">
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-5 shadow-sm space-y-4">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Kinematic Algorithms</span>
+            <div class="space-y-3">
+              
+              <div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-pink-500">
+                <div class="flex justify-between items-center mb-1.5">
+                  <span class="text-pink-400 font-bold text-xs uppercase tracking-wider">Avg Speed</span>
+                  <span class="bg-pink-500/20 text-pink-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-pink-500/30">Scalar</span>
+                </div>
+                <span class="text-xs font-medium text-slate-300 leading-relaxed block">
+                  The total distance covered by the moving object divided by the total elapsed time.
+                </span>
+                <div class="mt-2 text-xs text-pink-300 bg-slate-950/60 p-2.5 rounded border border-pink-500/10 text-center font-mono">
+                  $$v_{\text{avg}} = \frac{\text{Total Distance}}{\text{Total Time}}$$
+                </div>
+              </div>
+              
+              <div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-cyan-500">
+                <div class="flex justify-between items-center mb-1.5">
+                  <span class="text-cyan-400 font-bold text-xs uppercase tracking-wider">Avg Velocity</span>
+                  <span class="bg-cyan-500/20 text-cyan-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-cyan-500/30">Vector</span>
+                </div>
+                <span class="text-xs font-medium text-slate-300 leading-relaxed block">
+                  The net displacement of the object divided by the total time. Depends on the direct change in position.
+                </span>
+                <div class="mt-2 text-xs text-cyan-300 bg-slate-950/60 p-2.5 rounded border border-cyan-500/10 text-center font-mono">
+                  $$\vec{v}_{\text{avg}} = \frac{\text{Net Displacement}}{\text{Total Time}}$$
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]">
+        <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-lg flex items-center gap-2 pointer-events-none select-none z-20">
+          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+          <span id="simStatusText" class="text-[10px] font-extrabold text-white uppercase tracking-wider">Drone Standby</span>
+        </div>
+
+        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+            <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
+            <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
+            <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessment</h2>
+            <span id="viva-score" class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+            <div class="space-y-2">
+              <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2011]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-pink-800 group-hover:text-sm" id="q1-text">
+                A particle covers half of its total distance with speed $v_1$ and the rest half distance with speed $v_2$. Its average speed during the complete journey is:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+            <div class="space-y-2">
+              <span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE Class 9]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-cyan-800 group-hover:text-sm" id="q2-text">
+                A drone flies from A to B at 20 m/s and returns from B to A at 30 m/s. The average speed and average velocity of the drone for the whole journey are:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main 2021]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-emerald-800 group-hover:text-sm" id="q3-text">
+                A drone travels along a straight line for half the TIME with velocity $v_1$ and the second half TIME with velocity $v_2$. The mean velocity $v$ is given by:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2019]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-amber-800 group-hover:text-sm" id="q4-text">
+                An object travels 16m in 4s and then another 16m in 2s. What is the average speed of the object?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span>📘</span> CYBERGRID PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Average Speed vs Average Velocity Cyber Lab</strong>! Watch how the passage of time affects scalar and vector rates differently across a 3D city grid.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Select Drive Route</strong>: Try the "Perimeter Defense" route. Notice how Average Speed remains steady, but Average Velocity plummets to 0 m/s as the drone returns to the launch pad!</li>
+            <li><strong>Animation</strong>: Click "Launch Drone" to watch the 3D drone fly between the server pillars. The <strong>Neon Pink Line</strong> traces Distance. The <strong>Neon Cyan Arrow</strong> tracks Displacement.</li>
+            <li><strong>Formulas in Action</strong>: Both metrics divide by Total Time, but Speed uses Path Length while Velocity uses the straight-line Displacement Vector.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+          Initialize Systems
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        options: [
+          { text: "$\\frac{v_1 + v_2}{2}$", isCorrect: false, exp: "Incorrect. This formula is only used if the TIME intervals are equal, not the distance intervals." },
+          { text: "$\\frac{2v_1 v_2}{v_1 + v_2}$", isCorrect: true, exp: "Correct! Total Distance = $2d$. Time 1 = $d/v_1$, Time 2 = $d/v_2$. Average Speed = Total Dist / Total Time = $2d / (d/v_1 + d/v_2)$. Canceling $d$ gives $\\frac{2v_1 v_2}{v_1 + v_2}$." },
+          { text: "$\\frac{v_1 v_2}{v_1 + v_2}$", isCorrect: false, exp: "Incorrect." },
+          { text: "$\\sqrt{v_1 v_2}$", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        options: [
+          { text: "25 m/s & 0 m/s", isCorrect: false, exp: "Incorrect. You cannot simply average the two speeds if the time spent at each speed is different." },
+          { text: "24 m/s & 0 m/s", isCorrect: true, exp: "Correct! The drone returns to A, so Net Displacement = 0. Thus Average Velocity = 0. For Average Speed, use the formula $\\frac{2v_1 v_2}{v_1 + v_2} = \\frac{2 \\times 20 \\times 30}{20 + 30} = \\frac{1200}{50} = 24$ m/s." },
+          { text: "0 m/s & 24 m/s", isCorrect: false, exp: "Incorrect. The concepts are flipped." },
+          { text: "24 m/s & 25 m/s", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        options: [
+          { text: "$\\frac{2v_1 v_2}{v_1 + v_2}$", isCorrect: false, exp: "Incorrect. That is the formula for equal distance intervals." },
+          { text: "$\\frac{v_1 + v_2}{2}$", isCorrect: true, exp: "Correct! If time intervals are equal ($t_1 = t_2 = t$), then $d_1 = v_1 t$ and $d_2 = v_2 t$. Average velocity = $(v_1 t + v_2 t) / 2t = (v_1 + v_2) / 2$." },
+          { text: "$\\sqrt{v_1 v_2}$", isCorrect: false, exp: "Incorrect." },
+          { text: "$v_1 + v_2$", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        options: [
+          { text: "4.0 m/s", isCorrect: false, exp: "Incorrect." },
+          { text: "5.33 m/s", isCorrect: true, exp: "Correct! Average Speed = Total Distance / Total Time. Total Distance = 16m + 16m = 32m. Total Time = 4s + 2s = 6s. Average Speed = 32 / 6 = 5.33 m/s." },
+          { text: "8.0 m/s", isCorrect: false, exp: "Incorrect." },
+          { text: "6.0 m/s", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+// --- VIVA MCQS RENDERING ENGINE ---
+function renderQuestions() {
+  const scoreLabel = document.getElementById('viva-score');
+  
+  Object.keys(vivaData).forEach(qKey => {
+    const data = vivaData[qKey];
+    const optionsContainer = document.getElementById(`${qKey}-options`);
+    const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+    
+    if (!optionsContainer || !feedbackContainer) return; 
+    optionsContainer.innerHTML = ''; 
+    
+    data.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = "relative text-left p-3 rounded-lg text-[11px] hover:text-xs transition-all duration-300 transform hover:scale-[1.08] hover:-translate-y-1.5 border leading-snug font-bold bg-white hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-xl hover:z-10 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+      
+      let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+      // The math text is injected here
+      btn.innerHTML = `<span class="font-extrabold text-cyan-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+      
+      btn.addEventListener('click', () => {
+        if (appState.answers[qKey] !== null) return; 
+        
+        appState.answers[qKey] = idx;
+        if (opt.isCorrect) appState.vivaScore++;
+        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+        
+        const buttons = optionsContainer.querySelectorAll('button');
+        buttons.forEach((b, i) => {
+          b.disabled = true;
+          b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+          b.classList.add('cursor-not-allowed', 'shadow-none');
+          
+          if (appState.answers[qKey] === i) {
+            if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+            else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+          } else if (data.options[i].isCorrect) {
+            b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+          } else {
+            b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+          }
+        });
+        
+        feedbackContainer.innerHTML = opt.exp;
+        feedbackContainer.classList.remove('hidden');
+        if(window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+      });
+      optionsContainer.appendChild(btn);
+    });
+  });
+
+  // CRITICAL FIX: Tell MathJax to scan the page again to render the newly added buttons
+  if (window.MathJax) {
+    // A tiny timeout ensures the DOM has finished updating before MathJax runs
+    setTimeout(() => {
+      MathJax.typesetPromise();
+    }, 50);
+  }
+}
+    // --- PHYSICS & 3D SIMULATION LOGIC ---
+    let isRunning = false;
+    let isFinished = false;
+
+    let zoomLevel = 1.0;
+    let currentPath = []; 
+    let currentPointIndex = 0;
+    let traveledDistance = 0;
+    let netDisplacement = 0;
+    let elapsedTime = 0;
+    const SPEED = 120; // Drone is fast
+
+    let cityNodes = []; // Pseudo 3D buildings
+
+    const selPath = document.getElementById('select-path');
+    const chkDisplacement = document.getElementById('chk-displacement');
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telSpeed = document.getElementById('tel-speed');
+    const telVel = document.getElementById('tel-vel');
+    const telDist = document.getElementById('tel-dist');
+    const telDisp = document.getElementById('tel-disp');
+    const telTime = document.getElementById('tel-time');
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    const simCanvas = document.getElementById('simCanvas');
+    const ctx = simCanvas.getContext('2d');
+
+    document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.2); });
+    document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.5, zoomLevel - 0.2); });
+    document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.0; });
+
+    // Generate Cyber City Nodes (Buildings)
+    function generateCityNodes() {
+      cityNodes = [];
+      for(let i=0; i<30; i++) {
+        cityNodes.push({
+          x: (Math.random() - 0.5) * 800,
+          y: (Math.random() - 0.5) * 800,
+          size: 20 + Math.random() * 30,
+          height: 30 + Math.random() * 80
+        });
+      }
+    }
+
+    // Path Generators
+    function generateManhattanPath() {
+      const points = [];
+      // Zig zag between blocks
+      let curX = -200, curY = 150;
+      points.push({x: curX, y: curY});
+      for(let i=0; i<3; i++) {
+          for(let x=0; x<100; x+=5) { curX+=5; points.push({x: curX, y: curY}); }
+          for(let y=0; y<100; y+=5) { curY-=5; points.push({x: curX, y: curY}); }
+      }
+      return points;
+    }
+
+    function generatePerimeterPath() {
+      const points = [];
+      let cx = -150, cy = 150;
+      for(let x=0; x<300; x+=5) points.push({x: cx+x, y: cy});
+      for(let y=0; y<300; y+=5) points.push({x: cx+300, y: cy-y});
+      for(let x=0; x<300; x+=5) points.push({x: cx+300-x, y: cy-300});
+      for(let y=0; y<300; y+=5) points.push({x: cx, y: cy-300+y});
+      points.push({x: cx, y: cy}); // close
+      return points;
+    }
+
+    function generateLinearPath() {
+      const points = [];
+      for(let x = -300; x <= 300; x += 5) points.push({x: x, y: 0});
+      return points;
+    }
+
+    function generateScanPath() {
+      const points = [];
+      let curX = -200, curY = -150;
+      for(let i=0; i<4; i++) {
+          for(let x=0; x<400; x+=10) { curX+=10; points.push({x:curX, y:curY}); }
+          for(let y=0; y<50; y+=5) { curY+=5; points.push({x:curX, y:curY}); }
+          for(let x=0; x<400; x+=10) { curX-=10; points.push({x:curX, y:curY}); }
+          for(let y=0; y<50; y+=5) { curY+=5; points.push({x:curX, y:curY}); }
+      }
+      return points;
+    }
+
+    function loadPath() {
+      const type = selPath.value;
+      if (type === 'manhattan') currentPath = generateManhattanPath();
+      else if (type === 'perimeter') currentPath = generatePerimeterPath();
+      else if (type === 'scan') currentPath = generateScanPath();
+      else currentPath = generateLinearPath();
+      
+      generateCityNodes();
+      resetSimulation();
+    }
+
+    selPath.addEventListener('change', loadPath);
+
+    // Toolbar actions
+    btnRun.addEventListener('click', () => {
+      if(isFinished) resetSimulation();
+      isRunning = true;
+      btnRun.classList.add('bg-cyan-800', 'ring-2', 'ring-cyan-400');
+      btnPause.classList.remove('bg-slate-100');
+      statusText.innerText = "Drone in Transit";
+      statusText.className = "text-[10px] font-extrabold text-cyan-400 uppercase tracking-wider";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]";
+    });
+
+    btnPause.addEventListener('click', () => {
+      isRunning = false;
+      btnRun.classList.remove('bg-cyan-800', 'ring-2', 'ring-cyan-400');
+      statusText.innerText = "Paused";
+      statusText.className = "text-[10px] font-extrabold text-amber-500 uppercase tracking-wider";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_#facc15]";
+    });
+
+    btnReset.addEventListener('click', resetSimulation);
+
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    function resetSimulation() {
+      isRunning = false;
+      isFinished = false;
+      currentPointIndex = 0;
+      traveledDistance = 0;
+      netDisplacement = 0;
+      elapsedTime = 0;
+      
+      btnRun.classList.remove('bg-cyan-800', 'ring-2', 'ring-cyan-400');
+      statusText.innerText = "Drone Standby";
+      statusText.className = "text-[10px] font-extrabold text-white uppercase tracking-wider";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500 shadow-none";
+      
+      updateTelemetry();
+    }
+
+    function resizeCanvas() {
+      const container = simCanvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      simCanvas.width = container.clientWidth * dpr;
+      simCanvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawDisplacementArrow(ctx, x1, y1, x2, y2, color) {
+      if(Math.abs(x1-x2) < 1 && Math.abs(y1-y2) < 1) return;
+
+      ctx.save();
+      // Arrow Line
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 4;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 15;
+      
+      // Dashed for cyber feel
+      ctx.setLineDash([10, 5]);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Arrow Head
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - 18 * Math.cos(angle - 0.4), y2 - 18 * Math.sin(angle - 0.4));
+      ctx.lineTo(x2 - 18 * Math.cos(angle + 0.4), y2 - 18 * Math.sin(angle + 0.4));
+      ctx.closePath();
+      ctx.fill();
+
+      // Floating Text Label
+      const midX = (x1 + x2) / 2;
+      const midY = (y1 + y2) / 2;
+      ctx.translate(midX, midY);
+      let textAngle = angle;
+      if (textAngle > Math.PI/2 || textAngle < -Math.PI/2) textAngle += Math.PI;
+      ctx.rotate(textAngle);
+      
+      ctx.fillStyle = '#22d3ee'; // Bright cyan
+      ctx.font = 'bold 16px monospace';
+      ctx.textAlign = 'center'; 
+      ctx.textBaseline = 'bottom';
+      ctx.fillText("DISPLACEMENT", 0, -8);
+      
+      ctx.restore();
+    }
+
+    function draw3DDrone(ctx, x, y, angle) {
+      ctx.save();
+      ctx.translate(x, y);
+      
+      // Ground Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.beginPath(); ctx.ellipse(5, 35, 20, 10, angle, 0, Math.PI*2); ctx.fill();
+
+      // 3D Offset (Flying high)
+      ctx.translate(0, -35);
+      ctx.rotate(angle);
+
+      // Drone Body
+      ctx.fillStyle = '#334155'; 
+      ctx.beginPath(); ctx.arc(0, 0, 12, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#22d3ee'; ctx.lineWidth = 2; ctx.stroke();
+
+      // Arms
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(-15, -15); ctx.lineTo(15, 15); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(15, -15); ctx.lineTo(-15, 15); ctx.stroke();
+
+      // Rotors
+      ctx.fillStyle = 'rgba(6, 182, 212, 0.8)';
+      let rx = [15, 15, -15, -15];
+      let ry = [15, -15, 15, -15];
+      for(let i=0; i<4; i++) {
+         ctx.beginPath(); ctx.arc(rx[i], ry[i], 6, 0, Math.PI*2); ctx.fill();
+      }
+
+      // Center glowing eye
+      ctx.fillStyle = '#ec4899'; // Pink core
+      ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2); ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Main animation loop
+    let lastTime = performance.now();
+    
+    function simulationLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      const W = simCanvas.width / window.devicePixelRatio;
+      const H = simCanvas.height / window.devicePixelRatio;
+
+      // Update Physics
+      if(isRunning && !isFinished && currentPath.length > 0) {
+        elapsedTime += dt;
+        
+        let p1 = currentPath[currentPointIndex];
+        let p2 = currentPath[Math.min(currentPointIndex+1, currentPath.length-1)];
+        let dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        
+        if(dist === 0) dist = 1;
+
+        let framesToAdvance = Math.max(1, Math.floor((SPEED * dt) / dist));
+        
+        for(let i=0; i<framesToAdvance; i++) {
+           if(currentPointIndex < currentPath.length - 1) {
+              let pA = currentPath[currentPointIndex];
+              let pB = currentPath[currentPointIndex+1];
+              traveledDistance += Math.hypot(pB.x - pA.x, pB.y - pA.y);
+              currentPointIndex++;
+           } else {
+              isRunning = false;
+              isFinished = true;
+              btnRun.classList.remove('bg-cyan-800', 'ring-2', 'ring-cyan-400');
+              statusText.innerText = "Mission Accomplished";
+              statusText.className = "text-[10px] font-extrabold text-pink-500 uppercase tracking-wider";
+              statusDot.className = "w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899]";
+              break;
+           }
+        }
+
+        let startP = currentPath[0];
+        let curP = currentPath[currentPointIndex];
+        netDisplacement = Math.hypot(curP.x - startP.x, curP.y - startP.y);
+
+        updateTelemetry();
+      }
+
+      ctx.clearRect(0, 0, W, H);
+      
+      if(currentPath.length === 0) {
+          requestAnimationFrame(simulationLoop); return;
+      }
+
+      ctx.save();
+      ctx.translate(W/2, H/2);
+      ctx.scale(zoomLevel, zoomLevel);
+
+      // 1. Draw Flight Corridor (Faint Grid Path)
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.2)'; // Faint Cyan
+      ctx.lineWidth = 40;
+      ctx.lineCap = 'square'; ctx.lineJoin = 'miter';
+      ctx.beginPath();
+      ctx.moveTo(currentPath[0].x, currentPath[0].y); 
+      for(let i=1; i<currentPath.length; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y);
+      ctx.stroke();
+
+      // Launch Pad (A)
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(currentPath[0].x, currentPath[0].y, 25, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#22d3ee';
+      ctx.font = 'bold 16px monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText("HQ", currentPath[0].x, currentPath[0].y);
+
+      // 2. Draw 3D Cyber City Nodes
+      for(let node of cityNodes) {
+          // Clear area if over path
+          let isOverPath = false;
+          for(let p of currentPath) {
+             if(Math.hypot(node.x - p.x, node.y - p.y) < node.size + 20) { isOverPath = true; break; }
+          }
+          if(isOverPath) continue;
+
+          // Shadow
+          ctx.fillStyle = 'rgba(0,0,0,0.8)';
+          ctx.fillRect(node.x - node.size + 10, node.y - node.size + 10, node.size*2, node.size*2);
+
+          // 3D Extrusion (Building Body)
+          ctx.fillStyle = '#0f172a'; // Deep slate base
+          ctx.fillRect(node.x - node.size, node.y - node.size - node.height, node.size*2, node.size*2 + node.height);
+          
+          // Wireframe glowing edges
+          ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)'; // Cyan borders
+          ctx.lineWidth = 2;
+          ctx.strokeRect(node.x - node.size, node.y - node.size - node.height, node.size*2, node.size*2 + node.height);
+          
+          // Roof
+          ctx.fillStyle = '#1e293b';
+          ctx.fillRect(node.x - node.size, node.y - node.size - node.height, node.size*2, node.size*2);
+          // Roof grid
+          ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)'; // Emerald top border
+          ctx.strokeRect(node.x - node.size, node.y - node.size - node.height, node.size*2, node.size*2);
+      }
+
+      // 3. Draw Floating Traveled Distance Path (Neon Pink)
+      if(currentPointIndex > 0) {
+          // Elevated Pink Line
+          ctx.strokeStyle = '#ec4899'; 
+          ctx.lineWidth = 4;
+          ctx.shadowColor = '#ec4899';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.moveTo(currentPath[0].x, currentPath[0].y - 30); // Raised path
+          for(let i=1; i<=currentPointIndex; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y - 30);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          
+          if (currentPointIndex > 10) {
+              let midIdx = Math.floor(currentPointIndex / 2);
+              let pA = currentPath[midIdx - 1];
+              let pB = currentPath[midIdx];
+              let angle = Math.atan2(pB.y - pA.y, pB.x - pA.x);
+              
+              ctx.save();
+              ctx.translate(pB.x, pB.y - 45);
+              if (angle > Math.PI/2 || angle < -Math.PI/2) angle += Math.PI;
+              ctx.rotate(angle);
+              ctx.fillStyle = '#f43f5e';
+              ctx.font = 'bold 14px monospace';
+              ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+              ctx.fillText("DISTANCE", 0, -5);
+              ctx.restore();
+          }
+      }
+
+      let startP = currentPath[0];
+      let curP = currentPath[currentPointIndex];
+
+      // 4. Draw 3D Floating Displacement Vector (Neon Cyan)
+      if(chkDisplacement.checked && currentPointIndex > 0) {
+          drawDisplacementArrow(ctx, startP.x, startP.y - 35, curP.x, curP.y - 35, '#06b6d4');
+      }
+
+      // 5. Draw 3D Drone
+      let angle = 0;
+      if (currentPointIndex > 0) {
+          let prevP = currentPath[currentPointIndex - 1];
+          angle = Math.atan2(curP.y - prevP.y, curP.x - prevP.x);
+      }
+      draw3DDrone(ctx, curP.x, curP.y, angle);
+
+      ctx.restore(); 
+      requestAnimationFrame(simulationLoop);
+    }
+
+    function updateTelemetry() {
+      const scale = 10;
+      let distM = traveledDistance / scale;
+      let dispM = netDisplacement / scale;
+      let timeS = elapsedTime;
+      
+      telDist.innerText = distM.toFixed(1) + "m";
+      telDisp.innerText = dispM.toFixed(1) + "m";
+      telTime.innerText = timeS.toFixed(1) + "s";
+      
+      let avgSpeed = timeS > 0 ? (distM / timeS) : 0;
+      let avgVel = timeS > 0 ? (dispM / timeS) : 0;
+      
+      telSpeed.innerText = avgSpeed.toFixed(2) + " m/s";
+      telVel.innerText = avgVel.toFixed(2) + " m/s";
+    }
+
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      resizeCanvas();
+      loadPath();
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+      requestAnimationFrame(simulationLoop);
+    });
+  </script>
+</body>
+</html>

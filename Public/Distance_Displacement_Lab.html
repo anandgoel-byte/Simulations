@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distance vs Displacement Virtual Laboratory (3D)</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Custom Scrollbar for Panels */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Realistic Park Terrain Background */
+    .lab-stage {
+      background-color: #86efac !important; /* Base light grass green */
+      background-image: 
+        radial-gradient(#4ade80 3px, transparent 3px),
+        radial-gradient(#22c55e 2px, transparent 2px);
+      background-size: 80px 80px;
+      background-position: 0 0, 40px 40px;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.15);
+    }
+
+    /* Vibrant Text Gradients for Telemetry */
+    .grad-rose { background: linear-gradient(to right, #f43f5e, #fb923c); -webkit-background-clip: text; color: transparent; }
+    .grad-blue { background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; color: transparent; }
+    .grad-emerald { background: linear-gradient(to right, #10b981, #34d399); -webkit-background-clip: text; color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Distance vs Displacement</h1>
+          <p class="text-[11px] text-slate-400 font-medium">CBSE Class 9 Kinematics &amp; Motion Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Telemetry Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-2">
+        <button id="btn-run" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
+          <span>▶</span> Start Journey
+        </button>
+        <button id="btn-pause" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>⏸</span> Pause
+        </button>
+        <button id="btn-reset" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-displacement" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Displacement Vector</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block mb-2">Select Journey Path</span>
+          <select id="select-path" class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm">
+            <option value="winding" selected>Winding Trail (Park Route)</option>
+            <option value="straight">Straight Line (Linear)</option>
+            <option value="lshape">L-Shape (Pythagoras)</option>
+            <option value="circle">Circular Track (Round Trip)</option>
+          </select>
+        </div>
+
+        <div class="space-y-3">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block mb-2">Live Kinematics Dashboard</span>
+          
+          <div class="flex flex-col gap-2">
+            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+              <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] block"></span> Total Distance
+              </div>
+              <div class="text-2xl font-bold font-mono tracking-widest grad-rose uppercase drop-shadow-[0_0_8px_rgba(244,63,94,0.4)]" id="tel-distance">0.0 m</div>
+            </div>
+            
+            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+              <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_#38bdf8] block"></span> Net Displacement
+              </div>
+              <div class="text-2xl font-bold font-mono tracking-widest grad-blue uppercase drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]" id="tel-displacement">0.0 m</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Ratio (Disp/Dist)</div>
+                <div class="text-lg font-bold font-mono tracking-widest text-amber-400 uppercase" id="tel-ratio">0.00</div>
+              </div>
+              
+              <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Elapsed Time</div>
+                <div class="text-lg font-bold font-mono tracking-widest grad-emerald uppercase" id="tel-time">0.0 s</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200">
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-5 shadow-sm space-y-4">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-2">Kinematic Definitions</span>
+            <div class="space-y-3">
+              <div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-rose-500">
+                <div class="flex justify-between items-center mb-1.5">
+                  <span class="text-rose-400 font-bold text-xs uppercase tracking-wider">Distance</span>
+                  <span class="bg-rose-500/20 text-rose-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-rose-500/30">Scalar</span>
+                </div>
+                <span class="text-xs font-medium text-slate-300 leading-relaxed block">
+                  The total length of the actual path covered by the moving object. Depends entirely on the route taken.
+                </span>
+                <div class="mt-2 text-[11px] font-mono text-rose-300/90 bg-slate-950/60 p-2 rounded border border-rose-500/10">
+                  Formula: $\text{Distance} = \sum \Delta s_i$
+                </div>
+              </div>
+              
+              <div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-blue-500">
+                <div class="flex justify-between items-center mb-1.5">
+                  <span class="text-blue-400 font-bold text-xs uppercase tracking-wider">Displacement</span>
+                  <span class="bg-blue-500/20 text-blue-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-blue-500/30">Vector</span>
+                </div>
+                <span class="text-xs font-medium text-slate-300 leading-relaxed block">
+                  The shortest straight-line distance from the initial position to the final position.
+                </span>
+                <div class="mt-2 text-[11px] font-mono text-blue-300/90 bg-slate-950/60 p-2 rounded border border-blue-500/10">
+                  Formula: $\vec{s} = \vec{r}_f - \vec{r}_i$
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-300 shadow-inner min-h-[500px]">
+        <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+        
+        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+          <span id="simStatusText" class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">Ready to Start</span>
+        </div>
+
+        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md border border-slate-200 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+            <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded transition-colors">+</button>
+            <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded transition-colors">-</button>
+            <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded transition-colors text-[9px]">RST</button>
+        </div>
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessment</h2>
+            <span id="viva-score" class="text-[10px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full">Score: 0 / 4</span>
+          </div>
+        </div>
+
+<div class="space-y-3 pb-4">
+          
+  <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+      <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2019]</span>
+      <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-indigo-800 group-hover:text-base" id="q1-text">
+        Can the displacement of an object be zero even if the distance covered is not zero?
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+      <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+  <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+      <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2018]</span>
+      <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-emerald-800 group-hover:text-base" id="q2-text">
+        The numerical ratio of displacement to distance for a moving object is:
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+      <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+  <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+      <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2016]</span>
+      <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-amber-800 group-hover:text-base" id="q3-text">
+        An athlete completes one round of a circular track of diameter 200m in 40s. What will be the distance covered and the displacement at the end of 2 minutes 20s?
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+      <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+  <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+      <span class="inline-block bg-rose-50 text-rose-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2017]</span>
+      <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-rose-800 group-hover:text-base" id="q4-text">
+        A farmer moves along the boundary of a square field of side 10m in 40s. What will be the magnitude of displacement of the farmer at the end of 2 minutes 20 seconds from his initial position?
+      </h4>
+      <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+      <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+  </div>
+
+</div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span>📘</span> KINEMATICS LAB PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>3D Distance vs Displacement Laboratory</strong>! Explore the fundamental difference between scalar path length and vector displacement.</p>
+        
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Select Path</strong>: Choose different scenarios like a Winding Trail, an L-Shape (to test Pythagoras), or a Circular track.</li>
+            <li><strong>Animation</strong>: Click "Start Journey" to watch the cyclist navigate the 3D park. The <strong>Red Line</strong> traces the actual Distance. The <strong>Blue Arrow</strong> indicates the shortest straight-line Displacement.</li>
+            <li><strong>Live Telemetry</strong>: Watch the dark dashboard to see how Distance always increases, while Displacement can increase, decrease, or even return to zero!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+          Acknowledge & Start
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA (CBSE Class 9 PYQs) ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        options: [
+          { text: "No, both must always be equal.", isCorrect: false, exp: "Incorrect. They are only equal if the object moves in a straight line in one direction." },
+          { text: "Yes, if the object returns to its starting point.", isCorrect: true, exp: "Correct! If you start and end at the exact same position (like running a full circle), your straight-line displacement is 0, even though you covered a physical distance." },
+          { text: "Yes, but only in a vacuum.", isCorrect: false, exp: "Incorrect." },
+          { text: "No, displacement is always greater than distance.", isCorrect: false, exp: "Incorrect. Displacement is always less than or equal to distance." }
+        ]
+      },
+      q2: {
+        options: [
+          { text: "Always less than 1", isCorrect: false, exp: "Incorrect. It can be exactly equal to 1 if moving in a straight line." },
+          { text: "Always equal to 1", isCorrect: false, exp: "Incorrect." },
+          { text: "Always more than 1", isCorrect: false, exp: "Incorrect." },
+          { text: "Equal to or less than 1", isCorrect: true, exp: "Correct! Displacement is the shortest path between two points. Therefore, the magnitude of Displacement can never exceed Distance. (Displacement / Distance) ≤ 1." }
+        ]
+      },
+      q3: {
+        options: [
+          { text: "2200m & 200m", isCorrect: true, exp: "Correct! Time = 2 min 20s = 140s. Rounds completed = 140/40 = 3.5 rounds. Distance = 3.5 * (π * d) = 3.5 * (22/7 * 200) = 2200m. After 3.5 rounds, the athlete is exactly opposite the start point. Displacement = Diameter = 200m." },
+          { text: "2000m & 0m", isCorrect: false, exp: "Incorrect." },
+          { text: "2200m & 0m", isCorrect: false, exp: "Incorrect. After 3.5 rounds, they are not back at the start." },
+          { text: "2000m & 200m", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        options: [
+          { text: "10m", isCorrect: false, exp: "Incorrect." },
+          { text: "10√2 m", isCorrect: true, exp: "Correct! Perimeter = 40m. Time for 1 round = 40s. Total time = 2 min 20s = 140s. Rounds completed = 140/40 = 3.5 rounds. After 3.5 rounds, the farmer is at the opposite diagonal corner. Displacement = Diagonal = √(10² + 10²) = √200 = 10√2 m." },
+          { text: "40m", isCorrect: false, exp: "Incorrect. That is the perimeter." },
+          { text: "0m", isCorrect: false, exp: "Incorrect. They did not finish exactly on a full round." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (!optionsContainer || !feedbackContainer) return; 
+        optionsContainer.innerHTML = ''; 
+        
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = "relative text-left p-3 rounded-lg text-sm hover:text-base transition-all duration-300 transform hover:scale-[1.08] hover:-translate-y-1.5 border leading-snug font-bold bg-white hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-xl hover:z-10 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold text-indigo-500 w-4">${letter}</span> <span>${opt.text}</span>`;
+          
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) appState.vivaScore++;
+            if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
+              
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+              } else {
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            
+            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+    }
+
+    // --- PHYSICS & 3D SIMULATION LOGIC ---
+    let isRunning = false;
+    let isFinished = false;
+
+    let zoomLevel = 1.0;
+    let currentPath = []; 
+    let currentPointIndex = 0;
+    let traveledDistance = 0;
+    let netDisplacement = 0;
+    let elapsedTime = 0;
+    const SPEED = 80; 
+
+    let trees = [];
+
+    const selPath = document.getElementById('select-path');
+    const chkDisplacement = document.getElementById('chk-displacement');
+    const btnRun = document.getElementById('btn-run');
+    const btnPause = document.getElementById('btn-pause');
+    const btnReset = document.getElementById('btn-reset');
+
+    const telDistance = document.getElementById('tel-distance');
+    const telDisplacement = document.getElementById('tel-displacement');
+    const telRatio = document.getElementById('tel-ratio');
+    const telTime = document.getElementById('tel-time');
+    const statusText = document.getElementById('simStatusText');
+    const statusDot = document.getElementById('status-dot');
+
+    const simCanvas = document.getElementById('simCanvas');
+    const ctx = simCanvas.getContext('2d');
+
+    document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.2); });
+    document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.5, zoomLevel - 0.2); });
+    document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.0; });
+
+    // Generate Decorative Trees
+    function generateTrees() {
+      trees = [];
+      for(let i=0; i<40; i++) {
+        trees.push({
+          x: (Math.random() - 0.5) * 800,
+          y: (Math.random() - 0.5) * 800,
+          r: 15 + Math.random() * 25
+        });
+      }
+    }
+
+    // Path Generators
+    function generateStraightPath() {
+      const points = [];
+      for(let x = -250; x <= 250; x += 5) points.push({x: x, y: 0});
+      return points;
+    }
+
+    function generateLShapePath() {
+      const points = [];
+      for(let x = -150; x <= 0; x += 5) points.push({x: x, y: 100});
+      for(let y = 100; y >= -100; y -= 5) points.push({x: 0, y: y});
+      return points;
+    }
+
+    function generateCirclePath() {
+      const points = [];
+      const R = 150;
+      for(let a = Math.PI/2; a <= Math.PI/2 + 2*Math.PI; a += 0.04) {
+        points.push({ x: R * Math.cos(a), y: R * Math.sin(a) });
+      }
+      return points;
+    }
+
+    function generateWindingPath() {
+      const points = [];
+      for(let t = 0; t <= 1; t += 0.003) {
+        let x = -300 + (600 * t);
+        let y = Math.sin(t * Math.PI * 2.5) * 150 + Math.cos(t * Math.PI * 1.5) * 50;
+        points.push({x: x, y: y});
+      }
+      return points;
+    }
+
+    function loadPath() {
+      const type = selPath.value;
+      if (type === 'straight') currentPath = generateStraightPath();
+      else if (type === 'lshape') currentPath = generateLShapePath();
+      else if (type === 'circle') currentPath = generateCirclePath();
+      else currentPath = generateWindingPath();
+      
+      generateTrees();
+      resetSimulation();
+    }
+
+    selPath.addEventListener('change', loadPath);
+
+    // Toolbar actions
+    btnRun.addEventListener('click', () => {
+      if(isFinished) resetSimulation();
+      isRunning = true;
+      btnRun.classList.add('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      btnPause.classList.remove('bg-slate-300');
+      statusText.innerText = "Journey in Progress";
+      statusText.className = "text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]";
+    });
+
+    btnPause.addEventListener('click', () => {
+      isRunning = false;
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      statusText.innerText = "Paused";
+      statusText.className = "text-[10px] font-extrabold text-amber-700 uppercase tracking-wider";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 shadow-none";
+    });
+
+    btnReset.addEventListener('click', resetSimulation);
+
+    // Modal popup close
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+
+    function resetSimulation() {
+      isRunning = false;
+      isFinished = false;
+      currentPointIndex = 0;
+      traveledDistance = 0;
+      netDisplacement = 0;
+      elapsedTime = 0;
+      
+      btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+      statusText.innerText = "Ready to Start";
+      statusText.className = "text-[10px] font-extrabold text-slate-700 uppercase tracking-wider";
+      statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-400 shadow-none";
+      
+      updateTelemetry();
+    }
+
+    function resizeCanvas() {
+      const container = simCanvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      simCanvas.width = container.clientWidth * dpr;
+      simCanvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawDisplacementArrow(ctx, x1, y1, x2, y2, color) {
+      if(Math.abs(x1-x2) < 1 && Math.abs(y1-y2) < 1) return;
+
+      ctx.save();
+      // Drop Shadow for 3D effect
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+      ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(x1, y1+12); ctx.lineTo(x2, y2+12); ctx.stroke();
+
+      // Arrow Line
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      
+      // Arrow Head
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - 18 * Math.cos(angle - 0.4), y2 - 18 * Math.sin(angle - 0.4));
+      ctx.lineTo(x2 - 18 * Math.cos(angle + 0.4), y2 - 18 * Math.sin(angle + 0.4));
+      ctx.closePath();
+      ctx.fill();
+
+      // Floating Text Label
+      const midX = (x1 + x2) / 2;
+      const midY = (y1 + y2) / 2;
+      ctx.translate(midX, midY);
+      let textAngle = angle;
+      if (textAngle > Math.PI/2 || textAngle < -Math.PI/2) textAngle += Math.PI;
+      ctx.rotate(textAngle);
+      
+      ctx.fillStyle = '#1e3a8a'; 
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center'; 
+      ctx.textBaseline = 'top'; // Prevent overlap with arrow line
+      ctx.fillText("Displacement", 0, 15); // Shifted down
+      
+      ctx.restore();
+    }
+
+function drawCar(ctx, x, y, angle) {
+      ctx.save();
+      ctx.translate(x, y);
+      
+      // Ground Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath(); ctx.ellipse(4, 10, 20, 10, angle, 0, Math.PI*2); ctx.fill();
+
+      // 3D Offset
+      ctx.translate(0, -6);
+      ctx.rotate(angle);
+
+      // Tires
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(-12, -12, 8, 4); ctx.fillRect(12, -12, 8, 4);
+      ctx.fillRect(-12, 8, 8, 4);   ctx.fillRect(12, 8, 8, 4);
+
+      // Car Base Body (Yellow)
+      ctx.fillStyle = '#eab308'; 
+      ctx.beginPath(); ctx.roundRect(-20, -10, 40, 20, 5); ctx.fill();
+
+      // Car Cabin Roof (Darker Yellow)
+      ctx.fillStyle = '#ca8a04'; 
+      ctx.beginPath(); ctx.roundRect(-10, -8, 20, 16, 3); ctx.fill();
+
+      // Windows (Light Glass/Cyan)
+      ctx.fillStyle = '#cffafe'; 
+      ctx.beginPath(); ctx.roundRect(-8, -7, 6, 14, 2); ctx.fill(); // Back
+      ctx.beginPath(); ctx.roundRect(2, -7, 10, 14, 2); ctx.fill(); // Front windshield
+
+      // Headlights
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath(); ctx.arc(18, -6, 2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(18, 6, 2, 0, Math.PI*2); ctx.fill();
+
+      ctx.restore();
+    }
+    // Main animation loop
+    let lastTime = performance.now();
+    
+    function simulationLoop(timestamp) {
+      const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      const W = simCanvas.width / window.devicePixelRatio;
+      const H = simCanvas.height / window.devicePixelRatio;
+
+      if(isRunning && !isFinished && currentPath.length > 0) {
+        elapsedTime += dt;
+        
+        let p1 = currentPath[currentPointIndex];
+        let p2 = currentPath[Math.min(currentPointIndex+1, currentPath.length-1)];
+        let dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        
+        if(dist === 0) dist = 1;
+
+        let framesToAdvance = Math.max(1, Math.floor((SPEED * dt) / dist));
+        
+        for(let i=0; i<framesToAdvance; i++) {
+           if(currentPointIndex < currentPath.length - 1) {
+              let pA = currentPath[currentPointIndex];
+              let pB = currentPath[currentPointIndex+1];
+              traveledDistance += Math.hypot(pB.x - pA.x, pB.y - pA.y);
+              currentPointIndex++;
+           } else {
+              isRunning = false;
+              isFinished = true;
+              btnRun.classList.remove('bg-indigo-700', 'ring-2', 'ring-indigo-300');
+              statusText.innerText = "Journey Finished";
+              statusText.className = "text-[10px] font-extrabold text-fuchsia-700 uppercase tracking-wider";
+              statusDot.className = "w-2.5 h-2.5 rounded-full bg-fuchsia-500 shadow-none";
+              break;
+           }
+        }
+
+        let startP = currentPath[0];
+        let curP = currentPath[currentPointIndex];
+        netDisplacement = Math.hypot(curP.x - startP.x, curP.y - startP.y);
+
+        updateTelemetry();
+      }
+
+      ctx.clearRect(0, 0, W, H);
+      
+      if(currentPath.length === 0) {
+          requestAnimationFrame(simulationLoop); return;
+      }
+
+      ctx.save();
+      ctx.translate(W/2, H/2);
+      ctx.scale(zoomLevel, zoomLevel);
+
+      // 1. Draw 3D Water Body (Lake)
+      ctx.fillStyle = '#0284c7'; // Darker blue shadow
+      ctx.beginPath(); ctx.ellipse(80, -80, 180, 100, Math.PI/6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#38bdf8'; // Light sky blue
+      ctx.beginPath(); ctx.ellipse(80, -90, 180, 100, Math.PI/6, 0, Math.PI*2); ctx.fill();
+
+      // 2. Draw 3D Concrete Road with White Dashed Line
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      
+      // Concrete Depth Layer (Shadow)
+      ctx.strokeStyle = '#334155'; 
+      ctx.lineWidth = 44;
+      ctx.beginPath();
+      ctx.moveTo(currentPath[0].x, currentPath[0].y + 8); 
+      for(let i=1; i<currentPath.length; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y + 8);
+      ctx.stroke();
+
+      // Concrete Sidewalk/Border
+      ctx.strokeStyle = '#94a3b8';
+      ctx.beginPath();
+      ctx.moveTo(currentPath[0].x, currentPath[0].y);
+      for(let i=1; i<currentPath.length; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y);
+      ctx.stroke();
+
+      // Asphalt Inner Road
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 38;
+      ctx.stroke();
+
+      // White Dotted Center Line
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([15, 15]);
+      ctx.beginPath();
+      ctx.moveTo(currentPath[0].x, currentPath[0].y);
+      for(let i=1; i<currentPath.length; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y);
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset dash for other strokes
+
+      // Start Marker
+      ctx.fillStyle = '#cbd5e1';
+      ctx.beginPath(); ctx.arc(currentPath[0].x, currentPath[0].y, 20, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText("A", currentPath[0].x, currentPath[0].y);
+
+      // 3. Draw 3D Canopy Trees
+      for(let tree of trees) {
+          let isOverRoad = false;
+          for(let p of currentPath) {
+             if(Math.hypot(tree.x - p.x, tree.y - p.y) < 40) { isOverRoad = true; break; }
+          }
+          if(isOverRoad) continue;
+
+          // Shadow on ground
+          ctx.fillStyle = 'rgba(0,0,0,0.2)';
+          ctx.beginPath(); ctx.ellipse(tree.x + 10, tree.y + 15, tree.r, tree.r*0.6, 0, 0, Math.PI*2); ctx.fill();
+
+          // Trunk
+          ctx.fillStyle = '#78350f';
+          ctx.fillRect(tree.x - 3, tree.y, 6, 20);
+
+          // Canopy Base
+          ctx.fillStyle = '#14532d';
+          ctx.beginPath(); ctx.arc(tree.x, tree.y - 15, tree.r, 0, Math.PI*2); ctx.fill();
+          // Canopy Mid
+          ctx.fillStyle = '#22c55e';
+          ctx.beginPath(); ctx.arc(tree.x, tree.y - 17, tree.r * 0.8, 0, Math.PI*2); ctx.fill();
+          // Canopy Highlight
+          ctx.fillStyle = '#4ade80';
+          ctx.beginPath(); ctx.arc(tree.x - 4, tree.y - 20, tree.r * 0.5, 0, Math.PI*2); ctx.fill();
+      }
+
+      // 4. Draw Floating Traveled Distance Path (Neon Rose)
+      if(currentPointIndex > 0) {
+          // Drop shadow for path
+          ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.moveTo(currentPath[0].x, currentPath[0].y + 5);
+          for(let i=1; i<=currentPointIndex; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y + 5);
+          ctx.stroke();
+
+          // Elevated Red Line
+          ctx.strokeStyle = '#e11d48'; 
+          ctx.beginPath();
+          ctx.moveTo(currentPath[0].x, currentPath[0].y - 5);
+          for(let i=1; i<=currentPointIndex; i++) ctx.lineTo(currentPath[i].x, currentPath[i].y - 5);
+          ctx.stroke();
+          
+          if (currentPointIndex > 10) {
+              let midIdx = Math.floor(currentPointIndex / 2);
+              let pA = currentPath[midIdx - 1];
+              let pB = currentPath[midIdx];
+              let angle = Math.atan2(pB.y - pA.y, pB.x - pA.x);
+              
+              ctx.save();
+              ctx.translate(pB.x, pB.y - 15);
+              if (angle > Math.PI/2 || angle < -Math.PI/2) angle += Math.PI;
+              ctx.rotate(angle);
+              ctx.fillStyle = '#be123c';
+              ctx.font = 'bold 16px sans-serif';
+              ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+              ctx.fillText("Distance", 0, -5);
+              ctx.restore();
+          }
+      }
+
+      let startP = currentPath[0];
+      let curP = currentPath[currentPointIndex];
+
+      // 5. Draw 3D Floating Displacement Vector (Blue)
+      if(chkDisplacement.checked && currentPointIndex > 0) {
+          drawDisplacementArrow(ctx, startP.x, startP.y - 8, curP.x, curP.y - 8, '#3b82f6');
+      }
+
+      // 6. Draw 3D Cyclist Object
+      let angle = 0;
+      if (currentPointIndex > 0) {
+          let prevP = currentPath[currentPointIndex - 1];
+          angle = Math.atan2(curP.y - prevP.y, curP.x - prevP.x);
+      }
+      drawCar(ctx, curP.x, curP.y, angle);
+
+      ctx.restore(); 
+      requestAnimationFrame(simulationLoop);
+    }
+
+    function updateTelemetry() {
+      const scale = 10;
+      let distM = traveledDistance / scale;
+      let dispM = netDisplacement / scale;
+      
+      telDistance.innerText = distM.toFixed(1) + " m";
+      telDisplacement.innerText = dispM.toFixed(1) + " m";
+      telTime.innerText = elapsedTime.toFixed(1) + " s";
+      
+      let ratio = distM > 0 ? (dispM / distM) : 0;
+      telRatio.innerText = ratio.toFixed(2);
+    }
+
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      resizeCanvas();
+      loadPath();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(simulationLoop);
+    });
+  </script>
+</body>
+</html>
