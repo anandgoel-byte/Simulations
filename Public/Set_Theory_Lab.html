@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Theory & Venn Diagrams Lab</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar for Panels */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Cyber-Math Grid Background */
+        .lab-stage {
+            background-color: #020617 !important;
+            background-image:
+                radial-gradient(rgba(34, 211, 238, 0.1) 2px, transparent 2px),
+                linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(236, 72, 153, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px, 30px 30px, 30px 30px;
+            background-position: 0 0, 15px 15px, 15px 15px;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 1);
+        }
+
+        /* Vibrant Text Gradients */
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-emerald {
+            background: linear-gradient(to right, #10b981, #34d399);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-amber {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div
+                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Set Theory & Venn Diagrams
+                    </h1>
+                    <p class="text-[11px] text-pink-400 font-medium tracking-wider uppercase">Discrete Mathematics
+                        Laboratory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> User Guide
+                </button>
+                <div
+                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_#ec4899]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Boolean
+                        Engine Active</span>
+                </div>
+            </div>
+        </header>
+
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button onclick="triggerEvaluation()"
+                    class="px-5 py-1.5 bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>⚡</span> Evaluate Region
+                </button>
+                <button onclick="resetMath()"
+                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Reset
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-elements" checked
+                        class="rounded border-slate-300 text-pink-600 focus:ring-pink-500 h-4 w-4">
+                    <span>Show Set Elements</span>
+                </label>
+            </div>
+        </div>
+
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+
+                <!-- Operations Card -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <span
+                        class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Set
+                        Operation / Law</span>
+
+                    <select id="select-op"
+                        class="w-full bg-slate-50 border border-slate-300 text-pink-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all cursor-pointer shadow-sm">
+                        <optgroup label="Basic Operations">
+                            <option value="intersect">Intersection (A ∩ B)</option>
+                            <option value="diffAB">Difference (A - B)</option>
+                            <option value="diffBA">Difference (B - A)</option>
+                            <option value="symDiff">Symmetric Diff (A Δ B)</option>
+                            <option value="compA">Complement (A')</option>
+                        </optgroup>
+                        <optgroup label="Set Theory Laws">
+                            <option value="demorgan1" selected>De Morgan's Law 1</option>
+                            <option value="demorgan2">De Morgan's Law 2</option>
+                            <option value="dist1">Distributive Law 1</option>
+                            <option value="dist2">Distributive Law 2</option>
+                        </optgroup>
+                    </select>
+
+                    <div class="flex items-center justify-center p-1 bg-slate-100 rounded-lg border border-slate-200"
+                        id="law-toggle-container">
+                        <button id="btn-lhs"
+                            class="w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all">LHS
+                            Form</button>
+                        <button id="btn-rhs"
+                            class="w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all">RHS
+                            Form</button>
+                    </div>
+                </div>
+
+                <!-- Live Analytical Telemetry Card -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Live
+                        Analytical Telemetry</span>
+
+                    <div class="flex flex-col gap-2">
+
+                        <div
+                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                            <div
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span>
+                                Active Expression
+                            </div>
+                            <div class="text-[13px] font-bold font-mono tracking-widest grad-pink uppercase"
+                                id="tel-expr">
+                                (A ∪ B)'
+                            </div>
+                        </div>
+
+                        <div class="bg-[#020617] p-4 rounded-2xl shadow-inner border border-slate-700 text-center mt-1">
+                            <div
+                                class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1 text-cyan-400">
+                                Resulting Set Elements</div>
+                            <div class="text-[16px] font-bold font-mono tracking-wide text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                                id="tel-result">
+                                { 8, 9, 10 }
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                            <div
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"></span>
+                                Cardinality n(Result)
+                            </div>
+                            <div class="text-sm font-bold font-mono tracking-widest text-white uppercase"
+                                id="tel-cardinality">3 Elements</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Base Data State Card -->
+                <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-3">
+                    <span
+                        class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Base
+                        Data State</span>
+                    <div class="space-y-1.5 text-xs font-mono">
+                        <div class="flex justify-between"><span class="text-slate-400">Universal U:</span>
+                            <span>{1,2,3,4,5,6,7,8,9,10}</span></div>
+                        <div class="flex justify-between"><span class="text-cyan-400">Set A:</span> <span>{1, 2, 3,
+                                4, 5}</span></div>
+                        <div class="flex justify-between"><span class="text-emerald-400">Set B:</span> <span>{3, 4,
+                                6, 7}</span></div>
+                        <div class="flex justify-between"><span class="text-amber-400">Set C:</span> <span>{4, 5, 7,
+                                8}</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 shadow-inner min-h-[500px]">
+
+                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+
+                <div
+                    class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                    <span id="simStatusText"
+                        class="text-[10px] font-extrabold text-white uppercase tracking-wider">Awaiting
+                        Evaluation</span>
+                </div>
+
+                <div
+                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+                <div
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
+                        Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
+                        <span id="viva-score"
+                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
+                            0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-4">
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[De Morgan's Law]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
+                                id="q1-text">
+                                According to De Morgan's Laws, the complement of the union of two sets $(A \cup B)'$ is
+                                equal to:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+                            <p id="q1-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Symmetric
+                                Diff]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
+                                id="q2-text">
+                                The symmetric difference of sets A and B ($A \Delta B$) can be mathematically defined
+                                as:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+                            <p id="q2-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Distributive
+                                Law]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
+                                id="q3-text">
+                                Which of the following represents the correct expansion of $A \cap (B \cup C)$ using the
+                                Distributive Law?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+                            <p id="q3-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Cardinality]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
+                                id="q4-text">
+                                If $n(A) = 5$, $n(B) = 4$, and $n(A \cap B) = 2$, what is the cardinality of their union
+                                $n(A \cup B)$?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+                            <p id="q4-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span>📘</span> SET THEORY PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>Set Theory Laboratory</strong>! Visually explore how logical operators combine
+                    and isolate elements inside Venn diagrams.</p>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">🎯 Core
+                        Controls</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Select Operation</strong>: Choose from standard operations (Intersection,
+                            Difference) or advanced Laws. The Canvas will instantly draw the required 2-Set or 3-Set
+                            diagram.</li>
+                        <li><strong>LHS vs RHS Toggle</strong>: When a Law is selected (like De Morgan's), flip between
+                            the Left-Hand and Right-Hand formulas. Notice how the mathematical equation changes, but the
+                            <strong>Highlighted Region and Final Result stay exactly the same!</strong> This visually
+                            proves the law.</li>
+                        <li><strong>Evaluate Region</strong>: Click the pink Evaluate button to run the Boolean
+                            calculation and shade the resulting geometric sector in glowing pink.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2 border-t border-slate-100 pt-3">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">🎓 Learning Outcomes</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Set Algebra Operations</strong>: Visualize and define Union, Intersection, Difference, Symmetric Difference, and Complements.</li>
+                        <li><strong>Visual Proofs of Laws</strong>: Verify algebraic laws (De Morgan's, Distributive) by comparing LHS and RHS highlighted regions.</li>
+                        <li><strong>Cardinality Quantification</strong>: Relate visual intersections and unions directly to quantitative element counting.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VIVA MCQS DECK STATE & DATA ---
+        const appState = {
+            vivaScore: 0,
+            answers: { q1: null, q2: null, q3: null, q4: null }
+        };
+
+        const vivaData = {
+            q1: {
+                options: [
+                    { text: "$A' \\cup B'$", isCorrect: false, exp: "Incorrect. This is the complement of the intersection." },
+                    { text: "$A' \\cap B'$", isCorrect: true, exp: "Correct! By De Morgan's Law, the complement of a union is the intersection of the complements: $(A \\cup B)' = A' \\cap B'$." },
+                    { text: "$A \\cap B$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$(A \\cap B)'$", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q2: {
+                options: [
+                    { text: "$(A \\cup B) - (A \\cap B)$", isCorrect: true, exp: "Correct! Symmetric difference contains elements in A or B, but NOT in both. This is mathematically $(A \\cup B) - (A \\cap B)$ or $(A - B) \\cup (B - A)$." },
+                    { text: "$(A - B) \\cap (B - A)$", isCorrect: false, exp: "Incorrect. The intersection of differences is always the empty set $\\emptyset$." },
+                    { text: "$A \\cap B$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$(A \\cup B)'$", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q3: {
+                options: [
+                    { text: "$(A \\cap B) \\cap (A \\cap C)$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$(A \\cup B) \\cap (A \\cup C)$", isCorrect: false, exp: "Incorrect. This is the expansion for $A \\cup (B \\cap C)$." },
+                    { text: "$(A \\cap B) \\cup (A \\cap C)$", isCorrect: true, exp: "Correct! Just like standard algebraic distribution $a(b+c) = ab + ac$, the intersection distributes over the union: $A \\cap (B \\cup C) = (A \\cap B) \\cup (A \\cap C)$." },
+                    { text: "$(A \\cup B) \\cup (A \\cap C)$", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q4: {
+                options: [
+                    { text: "11", isCorrect: false, exp: "Incorrect." },
+                    { text: "9", isCorrect: false, exp: "Incorrect." },
+                    { text: "7", isCorrect: true, exp: "Correct! Using the Principle of Inclusion-Exclusion: $n(A \\cup B) = n(A) + n(B) - n(A \\cap B) = 5 + 4 - 2 = 7$." },
+                    { text: "5", isCorrect: false, exp: "Incorrect." }
+                ]
+            }
+        };
+
+        function renderQuestions() {
+            const scoreLabel = document.getElementById('viva-score');
+
+            Object.keys(vivaData).forEach(qKey => {
+                const data = vivaData[qKey];
+                const optionsContainer = document.getElementById(`${qKey}-options`);
+                const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+                if (!optionsContainer || !feedbackContainer) return;
+                optionsContainer.innerHTML = '';
+
+                data.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "relative text-left p-3 rounded-lg text-sm transition-all duration-300 transform hover:scale-[1.08] hover:-translate-y-1.5 border leading-snug font-bold bg-white hover:bg-pink-50 hover:border-pink-400 hover:shadow-xl hover:z-10 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+
+                    let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                    btn.innerHTML = `<span class="font-extrabold text-pink-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+
+                    btn.addEventListener('click', () => {
+                        if (appState.answers[qKey] !== null) return;
+
+                        appState.answers[qKey] = idx;
+                        if (opt.isCorrect) appState.vivaScore++;
+                        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                        const buttons = optionsContainer.querySelectorAll('button');
+                        buttons.forEach((b, i) => {
+                            b.disabled = true;
+                            b.classList.remove('bg-white', 'hover:bg-pink-50', 'hover:border-pink-400', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm', 'hover:scale-[1.08]', 'hover:-translate-y-1.5', 'hover:shadow-xl', 'hover:z-10');
+                            b.classList.add('cursor-not-allowed', 'shadow-none');
+
+                            if (appState.answers[qKey] === i) {
+                                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                            } else if (data.options[i].isCorrect) {
+                                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                            } else {
+                                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                            }
+                        });
+
+                        feedbackContainer.innerHTML = opt.exp;
+                        feedbackContainer.classList.remove('hidden');
+                        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    });
+                    optionsContainer.appendChild(btn);
+                });
+            });
+
+            if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        }
+
+        // --- MATH & CANVAS LOGIC ---
+        const simCanvas = document.getElementById('simCanvas');
+        const ctx = simCanvas.getContext('2d');
+
+        // Offscreen Canvas for Boolean Masking
+        const offCanvas = document.createElement('canvas');
+        const octx = offCanvas.getContext('2d');
+
+        let zoomLevel = 1.0;
+
+        const selOp = document.getElementById('select-op');
+        const chkElements = document.getElementById('chk-elements');
+        const btnLHS = document.getElementById('btn-lhs');
+        const btnRHS = document.getElementById('btn-rhs');
+        const lawToggleBox = document.getElementById('law-toggle-container');
+
+        // Telemetry
+        const telExpr = document.getElementById('tel-expr');
+        const telResult = document.getElementById('tel-result');
+        const telCard = document.getElementById('tel-cardinality');
+        const statusText = document.getElementById('simStatusText');
+        const statusDot = document.getElementById('status-dot');
+
+        // Data State
+        const elements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const setA = new Set([1, 2, 3, 4, 5]);
+        const setB = new Set([3, 4, 6, 7]);
+        const setC = new Set([4, 5, 7, 8]);
+
+        // Geometry Config
+        const R = 90; // Circle radius
+        const cxA = -45, cyA = -25;
+        const cxB = 45, cyB = -25;
+        const cxC = 0, cyC = 50;
+
+        // Operation State
+        let currentOp = 'demorgan1';
+        let isRHS = false;
+        let isEvaluated = false;
+
+        // Dictionary of operations mapped to data and visual routines
+        const operations = {
+            intersect: { expr: "A ∩ B", sets: 2 },
+            diffAB: { expr: "A - B", sets: 2 },
+            diffBA: { expr: "B - A", sets: 2 },
+            symDiff: { expr: "A Δ B", sets: 2 },
+            compA: { expr: "A'", sets: 2 },
+            demorgan1: { exprLHS: "(A ∪ B)'", exprRHS: "A' ∩ B'", sets: 2 },
+            demorgan2: { exprLHS: "(A ∩ B)'", exprRHS: "A' ∪ B'", sets: 2 },
+            dist1: { exprLHS: "A ∩ (B ∪ C)", exprRHS: "(A ∩ B) ∪ (A ∩ C)", sets: 3 },
+            dist2: { exprLHS: "A ∪ (B ∩ C)", exprRHS: "(A ∪ B) ∩ (A ∪ C)", sets: 3 }
+        };
+
+        function switchForm(toRHS) {
+            isRHS = toRHS;
+            if (isRHS) {
+                btnRHS.classList.replace('text-slate-500', 'text-slate-800');
+                btnRHS.classList.replace('bg-transparent', 'bg-white');
+                btnRHS.classList.add('shadow-sm');
+                btnLHS.classList.replace('text-slate-800', 'text-slate-500');
+                btnLHS.classList.remove('bg-white', 'shadow-sm');
+            } else {
+                btnLHS.classList.replace('text-slate-500', 'text-slate-800');
+                btnLHS.classList.add('bg-white', 'shadow-sm');
+                btnRHS.classList.replace('text-slate-800', 'text-slate-500');
+                btnRHS.classList.remove('bg-white', 'shadow-sm');
+            }
+            updateUI();
+        }
+
+        btnLHS.addEventListener('click', () => switchForm(false));
+        btnRHS.addEventListener('click', () => switchForm(true));
+
+        selOp.addEventListener('change', () => {
+            currentOp = selOp.value;
+            isEvaluated = false;
+
+            if (['demorgan1', 'demorgan2', 'dist1', 'dist2'].includes(currentOp)) {
+                lawToggleBox.style.opacity = '1';
+                lawToggleBox.style.pointerEvents = 'auto';
+            } else {
+                lawToggleBox.style.opacity = '0.4';
+                lawToggleBox.style.pointerEvents = 'none';
+            }
+            updateUI();
+        });
+
+        function triggerEvaluation() {
+            isEvaluated = true;
+            updateUI();
+
+            statusText.innerText = "Evaluation Complete";
+            statusText.className = "text-[10px] font-extrabold text-pink-500 uppercase tracking-wider";
+            statusDot.className = "w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899]";
+        }
+
+        function resetMath() {
+            isEvaluated = false;
+            updateUI();
+            statusText.innerText = "Awaiting Evaluation";
+            statusText.className = "text-[10px] font-extrabold text-white uppercase tracking-wider";
+            statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500 shadow-none";
+        }
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.2); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.4, zoomLevel - 0.2); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.0; });
+        chkElements.addEventListener('change', () => { }); // Triggers render loop inherently
+
+        function updateUI() {
+            let op = operations[currentOp];
+            let txt = op.expr || (isRHS ? op.exprRHS : op.exprLHS);
+            telExpr.innerText = txt;
+
+            if (!isEvaluated) {
+                telResult.innerText = "{ ? }";
+                telCard.innerText = "-";
+            } else {
+                // Perform numerical set logic to get result
+                let res = calculateNumericalSet(currentOp);
+                let resArr = Array.from(res).sort((a, b) => a - b);
+                telResult.innerText = "{ " + resArr.join(", ") + " }";
+                telCard.innerText = `${resArr.length} Elements`;
+            }
+        }
+
+        function calculateNumericalSet(opName) {
+            let res = new Set();
+
+            const intersection = (s1, s2) => new Set([...s1].filter(x => s2.has(x)));
+            const union = (s1, s2) => new Set([...s1, ...s2]);
+            const diff = (s1, s2) => new Set([...s1].filter(x => !s2.has(x)));
+            const comp = (s) => new Set(elements.filter(x => !s.has(x)));
+
+            switch (opName) {
+                case 'intersect': res = intersection(setA, setB); break;
+                case 'diffAB': res = diff(setA, setB); break;
+                case 'diffBA': res = diff(setB, setA); break;
+                case 'symDiff': res = union(diff(setA, setB), diff(setB, setA)); break;
+                case 'compA': res = comp(setA); break;
+                case 'demorgan1': res = comp(union(setA, setB)); break; // (A U B)' == A' n B'
+                case 'demorgan2': res = comp(intersection(setA, setB)); break; // (A n B)' == A' U B'
+                case 'dist1': res = intersection(setA, union(setB, setC)); break;
+                case 'dist2': res = union(setA, intersection(setB, setC)); break;
+            }
+            return res;
+        }
+
+        function resizeCanvas() {
+            const container = simCanvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+
+            simCanvas.width = container.clientWidth * dpr;
+            simCanvas.height = container.clientHeight * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+
+            offCanvas.width = simCanvas.width;
+            offCanvas.height = simCanvas.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // Coordinate mapping for elements to sit perfectly inside regions
+        const nodeCoords = {
+            1: { x: cxA - 35, y: cyA - 15 }, // A only
+            2: { x: cxA - 50, y: cyA + 10 }, // A only
+            3: { x: 0, y: -45 },             // A n B only
+            4: { x: 0, y: -5 },              // A n B n C
+            5: { x: -30, y: 15 },            // A n C only
+            6: { x: cxB + 40, y: cyB },      // B only
+            7: { x: 50, y: 30 },             // B n C only
+            8: { x: 0, y: 80 },              // C only
+            9: { x: -160, y: -120 },         // Outside
+            10: { x: 160, y: 120 }           // Outside
+        };
+
+        const elementStates = {};
+        elements.forEach(num => {
+            elementStates[num] = {
+                x: nodeCoords[num].x,
+                y: nodeCoords[num].y,
+                currentScale: 1.0,
+                currentOpacity: 1.0,
+                currentGlow: 0,
+                phaseX: Math.random() * Math.PI * 2,
+                phaseY: Math.random() * Math.PI * 2,
+                driftSpeedX: 0.0015 + Math.random() * 0.001,
+                driftSpeedY: 0.0015 + Math.random() * 0.001
+            };
+        });
+
+        function renderBooleanMask(opName) {
+            const dpr = window.devicePixelRatio || 1;
+            const W = offCanvas.width / dpr;
+            const H = offCanvas.height / dpr;
+
+            octx.clearRect(0, 0, offCanvas.width, offCanvas.height);
+            octx.save();
+            octx.scale(dpr, dpr);
+            octx.translate(W / 2, H / 2);
+            octx.scale(zoomLevel, zoomLevel);
+
+            let pA = new Path2D(); pA.arc(cxA, cyA, R, 0, Math.PI * 2);
+            let pB = new Path2D(); pB.arc(cxB, cyB, R, 0, Math.PI * 2);
+            let pC = new Path2D(); pC.arc(cxC, cyC, R, 0, Math.PI * 2);
+            let pU = new Path2D(); pU.roundRect(-220, -170, 440, 340, 10);
+
+            // Fill entire U block with solid black stage color
+            const blackColor = '#020617';
+            const pinkColor = 'rgba(236, 72, 153, 0.5)';
+
+            octx.fillStyle = blackColor;
+            octx.fill(pU);
+
+            switch (opName) {
+                case 'intersect':
+                    octx.save();
+                    octx.clip(pA);
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pB);
+                    octx.restore();
+                    break;
+                case 'diffAB':
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pA);
+                    octx.fillStyle = blackColor;
+                    octx.fill(pB);
+                    break;
+                case 'diffBA':
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pB);
+                    octx.fillStyle = blackColor;
+                    octx.fill(pA);
+                    break;
+                case 'symDiff':
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pA);
+                    octx.fill(pB);
+                    octx.save();
+                    octx.clip(pA);
+                    octx.fillStyle = blackColor;
+                    octx.fill(pB);
+                    octx.restore();
+                    break;
+                case 'compA':
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pU);
+                    octx.fillStyle = blackColor;
+                    octx.fill(pA);
+                    break;
+                case 'demorgan1':
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pU);
+                    octx.fillStyle = blackColor;
+                    octx.fill(pA);
+                    octx.fill(pB);
+                    break;
+                case 'demorgan2':
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pU);
+                    octx.save();
+                    octx.clip(pA);
+                    octx.fillStyle = blackColor;
+                    octx.fill(pB);
+                    octx.restore();
+                    break;
+                case 'dist1':
+                    // A n (B U C)
+                    octx.save();
+                    octx.clip(pA);
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pB);
+                    octx.fill(pC);
+                    octx.restore();
+                    break;
+                case 'dist2':
+                    // A U (B n C)
+                    octx.fillStyle = pinkColor;
+                    octx.fill(pA);
+                    octx.save();
+                    octx.clip(pB);
+                    octx.fill(pC);
+                    octx.restore();
+                    break;
+            }
+            octx.restore();
+        }
+
+        function renderLoop() {
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+            ctx.clearRect(0, 0, W, H);
+
+            ctx.save();
+            ctx.translate(W / 2, H / 2);
+            ctx.scale(zoomLevel, zoomLevel);
+
+            let pA = new Path2D(); pA.arc(cxA, cyA, R, 0, Math.PI * 2);
+            let pB = new Path2D(); pB.arc(cxB, cyB, R, 0, Math.PI * 2);
+            let pC = new Path2D(); pC.arc(cxC, cyC, R, 0, Math.PI * 2);
+            let pU = new Path2D(); pU.roundRect(-220, -170, 440, 340, 10);
+
+            // Draw Boolean Mask if evaluated
+            if (isEvaluated) {
+                renderBooleanMask(currentOp);
+                ctx.save();
+                ctx.resetTransform();
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 12;
+                ctx.drawImage(offCanvas, 0, 0, W, H);
+                ctx.restore();
+            }
+
+            // Draw Set Borders
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.stroke(pU);
+            ctx.strokeStyle = '#06b6d4'; ctx.stroke(pA); // Cyan
+            ctx.strokeStyle = '#10b981'; ctx.stroke(pB); // Emerald
+            if (operations[currentOp].sets === 3) {
+                ctx.strokeStyle = '#f59e0b'; ctx.stroke(pC); // Amber
+            }
+
+            // Draw Labels
+            ctx.font = 'bold 16px monospace';
+            ctx.fillStyle = '#06b6d4'; ctx.fillText("A", cxA - R + 10, cyA - R + 15);
+            ctx.fillStyle = '#10b981'; ctx.fillText("B", cxB + R - 20, cyB - R + 15);
+            if (operations[currentOp].sets === 3) {
+                ctx.fillStyle = '#f59e0b'; ctx.fillText("C", cxC, cyC + R - 10);
+            }
+            ctx.fillStyle = '#64748b'; ctx.fillText("U", -205, -150);
+
+            // Update Element Animation Attributes
+            const time = Date.now();
+            elements.forEach(num => {
+                const state = elementStates[num];
+                const isHidden = operations[currentOp].sets === 2 && [5, 8, 9].includes(num);
+
+                let targetScale = 1.0;
+                let targetOpacity = 1.0;
+                let targetGlow = 0;
+
+                if (isHidden) {
+                    targetOpacity = 0.0;
+                    targetScale = 0.0;
+                } else if (isEvaluated) {
+                    let resSet = calculateNumericalSet(currentOp);
+                    if (resSet.has(num)) {
+                        targetScale = 1.35;
+                        targetOpacity = 1.0;
+                        targetGlow = 12 + Math.sin(time * 0.005) * 4;
+                    } else {
+                        targetScale = 0.85;
+                        targetOpacity = 0.25;
+                        targetGlow = 0;
+                    }
+                }
+
+                // Interpolate
+                state.currentScale += (targetScale - state.currentScale) * 0.1;
+                state.currentOpacity += (targetOpacity - state.currentOpacity) * 0.1;
+                state.currentGlow += (targetGlow - state.currentGlow) * 0.1;
+
+                // Drift
+                let bobX = 0;
+                let bobY = 0;
+                if (!isHidden) {
+                    bobX = Math.sin(time * state.driftSpeedX + state.phaseX) * 4;
+                    bobY = Math.cos(time * state.driftSpeedY + state.phaseY) * 4;
+                }
+                state.x = nodeCoords[num].x + bobX;
+                state.y = nodeCoords[num].y + bobY;
+            });
+
+            // Draw Elements
+            if (chkElements.checked) {
+                elements.forEach(num => {
+                    const state = elementStates[num];
+                    if (state.currentOpacity <= 0.01) return;
+
+                    ctx.save();
+                    ctx.translate(state.x, state.y);
+                    ctx.scale(state.currentScale, state.currentScale);
+
+                    ctx.font = 'bold 14px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    if (isEvaluated) {
+                        let resSet = calculateNumericalSet(currentOp);
+                        if (resSet.has(num)) {
+                            ctx.fillStyle = '#ffffff';
+                            ctx.shadowColor = '#ffffff';
+                            ctx.shadowBlur = state.currentGlow;
+                        } else {
+                            ctx.fillStyle = `rgba(255, 255, 255, ${state.currentOpacity})`;
+                            ctx.shadowBlur = 0;
+                        }
+                    } else {
+                        ctx.fillStyle = `rgba(248, 250, 252, ${state.currentOpacity})`;
+                        ctx.shadowBlur = 0;
+                    }
+
+                    ctx.fillText(num, 0, 0);
+                    ctx.restore();
+                });
+            }
+
+            ctx.restore();
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Boot
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            resizeCanvas();
+            updateUI();
+            document.getElementById('user-guide-modal').classList.remove('hidden');
+
+            document.getElementById('btn-close-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+            document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+
+            // Open user guide button click handler
+            document.getElementById('btn-open-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.remove('hidden');
+            });
+
+            // Backdrop click handler to dismiss the user guide
+            const userGuideModal = document.getElementById('user-guide-modal');
+            userGuideModal.addEventListener('click', (e) => {
+                if (e.target === userGuideModal) {
+                    userGuideModal.classList.add('hidden');
+                }
+            });
+
+            requestAnimationFrame(renderLoop);
+        });
+    </script>
+</body>
+
+</html>

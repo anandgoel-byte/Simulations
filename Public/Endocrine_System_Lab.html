@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endocrine System Virtual Laboratory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar for Panels */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Medical Hologram Background */
+        .lab-stage {
+            background-color: #020617 !important;
+            background-image:
+                radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 1);
+        }
+
+        /* Vibrant Text Gradients */
+        .grad-emerald {
+            background: linear-gradient(to right, #10b981, #34d399);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-amber {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div
+                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Endocrine System & Hormones
+                    </h1>
+                    <p class="text-[11px] text-emerald-400 font-medium tracking-wider uppercase">Human Bio-Cybernetics
+                        Laboratory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> Protocol Guide
+                </button>
+                <div
+                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Bio-Scan
+                        Active</span>
+                </div>
+            </div>
+        </header>
+
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button id="btn-run"
+                    class="px-5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>⚡</span> Stimulate Gland
+                </button>
+                <button id="btn-reset"
+                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Clear System
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-blood" checked
+                        class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4 w-4">
+                    <span>Show Hormone Particles</span>
+                </label>
+            </div>
+        </div>
+
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+                <div class="space-y-4">
+
+                    <!-- 1. Controls -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3.5">
+                        <div>
+                            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block mb-2">Target Organ / Gland</span>
+                            <select id="select-gland"
+                                class="w-full bg-slate-50 border border-slate-300 text-emerald-700 text-base font-bold rounded-lg px-3 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm">
+                                <option value="hypothalamus">Hypothalamus</option>
+                                <option value="pineal">Pineal Gland</option>
+                                <option value="pituitary" selected>Pituitary Gland (Master)</option>
+                                <option value="thyroid">Thyroid Gland</option>
+                                <option value="parathyroid">Parathyroid Glands</option>
+                                <option value="thymus">Thymus Gland</option>
+                                <option value="adrenal">Adrenal Glands</option>
+                                <option value="pancreas">Pancreas</option>
+                                <option value="gonads">Gonads (Testes/Ovaries)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest">Hologram System</span>
+                            <div class="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                                <button id="btn-system-female" class="px-3 py-1 text-[10px] font-extrabold rounded-md transition-all bg-white text-emerald-700 shadow-sm border border-slate-200">Female</button>
+                                <button id="btn-system-male" class="px-3 py-1 text-[10px] font-extrabold rounded-md transition-all text-slate-600 hover:text-slate-800">Male</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Telemetry -->
+                    <div class="space-y-3">
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 block">Live Organ Telemetry</span>
+                        
+                        <div class="flex flex-col gap-2">
+                            <div class="bg-[#0f172a] p-3.5 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                                <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span>
+                                    Hormones
+                                </div>
+                                <div class="text-base font-bold font-mono tracking-wide grad-cyan uppercase text-right" id="tel-hormone">GH, TSH, ACTH</div>
+                            </div>
+
+                            <div class="bg-[#0f172a] p-3.5 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                                <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span>
+                                    Target Area
+                                </div>
+                                <div class="text-base font-bold font-mono tracking-wide grad-pink uppercase text-right" id="tel-target">Systemic</div>
+                            </div>
+
+                            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md border border-slate-800 flex flex-col justify-start text-left">
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1.5 text-emerald-400">
+                                    Systemic Function
+                                </div>
+                                <div class="text-sm font-bold font-sans tracking-wide text-slate-200 leading-normal" id="tel-function">
+                                    Controls other endocrine glands and regulates body growth.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 3. Properties/Theorem block at the bottom -->
+                <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-3 border border-slate-800 mt-4">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-2">Properties of Hormones</span>
+                    <div class="space-y-3 text-xs font-medium text-slate-300">
+                        <ul class="list-disc pl-4 space-y-1.5">
+                            <li>Chemical messengers secreted directly into the blood.</li>
+                            <li>Act on specific target organs/receptors.</li>
+                            <li>Required in very small quantities.</li>
+                            <li>Regulated by precise <strong class="text-cyan-400">Feedback Mechanisms</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]">
+
+                <div class="absolute top-6 left-0 right-0 flex justify-center z-20 pointer-events-none">
+                    <div class="bg-slate-900/80 backdrop-blur-md px-6 py-3 rounded-2xl border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-opacity duration-300 opacity-0"
+                        id="stimulation-alert">
+                        <h3 class="text-base font-mono font-bold text-white tracking-widest"><span
+                                class="text-emerald-400">⚡ HORMONE RELEASED:</span> Target Organs Activated</h3>
+                    </div>
+                </div>
+
+                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+
+                <div
+                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+                <div
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400">Viva Voce Lab
+                        Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-base font-bold tracking-tight">CBSE/NEET Assessments</h2>
+                        <span id="viva-score"
+                            class="text-[10px] font-mono font-bold text-white bg-emerald-500/30 border border-emerald-400/50 px-2 py-0.5 rounded-full">Score:
+                            0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-4">
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET
+                                2018]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
+                                id="q1-text">
+                                Which of the following is an amino acid derived hormone?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+                            <p id="q1-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE
+                                Class 10]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
+                                id="q2-text">
+                                Iodine is necessary for the synthesis of which hormone?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+                            <p id="q2-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT
+                                Core]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
+                                id="q3-text">
+                                Which gland is primarily responsible for the "fight or flight" response during emergency
+                                situations?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+                            <p id="q3-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE
+                                2019]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
+                                id="q4-text">
+                                The timing and amount of hormone released are regulated by which highly precise
+                                biological system?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+                            <p id="q4-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> BIO-SYSTEM PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>Endocrine System Laboratory</strong>! Explore the chemical control and
+                    coordination of the human body.</p>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Select Gland</strong>: Use the dropdown or click directly on any gland on the holographic silhouette to isolate it.</li>
+                        <li><strong>Live Telemetry</strong>: The dark dashboard reveals the specific hormones secreted by the active gland and their anatomical targets.</li>
+                        <li><strong>Stimulate Gland</strong>: Click this to simulate a hormone release. Watch the glowing particles travel through the bloodstream to trigger systemic or targeted effects!</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t border-slate-100">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🎓 Learning Outcomes</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Chemical Control Mechanism</strong>: Comprehend how the endocrine system uses chemical hormones to coordinate biological activities.</li>
+                        <li><strong>Feedback Systems</strong>: Explain homeostatic loops and feedforward/feedback loops that control hormone release.</li>
+                        <li><strong>Target Organ Specificity</strong>: Visualize how hormones diffuse through the bloodstream to act on specific target receptors.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VIVA MCQS DECK STATE & DATA ---
+        const appState = {
+            vivaScore: 0,
+            answers: { q1: null, q2: null, q3: null, q4: null }
+        };
+
+        const vivaData = {
+            q1: {
+                options: [
+                    { text: "Epinephrine", isCorrect: true, exp: "Correct! Epinephrine (adrenaline) is an amino acid derivative (derived from tyrosine). The others are steroids or peptides." },
+                    { text: "Ecdysone", isCorrect: false, exp: "Incorrect." },
+                    { text: "Estradiol", isCorrect: false, exp: "Incorrect. This is a steroid hormone." },
+                    { text: "Estriol", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q2: {
+                options: [
+                    { text: "Adrenaline", isCorrect: false, exp: "Incorrect." },
+                    { text: "Thyroxine", isCorrect: true, exp: "Correct! Iodine is essential for the synthesis of Thyroxine (T4) and T3 in the thyroid gland. Deficiency leads to goiter." },
+                    { text: "Auxin", isCorrect: false, exp: "Incorrect." },
+                    { text: "Insulin", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q3: {
+                options: [
+                    { text: "Pituitary Gland", isCorrect: false, exp: "Incorrect. Pituitary is the master gland." },
+                    { text: "Pineal Gland", isCorrect: false, exp: "Incorrect. Pineal regulates sleep cycles." },
+                    { text: "Adrenal Gland", isCorrect: true, exp: "Correct! The adrenal medulla secretes Adrenaline and Noradrenaline, which prepare the body for 'fight or flight' stress responses." },
+                    { text: "Pancreas", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q4: {
+                options: [
+                    { text: "Nervous System only", isCorrect: false, exp: "Incorrect." },
+                    { text: "Feedback Mechanism", isCorrect: true, exp: "Correct! Hormonal levels are tightly controlled by positive and negative feedback mechanisms to maintain homeostasis. For example, high blood sugar triggers insulin release, which lowers sugar, which then turns off insulin release." },
+                    { text: "Digestive System", isCorrect: false, exp: "Incorrect." },
+                    { text: "Circulatory System", isCorrect: false, exp: "Incorrect." }
+                ]
+            }
+        };
+
+        const colorsMap = {
+            q1: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+            q2: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+            q3: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+            q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+        };
+
+        function renderQuestions() {
+            const scoreLabel = document.getElementById('viva-score');
+
+            Object.keys(vivaData).forEach(qKey => {
+                const data = vivaData[qKey];
+                const optionsContainer = document.getElementById(`${qKey}-options`);
+                const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+                if (!optionsContainer || !feedbackContainer) return;
+                optionsContainer.innerHTML = '';
+
+                data.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `relative text-left p-3 rounded-lg text-sm transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+
+                    let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                    btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+
+                    btn.addEventListener('click', () => {
+                        if (appState.answers[qKey] !== null) return;
+
+                        appState.answers[qKey] = idx;
+                        if (opt.isCorrect) appState.vivaScore++;
+                        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                        const buttons = optionsContainer.querySelectorAll('button');
+                        buttons.forEach((b, i) => {
+                            b.disabled = true;
+                            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+                            b.classList.add('cursor-not-allowed', 'shadow-none');
+
+                            if (appState.answers[qKey] === i) {
+                                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                            } else if (data.options[i].isCorrect) {
+                                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                            } else {
+                                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                            }
+                        });
+
+                        feedbackContainer.innerHTML = opt.exp;
+                        feedbackContainer.classList.remove('hidden');
+                        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    });
+                    optionsContainer.appendChild(btn);
+                });
+            });
+
+            if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        }
+
+        // --- BIOLOGY SIMULATION LOGIC ---
+        const simCanvas = document.getElementById('simCanvas');
+        const ctx = simCanvas.getContext('2d');
+        let zoomLevel = 1.0;
+        let panX = 0;
+        let panY = 0;
+        let currentSystem = 'female'; // Default system: female
+
+        // Gland Database & Coordinates (relative to center 0,0)
+        const glandsDB = {
+            hypothalamus: { x: 0, y: -200, name: "Hypothalamus", hrm: "TRH, CRH, GnRH", trg: "Pituitary Gland", fn: "Links nervous system to endocrine system via pituitary.", color: "#ec4899", targets: ["pituitary"] },
+            pineal: { x: 14, y: -196, name: "Pineal Gland", hrm: "Melatonin", trg: "Brain / Systemic", fn: "Regulates circadian rhythms (sleep-wake cycles).", color: "#8b5cf6", targets: ["systemic"] },
+            pituitary: { x: 0, y: -188, name: "Pituitary Gland", hrm: "GH, TSH, ACTH, FSH, LH", trg: "Systemic / Other Glands", fn: "The 'Master Gland'. Controls other endocrine glands and body growth.", color: "#06b6d4", targets: ["thyroid", "adrenal", "gonads", "systemic"] },
+            thyroid: { x: 0, y: -130, name: "Thyroid Gland", hrm: "Thyroxine (T4), T3", trg: "Systemic", fn: "Regulates basal metabolic rate and physical development.", color: "#10b981", targets: ["systemic"] },
+            parathyroid: { x: 0, y: -130, name: "Parathyroid Glands", hrm: "PTH", trg: "Bones, Kidneys", fn: "Regulates calcium and phosphate levels in blood.", color: "#f59e0b", targets: ["systemic"] },
+            thymus: { x: 0, y: -90, name: "Thymus Gland", hrm: "Thymosin", trg: "T-Cells", fn: "Trains and develops T-lymphocytes for the immune system.", color: "#f43f5e", targets: ["systemic"] },
+            adrenal: { x: 0, y: 15, name: "Adrenal Glands", hrm: "Adrenaline, Cortisol", trg: "Heart, Liver, Vessels", fn: "Controls 'fight or flight' response and stress metabolism.", color: "#ef4444", targets: ["systemic", "head"] },
+            pancreas: { x: 0, y: 35, name: "Pancreas", hrm: "Insulin, Glucagon", trg: "Liver, Muscles", fn: "Regulates blood glucose levels (glucose homeostasis).", color: "#eab308", targets: ["systemic"] },
+            gonads: { x: 0, y: 120, name: "Gonads", hrm: "Testosterone / Estrogen", trg: "Reproductive Organs", fn: "Controls sexual development and reproductive functions.", color: "#d946ef", targets: ["systemic"] }
+        };
+
+        let activeGlandKey = "pituitary";
+        let particles = [];
+
+        const selGland = document.getElementById('select-gland');
+        const chkBlood = document.getElementById('chk-blood');
+        const btnRun = document.getElementById('btn-run');
+        const btnReset = document.getElementById('btn-reset');
+        const alertBox = document.getElementById('stimulation-alert');
+
+        // Telemetry DOM
+        const telHormone = document.getElementById('tel-hormone');
+        const telTarget = document.getElementById('tel-target');
+        const telFunction = document.getElementById('tel-function');
+
+        function getGlandCoords(key) {
+            const g = glandsDB[key];
+            if (key === 'gonads') {
+                if (currentSystem === 'female') {
+                    return [
+                        { x: -24, y: 112 },
+                        { x: 24, y: 112 }
+                    ];
+                } else {
+                    return [
+                        { x: -6.5, y: 152 },
+                        { x: 6.5, y: 152 }
+                    ];
+                }
+            }
+            if (key === 'adrenal') {
+                return [
+                    { x: -25, y: 4 },
+                    { x: 25, y: 4 }
+                ];
+            }
+            if (key === 'parathyroid') {
+                return [
+                    { x: -7, y: -134 },
+                    { x: -5, y: -125 },
+                    { x: 5, y: -134 },
+                    { x: 7, y: -125 }
+                ];
+            }
+            return [{ x: g.x, y: g.y }];
+        }
+
+        function updateTelemetry() {
+            const g = glandsDB[activeGlandKey];
+            if (activeGlandKey === 'gonads') {
+                if (currentSystem === 'female') {
+                    telHormone.innerText = "Estrogen, Progesterone";
+                    telTarget.innerText = "Uterus, Systemic";
+                    telFunction.innerText = "Regulates female secondary sexual characteristics, menstrual cycle, and ova development.";
+                } else {
+                    telHormone.innerText = "Testosterone";
+                    telTarget.innerText = "Reproductive Organs, Systemic";
+                    telFunction.innerText = "Regulates male secondary sexual characteristics, muscle growth, and sperm production.";
+                }
+            } else {
+                telHormone.innerText = g.hrm;
+                telTarget.innerText = g.trg;
+                telFunction.innerText = g.fn;
+            }
+        }
+
+        selGland.addEventListener('change', (e) => {
+            activeGlandKey = e.target.value;
+            particles = [];
+            updateTelemetry();
+        });
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.2); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.5, zoomLevel - 0.2); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.0; panX = 0; panY = 0; });
+
+        btnRun.addEventListener('click', () => {
+            if (!chkBlood.checked) return;
+
+            const source = glandsDB[activeGlandKey];
+
+            // UI Alert
+            alertBox.classList.remove('opacity-0');
+            setTimeout(() => alertBox.classList.add('opacity-0'), 2000);
+
+            // Spawn Particles
+            const sourceCoords = getGlandCoords(activeGlandKey);
+            for (let tKey of source.targets) {
+                let count = tKey === "systemic" ? 30 : 10;
+                for (let i = 0; i < count; i++) {
+                    // Pick start point randomly if bilateral
+                    let sc = sourceCoords[Math.floor(Math.random() * sourceCoords.length)];
+
+                    // Determine target coordinates
+                    let tx, ty;
+                    if (tKey === "systemic") {
+                        ty = -230 + Math.random() * 440;
+                        if (ty < -150) { // Head
+                            tx = (Math.random() - 0.5) * 40;
+                        } else if (ty < 130) { // Torso
+                            tx = (Math.random() - 0.5) * 70;
+                        } else { // Legs
+                            tx = (Math.random() - 0.5) * 30;
+                        }
+                    } else if (tKey === "head") {
+                        tx = (Math.random() - 0.5) * 35;
+                        ty = -220 + Math.random() * 35;
+                    } else {
+                        const targetCoords = getGlandCoords(tKey);
+                        let tc = targetCoords[Math.floor(Math.random() * targetCoords.length)];
+                        tx = tc.x + (Math.random() - 0.5) * 8;
+                        ty = tc.y + (Math.random() - 0.5) * 8;
+                    }
+
+                    particles.push({
+                        x: sc.x, y: sc.y,
+                        tx: tx, ty: ty,
+                        progress: 0,
+                        speed: 0.01 + Math.random() * 0.02,
+                        color: source.color,
+                        size: 2 + Math.random() * 2
+                    });
+                }
+            }
+        });
+
+        btnReset.addEventListener('click', () => {
+            particles = [];
+        });
+
+        function resizeCanvas() {
+            const container = simCanvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+            simCanvas.width = container.clientWidth * dpr;
+            simCanvas.height = container.clientHeight * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function drawHumanSilhouette(ctx) {
+            ctx.strokeStyle = 'rgba(6, 182, 212, 0.25)'; // Cyan wireframe
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#06b6d4';
+            ctx.shadowBlur = 10;
+
+            ctx.beginPath();
+            // Start at the back of the neck
+            ctx.moveTo(22, -140);
+            
+            // Curve up to back of head
+            ctx.bezierCurveTo(28, -165, 34, -180, 36, -210);
+            
+            // Curve to top back of head
+            ctx.bezierCurveTo(34, -235, 22, -238, 10, -238);
+            
+            // Curve to forehead
+            ctx.bezierCurveTo(-15, -238, -25, -220, -28, -208);
+            
+            // Forehead to nose bridge
+            ctx.lineTo(-31, -195);
+            
+            // Nose tip pointing left
+            ctx.lineTo(-46, -189);
+            
+            // Under nose to lips
+            ctx.lineTo(-33, -182);
+            ctx.lineTo(-36, -177); // Upper lip
+            ctx.lineTo(-32, -174);
+            ctx.lineTo(-35, -170); // Lower lip
+            
+            // Chin
+            ctx.lineTo(-34, -160);
+            
+            // Jawline
+            ctx.lineTo(-24, -150);
+            
+            // Throat/neck
+            ctx.lineTo(-20, -140);
+            
+            // Shoulder front
+            ctx.bezierCurveTo(-38, -135, -50, -125, -55, -110);
+            
+            // Chest curve
+            ctx.bezierCurveTo(-58, -90, -50, -70, -48, -50);
+            
+            // Abdomen curve down
+            ctx.bezierCurveTo(-46, 0, -48, 40, -45, 80);
+            
+            // Pelvis front
+            ctx.bezierCurveTo(-43, 105, -38, 120, -32, 132);
+
+            if (currentSystem === 'male') {
+                // Draw scrotum bulge
+                ctx.lineTo(-26, 138);
+                ctx.bezierCurveTo(-24, 168, 16, 168, 16, 138);
+            } else {
+                // Smooth female pelvis
+                ctx.lineTo(-26, 138);
+                ctx.bezierCurveTo(-22, 150, -20, 160, -20, 170);
+            }
+            
+            // Front thigh going down
+            ctx.lineTo(-18, 220);
+            
+            // Back thigh going down
+            ctx.lineTo(16, 220);
+            
+            // Buttocks curve
+            ctx.bezierCurveTo(24, 185, 34, 155, 34, 135);
+            
+            // Lower back
+            ctx.bezierCurveTo(24, 90, 26, 60, 24, 30);
+            
+            // Upper back / shoulder blade
+            ctx.bezierCurveTo(24, 0, 32, -40, 32, -90);
+            
+            // Back to shoulder/neck connection
+            ctx.bezierCurveTo(32, -115, 24, -130, 22, -140);
+
+            ctx.closePath();
+            ctx.stroke();
+
+            // Give a soft gradient fill inside the silhouette for a hologram effect
+            const grad = ctx.createRadialGradient(0, 0, 20, 0, 0, 200);
+            grad.addColorStop(0, 'rgba(6, 182, 212, 0.04)');
+            grad.addColorStop(1, 'rgba(6, 182, 212, 0.005)');
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Draw a soft cerebrum and cerebellum background in the head
+            ctx.beginPath();
+            ctx.moveTo(-15, -225);
+            ctx.bezierCurveTo(-25, -220, -25, -185, -10, -180);
+            ctx.bezierCurveTo(0, -178, 10, -178, 20, -180);
+            ctx.bezierCurveTo(30, -185, 32, -215, 20, -225);
+            ctx.bezierCurveTo(10, -232, -5, -232, -15, -225);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(236, 72, 153, 0.04)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.12)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(20, -175, 9, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(236, 72, 153, 0.03)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(8, -170);
+            ctx.lineTo(8, -145);
+            ctx.lineTo(13, -145);
+            ctx.lineTo(13, -170);
+            ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+            ctx.stroke();
+
+            ctx.shadowBlur = 0;
+        }
+
+        function drawGlandShape(key, ctx, isActive) {
+            if (key === 'hypothalamus') {
+                ctx.beginPath();
+                ctx.moveTo(-6, -205);
+                ctx.lineTo(6, -205);
+                ctx.lineTo(2, -194);
+                ctx.lineTo(-2, -194);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            } else if (key === 'pituitary') {
+                ctx.beginPath();
+                ctx.arc(-3.5, -188, 3.5, 0, Math.PI * 2);
+                ctx.arc(3.5, -188, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(0, -194);
+                ctx.lineTo(0, -188);
+                ctx.stroke();
+            } else if (key === 'pineal') {
+                ctx.beginPath();
+                ctx.ellipse(14, -196, 4, 3, Math.PI / 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            } else if (key === 'thyroid') {
+                ctx.beginPath();
+                ctx.ellipse(-6, -130, 4.5, 10, -Math.PI / 24, 0, Math.PI * 2);
+                ctx.ellipse(6, -130, 4.5, 10, Math.PI / 24, 0, Math.PI * 2);
+                ctx.rect(-6, -132, 12, 4);
+                ctx.fill();
+                ctx.stroke();
+            } else if (key === 'parathyroid') {
+                const pts = [
+                    { x: -7, y: -134 },
+                    { x: -5, y: -125 },
+                    { x: 5, y: -134 },
+                    { x: 7, y: -125 }
+                ];
+                for (let pt of pts) {
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, isActive ? 2.5 : 1.8, 0, Math.PI * 2);
+                    ctx.fillStyle = isActive ? '#f59e0b' : 'rgba(245, 158, 11, 0.6)';
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            } else if (key === 'thymus') {
+                ctx.beginPath();
+                ctx.ellipse(-5, -90, 6, 12, -Math.PI / 12, 0, Math.PI * 2);
+                ctx.ellipse(4, -88, 5, 10, Math.PI / 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            } else if (key === 'pancreas') {
+                ctx.beginPath();
+                ctx.moveTo(-20, 32);
+                ctx.bezierCurveTo(-10, 26, 10, 26, 22, 33);
+                ctx.bezierCurveTo(24, 36, 22, 42, 15, 42);
+                ctx.bezierCurveTo(5, 42, -10, 38, -20, 32);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(-17, 32);
+                ctx.quadraticCurveTo(0, 33, 17, 35);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = isActive ? '#ffffff' : 'rgba(255,255,255,0.4)';
+                ctx.stroke();
+            } else if (key === 'adrenal') {
+                // Left kidney
+                ctx.beginPath();
+                ctx.ellipse(-26, 15, 7, 13, Math.PI / 12, 0, Math.PI * 2);
+                ctx.fillStyle = isActive ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255,255,255,0.1)';
+                ctx.fill();
+                ctx.stroke();
+
+                // Right kidney
+                ctx.beginPath();
+                ctx.ellipse(26, 15, 7, 13, -Math.PI / 12, 0, Math.PI * 2);
+                ctx.fillStyle = isActive ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255,255,255,0.1)';
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = isActive ? glandsDB.adrenal.color : 'rgba(255, 255, 255, 0.4)';
+                ctx.strokeStyle = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.6)';
+
+                // Left cap
+                ctx.beginPath();
+                ctx.moveTo(-31, 3);
+                ctx.bezierCurveTo(-26, -5, -20, -2, -19, 5);
+                ctx.bezierCurveTo(-22, 5, -28, 4, -31, 3);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Right cap
+                ctx.beginPath();
+                ctx.moveTo(19, 5);
+                ctx.bezierCurveTo(20, -2, 26, -5, 31, 3);
+                ctx.bezierCurveTo(28, 4, 22, 5, 19, 5);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            } else if (key === 'gonads') {
+                if (currentSystem === 'female') {
+                    // Uterus
+                    ctx.beginPath();
+                    ctx.moveTo(-6, 115);
+                    ctx.bezierCurveTo(-10, 105, 10, 105, 6, 115);
+                    ctx.lineTo(3, 130);
+                    ctx.lineTo(-3, 130);
+                    ctx.closePath();
+                    ctx.fillStyle = isActive ? 'rgba(217, 70, 239, 0.25)' : 'rgba(255,255,255,0.1)';
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Fallopian tubes
+                    ctx.beginPath();
+                    ctx.moveTo(-6, 110);
+                    ctx.quadraticCurveTo(-18, 108, -22, 112);
+                    ctx.moveTo(6, 110);
+                    ctx.quadraticCurveTo(18, 108, 22, 112);
+                    ctx.strokeStyle = isActive ? glandsDB.gonads.color : 'rgba(255, 255, 255, 0.4)';
+                    ctx.stroke();
+
+                    ctx.fillStyle = isActive ? glandsDB.gonads.color : 'rgba(255, 255, 255, 0.4)';
+                    ctx.strokeStyle = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.6)';
+
+                    // Left ovary
+                    ctx.beginPath();
+                    ctx.ellipse(-24, 112, 5.5, 3.8, Math.PI / 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Right ovary
+                    ctx.beginPath();
+                    ctx.ellipse(24, 112, 5.5, 3.8, -Math.PI / 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                } else {
+                    // Scrotum
+                    ctx.beginPath();
+                    ctx.moveTo(-13, 142);
+                    ctx.bezierCurveTo(-13, 166, 13, 166, 13, 142);
+                    ctx.strokeStyle = isActive ? glandsDB.gonads.color : 'rgba(255, 255, 255, 0.3)';
+                    ctx.stroke();
+
+                    ctx.fillStyle = isActive ? glandsDB.gonads.color : 'rgba(255, 255, 255, 0.4)';
+                    ctx.strokeStyle = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.6)';
+
+                    // Left testis
+                    ctx.beginPath();
+                    ctx.ellipse(-6.5, 152, 4.5, 6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Right testis
+                    ctx.beginPath();
+                    ctx.ellipse(6.5, 152, 4.5, 6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Vas deferens
+                    ctx.beginPath();
+                    ctx.moveTo(-6.5, 146);
+                    ctx.bezierCurveTo(-9, 130, -18, 125, -20, 115);
+                    ctx.moveTo(6.5, 146);
+                    ctx.bezierCurveTo(9, 130, 18, 125, 20, 115);
+                    ctx.strokeStyle = isActive ? glandsDB.gonads.color : 'rgba(255, 255, 255, 0.3)';
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Main animation loop
+        let lastTime = performance.now();
+
+        function renderLoop(timestamp) {
+            const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+            lastTime = timestamp;
+
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+            ctx.clearRect(0, 0, W, H);
+
+            ctx.save();
+            ctx.translate(W / 2 + panX, H / 2 + 20 + panY); // Center slightly lower + pan offsets
+            ctx.scale(zoomLevel, zoomLevel);
+
+            // 1. Draw Body
+            drawHumanSilhouette(ctx);
+
+            // 2. Draw Glands
+            for (let key in glandsDB) {
+                let g = glandsDB[key];
+                let isActive = (key === activeGlandKey);
+                ctx.save();
+
+                if (isActive) {
+                    ctx.shadowColor = g.color;
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = g.color;
+                    ctx.strokeStyle = g.color;
+                    ctx.lineWidth = 2.5;
+                } else {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.lineWidth = 1.5;
+                }
+
+                drawGlandShape(key, ctx, isActive);
+
+                ctx.restore();
+
+                // Draw Label if Active
+                if (isActive) {
+                    ctx.fillStyle = g.color;
+                    ctx.font = 'bold 14px monospace';
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    
+                    let labelX = 20;
+                    let labelY = g.y;
+                    if (key === 'gonads') {
+                        labelX = currentSystem === 'female' ? 35 : 20;
+                        labelY = currentSystem === 'female' ? 112 : 152;
+                    } else if (key === 'adrenal') {
+                        labelX = 40;
+                        labelY = 5;
+                    } else if (key === 'parathyroid') {
+                        labelX = 20;
+                    } else if (key === 'pineal') {
+                        labelX = 25;
+                    } else if (key === 'hypothalamus') {
+                        labelX = 20;
+                    } else if (key === 'pituitary') {
+                        labelX = 20;
+                    } else if (key === 'thyroid') {
+                        labelX = 20;
+                    } else if (key === 'thymus') {
+                        labelX = 20;
+                    } else if (key === 'pancreas') {
+                        labelX = 30;
+                    }
+
+                    let displayName = g.name;
+                    if (key === 'gonads') {
+                        displayName = currentSystem === 'female' ? 'Ovaries' : 'Testes';
+                    }
+                    
+                    ctx.fillText(`◄ ${displayName}`, labelX, labelY);
+                }
+            }
+
+            // 3. Update & Draw Particles (Hormones in Bloodstream)
+            if (chkBlood.checked) {
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    let p = particles[i];
+                    p.progress += p.speed;
+
+                    if (p.progress >= 1) {
+                        particles.splice(i, 1); // Remove dead particles
+                        continue;
+                    }
+
+                    // Ease Out Lerp
+                    let ease = 1 - Math.pow(1 - p.progress, 3);
+                    let curX = p.x + (p.tx - p.x) * ease;
+                    let curY = p.y + (p.ty - p.y) * ease;
+
+                    ctx.beginPath(); ctx.arc(curX, curY, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color; ctx.shadowBlur = 8;
+                    ctx.fill(); ctx.shadowBlur = 0;
+                }
+            }
+
+            ctx.restore();
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Boot
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            resizeCanvas();
+            updateTelemetry();
+            document.getElementById('user-guide-modal').classList.remove('hidden');
+
+            const closeGuide = () => document.getElementById('user-guide-modal').classList.add('hidden');
+            document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+            document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+            document.getElementById('user-guide-modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('user-guide-modal')) closeGuide();
+            });
+
+            // Click-to-Select Glands & Drag-to-Pan Camera logic
+            let isPanning = false;
+            let startPanX = 0;
+            let startPanY = 0;
+
+            function getMouseCoords(e) {
+                const rect = simCanvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            simCanvas.addEventListener('mousedown', (e) => {
+                const { x, y } = getMouseCoords(e);
+                const W = simCanvas.width / window.devicePixelRatio;
+                const H = simCanvas.height / window.devicePixelRatio;
+                const centerX = W / 2 + panX;
+                const centerY = H / 2 + 20 + panY;
+
+                const gx = (x - centerX) / zoomLevel;
+                const gy = (y - centerY) / zoomLevel;
+
+                let clickedGlandKey = null;
+                for (let key in glandsDB) {
+                    const coords = getGlandCoords(key);
+                    let hit = false;
+                    for (let c of coords) {
+                        if (Math.hypot(gx - c.x, gy - c.y) < 15) {
+                            hit = true;
+                            break;
+                        }
+                    }
+                    if (hit) {
+                        clickedGlandKey = key;
+                        break;
+                    }
+                }
+
+                if (clickedGlandKey) {
+                    activeGlandKey = clickedGlandKey;
+                    selGland.value = clickedGlandKey;
+                    particles = [];
+                    updateTelemetry();
+                } else {
+                    isPanning = true;
+                    startX = x;
+                    startY = y;
+                    simCanvas.style.cursor = 'grabbing';
+                }
+            });
+
+            simCanvas.addEventListener('mousemove', (e) => {
+                const { x, y } = getMouseCoords(e);
+                const W = simCanvas.width / window.devicePixelRatio;
+                const H = simCanvas.height / window.devicePixelRatio;
+                const centerX = W / 2 + panX;
+                const centerY = H / 2 + 20 + panY;
+
+                const gx = (x - centerX) / zoomLevel;
+                const gy = (y - centerY) / zoomLevel;
+
+                if (isPanning) {
+                    const dx = x - startX;
+                    const dy = y - startY;
+                    panX += dx;
+                    panY += dy;
+                    startX = x;
+                    startY = y;
+                } else {
+                    let hovering = false;
+                    for (let key in glandsDB) {
+                        const coords = getGlandCoords(key);
+                        let hit = false;
+                        for (let c of coords) {
+                            if (Math.hypot(gx - c.x, gy - c.y) < 15) {
+                                hit = true;
+                                break;
+                            }
+                        }
+                        if (hit) {
+                            hovering = true;
+                            break;
+                        }
+                    }
+                    simCanvas.style.cursor = hovering ? 'pointer' : 'default';
+                }
+            });
+
+            const stopPanning = () => {
+                isPanning = false;
+                simCanvas.style.cursor = 'default';
+            };
+
+            simCanvas.addEventListener('mouseup', stopPanning);
+            simCanvas.addEventListener('mouseleave', stopPanning);
+
+            // Touch events support
+            simCanvas.addEventListener('touchstart', (e) => {
+                const { x, y } = getMouseCoords(e);
+                const W = simCanvas.width / window.devicePixelRatio;
+                const H = simCanvas.height / window.devicePixelRatio;
+                const centerX = W / 2 + panX;
+                const centerY = H / 2 + 20 + panY;
+
+                const gx = (x - centerX) / zoomLevel;
+                const gy = (y - centerY) / zoomLevel;
+
+                let clickedGlandKey = null;
+                for (let key in glandsDB) {
+                    const coords = getGlandCoords(key);
+                    let hit = false;
+                    for (let c of coords) {
+                        if (Math.hypot(gx - c.x, gy - c.y) < 15) {
+                            hit = true;
+                            break;
+                        }
+                    }
+                    if (hit) {
+                        clickedGlandKey = key;
+                        break;
+                    }
+                }
+
+                if (clickedGlandKey) {
+                    activeGlandKey = clickedGlandKey;
+                    selGland.value = clickedGlandKey;
+                    particles = [];
+                    updateTelemetry();
+                    e.preventDefault();
+                } else {
+                    isPanning = true;
+                    startX = x;
+                    startY = y;
+                }
+            }, { passive: false });
+
+            simCanvas.addEventListener('touchmove', (e) => {
+                if (isPanning) {
+                    const { x, y } = getMouseCoords(e);
+                    const dx = x - startX;
+                    const dy = y - startY;
+                    panX += dx;
+                    panY += dy;
+                    startX = x;
+                    startY = y;
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            simCanvas.addEventListener('touchend', stopPanning);
+            simCanvas.addEventListener('touchcancel', stopPanning);
+
+            requestAnimationFrame(renderLoop);
+        });
+    </script>
+</body>
+
+</html>

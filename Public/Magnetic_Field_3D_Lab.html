@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Magnetic Field Laboratory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Scrollbars */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Range Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #334155;
+            border-radius: 9999px;
+            height: 6px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -5px;
+            background-color: #06b6d4;
+            border-radius: 9999px;
+            height: 16px;
+            width: 16px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+            transition: 0.2s;
+        }
+
+        input[type="range"].slider-pink::-webkit-slider-thumb {
+            background-color: #ec4899;
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+        }
+
+        input[type="range"].slider-amber::-webkit-slider-thumb {
+            background-color: #f59e0b;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+        }
+
+        /* 3D Canvas Background */
+        .lab-stage {
+            background-color: #020617 !important;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 1);
+        }
+
+        /* Gradients */
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div
+                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">3D Magnetic Field Topology
+                    </h1>
+                    <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Biot-Savart Law 3D Engine
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> User Guide
+                </button>
+                <div
+                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">3D Vector
+                        Engine Active</span>
+                </div>
+            </div>
+        </header>
+
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button onclick="resetMath()"
+                    class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Reset Geometry
+                </button>
+            </div>
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-lines" checked
+                        class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
+                    <span>Show 3D Field Lines</span>
+                </label>
+            </div>
+        </div>
+
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+                <div class="space-y-4">
+
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <span
+                            class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Conductor
+                            Configuration</span>
+
+                        <select id="select-config"
+                            class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm">
+                            <option value="finite" selected>Infinite Straight Wire</option>
+                            <option value="arc">Circular Arc</option>
+                            <option value="axis">Axis of Circular Loop</option>
+                        </select>
+
+                        <div>
+                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1">
+                                <span class="text-cyan-600 flex items-center gap-1">■ Current ($I$)</span>
+                                <span id="val-i"
+                                    class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">10 A</span>
+                            </div>
+                            <input type="range" id="slider-i" min="-20" max="20" value="10">
+                        </div>
+
+                        <div id="ctrl-distance">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-3">
+                                <span class="text-pink-600 flex items-center gap-1">■ Dist / Position ($d$ or
+                                    $x$)</span>
+                                <span id="val-d"
+                                    class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-xs">5 cm</span>
+                            </div>
+                            <input type="range" id="slider-d" min="1" max="15" value="5" class="slider-pink">
+                        </div>
+
+                        <div id="ctrl-radius" class="hidden">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-3">
+                                <span class="text-amber-600 flex items-center gap-1">■ Radius ($R$)</span>
+                                <span id="val-r"
+                                    class="font-mono bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded text-xs">5
+                                    cm</span>
+                            </div>
+                            <input type="range" id="slider-r" min="2" max="15" value="5" class="slider-amber">
+                        </div>
+
+                        <div id="ctrl-arc" class="hidden">
+                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-3">
+                                <span class="text-emerald-600 flex items-center gap-1">■ Arc Angle ($\phi$)</span>
+                                <span id="val-arc"
+                                    class="font-mono bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-xs">180°</span>
+                            </div>
+                            <input type="range" id="slider-arc" min="30" max="360" value="180" class="slider-emerald">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2">
+                        <span
+                            class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Active
+                            Formula</span>
+                        <div class="text-[13px] font-mono text-center py-2 overflow-x-auto" id="ui-formula">
+                            $$B = \frac{\mu_0 I}{4\pi d} (\sin\theta_1 + \sin\theta_2)$$
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 space-y-3 mt-4">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block mb-2">Live
+                        Telemetry</span>
+
+                    <div class="flex flex-col gap-2">
+                        <div
+                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                            <div
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span>
+                                |B| Field
+                            </div>
+                            <div class="text-[14px] font-bold font-mono tracking-widest grad-cyan uppercase"
+                                id="tel-bfield">
+                                0.00 $\mu$T
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col gap-1 border border-slate-800 text-xs text-slate-300 font-mono text-left mt-1">
+                            <div class="flex items-center justify-between border-b border-slate-700 pb-1 mb-1">
+                                <span class="text-amber-400 font-bold">Current Flow:</span>
+                                <span class="text-white text-[11px]" id="tel-current-dir">Upward (+Y)</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-slate-700 pb-1 mb-1">
+                                <span class="text-pink-400 font-bold">B-Field Dir:</span>
+                                <span class="text-white text-[11px]" id="tel-dir">-Z Axis</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-emerald-400 font-bold">Geometry:</span>
+                                <span class="text-white text-[11px]" id="tel-geom">Concentric Circles</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-cyan-900 min-h-[500px]"
+                id="three-container">
+
+                <div
+                    class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></span>
+                    <span class="text-[10px] font-extrabold text-cyan-400 uppercase tracking-wider">3D Orbit Enabled
+                        (Drag to Rotate)</span>
+                </div>
+
+                <div
+                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                    <label for="filter-category" class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">Question Category</label>
+                    <select id="filter-category" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer">
+                        <option value="all">All Categories</option>
+                        <option value="jee">JEE Main</option>
+                        <option value="cbse">School Board PYQ</option>
+                        <option value="neet">NEET Prep</option>
+                    </select>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
+                        Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
+                        <span id="viva-score"
+                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
+                            0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-4">
+
+                    <div data-category="cbse"
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-indigo-50 text-indigo-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
+                                id="q1-text">
+                                The Biot-Savart Law in magnetostatics is analogous to which law in electrostatics?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+                            <p id="q1-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div data-category="jee"
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
+                                id="q2-text">
+                                What is the magnetic field $B$ at the center of a semi-circular current carrying wire of
+                                radius $R$?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+                            <p id="q2-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div data-category="neet"
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
+                                id="q3-text">
+                                For a point on the axis of a circular loop at a distance $x$ ($x \gg R$), the magnetic
+                                field varies as:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+                            <p id="q3-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div data-category="jee"
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
+                                id="q4-text">
+                                If the wire is infinitely long, what does the formula $B = \frac{\mu_0 I}{4\pi
+                                d}(\sin\theta_1 + \sin\theta_2)$ become?
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+                            <p id="q4-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span>📘</span> 3D MAGNETIC PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>3D Magnetic Field Visualizer</strong>! Interact with the Biot-Savart Law using
+                    a true 3D spatial engine.</p>
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core
+                        Controls</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>3D Navigation:</strong> Click and drag on the central canvas to rotate the camera.
+                            Scroll to zoom in and out.</li>
+                        <li><strong>Configurations:</strong> Switch between a straight wire, a circular arc, or a full
+                            loop. Watch the field lines reconstruct dynamically.</li>
+                        <li><strong>Current Flow:</strong> Look closely at the conductors to see the animated flow of
+                            electrons (amber particles) indicating the current vector $\vec{I}$.</li>
+                        <li><strong>Right-Hand Rule:</strong> Notice how the cyan magnetic field lines ($\vec{B}$)
+                            always curl around the current vectors according to the right-hand grip rule.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Initialize 3D Engine
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VIVA MCQS DECK STATE & DATA ---
+        const appState = {
+            vivaScore: 0,
+            answers: { q1: null, q2: null, q3: null, q4: null }
+        };
+
+        const vivaData = {
+            q1: {
+                options: [
+                    { text: "Gauss's Law", isCorrect: false, exp: "Incorrect." },
+                    { text: "Coulomb's Law", isCorrect: true, exp: "Correct! Just as Coulomb's Law gives the electric field due to a point charge, Biot-Savart Law gives the magnetic field due to an infinitesimal current element." },
+                    { text: "Faraday's Law", isCorrect: false, exp: "Incorrect." },
+                    { text: "Ampere's Law", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q2: {
+                options: [
+                    { text: "$\\frac{\\mu_0 I}{2R}$", isCorrect: false, exp: "Incorrect. This is for a full circle." },
+                    { text: "$\\frac{\\mu_0 I}{4R}$", isCorrect: true, exp: "Correct! For a circular arc, $B = \\frac{\\mu_0 I}{4\\pi R} \\times \\phi$. For a semi-circle, $\\phi = \\pi$, so $B = \\frac{\\mu_0 I}{4R}$." },
+                    { text: "$\\frac{\\mu_0 I}{\\pi R}$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$\\frac{\\mu_0 I}{4\\pi R}$", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q3: {
+                options: [
+                    { text: "$1 / x^2$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$1 / x^3$", isCorrect: true, exp: "Correct! The exact formula is $B = \\frac{\\mu_0 I R^2}{2(R^2 + x^2)^{3/2}}$. If $x \\gg R$, we ignore $R^2$, yielding $B \\approx \\frac{\\mu_0 I R^2}{2x^3}$." },
+                    { text: "$1 / x$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$x^2$", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q4: {
+                options: [
+                    { text: "$\\frac{\\mu_0 I}{2\\pi d}$", isCorrect: true, exp: "Correct! For an infinite wire, the ends are at infinity. Looking from point P, the angles approach $90^\\circ$. $\\sin(90^\\circ) = 1$, so the term becomes $(1+1) = 2$. Thus, $B = \\frac{\\mu_0 I}{2\\pi d}$." },
+                    { text: "$\\frac{\\mu_0 I}{4\\pi d}$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$\\frac{\\mu_0 I}{2d}$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$0$", isCorrect: false, exp: "Incorrect." }
+                ]
+            }
+        };
+
+        function triggerConfetti() {
+            const container = document.body;
+            const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+            const numParticles = 120;
+            
+            for (let i = 0; i < numParticles; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                
+                const isRibbon = Math.random() > 0.8;
+                const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+                const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+                
+                confetti.style.width = `${w}px`;
+                confetti.style.height = `${h}px`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+                
+                const fromLeft = i < numParticles / 2;
+                confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+                confetti.style.top = 'calc(100vh + 10px)';
+                
+                const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+                const velocity = Math.random() * 500 + 400;
+                
+                const dx = Math.cos(angle) * velocity;
+                const dy = -Math.sin(angle) * velocity;
+                
+                const fallDuration = Math.random() * 1.5 + 2.0;
+                const spinRotation = Math.random() * 1080 - 540;
+                
+                confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+                container.appendChild(confetti);
+                
+                confetti.offsetHeight; // force reflow
+                
+                confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+                confetti.style.opacity = '0';
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, fallDuration * 1000);
+            }
+        }
+
+        function renderQuestions() {
+            const scoreLabel = document.getElementById('viva-score');
+            Object.keys(vivaData).forEach(qKey => {
+                const data = vivaData[qKey];
+                const optionsContainer = document.getElementById(`${qKey}-options`);
+                const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+                if (!optionsContainer || !feedbackContainer) return;
+                optionsContainer.innerHTML = '';
+                data.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "relative text-left p-3 rounded-lg text-sm transition-all duration-200 border leading-snug font-bold bg-white hover:bg-cyan-50/50 hover:border-cyan-400 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+                    let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                    btn.innerHTML = `<span class="font-extrabold text-cyan-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+                    btn.addEventListener('click', () => {
+                        if (appState.answers[qKey] !== null) return;
+                        appState.answers[qKey] = idx;
+                        if (opt.isCorrect) {
+                            appState.vivaScore++;
+                        } else {
+                            triggerConfetti();
+                        }
+                        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                        const buttons = optionsContainer.querySelectorAll('button');
+                        buttons.forEach((b, i) => {
+                            b.disabled = true;
+                            b.classList.remove('bg-white', 'hover:bg-cyan-50/50', 'hover:border-cyan-400', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+                            b.classList.add('cursor-not-allowed', 'shadow-none');
+                            if (appState.answers[qKey] === i) {
+                                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-950');
+                            } else if (data.options[i].isCorrect) {
+                                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                            } else {
+                                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                            }
+                        });
+                        feedbackContainer.innerHTML = opt.exp;
+                        feedbackContainer.classList.remove('hidden');
+                        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    });
+                    optionsContainer.appendChild(btn);
+                });
+            });
+            if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        }
+
+        // --- STATE MANAGEMENT ---
+        const selConfig = document.getElementById('select-config');
+        const chkLines = document.getElementById('chk-lines');
+        const uiFormula = document.getElementById('ui-formula');
+
+        const slI = document.getElementById('slider-i');
+        const slD = document.getElementById('slider-d');
+        const slR = document.getElementById('slider-r');
+        const slArc = document.getElementById('slider-arc');
+
+        const ctrlDist = document.getElementById('ctrl-distance');
+        const ctrlRad = document.getElementById('ctrl-radius');
+        const ctrlArc = document.getElementById('ctrl-arc');
+
+        const valI = document.getElementById('val-i');
+        const valD = document.getElementById('val-d');
+        const valR = document.getElementById('val-r');
+        const valArc = document.getElementById('val-arc');
+
+        const telB = document.getElementById('tel-bfield');
+        const telDir = document.getElementById('tel-dir');
+        const telGeom = document.getElementById('tel-geom');
+
+        const formulas = {
+            finite: "$$B = \\frac{\\mu_0 I}{4\\pi d} (\\sin 90^\\circ + \\sin 90^\\circ) \\approx \\frac{\\mu_0 I}{2\\pi d}$$",
+            arc: "$$B = \\frac{\\mu_0 I}{4\\pi R} \\phi$$",
+            axis: "$$B = \\frac{\\mu_0 I R^2}{2(R^2 + x^2)^{3/2}}$$"
+        };
+
+        let pState = { mode: 'finite', I: 10, d: 5, R: 5, arc: 180 };
+
+        function updateState() {
+            pState.mode = selConfig.value;
+            pState.I = parseFloat(slI.value);
+            pState.d = parseFloat(slD.value);
+            pState.R = parseFloat(slR.value);
+            pState.arc = parseFloat(slArc.value);
+
+            valI.innerText = `${pState.I} A`;
+            valD.innerText = `${pState.d} cm`;
+            valR.innerText = `${pState.R} cm`;
+            valArc.innerText = `${pState.arc}°`;
+
+            const telCurrentDir = document.getElementById('tel-current-dir');
+            if (telCurrentDir) {
+                if (pState.I === 0) {
+                    telCurrentDir.innerText = "No Current Flow";
+                } else if (pState.mode === 'finite') {
+                    telCurrentDir.innerText = pState.I > 0 ? "Upward (+Y)" : "Downward (-Y)";
+                } else {
+                    telCurrentDir.innerText = pState.I > 0 ? "Counter-Clockwise" : "Clockwise";
+                }
+            }
+
+            if (pState.mode === 'finite') {
+                ctrlDist.classList.remove('hidden'); ctrlRad.classList.add('hidden'); ctrlArc.classList.add('hidden');
+                telDir.innerText = pState.I >= 0 ? "-Z Axis (Right-Hand Rule)" : "+Z Axis (Right-Hand Rule)";
+                telGeom.innerText = "Concentric Circles";
+            } else if (pState.mode === 'arc') {
+                ctrlDist.classList.add('hidden'); ctrlRad.classList.remove('hidden'); ctrlArc.classList.remove('hidden');
+                telDir.innerText = pState.I >= 0 ? "+Z Axis (At Center)" : "-Z Axis (At Center)";
+                telGeom.innerText = "Perpendicular to Plane";
+            } else {
+                ctrlDist.classList.remove('hidden'); ctrlRad.classList.remove('hidden'); ctrlArc.classList.add('hidden');
+                telDir.innerText = pState.I >= 0 ? "+Z Axis (Along Axis)" : "-Z Axis (Along Axis)";
+                telGeom.innerText = "Dipole Configuration";
+            }
+
+            // Math
+            let mu0_4pi = 1e-7;
+            let b_uT = 0;
+            let absI = Math.abs(pState.I);
+            if (pState.mode === 'finite') {
+                b_uT = (mu0_4pi * absI / (pState.d * 0.01)) * 2 * 1e6; // infinite approx for simplicity in 3D
+            } else if (pState.mode === 'arc') {
+                b_uT = (mu0_4pi * absI / (pState.R * 0.01)) * (pState.arc * Math.PI / 180) * 1e6;
+            } else {
+                let r = pState.R * 0.01; let x = pState.d * 0.01;
+                b_uT = ((4 * Math.PI * 1e-7) * absI * r * r) / (2 * Math.pow(r * r + x * x, 1.5)) * 1e6;
+            }
+            telB.innerText = `${b_uT.toFixed(2)} μT`;
+
+            if (uiFormula.getAttribute('data-mode') !== pState.mode) {
+                uiFormula.setAttribute('data-mode', pState.mode);
+                uiFormula.innerHTML = formulas[pState.mode];
+                if (window.MathJax) MathJax.typesetPromise([uiFormula]);
+            }
+
+            rebuild3DScene();
+        }
+
+        selConfig.addEventListener('change', updateState);
+        slI.addEventListener('change', updateState);
+        slD.addEventListener('change', updateState);
+        slR.addEventListener('change', updateState);
+        slArc.addEventListener('change', updateState);
+        chkLines.addEventListener('change', rebuild3DScene);
+
+        function resetMath() {
+            slI.value = 10; slD.value = 5; slR.value = 5; slArc.value = 180;
+            controls.reset();
+            updateState();
+        }
+
+        // --- THREE.JS 3D ENGINE ---
+        const container = document.getElementById('three-container');
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(20, 20, 30);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0x06b6d4, 1);
+        pointLight.position.set(10, 20, 10);
+        scene.add(pointLight);
+
+        // Helpers
+        const axesHelper = new THREE.AxesHelper(15);
+        scene.add(axesHelper);
+
+        // Materials
+        const matWire = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.2 });
+        const matPoint = new THREE.MeshBasicMaterial({ color: 0xec4899 });
+        
+        const matFieldSolid = new THREE.LineBasicMaterial({
+            color: 0x22d3ee,
+            transparent: true,
+            opacity: 0.45
+        });
+        const matArrow = new THREE.MeshBasicMaterial({
+            color: 0x22d3ee,
+            transparent: true,
+            opacity: 0.9
+        });
+        const geoArrow = new THREE.ConeGeometry(0.25, 0.7, 8);
+
+        let objectGroup = new THREE.Group();
+        scene.add(objectGroup);
+
+        // Electron animation array
+        let electrons = [];
+        const matElectron = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+        const geoElectron = new THREE.SphereGeometry(0.3, 8, 8);
+
+        // Moving field lines/groups animation array
+        let movingFieldLines = [];
+
+        let ptMesh = null;
+
+        function createCircleGeometry(radius, numSegments = 64) {
+            const points = [];
+            for (let i = 0; i <= numSegments; i++) {
+                const theta = (i / numSegments) * Math.PI * 2;
+                points.push(new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0));
+            }
+            return new THREE.BufferGeometry().setFromPoints(points);
+        }
+
+        function addArrowheadsToCircleGroup(group, radius, isClockwiseRotation) {
+            let currentSign = (pState.I >= 0) ? 1 : -1;
+            let dirSign = isClockwiseRotation ? -currentSign : currentSign;
+            
+            // Arrow 1 at (radius, 0, 0) - tangent is +Y (counter-clockwise)
+            let arrow1 = new THREE.Mesh(geoArrow, matArrow);
+            arrow1.position.set(radius, 0, 0);
+            arrow1.scale.set(1, dirSign, 1);
+            group.add(arrow1);
+            
+            // Arrow 2 at (-radius, 0, 0) - tangent is -Y (counter-clockwise)
+            let arrow2 = new THREE.Mesh(geoArrow, matArrow);
+            arrow2.position.set(-radius, 0, 0);
+            arrow2.rotation.z = Math.PI;
+            arrow2.scale.set(1, dirSign, 1);
+            group.add(arrow2);
+        }
+
+        function rebuild3DScene() {
+            objectGroup.clear();
+            electrons = [];
+            movingFieldLines = [];
+
+            let I_scale = Math.abs(pState.I) / 10;
+            let d = pState.d;
+            let R = pState.R;
+
+            ptMesh = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), matPoint);
+
+            if (pState.mode === 'finite') {
+                // Wire along Y
+                let wireGeo = new THREE.CylinderGeometry(0.5, 0.5, 40, 16);
+                let wire = new THREE.Mesh(wireGeo, matWire);
+                objectGroup.add(wire);
+
+                // Point P on X axis
+                ptMesh.position.set(d, 0, 0);
+                objectGroup.add(ptMesh);
+
+                // B-Vector at P
+                let dirZ = pState.I >= 0 ? -1 : 1;
+                let dir = new THREE.Vector3(0, 0, dirZ);
+                let arrow = new THREE.ArrowHelper(dir, ptMesh.position, 4 * I_scale, 0x06b6d4, 1, 0.5);
+                objectGroup.add(arrow);
+
+                // Current Flow Arrow on Wire
+                if (pState.I !== 0) {
+                    let curDir = pState.I > 0 ? 1 : -1;
+                    let currentArrow = new THREE.ArrowHelper(
+                        new THREE.Vector3(0, curDir, 0),
+                        new THREE.Vector3(0.8, -5, 0),
+                        10,
+                        0x22c55e,
+                        2,
+                        1
+                    );
+                    objectGroup.add(currentArrow);
+                }
+
+                // Solid Moving Field Lines (Concentric rings with arrowheads)
+                if (chkLines.checked) {
+                    const heights = [-8, -4, 0, 4, 8];
+                    const radii = [3, 6, 9];
+                    heights.forEach(hy => {
+                        radii.forEach(hr => {
+                            let circleGroup = new THREE.Group();
+                            circleGroup.position.y = hy;
+                            circleGroup.rotation.x = Math.PI / 2;
+                            
+                            let circleGeo = createCircleGeometry(hr);
+                            let circleLine = new THREE.Line(circleGeo, matFieldSolid);
+                            circleGroup.add(circleLine);
+                            
+                            addArrowheadsToCircleGroup(circleGroup, hr, true);
+                            
+                            objectGroup.add(circleGroup);
+                            
+                            movingFieldLines.push({
+                                mesh: circleGroup,
+                                type: 'rotate_z_cw'
+                            });
+                        });
+                    });
+                }
+
+                // Electrons
+                for (let i = 0; i < 20; i++) {
+                    let e = new THREE.Mesh(geoElectron, matElectron);
+                    e.position.y = -20 + Math.random() * 40;
+                    objectGroup.add(e);
+                    electrons.push({ mesh: e, type: 'line' });
+                }
+
+            } else if (pState.mode === 'arc') {
+                // Arc in XY plane
+                let angleRad = pState.arc * Math.PI / 180;
+                let arcGeo = new THREE.TorusGeometry(R, 0.5, 16, 64, angleRad);
+                let arc = new THREE.Mesh(arcGeo, matWire);
+                objectGroup.add(arc);
+
+                // Point P at origin
+                ptMesh.position.set(0, 0, 0);
+                objectGroup.add(ptMesh);
+
+                // B-Vector
+                let dirZ = pState.I >= 0 ? 1 : -1;
+                let dir = new THREE.Vector3(0, 0, dirZ);
+                let arrow = new THREE.ArrowHelper(dir, ptMesh.position, 5 * I_scale, 0x06b6d4, 1.5, 0.5);
+                objectGroup.add(arrow);
+
+                // Current Flow Arrow on Wire (tangent to midpoint)
+                if (pState.I !== 0) {
+                    let curDir = pState.I > 0 ? 1 : -1;
+                    let midAngle = angleRad / 2;
+                    let arrowPos = new THREE.Vector3(R * Math.cos(midAngle), R * Math.sin(midAngle), 0.8);
+                    let tangent = new THREE.Vector3(-Math.sin(midAngle) * curDir, Math.cos(midAngle) * curDir, 0).normalize();
+                    let currentArrow = new THREE.ArrowHelper(
+                        tangent,
+                        arrowPos,
+                        6,
+                        0x22c55e,
+                        1.5,
+                        0.8
+                    );
+                    objectGroup.add(currentArrow);
+                }
+
+                // Solid Moving Field Lines (Central line and wrapping loops with arrowheads)
+                if (chkLines.checked) {
+                    // 1. Center straight line with sliding arrowheads
+                    let lineGeo = new THREE.BufferGeometry().setFromPoints([
+                        new THREE.Vector3(0, 0, -10),
+                        new THREE.Vector3(0, 0, 10)
+                    ]);
+                    let line = new THREE.Line(lineGeo, matFieldSolid);
+                    objectGroup.add(line);
+
+                    let dirSign = (pState.I >= 0) ? 1 : -1;
+                    let numArrows = 2;
+                    for (let k = 0; k < numArrows; k++) {
+                        let arrow = new THREE.Mesh(geoArrow, matArrow);
+                        arrow.rotation.x = Math.PI / 2;
+                        arrow.scale.set(1, dirSign, 1);
+                        let zPos = -10 + (k / numArrows) * 20;
+                        arrow.position.set(0, 0, zPos);
+                        objectGroup.add(arrow);
+
+                        movingFieldLines.push({
+                            mesh: arrow,
+                            type: 'translate_arrow_z',
+                            zStart: -10,
+                            zEnd: 10
+                        });
+                    }
+
+                    // 2. Wrapping loops
+                    let numLoops = Math.max(3, Math.floor(pState.arc / 45));
+                    let r_val = 1.5;
+                    for (let i = 0; i <= numLoops; i++) {
+                        let alpha = (i / numLoops) * angleRad;
+                        let tx = R * Math.cos(alpha);
+                        let ty = R * Math.sin(alpha);
+                        let target = new THREE.Vector3(tx - Math.sin(alpha), ty + Math.cos(alpha), 0);
+
+                        let circleGroup = new THREE.Group();
+                        circleGroup.position.set(tx, ty, 0);
+                        
+                        let circleGeo = createCircleGeometry(r_val);
+                        let circleLine = new THREE.Line(circleGeo, matFieldSolid);
+                        circleGroup.add(circleLine);
+                        
+                        addArrowheadsToCircleGroup(circleGroup, r_val, true);
+                        
+                        circleGroup.lookAt(target);
+                        objectGroup.add(circleGroup);
+
+                        movingFieldLines.push({
+                            mesh: circleGroup,
+                            type: 'rotate_z_cw'
+                        });
+                    }
+                }
+
+                // Electrons
+                for (let i = 0; i < 15; i++) {
+                    let e = new THREE.Mesh(geoElectron, matElectron);
+                    let t = Math.random() * angleRad;
+                    e.position.set(R * Math.cos(t), R * Math.sin(t), 0);
+                    objectGroup.add(e);
+                    electrons.push({ mesh: e, type: 'arc', R: R, t: t, maxT: angleRad });
+                }
+
+            } else if (pState.mode === 'axis') {
+                // Loop in XY plane
+                let loopGeo = new THREE.TorusGeometry(R, 0.5, 16, 64);
+                let loop = new THREE.Mesh(loopGeo, matWire);
+                objectGroup.add(loop);
+
+                // Point P on Z axis
+                ptMesh.position.set(0, 0, d);
+                objectGroup.add(ptMesh);
+
+                // B-Vector
+                let dirZ = pState.I >= 0 ? 1 : -1;
+                let dir = new THREE.Vector3(0, 0, dirZ);
+                let arrow = new THREE.ArrowHelper(dir, ptMesh.position, 5 * I_scale, 0x06b6d4, 1.5, 0.5);
+                objectGroup.add(arrow);
+
+                // Current Flow Arrows on loop (two opposite arrows)
+                if (pState.I !== 0) {
+                    let curDir = pState.I > 0 ? 1 : -1;
+                    
+                    let pos1 = new THREE.Vector3(R, 0, 0.8);
+                    let tangent1 = new THREE.Vector3(0, curDir, 0);
+                    let currentArrow1 = new THREE.ArrowHelper(tangent1, pos1, 6, 0x22c55e, 1.5, 0.8);
+                    objectGroup.add(currentArrow1);
+                    
+                    let pos2 = new THREE.Vector3(-R, 0, 0.8);
+                    let tangent2 = new THREE.Vector3(0, -curDir, 0);
+                    let currentArrow2 = new THREE.ArrowHelper(tangent2, pos2, 6, 0x22c55e, 1.5, 0.8);
+                    objectGroup.add(currentArrow2);
+                }
+
+                // Solid Moving Field Lines (Dipole like with arrowheads)
+                if (chkLines.checked) {
+                    // 1. Center straight line with sliding arrowheads
+                    let lineGeo = new THREE.BufferGeometry().setFromPoints([
+                        new THREE.Vector3(0, 0, -20),
+                        new THREE.Vector3(0, 0, 20)
+                    ]);
+                    let line = new THREE.Line(lineGeo, matFieldSolid);
+                    objectGroup.add(line);
+
+                    let dirSign = (pState.I >= 0) ? 1 : -1;
+                    let numArrows = 3;
+                    for (let k = 0; k < numArrows; k++) {
+                        let arrow = new THREE.Mesh(geoArrow, matArrow);
+                        arrow.rotation.x = Math.PI / 2;
+                        arrow.scale.set(1, dirSign, 1);
+                        let zPos = -20 + (k / numArrows) * 40;
+                        arrow.position.set(0, 0, zPos);
+                        objectGroup.add(arrow);
+
+                        movingFieldLines.push({
+                            mesh: arrow,
+                            type: 'translate_arrow_z',
+                            zStart: -20,
+                            zEnd: 20
+                        });
+                    }
+
+                    // 2. Side curving dipole loops
+                    const radii = [R * 1.2, R * 1.8];
+                    const numAngles = 4;
+                    radii.forEach(R_d => {
+                        for (let i = 0; i < numAngles; i++) {
+                            let beta = (i * Math.PI / numAngles);
+                            
+                            let circleGroup = new THREE.Group();
+                            
+                            let circleGeo = createCircleGeometry(R_d);
+                            let circleLine = new THREE.Line(circleGeo, matFieldSolid);
+                            circleGroup.add(circleLine);
+                            
+                            addArrowheadsToCircleGroup(circleGroup, R_d, false);
+                            
+                            circleGroup.lookAt(new THREE.Vector3(-Math.sin(beta), Math.cos(beta), 0));
+                            objectGroup.add(circleGroup);
+
+                            movingFieldLines.push({
+                                mesh: circleGroup,
+                                type: 'rotate_z_ccw'
+                            });
+                        }
+                    });
+                }
+
+                // Electrons
+                for (let i = 0; i < 20; i++) {
+                    let e = new THREE.Mesh(geoElectron, matElectron);
+                    let t = Math.random() * Math.PI * 2;
+                    e.position.set(R * Math.cos(t), R * Math.sin(t), 0);
+                    objectGroup.add(e);
+                    electrons.push({ mesh: e, type: 'arc', R: R, t: t, maxT: Math.PI * 2 });
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            let iSign = Math.sign(pState.I);
+            let absI = Math.abs(pState.I);
+
+            // Animate electrons
+            electrons.forEach(el => {
+                if (el.type === 'line') {
+                    let speed = (0.05 + 0.015 * absI) * iSign;
+                    el.mesh.position.y -= speed; // oppose conventional current
+                    if (el.mesh.position.y > 20) el.mesh.position.y = -20;
+                    if (el.mesh.position.y < -20) el.mesh.position.y = 20;
+                } else if (el.type === 'arc') {
+                    let speed = (0.005 + 0.002 * absI) * iSign;
+                    el.t -= speed; // oppose conventional current
+                    if (el.t > el.maxT) el.t = 0;
+                    if (el.t < 0) el.t = el.maxT;
+                    el.mesh.position.set(el.R * Math.cos(el.t), el.R * Math.sin(el.t), 0);
+                }
+            });
+
+            // Animate magnetic field lines
+            movingFieldLines.forEach(fl => {
+                if (fl.type === 'rotate_z_cw') {
+                    let speed = (0.008 + 0.003 * absI) * iSign;
+                    fl.mesh.rotation.z -= speed;
+                } else if (fl.type === 'rotate_z_ccw') {
+                    let speed = (0.008 + 0.003 * absI) * iSign;
+                    fl.mesh.rotation.z += speed;
+                } else if (fl.type === 'translate_arrow_z') {
+                    let speed = (0.04 + 0.015 * absI) * iSign;
+                    fl.mesh.position.z += speed;
+                    
+                    if (fl.mesh.position.z > fl.zEnd) fl.mesh.position.z = fl.zStart;
+                    if (fl.mesh.position.z < fl.zStart) fl.mesh.position.z = fl.zEnd;
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            const container = document.getElementById('three-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { camera.position.multiplyScalar(0.8); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { camera.position.multiplyScalar(1.2); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { controls.reset(); camera.position.set(20, 20, 30); });
+
+        // --- 3D INTERACTIVE POINT DRAGGING ---
+        let isDraggingPoint = false;
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let dragPlaneNormal = new THREE.Vector3();
+        let dragPlanePoint = new THREE.Vector3();
+
+        function onMouseMove(event) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            if (isDraggingPoint) {
+                const denom = raycaster.ray.direction.dot(dragPlaneNormal);
+                if (Math.abs(denom) > 1e-6) {
+                    const s = dragPlaneNormal.dot(dragPlanePoint.clone().sub(raycaster.ray.origin)) / denom;
+                    const intersection = raycaster.ray.origin.clone().add(raycaster.ray.direction.clone().multiplyScalar(s));
+
+                    if (pState.mode === 'finite') {
+                        let val = Math.max(1, Math.min(15, intersection.x));
+                        slD.value = Math.round(val);
+                        updateState();
+                    } else if (pState.mode === 'axis') {
+                        let val = Math.max(1, Math.min(15, intersection.z));
+                        slD.value = Math.round(val);
+                        updateState();
+                    }
+                }
+            } else {
+                if (ptMesh && (pState.mode === 'finite' || pState.mode === 'axis')) {
+                    const intersects = raycaster.intersectObject(ptMesh);
+                    if (intersects.length > 0) {
+                        container.style.cursor = 'grab';
+                    } else {
+                        container.style.cursor = 'default';
+                    }
+                } else {
+                    container.style.cursor = 'default';
+                }
+            }
+        }
+
+        function onMouseDown(event) {
+            if (pState.mode === 'arc') return;
+
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            if (ptMesh) {
+                const intersects = raycaster.intersectObject(ptMesh);
+                if (intersects.length > 0) {
+                    isDraggingPoint = true;
+                    controls.enabled = false;
+                    container.style.cursor = 'grabbing';
+
+                    camera.getWorldDirection(dragPlaneNormal);
+                    dragPlaneNormal.negate();
+                    dragPlanePoint.copy(ptMesh.position);
+                }
+            }
+        }
+
+        function onMouseUp() {
+            if (isDraggingPoint) {
+                isDraggingPoint = false;
+                controls.enabled = true;
+                container.style.cursor = 'default';
+            }
+        }
+
+        function onTouchMove(event) {
+            if (event.touches.length > 0) {
+                onMouseMove(event.touches[0]);
+            }
+        }
+
+        function onTouchStart(event) {
+            if (event.touches.length > 0) {
+                onMouseDown(event.touches[0]);
+            }
+        }
+
+        function onTouchEnd() {
+            onMouseUp();
+        }
+
+        container.addEventListener('mousemove', onMouseMove);
+        container.addEventListener('mousedown', onMouseDown);
+        window.addEventListener('mouseup', onMouseUp);
+
+        container.addEventListener('touchmove', onTouchMove, { passive: true });
+        container.addEventListener('touchstart', onTouchStart, { passive: true });
+        window.addEventListener('touchend', onTouchEnd);
+
+        // Boot
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            updateState();
+            animate();
+
+            // Question Filter
+            const filterSelect = document.getElementById('filter-category');
+            if (filterSelect) {
+                filterSelect.addEventListener('change', () => {
+                    const selectedCategory = filterSelect.value;
+                    const questions = document.querySelectorAll('[data-category]');
+                    questions.forEach(q => {
+                        const cat = q.getAttribute('data-category');
+                        if (selectedCategory === 'all' || cat === selectedCategory) {
+                            q.classList.remove('hidden');
+                        } else {
+                            q.classList.add('hidden');
+                        }
+                    });
+                });
+            }
+
+            document.getElementById('user-guide-modal').classList.remove('hidden');
+            
+            // Wire open button
+            const btnOpenGuide = document.getElementById('btn-open-guide');
+            if (btnOpenGuide) {
+                btnOpenGuide.addEventListener('click', () => {
+                    document.getElementById('user-guide-modal').classList.remove('hidden');
+                });
+            }
+            
+            document.getElementById('btn-close-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+            document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+
+</html>

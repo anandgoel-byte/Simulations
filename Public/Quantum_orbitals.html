@@ -1,52 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2D Quantum Number Orbital Visualizer</title>
-  
+  <title>3D Quantum Orbital Laboratory</title>
+  <meta name="description" content="Explore mathematical probability density clouds and nodes of Hydrogen and Hydrogen-like atom orbitals in an interactive 3D virtual laboratory simulation.">
+
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
     };
   </script>
   <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
     }
+
     .mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    /* Range Slider Styling */
+
+    /* Scrollbars */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Range Sliders */
     input[type="range"] {
       -webkit-appearance: none;
       appearance: none;
       background: transparent;
       cursor: pointer;
+      width: 100%;
     }
+
     input[type="range"]::-webkit-slider-runnable-track {
-      background: #e2e8f0;
+      background: #334155;
       border-radius: 9999px;
       height: 6px;
     }
+
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -55,386 +78,697 @@
       border-radius: 9999px;
       height: 16px;
       width: 16px;
-      transition: all 0.15s ease-in-out;
       border: 2px solid #ffffff;
-      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+      transition: 0.2s;
     }
-    input[type="range"]::-webkit-slider-thumb:hover {
-      background-color: #3730a3;
-      transform: scale(1.15);
+
+    input[type="range"].slider-cyan::-webkit-slider-thumb {
+      background-color: #06b6d4;
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
     }
-    /* Custom Scrollbar */
-    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
-    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
-    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    input[type="range"].slider-pink::-webkit-slider-thumb {
+      background-color: #ec4899;
+      box-shadow: 0 0 8px rgba(236, 72, 153, 0.5);
+    }
+
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    }
+
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background-color: #f59e0b;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+
+    /* 3D Viewport styling */
+    .lab-stage {
+      background-color: #020617 !important;
+      box-shadow: inset 0 0 100px rgba(0, 0, 0, 1);
+    }
+
+    .grad-cyan {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .grad-pink {
+      background: linear-gradient(to right, #ec4899, #f43f5e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
   </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center p-4">
 
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+  <div
+    class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+    <header
+      class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
       <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"
-       alt="Sparkl Alpha Logo"
-       class="h-8 w-auto object-contain">
+        <div
+          class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+            class="h-8 object-contain" onerror="this.style.display='none'">
         </div>
         <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">2D Quantum Orbital Visualizer</h1>
-          <p class="text-[11px] text-slate-400 font-medium">Precision Atomic Structure &amp; 2D Probability Density Maps</p>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">3D Quantum Orbital Laboratory</h1>
+          <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Hydrogen Wavefunction 3D Engine</p>
         </div>
       </div>
       <div class="flex items-center space-x-3">
-        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+        <button id="btn-open-guide"
+          class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
           <span>📘</span> User Guide
         </button>
-        <div class="hidden sm:flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Schrödinger Engine Active</span>
+        <div
+          class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+          <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">3D Schrödinger Engine Active</span>
         </div>
       </div>
     </header>
 
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center space-x-2">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Slicing Plane:</span>
-        <select id="select-plane" class="bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer">
-          <option value="XY">XY Plane (Z = 0)</option>
-          <option value="XZ">XZ Plane (Y = 0)</option>
-          <option value="YZ">YZ Plane (X = 0)</option>
-        </select>
+    <div
+      class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Slicing Plane:</span>
+          <select id="select-plane"
+            class="bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer shadow-sm">
+            <option value="NONE" selected>No Slicing Plane</option>
+            <option value="XY">XY Plane (Z = 0)</option>
+            <option value="XZ">XZ Plane (Y = 0)</option>
+            <option value="YZ">YZ Plane (X = 0)</option>
+          </select>
+        </div>
       </div>
 
-      <div class="flex items-center space-x-4">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
-          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+      <div class="flex flex-wrap items-center gap-4">
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-cloud" checked
+            class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+          <span>Show 3D Probability Cloud</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-lobes" checked
+            class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+          <span>Show Textbook Lobes</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-plane" checked
+            class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+          <span>Show Slicing Plane</span>
+        </label>
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-grid" checked
+            class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
           <span>Show Spatial Grid</span>
         </label>
       </div>
     </div>
 
     <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
-        
-        <div class="md:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-          <div class="space-y-6">
-            
+
+      <section
+        class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-4">
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <span
+              class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Quantum Numbers</span>
+
             <div>
-              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500 block"></span> Principal ($n$)</span>
-                <div class="flex items-center space-x-1">
-                  <input type="number" id="num-n" step="1" min="1" max="4" value="2" class="w-12 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
+              <div class="flex justify-between text-sm font-bold text-slate-700 mb-1 mt-2">
+                <span class="text-indigo-600 flex items-center gap-1">■ Principal ($n$)</span>
+                <span id="val-n" class="font-mono bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg text-xs font-bold">n = 2</span>
               </div>
-              <input type="range" id="slider-n" min="1" max="4" step="1" value="2" class="w-full">
-              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
-                <span>1 (K shell)</span>
-                <span>4 (N shell)</span>
-              </div>
+              <input type="range" id="slider-n" min="1" max="4" value="2" class="slider-indigo">
             </div>
 
             <div>
-              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Azimuthal ($l$)</span>
-                <div class="flex items-center space-x-1">
-                  <input type="number" id="num-l" step="1" min="0" max="1" value="1" class="w-12 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
+              <div class="flex justify-between text-sm font-bold text-slate-700 mb-1 mt-3">
+                <span class="text-emerald-600 flex items-center gap-1">■ Azimuthal ($l$)</span>
+                <span id="val-l" class="font-mono bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-lg text-xs font-bold">l = 1 (p)</span>
               </div>
-              <input type="range" id="slider-l" min="0" max="1" step="1" value="1" class="w-full">
-              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
-                <span id="label-l-min">0 (s)</span>
-                <span id="label-l-max">1 (p)</span>
-              </div>
+              <input type="range" id="slider-l" min="0" max="1" value="1" class="slider-emerald">
             </div>
 
             <div>
-              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-fuchsia-500 block"></span> Magnetic ($m_l$)</span>
-                <div class="flex items-center space-x-1">
-                  <input type="number" id="num-ml" step="1" min="-1" max="1" value="0" class="w-12 px-1 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
+              <div class="flex justify-between text-sm font-bold text-slate-700 mb-1 mt-3">
+                <span class="text-pink-600 flex items-center gap-1">■ Magnetic ($m_l$)</span>
+                <span id="val-ml" class="font-mono bg-pink-50 text-pink-700 px-2 py-0.5 rounded-lg text-xs font-bold">m_l = 0</span>
               </div>
-              <input type="range" id="slider-ml" min="-1" max="1" step="1" value="0" class="w-full">
-              <div class="flex justify-between text-[9px] text-slate-400 mt-1">
-                <span id="label-ml-min">-1</span>
-                <span id="label-ml-max">+1</span>
+              <input type="range" id="slider-ml" min="-1" max="1" value="0" class="slider-pink">
+            </div>
+
+            <div class="pt-2 border-t border-slate-100">
+              <div class="flex justify-between text-sm font-bold text-slate-700 mb-1 mt-2">
+                <span class="text-amber-600 flex items-center gap-1">■ Contrast Boost</span>
+              </div>
+              <input type="range" id="slider-contrast" min="0.2" max="1.0" step="0.1" value="0.6" class="slider-amber">
+              <div class="text-xs text-slate-400 mt-1.5 italic leading-snug">
+                Decreasing this brightens faint outer probability lobes and nodes.
               </div>
             </div>
 
-            <div class="pt-3 border-t border-slate-200">
-              <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Visual Contrast Boost</span>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <span
+              class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Live Quantum Telemetry</span>
+
+            <div class="flex flex-col gap-2">
+              <div
+                class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span> Designation
+                </div>
+                <div class="text-base font-bold font-mono tracking-widest text-white uppercase" id="telemetryName">
+                  2p_z
+                </div>
               </div>
-              <input type="range" id="slider-contrast" min="0.2" max="1.0" step="0.1" value="0.6" class="w-full">
-              <div class="text-[9px] text-slate-400 mt-1 italic leading-tight">
-                Lowering this value enhances the visibility of faint outer probability lobes (radial nodes).
+
+              <div class="grid grid-cols-2 gap-2">
+                <div
+                  class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                  <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-emerald-400">Radial Nodes
+                  </div>
+                  <div class="text-base font-bold font-mono tracking-wide text-white" id="telemetryRadial">0</div>
+                </div>
+
+                <div
+                  class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                  <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-pink-400">Angular Nodes
+                  </div>
+                  <div class="text-base font-bold font-mono tracking-wide text-white" id="telemetryAngular">1</div>
+                </div>
               </div>
             </div>
-            
-            <div class="bg-slate-900 text-slate-100 rounded-xl p-3.5 shadow-sm space-y-2">
-              <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-1">Hydrogen Wavefunction</span>
-              <div class="text-[11px] font-mono text-center py-2">
+          </div>
+
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-3">
+            <span
+              class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Wavefunction</span>
+            <div class="space-y-2 text-[11px] font-mono text-slate-300">
+              <div class="bg-[#0f172a] p-3 rounded-lg border border-slate-800 text-center">
                 $$\psi(r,\theta,\phi) = R_{n,l}(r) Y_{l}^{m_l}(\theta,\phi)$$
                 $$P = |\psi|^2$$
               </div>
             </div>
-
           </div>
 
-          <div class="pt-4 border-t border-slate-200 space-y-3">
-            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Orbital Characteristics</span>
-            <div class="grid grid-cols-2 gap-2 text-center">
-              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between px-4 items-center">
-                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Orbital Designation</div>
-                <div id="telemetryName" class="text-sm font-bold text-white font-mono">2p_z</div>
-              </div>
-              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
-                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Radial Nodes</div>
-                <div id="telemetryRadial" class="text-sm font-bold text-amber-400 font-mono mt-0.5">0</div>
-              </div>
-              <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm">
-                <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Angular Nodes</div>
-                <div id="telemetryAngular" class="text-sm font-bold text-fuchsia-400 font-mono mt-0.5">1</div>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <div class="md:col-span-8 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
-          
-          <div class="relative w-full aspect-square max-w-[600px] mx-auto border border-slate-800 shadow-2xl">
-            <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
-            
-            <div id="label-axis-v" class="absolute top-2 left-1/2 transform -translate-x-1/2 text-[10px] font-mono font-bold text-slate-400">Y</div>
-            <div id="label-axis-h" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-[10px] font-mono font-bold text-slate-400">X</div>
-          </div>
-          
-          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm text-[9px] font-bold text-slate-300 space-y-1">
-            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#38bdf8] block"></span> Positive Wave Phase ($+$)</div>
-            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#f43f5e] block"></span> Negative Wave Phase ($-$)</div>
-          </div>
-        </div>
-
       </section>
 
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
-        
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center min-h-[500px]"
+        id="three-container">
+
+        <!-- Zoom & Reset HUD Controls -->
+        <div class="absolute top-4 right-4 flex flex-col gap-1.5 z-20">
+          <button id="btn-zoom-in"
+            class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-sm shadow-md border border-slate-700">+</button>
+          <button id="btn-zoom-out"
+            class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-sm shadow-md border border-slate-700">−</button>
+          <button id="btn-zoom-reset"
+            class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px] shadow-md border border-slate-700">RST</button>
         </div>
 
-        <div class="space-y-3">
-          
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why do we see alternating red and blue rings in higher $s$ orbitals (like $3s$ or $4s$)?
-              </h4>
-              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Scientific Verification</span>
-                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
-                These represent <strong>Radial Nodes</strong>. A radial node occurs when the radial component of the wavefunction $R_{n,l}(r)$ passes through zero and changes mathematical sign (phase). The dark black gaps in the canvas are the exact nodes where probability is zero.
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why does the $p_z$ ($l=1, m_l=0$) orbital appear completely empty when viewing the XY plane?
-              </h4>
-              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Scientific Verification</span>
-                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
-                The $p_z$ orbital is aligned strictly along the Z-axis. The entire XY plane ($z=0$) acts as an <strong>Angular Node</strong> for this orbital. Therefore, taking a 2D slice directly through the XY plane yields zero probability density. Switch to the XZ plane to see its lobes!
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What dictates the spatial orientation of an orbital?
-              </h4>
-              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Scientific Verification</span>
-                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2.5 rounded font-mono text-[10px] text-slate-700 border-l-2 border-rose-500">
-                The Magnetic Quantum Number ($m_l$). It determines the projection of angular momentum along a specified axis, essentially splitting a subshell (like $p$ or $d$) into specifically oriented individual orbitals. It ranges from $-l$ to $+l$.
-              </div>
-            </div>
-          </div>
-
+        <!-- Legends -->
+        <div
+          class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm text-[9px] font-bold text-slate-300 space-y-1 z-20 pointer-events-none select-none">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#38bdf8] block"></span> Positive Wave Phase ($+$)</div>
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#f43f5e] block"></span> Negative Wave Phase ($-$)</div>
         </div>
+      </section>
+
+      <section
+        class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+        <div
+          class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score"
+              class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
+              0 / 4</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase">Category</span>
+            <select id="viva-category"
+              class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all cursor-pointer shadow-sm">
+              <option value="all" selected>All Questions</option>
+              <option value="school">School Board PYQ</option>
+              <option value="jee">JEE Main</option>
+              <option value="neet">NEET Prep</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="viva-questions-container" class="space-y-4">
+          <!-- Rendered dynamically -->
+        </div>
+
       </section>
 
     </main>
-
   </div>
 
-  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>📘</span> 2D ORBITAL PROTOCOLS
+  <div id="user-guide-modal"
+    class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div
+      class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span>📘</span> QUANTUM ORBITALS - User Guide
         </h3>
-        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+        <button id="btn-close-guide"
+          class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
       </div>
-      <div class="space-y-3.5 text-sm text-slate-600">
-        <p>Welcome to the <strong>2D Quantum Number Virtual Laboratory</strong>! Explore the probability densities of atomic orbitals precisely mapped onto 2D slicing planes.</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Principal (n)</strong>: Defines the energy shell (Size).</li>
-          <li><strong>Azimuthal (l)</strong>: Defines the subshell shape (s, p, d, f). Note that $l$ is strictly capped at $n-1$.</li>
-          <li><strong>Magnetic (m_l)</strong>: Defines orientation. Restricted from $-l$ to $+l$.</li>
-          <li><strong>Slicing Plane</strong>: If an orbital appears completely dark, you are likely viewing it cross-sectioned through one of its angular nodes! Change the Slicing Plane to reveal the lobes.</li>
-        </ul>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>3D Quantum Orbitals Laboratory</strong>! Explore the mathematical probability clouds and nodes of Hydrogen and Hydrogen-like atoms in full interactive 3D.</p>
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Principal ($n$):</strong> Defines the energy shell (Size/Bound).</li>
+            <li><strong>Azimuthal ($l$):</strong> Defines the subshell shape (s, p, d, f). Note that $l$ is strictly capped at $n-1$.</li>
+            <li><strong>Magnetic ($m_l$):</strong> Defines orbital orientation in space. Restricted from $-l$ to $+l$.</li>
+            <li><strong>Slicing Plane:</strong> Projects a 2D cross-section heatmap of wavefunction intensity directly through the center of the 3D orbital.</li>
+          </ul>
+        </div>
+        <div class="space-y-2 pt-2 border-t border-slate-100">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-500">🎓 Learning Outcomes</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Probability Cloud Shapes:</strong> Learn why quantum orbitals take on spherical, dumbbell, cloverleaf, and torus shapes in 3D.</li>
+            <li><strong>Quantum Boundary States:</strong> Understand the significance of principal, azimuthal, and magnetic quantum numbers.</li>
+            <li><strong>Radial &amp; Angular Nodes:</strong> Observe the visual boundaries where the probability density $|\psi|^2$ becomes exactly zero.</li>
+          </ul>
+        </div>
       </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm"
+          class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
           Acknowledge
         </button>
       </div>
     </div>
   </div>
 
+  <canvas id="confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full"></canvas>
+
   <script>
-    // --- UI Logic & Parameter Syncing ---
+    // --- CONFETTI ENGINE ---
+    let confettiActive = false;
+    let confettiParticles = [];
+    let confettiCanvas = document.getElementById('confetti-canvas');
+    let confettiCtx = confettiCanvas.getContext('2d');
+    let confettiAnimationId = null;
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    function triggerConfetti() {
+      if (!confettiActive) {
+        confettiActive = true;
+        confettiParticles = [];
+        const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#14b8a6', '#f97316', '#a855f7'];
+        
+        // Spawn particles from both corners
+        const count = 75;
+        for (let i = 0; i < count; i++) {
+          createConfettiParticle(0, confettiCanvas.height, true, colors);
+          createConfettiParticle(confettiCanvas.width, confettiCanvas.height, false, colors);
+        }
+        
+        if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+        animateConfetti();
+      }
+    }
+
+    function createConfettiParticle(x, y, isLeft, colors) {
+      const angle = isLeft 
+        ? (-45 - Math.random() * 35) * Math.PI / 180 
+        : (-135 + Math.random() * 35) * Math.PI / 180;
+      const speed = 14 + Math.random() * 15;
+      
+      confettiParticles.push({
+        x: x,
+        y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        gravity: 0.28 + Math.random() * 0.15,
+        drag: 0.965,
+        size: 5 + Math.random() * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        spin: -10 + Math.random() * 20,
+        shape: Math.random() > 0.4 ? 'rect' : 'circle',
+        opacity: 1
+      });
+    }
+
+    function animateConfetti() {
+      if (confettiParticles.length === 0) {
+        confettiActive = false;
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        return;
+      }
+      
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.vx *= p.drag;
+        p.vy += p.gravity;
+        p.vy *= p.drag;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.spin;
+        
+        if (p.y > confettiCanvas.height * 0.7) {
+          p.opacity -= 0.02;
+        }
+        
+        if (p.opacity <= 0 || p.y > confettiCanvas.height || p.x < -20 || p.x > confettiCanvas.width + 20) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+        
+        confettiCtx.save();
+        confettiCtx.globalAlpha = p.opacity;
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate(p.rotation * Math.PI / 180);
+        confettiCtx.fillStyle = p.color;
+        
+        if (p.shape === 'rect') {
+          confettiCtx.fillRect(-p.size / 2, -p.size, p.size, p.size * 1.5);
+        } else {
+          confettiCtx.beginPath();
+          confettiCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          confettiCtx.fill();
+        }
+        confettiCtx.restore();
+      }
+      
+      confettiAnimationId = requestAnimationFrame(animateConfetti);
+    }
+
+    // --- MCQ ASSESSMENT DATA & HANDLERS ---
+    const appState = {
+      vivaScore: 0,
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const questionsData = [
+      {
+        id: "q1",
+        category: "school",
+        tag: "School Board PYQ",
+        colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        question: "Alternating positive (blue) and negative (red) lobes in higher radial shells (like $2s$ or $3s$) are separated by regions of zero probability density called:",
+        options: [
+          { text: "Angular Nodes", isCorrect: false, exp: "Incorrect. Angular nodes are flat planes or cones where probability is zero, not spherical shells." },
+          { text: "Radial Nodes", isCorrect: true, exp: "Correct! Radial nodes are spherical shells of zero probability where the radial wavefunction $R_{n,l}(r)$ changes sign." },
+          { text: "Nodal Planes", isCorrect: false, exp: "Incorrect. Nodal planes are angular nodes." },
+          { text: "Bohr Orbits", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      {
+        id: "q2",
+        category: "neet",
+        tag: "NEET Prep",
+        colorClass: "bg-cyan-50 text-cyan-700 border-cyan-200",
+        question: "For the $3d_{z^2}$ orbital, the number of radial nodes and angular nodes are respectively:",
+        options: [
+          { text: "0 and 2", isCorrect: true, exp: "Correct! The number of radial nodes is $n - l - 1 = 3 - 2 - 1 = 0$, and the number of angular nodes is $l = 2$." },
+          { text: "1 and 1", isCorrect: false, exp: "Incorrect. Recalculate using $n-l-1$ for radial nodes and $l$ for angular nodes." },
+          { text: "2 and 0", isCorrect: false, exp: "Incorrect." },
+          { text: "0 and 1", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      {
+        id: "q3",
+        category: "jee",
+        tag: "JEE Main",
+        colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+        question: "Which quantum number determines the spatial orientation of a given subshell orbital in 3D space?",
+        options: [
+          { text: "Principal Quantum Number ($n$)", isCorrect: false, exp: "Incorrect. The principal quantum number determines the energy and scale of the shell." },
+          { text: "Azimuthal Quantum Number ($l$)", isCorrect: false, exp: "Incorrect. The azimuthal quantum number determines the shape of the subshell." },
+          { text: "Magnetic Quantum Number ($m_l$)", isCorrect: true, exp: "Correct! The magnetic quantum number $m_l$ specifies the spatial orientation of the orbital's angular momentum vector along the quantization axis, ranging from $-l$ to $+l$." },
+          { text: "Spin Quantum Number ($s$)", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      {
+        id: "q4",
+        category: "jee",
+        tag: "JEE Main",
+        colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+        question: "The probability density at a nodal plane or nodal cone is:",
+        options: [
+          { text: "Infinite", isCorrect: false, exp: "Incorrect." },
+          { text: "Zero", isCorrect: true, exp: "Correct! Nodal planes and nodal cones are surfaces where the wavefunction $\psi = 0$, meaning the probability density $|\psi|^2$ of finding the electron is exactly zero." },
+          { text: "0.5", isCorrect: false, exp: "Incorrect." },
+          { text: "1.0", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    ];
+
+    function renderQuestions() {
+      const filterVal = document.getElementById('viva-category').value;
+      const container = document.getElementById('viva-questions-container');
+      const scoreLabel = document.getElementById('viva-score');
+      
+      if (!container) return;
+      container.innerHTML = '';
+      
+      const filtered = questionsData.filter(q => filterVal === 'all' || q.category === filterVal);
+      
+      let answeredInFilter = 0;
+      let correctInFilter = 0;
+      
+      filtered.forEach(q => {
+        if (appState.answers[q.id] !== null) {
+          answeredInFilter++;
+          const selectedIdx = appState.answers[q.id];
+          if (q.options[selectedIdx].isCorrect) {
+            correctInFilter++;
+          }
+        }
+      });
+      
+      if (scoreLabel) {
+        scoreLabel.textContent = `Score: ${correctInFilter} / ${filtered.length}`;
+      }
+      
+      filtered.forEach(q => {
+        const card = document.createElement('div');
+        let cardHoverClass = "hover:border-cyan-400";
+        if (q.category === 'jee') {
+          cardHoverClass = "hover:border-pink-400";
+        } else if (q.category === 'school') {
+          cardHoverClass = "hover:border-emerald-400";
+        }
+        card.className = `bg-white border border-slate-200 rounded-xl p-4 ${cardHoverClass} hover:shadow-md transition-all duration-300`;
+        
+        const header = document.createElement('div');
+        header.className = "flex items-center justify-between mb-2";
+        header.innerHTML = `<span class="inline-block ${q.colorClass} text-[10px] font-extrabold px-2 py-0.5 rounded border font-mono uppercase tracking-wider">${q.tag}</span>`;
+        card.appendChild(header);
+        
+        const qText = document.createElement('h4');
+        qText.className = "text-base font-bold text-slate-800 leading-snug mb-3";
+        qText.innerHTML = q.question;
+        card.appendChild(qText);
+        
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = "flex flex-col gap-2";
+        
+        const hasBeenAnswered = appState.answers[q.id] !== null;
+        
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          
+          let themeColorClass = "text-cyan-600";
+          let hoverClass = "hover:bg-cyan-50/50 hover:border-cyan-400 hover:shadow-md hover:scale-[1.015]";
+          if (q.category === 'jee') {
+            themeColorClass = "text-pink-600";
+            hoverClass = "hover:bg-pink-50/50 hover:border-pink-400 hover:shadow-md hover:scale-[1.015]";
+          } else if (q.category === 'school') {
+            themeColorClass = "text-emerald-600";
+            hoverClass = "hover:bg-emerald-50/50 hover:border-emerald-400 hover:shadow-md hover:scale-[1.015]";
+          }
+          
+          btn.className = "text-left p-3 rounded-lg text-sm border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
+            (hasBeenAnswered 
+              ? "cursor-not-allowed" 
+              : `bg-white border-slate-200 text-slate-700 transform ${hoverClass} active:scale-95 cursor-pointer shadow-sm`);
+          
+          const letter = String.fromCharCode(65 + idx) + ")";
+          btn.innerHTML = `<span class="font-extrabold ${themeColorClass} w-4">${letter}</span> <span class="flex-grow">${opt.text}</span>`;
+          
+          if (hasBeenAnswered) {
+            btn.disabled = true;
+            const selectedIdx = appState.answers[q.id];
+            if (selectedIdx === idx) {
+              if (opt.isCorrect) {
+                btn.className += " bg-emerald-50 border-emerald-400 text-emerald-950 font-bold";
+              } else {
+                btn.className += " bg-rose-50 border-rose-400 text-rose-950 font-bold";
+              }
+            } else if (opt.isCorrect) {
+              btn.className += " bg-emerald-50/40 border-emerald-300 text-emerald-900 opacity-85";
+            } else {
+              btn.className += " bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+            }
+          } else {
+            btn.addEventListener('click', () => {
+              appState.answers[q.id] = idx;
+              if (!opt.isCorrect) {
+                triggerConfetti();
+              }
+              renderQuestions();
+            });
+          }
+          optionsDiv.appendChild(btn);
+        });
+        
+        card.appendChild(optionsDiv);
+        
+        if (hasBeenAnswered) {
+          const selectedIdx = appState.answers[q.id];
+          const selectedOpt = q.options[selectedIdx];
+          const feedback = document.createElement('p');
+          feedback.className = "text-xs mt-3 text-slate-600 italic font-medium leading-relaxed bg-slate-50 border border-slate-150 p-2.5 rounded-lg";
+          feedback.innerHTML = selectedOpt.exp;
+          card.appendChild(feedback);
+        }
+        
+        container.appendChild(card);
+      });
+      
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([container]).catch(err => console.log(err));
+      }
+    }
+
+    // --- 3D QUANTUM SIMULATION VARIABLES & PHYSICS ---
     let q_n = 2;
     let q_l = 1;
     let q_ml = 0;
-    let contrastGamma = 0.6; // Higher makes outer lobes fainter, lower brightens them
+    let contrastGamma = 0.6;
 
     const el_n_slider = document.getElementById('slider-n');
-    const el_n_num = document.getElementById('num-n');
+    const el_n_val = document.getElementById('val-n');
     const el_l_slider = document.getElementById('slider-l');
-    const el_l_num = document.getElementById('num-l');
+    const el_l_val = document.getElementById('val-l');
     const el_ml_slider = document.getElementById('slider-ml');
-    const el_ml_num = document.getElementById('num-ml');
+    const el_ml_val = document.getElementById('val-ml');
+
     const select_plane = document.getElementById('select-plane');
+    const chk_cloud = document.getElementById('chk-cloud');
+    const chk_plane = document.getElementById('chk-plane');
     const chk_grid = document.getElementById('chk-grid');
-    
+
+    const R_BASE = 0.529;
+
     function syncConstraints() {
       // Constrain l max based on n
       let l_max = q_n - 1;
       el_l_slider.max = l_max;
-      el_l_num.max = l_max;
-      document.getElementById('label-l-max').innerText = l_max + (l_max===0?' (s)':l_max===1?' (p)':l_max===2?' (d)':' (f)');
+      
+      let letter = q_l === 0 ? 's' : q_l === 1 ? 'p' : q_l === 2 ? 'd' : 'f';
+      el_l_val.innerText = `l = ${q_l} (${letter})`;
       
       if (q_l > l_max) {
         q_l = l_max;
         el_l_slider.value = q_l;
-        el_l_num.value = q_l;
+        letter = q_l === 0 ? 's' : q_l === 1 ? 'p' : q_l === 2 ? 'd' : 'f';
+        el_l_val.innerText = `l = ${q_l} (${letter})`;
       }
       
       // Constrain ml based on l
       el_ml_slider.min = -q_l;
       el_ml_slider.max = q_l;
-      el_ml_num.min = -q_l;
-      el_ml_num.max = q_l;
-      document.getElementById('label-ml-min').innerText = -q_l;
-      document.getElementById('label-ml-max').innerText = "+" + q_l;
+      el_ml_val.innerText = `m_l = ${q_ml}`;
 
       if (q_ml > q_l) { q_ml = q_l; }
       if (q_ml < -q_l) { q_ml = -q_l; }
       el_ml_slider.value = q_ml;
-      el_ml_num.value = q_ml;
+      el_ml_val.innerText = `m_l = ${q_ml}`;
 
       updateTelemetry();
       autoSelectBestPlane();
-      renderHeatmap();
+      rebuild3DScene();
     }
 
     function autoSelectBestPlane() {
-      // Automatically choose the best slicing plane so the user isn't stuck looking at a dark node
+      if (select_plane.value === "NONE") return;
       if (q_l === 0) { select_plane.value = "XY"; }
       else if (q_l === 1) {
-        if (q_ml === 0) select_plane.value = "XZ"; // p_z
-        else select_plane.value = "XY";            // p_x, p_y
-      } else if (q_l === 2) {
-        if (q_ml === 0) select_plane.value = "XZ"; // d_z2
-        else if (Math.abs(q_ml) === 1) select_plane.value = "XZ"; // d_xz, d_yz
-        else select_plane.value = "XY";            // d_xy, d_x2-y2
-      } else if (q_l === 3) {
-        if (q_ml === 0) select_plane.value = "XZ"; 
+        if (q_ml === 0) select_plane.value = "XZ";
         else select_plane.value = "XY";
-      }
-      updateAxisLabels();
-    }
-
-    function updateAxisLabels() {
-      const p = select_plane.value;
-      if (p === "XY") {
-        document.getElementById('label-axis-h').innerText = "X";
-        document.getElementById('label-axis-v').innerText = "Y";
-      } else if (p === "XZ") {
-        document.getElementById('label-axis-h').innerText = "X";
-        document.getElementById('label-axis-v').innerText = "Z";
-      } else if (p === "YZ") {
-        document.getElementById('label-axis-h').innerText = "Y";
-        document.getElementById('label-axis-v').innerText = "Z";
+      } else if (q_l === 2) {
+        if (q_ml === 0) select_plane.value = "XZ";
+        else if (Math.abs(q_ml) === 1) select_plane.value = "XZ";
+        else select_plane.value = "XY";
+      } else if (q_l === 3) {
+        if (q_ml === 0) select_plane.value = "XZ";
+        else select_plane.value = "XY";
       }
     }
 
     function updateN(val) {
       q_n = parseInt(val) || 1;
       el_n_slider.value = q_n;
-      el_n_num.value = q_n;
+      el_n_val.innerText = `n = ${q_n}`;
       syncConstraints();
     }
     el_n_slider.addEventListener('input', e => updateN(e.target.value));
-    el_n_num.addEventListener('change', e => updateN(e.target.value));
 
     function updateL(val) {
       q_l = parseInt(val) || 0;
       el_l_slider.value = q_l;
-      el_l_num.value = q_l;
+      let letter = q_l === 0 ? 's' : q_l === 1 ? 'p' : q_l === 2 ? 'd' : 'f';
+      el_l_val.innerText = `l = ${q_l} (${letter})`;
       syncConstraints();
     }
     el_l_slider.addEventListener('input', e => updateL(e.target.value));
-    el_l_num.addEventListener('change', e => updateL(e.target.value));
 
     function updateML(val) {
       q_ml = parseInt(val) || 0;
       el_ml_slider.value = q_ml;
-      el_ml_num.value = q_ml;
+      el_ml_val.innerText = `m_l = ${q_ml}`;
       updateTelemetry();
       autoSelectBestPlane();
-      renderHeatmap();
+      rebuild3DScene();
     }
     el_ml_slider.addEventListener('input', e => updateML(e.target.value));
-    el_ml_num.addEventListener('change', e => updateML(e.target.value));
 
     document.getElementById('slider-contrast').addEventListener('input', e => {
       contrastGamma = parseFloat(e.target.value);
-      renderHeatmap();
+      rebuild3DScene();
     });
 
-    select_plane.addEventListener('change', () => {
-      updateAxisLabels();
-      renderHeatmap();
-    });
+    select_plane.addEventListener('change', rebuild3DScene);
+    chk_cloud.addEventListener('change', () => { if (cloudMesh) cloudMesh.visible = chk_cloud.checked; });
+    chk_plane.addEventListener('change', () => { if (planeGroup) planeGroup.visible = chk_plane.checked; });
+    chk_grid.addEventListener('change', () => { if (gridHelper) gridHelper.visible = chk_grid.checked; });
 
-    chk_grid.addEventListener('change', renderHeatmap);
-
-    // --- Telemetry Formatter ---
     function updateTelemetry() {
       let letter = q_l === 0 ? 's' : q_l === 1 ? 'p' : q_l === 2 ? 'd' : 'f';
       let sub = '';
@@ -458,16 +792,7 @@
       document.getElementById('telemetryAngular').innerText = q_l;
     }
 
-
-    // --- Mathematical Engine (Heatmap Generation) ---
-    const canvas = document.getElementById('simCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Internal logical resolution (fast compute, scaled up via CSS)
-    const RES = 300; 
-    canvas.width = RES;
-    canvas.height = RES;
-
+    // --- PHYSICS SCHRÖDINGER MATHEMATICS ENGINE ---
     function getHydrogenicWavefunction(x, y, z, n, l, m) {
       let r = Math.sqrt(x*x + y*y + z*z);
       if (r < 0.0001) r = 0.0001;
@@ -475,10 +800,8 @@
       let theta = Math.acos(z / r);
       let phi = Math.atan2(y, x);
       
-      // Scale radius based on n to keep it visible in canvas
       let rho = 2 * r / (n * 1.5); 
       
-      // Radial component approximation (Laguerre polynomials)
       let L_poly = 1.0;
       let radialNodes = n - l - 1;
       
@@ -488,7 +811,6 @@
 
       let R = Math.pow(rho, l) * L_poly * Math.exp(-rho/2);
 
-      // Angular component (Spherical Harmonics - Real Basis)
       let Y = 1.0;
       if (l === 1) {
         if (m === 0) Y = Math.cos(theta); 
@@ -510,135 +832,524 @@
         else if (m === -3) Y = Math.pow(Math.sin(theta),3) * Math.sin(3*phi);
       }
 
-      let psi = R * Y;
-      return psi;
+      return R * Y;
     }
 
-    function renderHeatmap() {
-      const imgData = ctx.createImageData(RES, RES);
-      const data = imgData.data;
-      
-      const plane = select_plane.value;
-      const bound = q_n * 6; // Spatial bounds scale with principal quantum number
-      
-      // Step 1: Compute raw Psi values and find maximum for auto-normalization
-      const rawValues = new Float32Array(RES * RES);
-      let maxAbsPsi = 0.00001;
+    // --- THREE.JS 3D ENGINE ---
+    let scene, camera, renderer, controls;
+    let cloudMesh = null;
+    let planeGroup = null;
+    let planeMesh = null;
+    let planeOutline = null;
+    let gridHelper = null;
+    let axesHelper = null;
+    let stageGroup = null;
+    let lobesGroup = null;
 
+    // Global materials for Textbook Lobes
+    const matPosLobe = new THREE.MeshBasicMaterial({
+      color: 0x38bdf8, // Bright Cyan
+      transparent: true,
+      opacity: 0.3,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const matNegLobe = new THREE.MeshBasicMaterial({
+      color: 0xf43f5e, // Bright Rose
+      transparent: true,
+      opacity: 0.3,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const matPosLobeWire = new THREE.MeshBasicMaterial({
+      color: 0x06b6d4,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.6
+    });
+    const matNegLobeWire = new THREE.MeshBasicMaterial({
+      color: 0xe11d48,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.6
+    });
+
+    const sliceCanvas = document.createElement('canvas');
+    sliceCanvas.width = 256;
+    sliceCanvas.height = 256;
+    const sliceCtx = sliceCanvas.getContext('2d');
+    let sliceTexture = null;
+
+    function init3D() {
+      const container = document.getElementById('three-container');
+      
+      scene = new THREE.Scene();
+      
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(0, 30, 50);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.4);
+      dirLight.position.set(10, 20, 10);
+      scene.add(dirLight);
+
+      // Main stage group containing orbital cloud and clipping plane
+      stageGroup = new THREE.Group();
+      scene.add(stageGroup);
+
+      // Axes Helper
+      axesHelper = new THREE.AxesHelper(15);
+      scene.add(axesHelper);
+
+      // Slicing plane dynamic texture & material
+      sliceTexture = new THREE.CanvasTexture(sliceCanvas);
+      const matPlane = new THREE.MeshBasicMaterial({
+        map: sliceTexture,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.82
+      });
+
+      planeGroup = new THREE.Group();
+      
+      planeMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), matPlane);
+      planeGroup.add(planeMesh);
+      
+      stageGroup.add(planeGroup);
+
+      lobesGroup = new THREE.Group();
+      stageGroup.add(lobesGroup);
+    }
+
+    function rebuild3DScene() {
+      if (!stageGroup) return;
+
+      const sampleBound = q_n * 6.5;
+
+      // 1. Remove old cloud Points if any
+      if (cloudMesh) {
+        stageGroup.remove(cloudMesh);
+        cloudMesh.geometry.dispose();
+        cloudMesh.material.dispose();
+        cloudMesh = null;
+      }
+
+      // 2. Remove old grid helper
+      if (gridHelper) {
+        scene.remove(gridHelper);
+        gridHelper.geometry.dispose();
+        gridHelper.material.dispose();
+        gridHelper = null;
+      }
+
+      // 3. Grid Helper
+      if (chk_grid.checked) {
+        gridHelper = new THREE.GridHelper(sampleBound * 3, 20, 0x1e293b, 0x0f172a);
+        gridHelper.position.y = -sampleBound - 1;
+        scene.add(gridHelper);
+      }
+
+      // 4. Estimate max wavefunction value for Monte Carlo normalisation
+      let maxPsiSq = 0.00001;
+      for (let i = 0; i < 1500; i++) {
+        let rx = (Math.random() - 0.5) * 2 * sampleBound;
+        let ry = (Math.random() - 0.5) * 2 * sampleBound;
+        let rz = (Math.random() - 0.5) * 2 * sampleBound;
+        let psi = getHydrogenicWavefunction(rx, ry, rz, q_n, q_l, q_ml);
+        let p = psi * psi;
+        if (p > maxPsiSq) maxPsiSq = p;
+      }
+
+      // 5. Generate 3D cloud points using Monte Carlo rejection sampling
+      const points = [];
+      const colors = [];
+      let count = 0;
+      let attempts = 0;
+      const targetCount = 14000;
+      const maxAttempts = 150000;
+
+      const colorPos = new THREE.Color(0x38bdf8); // Light Cyan
+      const colorNeg = new THREE.Color(0xf43f5e); // Rose
+
+      while (count < targetCount && attempts < maxAttempts) {
+        attempts++;
+        let x = (Math.random() - 0.5) * 2 * sampleBound;
+        let y = (Math.random() - 0.5) * 2 * sampleBound;
+        let z = (Math.random() - 0.5) * 2 * sampleBound;
+
+        let psi = getHydrogenicWavefunction(x, y, z, q_n, q_l, q_ml);
+        let p = psi * psi;
+
+        if (Math.random() * maxPsiSq < p) {
+          points.push(x, y, z);
+          const c = (psi > 0) ? colorPos : colorNeg;
+          colors.push(c.r, c.g, c.b);
+          count++;
+        }
+      }
+
+      const cloudGeo = new THREE.BufferGeometry();
+      cloudGeo.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+      cloudGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+      // Size attenuation helps visualize depth
+      const cloudMat = new THREE.PointsMaterial({
+        size: 0.16 + (q_n * 0.03),
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        sizeAttenuation: true
+      });
+
+      cloudMesh = new THREE.Points(cloudGeo, cloudMat);
+      cloudMesh.visible = chk_cloud.checked;
+      stageGroup.add(cloudMesh);
+
+      // 6. Draw 2D Slicing Plane texture
+      const RES = 256;
+      const imgData = sliceCtx.createImageData(RES, RES);
+      const pixels = imgData.data;
+      const plane = select_plane.value;
+
+      const chk_plane = document.getElementById('chk-plane');
+      if (plane === "NONE") {
+        chk_plane.disabled = true;
+        chk_plane.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+        chk_plane.parentElement.classList.remove('cursor-pointer');
+        
+        if (planeMesh) {
+          planeMesh.geometry.dispose();
+        }
+        if (planeOutline) {
+          planeOutline.geometry.dispose();
+          planeOutline.material.dispose();
+        }
+        planeGroup.clear();
+        planeGroup.visible = false;
+        return;
+      } else {
+        chk_plane.disabled = false;
+        chk_plane.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
+        chk_plane.parentElement.classList.add('cursor-pointer');
+      }
+
+      let planeMaxPsi = 0.00001;
+      const rawPlaneValues = new Float32Array(RES * RES);
+
+      // Calculate 2D wavefunction intensities
       for (let py = 0; py < RES; py++) {
         for (let px = 0; px < RES; px++) {
-          // Map canvas pixel [0, RES] to physical coords [-bound, +bound]
-          let u = ((px / RES) - 0.5) * 2 * bound;
-          // Canvas Y is down, standard math Y is up, so invert
-          let v = -((py / RES) - 0.5) * 2 * bound;
-          
-          let x=0, y=0, z=0;
+          let u = ((px / RES) - 0.5) * 2 * sampleBound;
+          let v = -((py / RES) - 0.5) * 2 * sampleBound;
+
+          let x = 0, y = 0, z = 0;
           if (plane === "XY") { x = u; y = v; z = 0; }
           else if (plane === "XZ") { x = u; y = 0; z = v; }
           else if (plane === "YZ") { x = 0; y = u; z = v; }
 
           let psi = getHydrogenicWavefunction(x, y, z, q_n, q_l, q_ml);
-          rawValues[py * RES + px] = psi;
-          
-          if (Math.abs(psi) > maxAbsPsi) maxAbsPsi = Math.abs(psi);
+          rawPlaneValues[py * RES + px] = psi;
+          if (Math.abs(psi) > planeMaxPsi) planeMaxPsi = Math.abs(psi);
         }
       }
 
-      // Step 2: Map normalized values to colors
-      for (let i = 0; i < rawValues.length; i++) {
-        let psi = rawValues[i];
-        let normalized = Math.abs(psi) / maxAbsPsi;
-        
-        // Gamma correction to boost faint outer lobes
+      // Map to pixels (using same background color blend technique to overlay seamlessly)
+      for (let i = 0; i < rawPlaneValues.length; i++) {
+        let psi = rawPlaneValues[i];
+        let normalized = Math.abs(psi) / planeMaxPsi;
         let intensity = Math.pow(normalized, contrastGamma);
-        
-        // Base dark slate background
-        let r = 11, g = 15, b = 25; 
 
-        if (intensity > 0.02) {
+        let r = 2, g = 6, b = 23, alphaVal = 0; // invisible/dark background
+
+        if (intensity > 0.015) {
+          alphaVal = Math.floor(intensity * 200);
           if (psi > 0) {
-            // Blend with Positive Blue (#38bdf8 -> 56, 189, 248)
-            r = Math.floor(11 * (1 - intensity) + 56 * intensity);
-            g = Math.floor(15 * (1 - intensity) + 189 * intensity);
-            b = Math.floor(25 * (1 - intensity) + 248 * intensity);
+            r = 56; g = 189; b = 248; // Cyan
           } else {
-            // Blend with Negative Red (#f43f5e -> 244, 63, 94)
-            r = Math.floor(11 * (1 - intensity) + 244 * intensity);
-            g = Math.floor(15 * (1 - intensity) + 63 * intensity);
-            b = Math.floor(25 * (1 - intensity) + 94 * intensity);
+            r = 244; g = 63; b = 94; // Rose
           }
         }
 
         let idx = i * 4;
-        data[idx]     = r;
-        data[idx + 1] = g;
-        data[idx + 2] = b;
-        data[idx + 3] = 255; // Alpha
+        pixels[idx] = r;
+        pixels[idx + 1] = g;
+        pixels[idx + 2] = b;
+        pixels[idx + 3] = alphaVal;
       }
 
-      ctx.putImageData(imgData, 0, 0);
+      sliceCtx.putImageData(imgData, 0, 0);
+      sliceTexture.needsUpdate = true;
 
-      // Draw Grid Overlays
-      if (chk_grid.checked) {
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-        ctx.lineWidth = 1;
-        ctx.setLineDash([4, 4]);
+      // 7. Update Slicing Plane Mesh Size & Rotation
+      if (planeMesh) {
+        planeMesh.geometry.dispose();
+      }
+      if (planeOutline) {
+        planeOutline.geometry.dispose();
+        planeOutline.material.dispose();
+      }
+      planeGroup.clear();
+
+      // PlaneGeometry matches spatial bounds
+      let planeSize = sampleBound * 2;
+      planeMesh = new THREE.Mesh(new THREE.PlaneGeometry(planeSize, planeSize), planeMesh.material);
+      planeGroup.add(planeMesh);
+
+      // Add a sharp glowing outline border around the plane
+      const outlinePts = [
+        new THREE.Vector3(-sampleBound, -sampleBound, 0),
+        new THREE.Vector3(sampleBound, -sampleBound, 0),
+        new THREE.Vector3(sampleBound, sampleBound, 0),
+        new THREE.Vector3(-sampleBound, sampleBound, 0),
+        new THREE.Vector3(-sampleBound, -sampleBound, 0)
+      ];
+      const outlineGeo = new THREE.BufferGeometry().setFromPoints(outlinePts);
+      const outlineMat = new THREE.LineBasicMaterial({ color: 0x4f46e5, transparent: true, opacity: 0.9 });
+      planeOutline = new THREE.Line(outlineGeo, outlineMat);
+      planeGroup.add(planeOutline);
+
+      // Reorient the entire planeGroup based on selected slicing plane
+      if (plane === "XY") {
+        planeGroup.rotation.set(0, 0, 0);
+      } else if (plane === "XZ") {
+        planeGroup.rotation.set(Math.PI / 2, 0, 0);
+      } else if (plane === "YZ") {
+        planeGroup.rotation.set(0, Math.PI / 2, 0);
+      }
+
+      planeGroup.visible = chk_plane.checked;
+
+      // 8. Generate Textbook Lobes
+      if (lobesGroup) {
+        const disposed = new Set();
+        lobesGroup.traverse(child => {
+          if (child.isMesh && child.geometry) {
+            if (!disposed.has(child.geometry)) {
+              child.geometry.dispose();
+              disposed.add(child.geometry);
+            }
+          }
+        });
+        lobesGroup.clear();
+      }
+
+      const chk_lobes = document.getElementById('chk-lobes');
+      lobesGroup.visible = chk_lobes.checked;
+
+      function addLobeMesh(geom, isPos, pos, rot, scl) {
+        const mesh = new THREE.Mesh(geom, isPos ? matPosLobe : matNegLobe);
+        const wire = new THREE.Mesh(geom, isPos ? matPosLobeWire : matNegLobeWire);
         
-        // Vertical center line
-        ctx.beginPath();
-        ctx.moveTo(RES/2, 0);
-        ctx.lineTo(RES/2, RES);
-        ctx.stroke();
+        if (pos) {
+          mesh.position.copy(pos);
+          wire.position.copy(pos);
+        }
+        if (rot) {
+          mesh.rotation.copy(rot);
+          wire.rotation.copy(rot);
+        }
+        if (scl) {
+          mesh.scale.copy(scl);
+          wire.scale.copy(scl);
+        }
         
-        // Horizontal center line
-        ctx.beginPath();
-        ctx.moveTo(0, RES/2);
-        ctx.lineTo(RES, RES/2);
-        ctx.stroke();
-        
-        ctx.setLineDash([]);
-        
-        // Origin dot
-        ctx.fillStyle = '#cbd5e1';
-        ctx.beginPath();
-        ctx.arc(RES/2, RES/2, 3, 0, Math.PI*2);
-        ctx.fill();
+        lobesGroup.add(mesh);
+        lobesGroup.add(wire);
+      }
+
+      // Base dimension scaled with n
+      const dBase = q_n * 2.2;
+      const rLobe = q_n * 1.5;
+
+      if (q_l === 0) {
+        // s orbital: nested spheres
+        if (q_n === 1) {
+          addLobeMesh(new THREE.SphereGeometry(2.0, 32, 32), true);
+        } else if (q_n === 2) {
+          addLobeMesh(new THREE.SphereGeometry(1.2, 32, 32), false);
+          addLobeMesh(new THREE.SphereGeometry(4.0, 32, 32), true);
+        } else if (q_n === 3) {
+          addLobeMesh(new THREE.SphereGeometry(0.9, 32, 32), true);
+          addLobeMesh(new THREE.SphereGeometry(2.6, 32, 32), false);
+          addLobeMesh(new THREE.SphereGeometry(6.2, 32, 32), true);
+        } else if (q_n === 4) {
+          addLobeMesh(new THREE.SphereGeometry(0.8, 32, 32), false);
+          addLobeMesh(new THREE.SphereGeometry(2.0, 32, 32), true);
+          addLobeMesh(new THREE.SphereGeometry(4.6, 32, 32), false);
+          addLobeMesh(new THREE.SphereGeometry(8.5, 32, 32), true);
+        }
+      } else if (q_l === 1) {
+        // p orbital: dumbbell along Z, X, or Y
+        const geom = new THREE.SphereGeometry(rLobe, 32, 32);
+        if (q_ml === 0) {
+          // p_z
+          addLobeMesh(geom, true, new THREE.Vector3(0, 0, dBase), null, new THREE.Vector3(1, 1, 1.8));
+          addLobeMesh(geom, false, new THREE.Vector3(0, 0, -dBase), null, new THREE.Vector3(1, 1, 1.8));
+        } else if (q_ml === 1) {
+          // p_x
+          addLobeMesh(geom, true, new THREE.Vector3(dBase, 0, 0), null, new THREE.Vector3(1.8, 1, 1));
+          addLobeMesh(geom, false, new THREE.Vector3(-dBase, 0, 0), null, new THREE.Vector3(1.8, 1, 1));
+        } else if (q_ml === -1) {
+          // p_y
+          addLobeMesh(geom, true, new THREE.Vector3(0, dBase, 0), null, new THREE.Vector3(1, 1.8, 1));
+          addLobeMesh(geom, false, new THREE.Vector3(0, -dBase, 0), null, new THREE.Vector3(1, 1.8, 1));
+        }
+      } else if (q_l === 2) {
+        // d orbital
+        if (q_ml === 0) {
+          // d_z2: dumbbell along Z + torus in XY
+          const geomZ = new THREE.SphereGeometry(rLobe * 0.9, 32, 32);
+          addLobeMesh(geomZ, true, new THREE.Vector3(0, 0, dBase * 1.1), null, new THREE.Vector3(1, 1, 1.8));
+          addLobeMesh(geomZ, true, new THREE.Vector3(0, 0, -dBase * 1.1), null, new THREE.Vector3(1, 1, 1.8));
+          
+          const geomTorus = new THREE.TorusGeometry(rLobe * 1.4, rLobe * 0.5, 16, 64);
+          addLobeMesh(geomTorus, false, null, new THREE.Euler(Math.PI / 2, 0, 0));
+        } else if (q_ml === 1) {
+          // d_xz: 4 lobes in XZ plane
+          const geom = new THREE.SphereGeometry(rLobe * 0.8, 32, 32);
+          const posVal = dBase * 0.85;
+          const scl = new THREE.Vector3(1.6, 1, 1);
+          const r1 = new THREE.Euler(0, Math.PI / 4, 0);
+          const r2 = new THREE.Euler(0, -Math.PI / 4, 0);
+          
+          addLobeMesh(geom, true, new THREE.Vector3(posVal, 0, posVal), r1, scl);
+          addLobeMesh(geom, true, new THREE.Vector3(-posVal, 0, -posVal), r1, scl);
+          addLobeMesh(geom, false, new THREE.Vector3(-posVal, 0, posVal), r2, scl);
+          addLobeMesh(geom, false, new THREE.Vector3(posVal, 0, -posVal), r2, scl);
+        } else if (q_ml === -1) {
+          // d_yz: 4 lobes in YZ plane
+          const geom = new THREE.SphereGeometry(rLobe * 0.8, 32, 32);
+          const posVal = dBase * 0.85;
+          const scl = new THREE.Vector3(1, 1.6, 1);
+          const r1 = new THREE.Euler(-Math.PI / 4, 0, 0);
+          const r2 = new THREE.Euler(Math.PI / 4, 0, 0);
+          
+          addLobeMesh(geom, true, new THREE.Vector3(0, posVal, posVal), r1, scl);
+          addLobeMesh(geom, true, new THREE.Vector3(0, -posVal, -posVal), r1, scl);
+          addLobeMesh(geom, false, new THREE.Vector3(0, -posVal, posVal), r2, scl);
+          addLobeMesh(geom, false, new THREE.Vector3(0, posVal, -posVal), r2, scl);
+        } else if (q_ml === -2) {
+          // d_xy: 4 lobes in XY plane
+          const geom = new THREE.SphereGeometry(rLobe * 0.8, 32, 32);
+          const posVal = dBase * 0.85;
+          const scl = new THREE.Vector3(1.6, 1, 1);
+          const r1 = new THREE.Euler(0, 0, Math.PI / 4);
+          const r2 = new THREE.Euler(0, 0, -Math.PI / 4);
+          
+          addLobeMesh(geom, true, new THREE.Vector3(posVal, posVal, 0), r1, scl);
+          addLobeMesh(geom, true, new THREE.Vector3(-posVal, -posVal, 0), r1, scl);
+          addLobeMesh(geom, false, new THREE.Vector3(-posVal, posVal, 0), r2, scl);
+          addLobeMesh(geom, false, new THREE.Vector3(posVal, -posVal, 0), r2, scl);
+        } else if (q_ml === 2) {
+          // d_x2-y2: 4 lobes along X and Y axes
+          const geom = new THREE.SphereGeometry(rLobe * 0.8, 32, 32);
+          addLobeMesh(geom, true, new THREE.Vector3(dBase * 1.1, 0, 0), null, new THREE.Vector3(1.8, 1, 1));
+          addLobeMesh(geom, true, new THREE.Vector3(-dBase * 1.1, 0, 0), null, new THREE.Vector3(1.8, 1, 1));
+          addLobeMesh(geom, false, new THREE.Vector3(0, dBase * 1.1, 0), null, new THREE.Vector3(1, 1.8, 1));
+          addLobeMesh(geom, false, new THREE.Vector3(0, -dBase * 1.1, 0), null, new THREE.Vector3(1, 1.8, 1));
+        }
+      } else if (q_l === 3) {
+        // f orbital
+        if (q_ml === 0) {
+          // f_z3: Z-dumbbell + 2 stacked tori
+          const geomZ = new THREE.SphereGeometry(rLobe * 0.7, 32, 32);
+          addLobeMesh(geomZ, true, new THREE.Vector3(0, 0, dBase * 1.2), null, new THREE.Vector3(1, 1, 1.8));
+          addLobeMesh(geomZ, false, new THREE.Vector3(0, 0, -dBase * 1.2), null, new THREE.Vector3(1, 1, 1.8));
+          
+          const geomTorus = new THREE.TorusGeometry(rLobe * 1.3, rLobe * 0.35, 16, 64);
+          addLobeMesh(geomTorus, false, new THREE.Vector3(0, 0, dBase * 0.4), new THREE.Euler(Math.PI / 2, 0, 0));
+          addLobeMesh(geomTorus, true, new THREE.Vector3(0, 0, -dBase * 0.4), new THREE.Euler(Math.PI / 2, 0, 0));
+        } else if (Math.abs(q_ml) === 3) {
+          // f_x(x2-3y2) or f_y(3x2-y2): 6 lobes in XY plane
+          const geom = new THREE.SphereGeometry(rLobe * 0.7, 32, 32);
+          const scl = new THREE.Vector3(1.5, 1, 1);
+          for (let i = 0; i < 6; i++) {
+            const theta = i * Math.PI / 3 + (q_ml < 0 ? Math.PI / 6 : 0);
+            const pos = new THREE.Vector3(dBase * 1.1 * Math.cos(theta), dBase * 1.1 * Math.sin(theta), 0);
+            const rot = new THREE.Euler(0, 0, theta);
+            const isPos = (i % 2 === 0);
+            addLobeMesh(geom, isPos, pos, rot, scl);
+          }
+        } else {
+          // 8 lobes sitting in the 8 quadrants
+          const geom = new THREE.SphereGeometry(rLobe * 0.65, 32, 32);
+          const posVal = dBase * 0.8;
+          const signs = [-1, 1];
+          signs.forEach(sx => {
+            signs.forEach(sy => {
+              signs.forEach(sz => {
+                const pos = new THREE.Vector3(sx * posVal, sy * posVal, sz * posVal);
+                const targetDir = pos.clone().normalize();
+                const rot = new THREE.Euler();
+                const alignQuat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), targetDir);
+                rot.setFromQuaternion(alignQuat);
+                const isPos = (sx * sy * sz > 0);
+                addLobeMesh(geom, isPos, pos, rot, new THREE.Vector3(1, 1, 1.6));
+              });
+            });
+          });
+        }
       }
     }
 
-    // Viva Voce Logic
-    function toggleVerification(id) {
-      const panel = document.getElementById(`viva-panel-${id}`);
-      const btnText = document.getElementById(`btn-text-${id}`);
-      const btnArrow = document.getElementById(`btn-arrow-${id}`);
-      
-      if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-        btnText.textContent = "Hide Scientific Verification";
-        btnArrow.style.transform = "rotate(180deg)";
-        if (window.MathJax) MathJax.typesetPromise([panel]);
-      } else {
-        panel.classList.add('hidden');
-        btnText.textContent = "Show Scientific Verification";
-        btnArrow.style.transform = "rotate(0deg)";
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      // Subtle slow rotation of the point cloud to make the 3D structure easier to perceive
+      if (stageGroup) {
+        stageGroup.rotation.y += 0.0025;
       }
+
+      renderer.render(scene, camera);
     }
 
-    // Modal Guide
+    window.addEventListener('resize', () => {
+      const container = document.getElementById('three-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    document.getElementById('btn-zoom-in').addEventListener('click', () => { camera.position.multiplyScalar(0.85); });
+    document.getElementById('btn-zoom-out').addEventListener('click', () => { camera.position.multiplyScalar(1.15); });
+    document.getElementById('btn-zoom-reset').addEventListener('click', () => { controls.reset(); camera.position.set(0, 30, 50); });
+
+    document.getElementById('viva-category').addEventListener('change', renderQuestions);
+    document.getElementById('chk-lobes').addEventListener('change', () => { if (lobesGroup) lobesGroup.visible = document.getElementById('chk-lobes').checked; });
+
+    // Modal User Guide
     document.getElementById('btn-open-guide').addEventListener('click', () => {
       document.getElementById('user-guide-modal').classList.remove('hidden');
     });
     const closeGuide = () => document.getElementById('user-guide-modal').classList.add('hidden');
     document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
     document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
-
-    // Initial setup
-    window.addEventListener('load', () => {
-      document.getElementById('user-guide-modal').classList.remove('hidden');
-      updateAxisLabels();
-      syncConstraints(); // kicks off rendering
+    document.getElementById('user-guide-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('user-guide-modal')) closeGuide();
     });
 
+    // Boot
+    window.addEventListener('load', () => {
+      init3D();
+      syncConstraints();
+      animate();
+      renderQuestions();
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+    });
   </script>
 </body>
+
 </html>

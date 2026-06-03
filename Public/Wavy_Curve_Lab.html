@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wavy Curve Method Laboratory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar for Panels */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Holographic Math Grid Background */
+        .lab-stage {
+            background-color: #0f172a !important;
+            background-image:
+                linear-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 1);
+        }
+
+        /* Vibrant Text Gradients */
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-emerald {
+            background: linear-gradient(to right, #10b981, #34d399);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-amber {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div
+                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Wavy Curve Method</h1>
+                    <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Method of Intervals
+                        Virtual Lab</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> Concept Guide
+                </button>
+                <div
+                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Math Engine
+                        Active</span>
+                </div>
+            </div>
+        </header>
+
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button onclick="resetMath()"
+                    class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Reset Grid
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-regions" checked
+                        class="rounded border-slate-300 text-pink-600 focus:ring-pink-500 h-4 w-4">
+                    <span>Highlight +/- Regions</span>
+                </label>
+            </div>
+        </div>
+
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+                <div class="space-y-4">
+
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <span
+                            class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Select
+                            Inequality</span>
+
+                        <select id="select-equation"
+                            class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm">
+                            <option value="preset1" selected>Standard Alternating Roots</option>
+                            <option value="preset2">Even Power (Bouncing Curve)</option>
+                            <option value="preset3">Negative Leading Coefficient</option>
+                            <option value="preset4">Rational Inequality (Asymptote)</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2">
+                        <span
+                            class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Active
+                            Equation $f(x)$</span>
+                        <div class="text-sm font-mono text-center py-2" id="ui-equation">
+                            $$f(x) = (x+3)(x-1)(x-4) > 0$$
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 space-y-3 mt-4">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block mb-2">Live Math
+                        Telemetry</span>
+
+                    <div class="flex flex-col gap-2">
+
+                        <div
+                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                            <div
+                                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span>
+                                Critical Points
+                            </div>
+                            <div class="text-xs font-bold font-mono tracking-widest text-cyan-400" id="tel-roots">-3, 1,
+                                4</div>
+                        </div>
+
+                        <div
+                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col gap-1 border border-slate-800 text-xs text-slate-300 font-mono text-left">
+                            <div class="flex items-center justify-between border-b border-slate-700 pb-1 mb-1">
+                                <span class="text-pink-400 font-bold">Power is ODD:</span>
+                                <span class="text-white">Curve Crosses Axis</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-amber-400 font-bold">Power is EVEN:</span>
+                                <span class="text-white">Curve Bounces</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#020617] p-4 rounded-2xl shadow-inner border border-slate-700 text-center mt-2">
+                            <div
+                                class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1 text-emerald-400">
+                                Final Solution Set $x \in$</div>
+                            <div class="text-[15px] font-bold font-mono tracking-wide text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                                id="tel-solution">
+                                (-3, 1) ∪ (4, ∞)
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-cyan-900 min-h-[500px]">
+                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+
+                <div
+                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+                <div
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
+                        Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-base font-bold tracking-tight">JEE Main PYQs</h2>
+                        <span id="viva-score"
+                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
+                            0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-4">
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
+                                Main Concept]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
+                                id="q1-text">
+                                The solution set of the inequality $\frac{x-2}{x+3} \ge 0$ is:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+                            <p id="q1-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Algebra
+                                Rule]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
+                                id="q2-text">
+                                When applying the wavy curve method, if a critical point originates from a factor with
+                                an EVEN power (like $(x-3)^2$), the curve will:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+                            <p id="q2-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
+                                Advanced Prep]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
+                                id="q3-text">
+                                Solve the inequality: $(x+1)(x-2)^2(x-4) \le 0$
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+                            <p id="q3-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Domain
+                                Check]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
+                                id="q4-text">
+                                In rational inequalities like $\frac{P(x)}{Q(x)} > 0$, the roots of the denominator
+                                $Q(x) = 0$ are always:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+                            <p id="q4-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span>📘</span> WAVY CURVE PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>Method of Intervals Visualizer</strong>! Learn how to instantly solve complex
+                    inequalities.</p>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core
+                        Controls</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Step 1:</strong> Plot all critical points (roots of numerator and denominator) on
+                            the number line.</li>
+                        <li><strong>Step 2:</strong> Check the leading coefficient. If positive, start the curve from
+                            the <strong>Top-Right</strong> (+). If negative, start from the Bottom-Right (-).</li>
+                        <li><strong>Step 3 (The Wavy Curve):</strong> Move left across the roots. If the root's power is
+                            <strong>ODD</strong>, the curve CROSSES the axis (changes sign). If the power is
+                            <strong>EVEN</strong>, it BOUNCES off the axis (keeps sign).</li>
+                        <li><strong>Step 4:</strong> Select the intervals! Pink shaded regions are negative ($< 0$),
+                                Emerald regions are positive ($> 0$).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Initialize Engine
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VIVA MCQS DECK STATE & DATA ---
+        const appState = {
+            vivaScore: 0,
+            answers: { q1: null, q2: null, q3: null, q4: null }
+        };
+
+        const vivaData = {
+            q1: {
+                options: [
+                    { text: "$(-\\infty, -3) \\cup (2, \\infty)$", isCorrect: false, exp: "Incorrect. The point $x=2$ must be included because of the $\\ge$ sign." },
+                    { text: "$(-\\infty, -3] \\cup [2, \\infty)$", isCorrect: false, exp: "Incorrect. $x=-3$ makes the denominator zero, so it must be an open interval." },
+                    { text: "$(-\\infty, -3) \\cup [2, \\infty)$", isCorrect: true, exp: "Correct! Critical points are $x=2$ and $x=-3$. The curve is positive for $x > 2$ and $x < -3$. Since it's $\\ge 0$, we include the numerator root $x=2$ (closed bracket), but exclude the denominator root $x=-3$ (open parenthesis to avoid division by zero)." },
+                    { text: "$(-3, 2]$", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q2: {
+                options: [
+                    { text: "Cross the x-axis, changing the sign of the function.", isCorrect: false, exp: "Incorrect. That happens with odd powers (e.g., exponent 1, 3, 5)." },
+                    { text: "Bounce off the x-axis, keeping the sign of the function the same.", isCorrect: true, exp: "Correct! If a factor has an even power like $(x-3)^2$, its value is always non-negative. Therefore, crossing $x=3$ does not change the overall sign of the expression, causing a 'bounce' on the graph." },
+                    { text: "Create a vertical asymptote.", isCorrect: false, exp: "Incorrect." },
+                    { text: "Become a straight line.", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            q3: {
+                options: [
+                    { text: "$[-1, 4]$", isCorrect: true, exp: "Correct! Roots: -1 (odd), 2 (even), 4 (odd). Right of 4: (+). Cross 4: (-). Bounce at 2: still (-). Cross -1: (+). For $\\le 0$, we need the negative regions: $[-1, 2] \\cup [2, 4]$, which simplifies cleanly to $[-1, 4]$. The bounce point is included!" },
+                    { text: "$[-1, 2) \\cup (2, 4]$", isCorrect: false, exp: "Incorrect. Since the inequality is $\\le 0$, the root $x=2$ is included (evaluates to 0)." },
+                    { text: "$(2, 4]$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$(-\\infty, -1] \\cup [4, \\infty)$", isCorrect: false, exp: "Incorrect. This is the solution for $\\ge 0$." }
+                ]
+            },
+            q4: {
+                options: [
+                    { text: "Included in the solution set with a closed bracket '['.", isCorrect: false, exp: "Incorrect. That would cause division by zero." },
+                    { text: "Excluded from the solution set with an open parenthesis '('.", isCorrect: true, exp: "Correct! The denominator can NEVER equal zero, otherwise the expression is undefined. Therefore, critical points from the denominator must always use open intervals." },
+                    { text: "Ignored when drawing the wavy curve.", isCorrect: false, exp: "Incorrect. They still act as boundaries where the sign can change." },
+                    { text: "Placed at the very end of the number line.", isCorrect: false, exp: "Incorrect." }
+                ]
+            }
+        };
+
+        function renderQuestions() {
+            const scoreLabel = document.getElementById('viva-score');
+
+            Object.keys(vivaData).forEach(qKey => {
+                const data = vivaData[qKey];
+                const optionsContainer = document.getElementById(`${qKey}-options`);
+                const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+                if (!optionsContainer || !feedbackContainer) return;
+                optionsContainer.innerHTML = '';
+
+                data.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "relative text-left p-3 rounded-lg text-sm transition-all duration-300 transform hover:scale-[1.08] hover:-translate-y-1.5 border leading-snug font-bold bg-white hover:bg-cyan-50 hover:border-cyan-400 hover:shadow-xl hover:z-10 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+
+                    let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                    btn.innerHTML = `<span class="font-extrabold text-cyan-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+
+                    btn.addEventListener('click', () => {
+                        if (appState.answers[qKey] !== null) return;
+
+                        appState.answers[qKey] = idx;
+                        if (opt.isCorrect) appState.vivaScore++;
+                        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                        const buttons = optionsContainer.querySelectorAll('button');
+                        buttons.forEach((b, i) => {
+                            b.disabled = true;
+                            b.classList.remove('bg-white', 'hover:bg-cyan-50', 'hover:border-cyan-400', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm', 'hover:scale-[1.08]', 'hover:-translate-y-1.5', 'hover:shadow-xl', 'hover:z-10');
+                            b.classList.add('cursor-not-allowed', 'shadow-none');
+
+                            if (appState.answers[qKey] === i) {
+                                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                            } else if (data.options[i].isCorrect) {
+                                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                            } else {
+                                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                            }
+                        });
+
+                        feedbackContainer.innerHTML = opt.exp;
+                        feedbackContainer.classList.remove('hidden');
+                        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    });
+                    optionsContainer.appendChild(btn);
+                });
+            });
+
+            if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        }
+
+        // --- MATH & CANVAS LOGIC ---
+        const simCanvas = document.getElementById('simCanvas');
+        const ctx = simCanvas.getContext('2d');
+        let zoomLevel = 1.0;
+        const PX_PER_UNIT = 40;
+
+        const selEq = document.getElementById('select-equation');
+        const chkReg = document.getElementById('chk-regions');
+
+        // Telemetry labels
+        const uiEq = document.getElementById('ui-equation');
+        const telRoots = document.getElementById('tel-roots');
+        const telSol = document.getElementById('tel-solution');
+
+        // Equation Presets
+        const presets = {
+            preset1: {
+                mathJax: "$$f(x) = (x+3)(x-1)(x-4) > 0$$",
+                roots: [{ val: -3, type: 'odd', style: 'closed' }, { val: 1, type: 'odd', style: 'closed' }, { val: 4, type: 'odd', style: 'closed' }],
+                startSign: 1, // Positive from right
+                solution: "(-3, 1) ∪ (4, ∞)"
+            },
+            preset2: {
+                mathJax: "$$f(x) = (x+2)^2(x-3) > 0$$",
+                roots: [{ val: -2, type: 'even', style: 'closed' }, { val: 3, type: 'odd', style: 'closed' }],
+                startSign: 1,
+                solution: "(3, ∞)"
+            },
+            preset3: {
+                mathJax: "$$f(x) = -(x+4)(x-2) > 0$$",
+                roots: [{ val: -4, type: 'odd', style: 'closed' }, { val: 2, type: 'odd', style: 'closed' }],
+                startSign: -1, // Negative leading coeff means starts negative
+                solution: "(-4, 2)"
+            },
+            preset4: {
+                mathJax: "$$f(x) = \\frac{x-1}{(x+3)^3} \\ge 0$$",
+                roots: [{ val: -3, type: 'odd', style: 'open' }, { val: 1, type: 'odd', style: 'closed' }],
+                startSign: 1,
+                solution: "(-∞, -3) ∪ [1, ∞)"
+            }
+        };
+
+        let activeState = presets['preset1'];
+
+        function updateMath() {
+            activeState = presets[selEq.value];
+
+            uiEq.innerHTML = activeState.mathJax;
+            if (window.MathJax) MathJax.typesetPromise([uiEq]);
+
+            let rootStrs = activeState.roots.map(r => r.val).join(', ');
+            telRoots.innerText = rootStrs;
+            telSol.innerText = activeState.solution;
+        }
+
+        selEq.addEventListener('change', updateMath);
+
+        function resetMath() {
+            zoomLevel = 1.0;
+        }
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.2); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.4, zoomLevel - 0.2); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.0; });
+
+        function resizeCanvas() {
+            const container = simCanvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+            simCanvas.width = container.clientWidth * dpr;
+            simCanvas.height = container.clientHeight * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function drawGrid(W, H) {
+            ctx.strokeStyle = 'rgba(34, 211, 238, 0.1)';
+            ctx.lineWidth = 1;
+
+            const step = PX_PER_UNIT * zoomLevel;
+            const startX = (W / 2) % step;
+
+            ctx.beginPath();
+            for (let x = startX; x < W; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+            ctx.stroke();
+
+            // Main X Axis
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+
+            // Axis Ticks
+            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            for (let i = 0; i < 20; i++) {
+                let pxX1 = W / 2 + i * step; let pxX2 = W / 2 - i * step;
+                ctx.fillText(i, pxX1, H / 2 + 5);
+                if (i !== 0) ctx.fillText(-i, pxX2, H / 2 + 5);
+            }
+        }
+
+        function renderLoop() {
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+            ctx.clearRect(0, 0, W, H);
+
+            drawGrid(W, H);
+
+            ctx.save();
+            ctx.translate(W / 2, H / 2);
+            ctx.scale(zoomLevel, zoomLevel);
+
+            let roots = [...activeState.roots].sort((a, b) => a.val - b.val); // Sort left to right
+
+            // Calculate signs for each interval (from right to left)
+            let intervals = [];
+            let currentSign = activeState.startSign;
+
+            // Rightmost interval
+            intervals.push({
+                start: roots[roots.length - 1].val, end: 15, sign: currentSign
+            });
+
+            // Middle intervals (right to left)
+            for (let i = roots.length - 1; i >= 0; i--) {
+                let r = roots[i];
+                if (r.type === 'odd') currentSign *= -1; // Flip sign
+
+                let startX = (i > 0) ? roots[i - 1].val : -15;
+                intervals.unshift({
+                    start: startX, end: r.val, sign: currentSign
+                });
+            }
+
+            // Draw Regions (Pink for Negative, Emerald for Positive)
+            if (chkReg.checked) {
+                intervals.forEach(inv => {
+                    let pxStart = inv.start * PX_PER_UNIT;
+                    let pxEnd = inv.end * PX_PER_UNIT;
+                    let w = pxEnd - pxStart;
+
+                    ctx.fillStyle = inv.sign > 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(236, 72, 153, 0.15)';
+                    ctx.fillRect(pxStart, -H / (2 * zoomLevel), w, H / zoomLevel);
+                });
+            }
+
+            // Draw The Wavy Curve
+            ctx.beginPath();
+            ctx.strokeStyle = '#06b6d4'; // Cyan neon
+            ctx.lineWidth = 3 / zoomLevel;
+            ctx.lineJoin = 'round';
+            ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 10;
+
+            let isFirst = true;
+            let stepX = 0.05 / zoomLevel;
+
+            for (let x = -15; x <= 15; x += stepX) {
+                // Find interval for x
+                let sign = 1;
+                let amp = 60 / zoomLevel;
+
+                // Determine Y value using Sine-arch interpolation for visual beauty
+                let y = 0;
+                for (let i = 0; i < intervals.length; i++) {
+                    if (x >= intervals[i].start && x <= intervals[i].end) {
+                        let s = intervals[i].start;
+                        let e = intervals[i].end;
+
+                        if (s === -15) { // Leftmost
+                            y = intervals[i].sign * Math.pow(x - e, 2) * 10;
+                        } else if (e === 15) { // Rightmost
+                            y = intervals[i].sign * Math.pow(x - s, 2) * 10;
+                        } else { // Bounded
+                            // Sine arch
+                            let percent = (x - s) / (e - s);
+                            y = intervals[i].sign * amp * Math.sin(percent * Math.PI);
+                        }
+                        break;
+                    }
+                }
+
+                // Cap Y to prevent crazy rendering offscreen
+                if (y > 150) y = 150;
+                if (y < -150) y = -150;
+
+                let pxX = x * PX_PER_UNIT;
+                let pxY = -y; // Invert Y
+
+                if (isFirst) { ctx.moveTo(pxX, pxY); isFirst = false; }
+                else { ctx.lineTo(pxX, pxY); }
+            }
+            ctx.stroke(); ctx.shadowBlur = 0;
+
+            // Draw Critical Points (Roots)
+            roots.forEach(r => {
+                let pxX = r.val * PX_PER_UNIT;
+                ctx.beginPath(); ctx.arc(pxX, 0, 6 / zoomLevel, 0, Math.PI * 2);
+
+                if (r.style === 'open') {
+                    ctx.fillStyle = '#0f172a'; // Background color
+                    ctx.lineWidth = 2 / zoomLevel;
+                    ctx.strokeStyle = '#f8fafc';
+                    ctx.fill(); ctx.stroke();
+                } else {
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 10;
+                    ctx.fill(); ctx.shadowBlur = 0;
+                }
+            });
+
+            ctx.restore();
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Boot
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            resizeCanvas();
+            updateMath();
+            document.getElementById('user-guide-modal').classList.remove('hidden');
+
+            document.getElementById('btn-close-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+            document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+
+            requestAnimationFrame(renderLoop);
+        });
+    </script>
+</body>
+
+</html>
