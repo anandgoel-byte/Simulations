@@ -1,24 +1,19 @@
 w
 <!DOCTYPE html>
+
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Electromagnetic Wave 3D Virtual Laboratory</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-
-  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Electromagnetic Wave 3D Virtual Laboratory</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- MathJax for rendering gorgeous physical LaTeX equations -->
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -30,11 +25,9 @@ w
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -93,430 +86,259 @@ w
     }
   </style>
 </head>
-
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <!-- Main Premium Dashboard Container -->
-  <div
-    class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-
-    <!-- Top Header & Brand -->
-    <header
-      class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo"
-            class="h-10 object-contain">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">ELECTROMAGNETIC WAVE 3D SANDBOX</h1>
-          <p class="text-[11px] text-slate-400 font-medium">Interactive 3D Electrodynamics &amp; Radiation Field Virtual
+<!-- Main Premium Dashboard Container -->
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<!-- Top Header & Brand -->
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+<img alt="Sparkl Alpha Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">ELECTROMAGNETIC WAVE 3D SANDBOX</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Interactive 3D Electrodynamics &amp; Radiation Field Virtual
             Laboratory</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-3">
-        <!-- Preset Views -->
-        <div class="flex bg-slate-800 p-1 rounded-lg border border-slate-700">
-          <button onclick="setPresetView('isometric')"
-            class="px-2.5 py-1 text-[10px] font-bold rounded text-white bg-slate-700 transition-all">Isometric</button>
-          <button onclick="setPresetView('top')"
-            class="px-2.5 py-1 text-[10px] font-bold rounded text-slate-400 hover:text-white transition-all">Top
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<!-- Preset Views -->
+<div class="flex bg-slate-800 p-1 rounded-lg border border-slate-700">
+<button class="px-2.5 py-1 text-[10px] font-bold rounded text-white bg-slate-700 transition-all" onclick="setPresetView('isometric')">Isometric</button>
+<button class="px-2.5 py-1 text-[10px] font-bold rounded text-slate-400 hover:text-white transition-all" onclick="setPresetView('top')">Top
             (xz)</button>
-          <button onclick="setPresetView('front')"
-            class="px-2.5 py-1 text-[10px] font-bold rounded text-slate-400 hover:text-white transition-all">Front
+<button class="px-2.5 py-1 text-[10px] font-bold rounded text-slate-400 hover:text-white transition-all" onclick="setPresetView('front')">Front
             (yz)</button>
-          <button onclick="setPresetView('side')"
-            class="px-2.5 py-1 text-[10px] font-bold rounded text-slate-400 hover:text-white transition-all">Side
+<button class="px-2.5 py-1 text-[10px] font-bold rounded text-slate-400 hover:text-white transition-all" onclick="setPresetView('side')">Side
             (yx)</button>
-        </div>
-        <!-- User Guide Trigger Button -->
-        <button id="btn-open-guide"
-          class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
-          <span>📘</span> User Guide
+</div>
+<!-- User Guide Trigger Button -->
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> User Guide
         </button>
-      </div>
-    </header>
-
-    <!-- Simulation Toolbar Controls (Playback controls & Speed multipliers) -->
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center space-x-2">
-        <button id="btnPlayPause"
-          class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
-          <span id="playStateIcon">⏸</span> <span id="playStateText">Pause</span>
-        </button>
-        <button id="btnSlowmo"
-          class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all">
+</div>
+</header>
+<!-- Simulation Toolbar Controls (Playback controls & Speed multipliers) -->
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5" id="btnPlayPause">
+<span id="playStateIcon">⏸</span> <span id="playStateText">Pause</span>
+</button>
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all" id="btnSlowmo">
           1.0x Speed
         </button>
-        <button onclick="resetToDefault()"
-          class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all">
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all" onclick="resetToDefault()">
           Reset View
         </button>
-      </div>
-    </div>
-
-    <!-- Master Layout Split: Left (Lab Controls), Center (3D Canvas), Right (Viva Workspace) -->
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-
-      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
-      <section
-        class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
-
-        <!-- Interactive Controls (4 Columns of 9) -->
-        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-6 overflow-y-auto max-h-[640px] pr-1 viva-scrollbar">
-
-            <!-- Parameters Sliders -->
-            <div class="space-y-4">
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Wave Parameters</span>
-
-              <!-- Amplitude -->
-              <div>
-                <div
-                  class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>Amplitude ($E_0, B_0$)</span>
-                  <input type="number" id="num-amp" step="0.1" min="0.2" max="1.8" value="1.0"
-                    class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="paramAmp" min="0.2" max="1.8" step="0.1" value="1.0" class="w-full">
-              </div>
-
-              <!-- Wavelength -->
-              <div>
-                <div
-                  class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>Wavelength ($\lambda$)</span>
-                  <input type="number" id="num-wavelength" step="0.1" min="0.5" max="2.5" value="1.3"
-                    class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="paramWavelength" min="0.5" max="2.5" step="0.1" value="1.3" class="w-full">
-              </div>
-
-              <!-- Frequency -->
-              <div>
-                <div
-                  class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>Frequency ($f$)</span>
-                  <input type="number" id="num-frequency" step="0.1" min="0.1" max="2.5" value="1.0"
-                    class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="paramFrequency" min="0.1" max="2.5" step="0.1" value="1.0" class="w-full">
-              </div>
-
-              <!-- Density -->
-              <div>
-                <div
-                  class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>Vector Arrow Density</span>
-                  <input type="number" id="num-density" step="2" min="10" max="60" value="32"
-                    class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="paramDensity" min="10" max="60" step="2" value="32" class="w-full">
-              </div>
-            </div>
-
-            <!-- Field Component Layer Toggles -->
-            <div class="space-y-2 pt-2 border-t border-slate-200">
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Field Layers</span>
-
-              <label
-                class="flex items-center space-x-2.5 text-xs font-bold text-emerald-600 cursor-pointer select-none">
-                <input type="checkbox" id="masterEField" checked
-                  class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4.5 w-4.5">
-                <span>Electric Field ($\vec{E}$) [y-axis]</span>
-              </label>
-
-              <div class="pl-7 space-y-1.5 text-[11px] text-slate-500 font-semibold">
-                <label class="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" id="toggleEPlane" checked
-                    class="rounded border-slate-300 text-emerald-600 h-3.5 w-3.5">
-                  <span>Show yz Plane Grid</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" id="toggleEVectors" checked
-                    class="rounded border-slate-300 text-emerald-600 h-3.5 w-3.5">
-                  <span>Show E Field Vectors</span>
-                </label>
-              </div>
-
-              <label class="flex items-center space-x-2.5 text-xs font-bold text-rose-600 cursor-pointer select-none">
-                <input type="checkbox" id="masterBField" checked
-                  class="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-4.5 w-4.5">
-                <span>Magnetic Field ($\vec{B}$) [x-axis]</span>
-              </label>
-
-              <div class="pl-7 space-y-1.5 text-[11px] text-slate-500 font-semibold">
-                <label class="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" id="toggleBPlane" checked
-                    class="rounded border-slate-300 text-rose-600 h-3.5 w-3.5">
-                  <span>Show xz Plane Grid</span>
-                </label>
-                <label class="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" id="toggleBVectors" checked
-                    class="rounded border-slate-300 text-rose-600 h-3.5 w-3.5">
-                  <span>Show B Field Vectors</span>
-                </label>
-              </div>
-
-              <label
-                class="flex items-center space-x-2.5 text-xs font-bold text-amber-600 cursor-pointer select-none pt-1">
-                <input type="checkbox" id="togglePoynting" checked
-                  class="rounded border-slate-300 text-amber-600 focus:ring-amber-500 h-4.5 w-4.5">
-                <span>Poynting Vector ($\vec{S}$) [z-axis]</span>
-              </label>
-            </div>
-
-            <!-- Visualization helpers -->
-            <div class="space-y-2 pt-2 border-t border-slate-200 text-xs font-semibold text-slate-600">
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Display Helpers</span>
-              <label class="flex items-center space-x-2.5 cursor-pointer">
-                <input type="checkbox" id="toggleOscillationArrows" checked
-                  class="rounded border-slate-300 text-indigo-600 h-4 w-4">
-                <span>Show Oscillation Planes</span>
-              </label>
-              <label class="flex items-center space-x-2.5 cursor-pointer">
-                <input type="checkbox" id="toggleAxes" checked class="rounded border-slate-300 text-indigo-600 h-4 w-4">
-                <span>Show Coordinates Axes</span>
-              </label>
-              <label class="flex items-center space-x-2.5 cursor-pointer">
-                <input type="checkbox" id="toggleVelocity" checked
-                  class="rounded border-slate-300 text-indigo-600 h-4 w-4">
-                <span>Show Velocity Vector</span>
-              </label>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- 3D Interactive Canvas Box (8 Columns of 9) -->
-        <div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[480px]">
-          <canvas id="simCanvas" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"></canvas>
-
-          <!-- Floating live telemetry HUD overlay -->
-          <div
-            class="absolute top-4 left-4 bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl text-[11px] font-mono shadow-2xl backdrop-blur text-slate-300 pointer-events-none select-none">
-            <div class="text-[9px] text-slate-500 font-sans font-extrabold uppercase tracking-wider mb-1.5">
+</div>
+</div>
+<!-- Master Layout Split: Left (Lab Controls), Center (3D Canvas), Right (Viva Workspace) -->
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (9 Columns) -->
+<section class="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+<!-- Interactive Controls (4 Columns of 9) -->
+<div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6"><div class="space-y-5"><div class="space-y-4">
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Wave Parameters</span>
+<!-- Amplitude -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Amplitude ($E_0, B_0$)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-amp" max="1.8" min="0.2" step="0.1" type="number" value="1.0"/>
+</div>
+<input class="w-full" id="paramAmp" max="1.8" min="0.2" step="0.1" type="range" value="1.0"/>
+</div>
+<!-- Wavelength -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Wavelength ($\lambda$)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-wavelength" max="2.5" min="0.5" step="0.1" type="number" value="1.3"/>
+</div>
+<input class="w-full" id="paramWavelength" max="2.5" min="0.5" step="0.1" type="range" value="1.3"/>
+</div>
+<!-- Frequency -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Frequency ($f$)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-frequency" max="2.5" min="0.1" step="0.1" type="number" value="1.0"/>
+</div>
+<input class="w-full" id="paramFrequency" max="2.5" min="0.1" step="0.1" type="range" value="1.0"/>
+</div>
+<!-- Density -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Vector Arrow Density</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-density" max="60" min="10" step="2" type="number" value="32"/>
+</div>
+<input class="w-full" id="paramDensity" max="60" min="10" step="2" type="range" value="32"/>
+</div>
+</div><div class="space-y-2 pt-2 border-t border-slate-200">
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Field Layers</span>
+<label class="flex items-center space-x-2.5 text-xs font-bold text-emerald-600 cursor-pointer select-none">
+<input checked="" class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4.5 w-4.5" id="masterEField" type="checkbox"/>
+<span>Electric Field ($\vec{E}$) [y-axis]</span>
+</label>
+<div class="pl-7 space-y-1.5 text-[11px] text-slate-500 font-semibold">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-emerald-600 h-3.5 w-3.5" id="toggleEPlane" type="checkbox"/>
+<span>Show yz Plane Grid</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-emerald-600 h-3.5 w-3.5" id="toggleEVectors" type="checkbox"/>
+<span>Show E Field Vectors</span>
+</label>
+</div>
+<label class="flex items-center space-x-2.5 text-xs font-bold text-rose-600 cursor-pointer select-none">
+<input checked="" class="rounded border-slate-300 text-rose-600 focus:ring-rose-500 h-4.5 w-4.5" id="masterBField" type="checkbox"/>
+<span>Magnetic Field ($\vec{B}$) [x-axis]</span>
+</label>
+<div class="pl-7 space-y-1.5 text-[11px] text-slate-500 font-semibold">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-rose-600 h-3.5 w-3.5" id="toggleBPlane" type="checkbox"/>
+<span>Show xz Plane Grid</span>
+</label>
+<label class="flex items-center space-x-2 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-rose-600 h-3.5 w-3.5" id="toggleBVectors" type="checkbox"/>
+<span>Show B Field Vectors</span>
+</label>
+</div>
+<label class="flex items-center space-x-2.5 text-xs font-bold text-amber-600 cursor-pointer select-none pt-1">
+<input checked="" class="rounded border-slate-300 text-amber-600 focus:ring-amber-500 h-4.5 w-4.5" id="togglePoynting" type="checkbox"/>
+<span>Poynting Vector ($\vec{S}$) [z-axis]</span>
+</label>
+</div><div class="space-y-2 pt-2 border-t border-slate-200 text-xs font-semibold text-slate-600">
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block">Display Helpers</span>
+<label class="flex items-center space-x-2.5 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-indigo-600 h-4 w-4" id="toggleOscillationArrows" type="checkbox"/>
+<span>Show Oscillation Planes</span>
+</label>
+<label class="flex items-center space-x-2.5 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-indigo-600 h-4 w-4" id="toggleAxes" type="checkbox"/>
+<span>Show Coordinates Axes</span>
+</label>
+<label class="flex items-center space-x-2.5 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-indigo-600 h-4 w-4" id="toggleVelocity" type="checkbox"/>
+<span>Show Velocity Vector</span>
+</label>
+</div></div></div>
+<!-- 3D Interactive Canvas Box (8 Columns of 9) -->
+<div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[480px]">
+<canvas class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing" id="simCanvas"></canvas>
+<!-- Floating live telemetry HUD overlay -->
+<div class="absolute top-4 left-4 bg-slate-900/90 border border-slate-800 p-3.5 rounded-xl text-[11px] font-mono shadow-2xl backdrop-blur text-slate-300 pointer-events-none select-none">
+<div class="text-[9px] text-slate-500 font-sans font-extrabold uppercase tracking-wider mb-1.5">
               Instantaneous Quantities</div>
-            <div class="flex items-center gap-4">
-              <span class="text-emerald-400 font-bold">E_y:</span>
-              <span id="hudEy" class="text-slate-200">0.00 V/m</span>
-            </div>
-            <div class="flex items-center gap-4">
-              <span class="text-rose-400 font-bold">B_x:</span>
-              <span id="hudBx" class="text-slate-200">0.00 T</span>
-            </div>
-            <div class="flex items-center gap-4 border-t border-slate-800 pt-1 mt-1">
-              <span class="text-amber-400 font-bold">|S_z|:</span>
-              <span id="hudSz" class="text-slate-200">0.00 W/m²</span>
-            </div>
-          </div>
-
-          <!-- Bottom drag rotation hint banner -->
-          <div
-            class="absolute bottom-4 left-4 right-4 bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-[9px] text-center shadow-xl backdrop-blur text-slate-400 select-none pointer-events-none uppercase tracking-wider">
+<div class="flex items-center gap-4">
+<span class="text-emerald-400 font-bold">E_y:</span>
+<span class="text-slate-200" id="hudEy">0.00 V/m</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-rose-400 font-bold">B_x:</span>
+<span class="text-slate-200" id="hudBx">0.00 T</span>
+</div>
+<div class="flex items-center gap-4 border-t border-slate-800 pt-1 mt-1">
+<span class="text-amber-400 font-bold">|S_z|:</span>
+<span class="text-slate-200" id="hudSz">0.00 W/m²</span>
+</div>
+</div>
+<!-- Bottom drag rotation hint banner -->
+<div class="absolute bottom-4 left-4 right-4 bg-slate-900/80 border border-slate-800 p-2 rounded-xl text-[9px] text-center shadow-xl backdrop-blur text-slate-400 select-none pointer-events-none uppercase tracking-wider">
             Click and drag directly on the canvas viewport to rotate perspective. Scroll/pinch to zoom.
           </div>
-        </div>
-
-      </section>
-
-      <!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
-      <section
-        class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
-
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-          <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
-        </div>
-
-        <div class="space-y-3">
-
-          <!-- QUESTION 1 -->
-          <div
-            class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span
-                class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
-                1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                How do Maxwell's equations show that EM waves travel at the speed of light?
-              </h4>
-              <button onclick="toggleVerification(1)"
-                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Scientific Verification</span>
-                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-1"
-              class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
-                Taking curl of Faraday's law and substituting Ampere-Maxwell's law in vacuum gives the wave equation:
-                $$\nabla^2 \vec{E} = \mu_0\epsilon_0 \frac{\partial^2\vec{E}}{\partial t^2}$$
-                Comparing this directly to the classical wave equation yields the wave phase velocity:
-                $$v = \frac{1}{\sqrt{\mu_0\epsilon_0}} \approx 3.00 \times 10^8\text{ m/s} = c$$
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 2 -->
-          <div
-            class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span
-                class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
-                2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why are $\vec{E}$ and $\vec{B}$ fields transverse and orthogonal to propagation?
-              </h4>
-              <button onclick="toggleVerification(2)"
-                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Scientific Verification</span>
-                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-2"
-              class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
-                Gauss's laws in vacuum dictate $\vec{\nabla}\cdot\vec{E}=0$ and $\vec{\nabla}\cdot\vec{B}=0$. For plane
-                wave propagating along z:
-                $$\frac{\partial E_z}{\partial z} = ik E_z = 0 \implies E_z = 0$$
-                $$\frac{\partial B_z}{\partial z} = ik B_z = 0 \implies B_z = 0$$
-                Thus, field vibrations have no parallel components along propagation axis.
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 3 -->
-          <div
-            class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span
-                class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
-                3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What is the physical definition of the Poynting Vector ($\vec{S}$)?
-              </h4>
-              <button onclick="toggleVerification(3)"
-                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Scientific Verification</span>
-                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-3"
-              class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
-                The Poynting vector represents the instantaneous directional energy flux density (watts per unit area):
-                $$\vec{S} = \frac{1}{\mu_0}(\vec{E} \times \vec{B})$$
-                With $\vec{E} = E_y\hat{j}$ and $\vec{B} = B_x\hat{i}$, the vector cross product direction maps to:
-                $$\vec{S} = -\frac{1}{\mu_0}E_yB_x\hat{k}$$
-                Because $B_x$ is in anti-phase relative to $E_y$, $S_z$ is always non-negative:
-                $$S_z \propto \sin^2(kz-\omega t) \ge 0$$
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 4 -->
-          <div
-            class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span
-                class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
-                4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What is the exact ratio between the amplitudes of $\vec{E}$ and $\vec{B}$?
-              </h4>
-              <button onclick="toggleVerification(4)"
-                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-4">Show Scientific Verification</span>
-                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-4"
-              class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
-                Applying plane wave equations to Faraday's induction curl $\vec{\nabla}\times\vec{E} =
-                -\frac{\partial\vec{B}}{\partial t}$ gives:
-                $$\frac{\partial E_y}{\partial z} = -\frac{\partial B_x}{\partial t} \implies k E_0 = \omega B_0$$
-                This simplifies directly to the vacuum velocity factor ratio:
-                $$\frac{E_0}{B_0} = \frac{\omega}{k} = c$$
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 5 -->
-          <div
-            class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span
-                class="inline-block bg-red-50 text-red-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question
-                5</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                How does radiation pressure ($P$) scale with Poynting energy flux?
-              </h4>
-              <button onclick="toggleVerification(5)"
-                class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-5">Show Scientific Verification</span>
-                <span id="btn-arrow-5" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-5"
-              class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-red-500">
-                Light waves transport physical momentum. The time-averaged radiation pressure $P$ on a perfectly
-                absorbing surface is:
-                $$P = \frac{\langle S \rangle}{c}$$
-                If the surface is perfectly reflecting, momentum transfer doubles:
-                $$P = \frac{2\langle S \rangle}{c}$$
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Calibration Footer -->
-    <footer
-      class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
-      <span>* Propagation physics verified via 3D vector rotation projection.</span>
-      <span>Apparatus Calibration: c = f &times; &lambda;</span>
-    </footer>
-
-  </div>
-
-  <!-- User Guide Modal Popup -->
-  <div id="user-guide-modal"
-    class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div
-      class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>📘</span> ELECTROMAGNETIC WAVES - User Guide
+</div>
+</section>
+<!-- RIGHT PANEL: Viva Assessment Workspace (3 Columns) -->
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="space-y-2">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+                        Why are $\vec{E}$ and $\vec{B}$ fields transverse and orthogonal to propagation?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+                        What is the physical definition of the Poynting Vector ($\vec{S}$)?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+<div class="space-y-2">
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
+                        What is the exact ratio between the amplitudes of $\vec{E}$ and $\vec{B}$?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+<div class="space-y-2">
+<span class="inline-block bg-rose-50 text-rose-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-rose-700" id="q5-text">
+                        How does radiation pressure ($P$) scale with Poynting energy flux?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q5-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q5-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+<div class="space-y-2">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+                        How do Maxwell's equations show that EM waves travel at the speed of light?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+</div>
+</div></section>
+</main>
+<!-- Calibration Footer -->
+<footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+<span>* Propagation physics verified via 3D vector rotation projection.</span>
+<span>Apparatus Calibration: c = f × λ</span>
+</footer>
+</div>
+<!-- User Guide Modal Popup -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> ELECTROMAGNETIC WAVES - User Guide
         </h3>
-        <button id="btn-close-guide"
-          class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
-      </div>
-      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-        <p>Explore EM wave dynamics with this interactive 3D laboratory:</p>
-        <ul class="list-disc pl-5 space-y-1.5">
-          <li><strong>Rotate View</strong>: Click and drag anywhere inside the 3D canvas to rotate your viewing
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Explore EM wave dynamics with this interactive 3D laboratory:</p>
+<ul class="list-disc pl-5 space-y-1.5">
+<li><strong>Rotate View</strong>: Click and drag anywhere inside the 3D canvas to rotate your viewing
             perspective. Scroll/pinch to zoom.</li>
-          <li><strong>Sliders</strong>: Adjust Wave amplitude, Wavelength ($\lambda$), Frequency ($f$), and vector
+<li><strong>Sliders</strong>: Adjust Wave amplitude, Wavelength ($\lambda$), Frequency ($f$), and vector
             densities.</li>
-          <li><strong>Playback Controls</strong>: Use Play/Pause and slow-motion speed toggles.</li>
-        </ul>
-      </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm"
-          class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
-          Get Started
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
+<li><strong>Playback Controls</strong>: Use Play/Pause and slow-motion speed toggles.</li>
+</ul>
+</div>
+<div class="pt-3 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<script>
     // System clock state
     let isPlaying = true;
     let speedFactor = 1.0;
@@ -1000,29 +822,189 @@ w
       requestAnimationFrame(renderLoop);
     }
 
-    function toggleVerification(id) {
-      const panel = document.getElementById(`viva-panel-${id}`);
-      const btnText = document.getElementById(`btn-text-${id}`);
-      const btnArrow = document.getElementById(`btn-arrow-${id}`);
-
-      if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-        btnText.textContent = "Hide Scientific Verification";
-        btnArrow.classList.add('rotate-180');
-        if (window.MathJax) {
-          MathJax.typesetPromise([panel]);
-        }
-      } else {
-        panel.classList.add('hidden');
-        btnText.textContent = "Show Scientific Verification";
-        btnArrow.classList.remove('rotate-180');
-      }
-    }
+    
 
     // Launch
     setPresetView('isometric');
     requestAnimationFrame(renderLoop);
-  </script>
-</body>
+  
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = {
+        vivaScore: 0,
+        answers: { q1: null, q2: null, q3: null, q4: null, q5: null }
+    };
 
+    const vivaData = {
+        q1: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "Taking curl of Faraday's law and substituting Ampere-Maxwell's law in vacuum gives the wave equation:...", isCorrect: true, exp: "Correct! Taking curl of Faraday's law and substituting Ampere-Maxwell's law in vacuum gives the wave equation: $$\nabla^2 \vec{E} = \mu_0\epsilon_0 \frac{\partial^2\vec{E}}{\partial t^2}$$ Comparing this directly to the classical wave equation yields the wave phase velocity: $$v = \frac{1}{\sqrt{\mu_0\epsilon_0}} \approx 3.00 \times 10^8\text{ m/s} = c$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q2: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "Gauss's laws in vacuum dictate $\vec{\nabla}\cdot\vec{E}=0$ and $\vec{\nabla}\cdot\vec{B}=0$", isCorrect: true, exp: "Correct! Gauss's laws in vacuum dictate $\vec{\nabla}\cdot\vec{E}=0$ and $\vec{\nabla}\cdot\vec{B}=0$. For plane wave propagating along z: $$\frac{\partial E_z}{\partial z} = ik E_z = 0 \implies E_z = 0$$ $$\frac{\partial B_z}{\partial z} = ik B_z = 0 \implies B_z = 0$$ Thus, field vibrations have no parallel components along propagation axis." },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q3: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "The Poynting vector represents the instantaneous directional energy flux density (watts per unit area):...", isCorrect: true, exp: "Correct! The Poynting vector represents the instantaneous directional energy flux density (watts per unit area): $$\vec{S} = \frac{1}{\mu_0}(\vec{E} \times \vec{B})$$ With $\vec{E} = E_y\hat{j}$ and $\vec{B} = B_x\hat{i}$, the vector cross product direction maps to: $$\vec{S} = -\frac{1}{\mu_0}E_yB_x\hat{k}$$ Because $B_x$ is in anti-phase relative to $E_y$, $S_z$ is always non-negative: $$S_z \propto \sin^2(kz-\omega t) \ge 0$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q4: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "Applying plane wave equations to Faraday's induction curl $\vec{\nabla}\times\vec{E} = -\frac{\partial\vec{B}}{\partial...", isCorrect: true, exp: "Correct! Applying plane wave equations to Faraday's induction curl $\vec{\nabla}\times\vec{E} = -\frac{\partial\vec{B}}{\partial t}$ gives: $$\frac{\partial E_y}{\partial z} = -\frac{\partial B_x}{\partial t} \implies k E_0 = \omega B_0$$ This simplifies directly to the vacuum velocity factor ratio: $$\frac{E_0}{B_0} = \frac{\omega}{k} = c$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q5: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "Light waves transport physical momentum.", isCorrect: true, exp: "Correct! Light waves transport physical momentum. The time-averaged radiation pressure $P$ on a perfectly absorbing surface is: $$P = \frac{\langle S \rangle}{c}$$ If the surface is perfectly reflecting, momentum transfer doubles: $$P = \frac{2\langle S \rangle}{c}$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+    };
+
+    const colorsMap = {
+        q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+        q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' },
+        q5: { hoverBg: 'hover:bg-rose-50', hoverBorder: 'hover:border-rose-400', labelText: 'text-rose-600' }
+    };
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    function renderQuestions() {
+        const scoreLabel = document.getElementById('viva-score');
+
+        Object.keys(vivaData).forEach(qKey => {
+            const data = vivaData[qKey];
+            const optionsContainer = document.getElementById(`${qKey}-options`);
+            const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+            if (!optionsContainer || !feedbackContainer) return;
+            optionsContainer.innerHTML = '';
+
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+
+                let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+
+                btn.addEventListener('click', () => {
+                    if (appState.answers[qKey] !== null) return;
+
+                    appState.answers[qKey] = idx;
+                    if (opt.isCorrect) {
+                        appState.vivaScore++;
+                        triggerConfetti();
+                    }
+                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 5`;
+
+                    const buttons = optionsContainer.querySelectorAll('button');
+                    buttons.forEach((b, i) => {
+                        b.disabled = true;
+                        b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+                        b.classList.add('cursor-not-allowed', 'shadow-none');
+
+                        if (appState.answers[qKey] === i) {
+                            if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                            else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                        } else if (data.options[i].isCorrect) {
+                            b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                        } else {
+                            b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                        }
+                    });
+
+                    feedbackContainer.innerHTML = opt.exp;
+                    feedbackContainer.classList.remove('hidden');
+                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                });
+                optionsContainer.appendChild(btn);
+            });
+        });
+
+        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+    }
+
+    // Category Filter Handler
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    try { renderQuestions(); } catch(e) { console.error(e); }
+</script>
+</body>
 </html>

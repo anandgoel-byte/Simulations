@@ -1,20 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Human Eye Defects Laboratory</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Human Eye Defects Laboratory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -26,11 +21,9 @@
             }
         };
     </script>
-    <script type="text/javascript" id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-        </script>
-
-    <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f1f5f9;
@@ -127,341 +120,214 @@
         }
     </style>
 </head>
-
 <body class="min-h-screen flex items-center justify-center p-4">
-
-    <div
-        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-
-        <header
-            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
-            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                <div
-                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
-                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
-                        class="h-8 object-contain" onerror="this.style.display='none'">
-                </div>
-                <div>
-                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Human Eye & Vision Defects
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Human Eye &amp; Vision Defects
                     </h1>
-                    <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Optics & Ophthalmology
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Optics &amp; Ophthalmology
                         Laboratory</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button id="btn-open-guide"
-                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
-                    <span>📘</span> User Guide
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> User Guide
                 </button>
-                <div
-                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
-                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
-                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Optics Engine
+<div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+<span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Optics Engine
                         Active</span>
-                </div>
-            </div>
-        </header>
-
-        <div
-            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
-            <div class="flex items-center space-x-2">
-                <button id="btn-correct"
-                    class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
-                    <span>👓</span> Apply Correction
+</div>
+</div>
+</header>
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-correct">
+<span>👓</span> Apply Correction
                 </button>
-                <button id="btn-reset"
-                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
-                    <span>🔄</span> Reset Eye
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5" id="btn-reset">
+<span>🔄</span> Reset Eye
                 </button>
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
-                    <input type="checkbox" id="chk-rays" checked
-                        class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
-                    <span>Show Light Rays</span>
-                </label>
-            </div>
-        </div>
-
-        <main
-            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-
-            <section
-                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-
-                <!-- Controls Card -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                    <span
-                        class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Vision
-                        Condition</span>
-
-                    <select id="select-defect"
-                        class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm">
-                        <option value="normal" selected>Normal Vision</option>
-                        <option value="myopia">Myopia (Near-Sightedness)</option>
-                        <option value="hypermetropia">Hypermetropia (Far-Sightedness)</option>
-                        <option value="presbyopia">Presbyopia (Aging Eye)</option>
-                        <option value="astigmatism">Astigmatism</option>
-                        <option value="cataract">Cataract (Cloudy Lens)</option>
-                        <option value="pov">Persistence of Vision (Illusion)</option>
-                    </select>
-
-                    <div id="ctrl-distance">
-                        <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-4">
-                            <span class="text-cyan-600 flex items-center gap-1">■ Object Distance</span>
-                            <span id="val-dist"
-                                class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">Far</span>
-                        </div>
-                        <input type="range" id="slider-dist" min="0" max="100" value="100">
-                    </div>
-
-                    <div id="ctrl-spin" class="hidden">
-                        <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-4">
-                            <span class="text-amber-600 flex items-center gap-1">■ Disc Spin Speed (FPS)</span>
-                            <span id="val-spin"
-                                class="font-mono bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded text-xs">0
+</div>
+<div class="flex items-center space-x-4">
+<label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4" id="chk-rays" type="checkbox"/>
+<span>Show Light Rays</span>
+</label>
+</div>
+</div>
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar"><div class="space-y-5"><div id="ctrl-distance">
+<div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-4">
+<span class="text-cyan-600 flex items-center gap-1">■ Object Distance</span>
+<span class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs" id="val-dist">Far</span>
+</div>
+<input id="slider-dist" max="100" min="0" type="range" value="100"/>
+</div><div class="hidden" id="ctrl-spin">
+<div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-4">
+<span class="text-amber-600 flex items-center gap-1">■ Disc Spin Speed (FPS)</span>
+<span class="font-mono bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded text-xs" id="val-spin">0
                                 fps</span>
-                        </div>
-                        <input type="range" id="slider-spin" min="0" max="30" value="0" class="slider-amber">
-                    </div>
-                </div>
-
-                <!-- Live Optical Telemetry Card -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3" id="telemetry-panel">
-                    <span
-                        class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Live
-                        Optical Telemetry</span>
-
-                    <div class="flex flex-col gap-2">
-
-                        <div
-                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
-                            <div
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"
-                                    id="dot-focus"></span> Focal Position
-                            </div>
-                            <div class="text-sm font-bold font-mono tracking-widest grad-cyan uppercase text-right"
-                                id="tel-focus">On Retina</div>
-                        </div>
-
-                        <div
-                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
-                            <div
-                                class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"
-                                    id="dot-acuity"></span> Visual Acuity
-                            </div>
-                            <div class="text-sm font-bold font-mono tracking-widest grad-emerald uppercase text-right"
-                                id="tel-acuity">Clear</div>
-                        </div>
-
-                        <div
-                            class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800 mt-1">
-                            <div
-                                class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-pink-400">
-                                Required Correction Lens</div>
-                            <div class="text-[13px] font-bold font-mono tracking-wide text-white" id="tel-lens">None
-                                Required</div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Condition Details Card -->
-                <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2" id="desc-box">
-                    <span
-                        class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Condition
-                        Details</span>
-                    <div class="text-xs text-slate-300 mt-2 leading-relaxed" id="txt-desc">
+</div>
+<input class="slider-amber" id="slider-spin" max="30" min="0" type="range" value="0"/>
+</div><div class="text-xs text-slate-300 mt-2 leading-relaxed" id="txt-desc">
                         Light focuses perfectly on the retina. The ciliary muscles adjust the lens thickness to
                         maintain focus for both near and distant objects (Accommodation).
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 shadow-inner min-h-[500px]">
-                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
-
-                <div
-                    class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
-                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
-                    <span id="simStatusText"
-                        class="text-[10px] font-extrabold text-white uppercase tracking-wider">Uncorrected Vision</span>
-                </div>
-
-                <div class="absolute bottom-4 left-4 bg-black/80 backdrop-blur-md p-2 rounded-xl border border-slate-700 shadow-lg flex flex-col gap-1 z-20 w-32"
-                    id="vision-preview">
-                    <span
-                        class="text-[8px] font-bold text-slate-400 uppercase tracking-widest text-center border-b border-slate-700 pb-1">Perceived
+                    </div><div class="flex flex-col gap-2">
+<div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block" id="dot-focus"></span> Focal Position
+                            </div>
+<div class="text-sm font-bold font-mono tracking-widest grad-cyan uppercase text-right" id="tel-focus">On Retina</div>
+</div>
+<div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block" id="dot-acuity"></span> Visual Acuity
+                            </div>
+<div class="text-sm font-bold font-mono tracking-widest grad-emerald uppercase text-right" id="tel-acuity">Clear</div>
+</div>
+<div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800 mt-1">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-pink-400">
+                                Required Correction Lens</div>
+<div class="text-[13px] font-bold font-mono tracking-wide text-white" id="tel-lens">None
+                                Required</div>
+</div>
+</div></div></section>
+<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 shadow-inner min-h-[500px]">
+<canvas class="w-full h-full block z-10" id="simCanvas"></canvas>
+<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-500" id="status-dot"></span>
+<span class="text-[10px] font-extrabold text-white uppercase tracking-wider" id="simStatusText">Uncorrected Vision</span>
+</div>
+<div class="absolute bottom-4 left-4 bg-black/80 backdrop-blur-md p-2 rounded-xl border border-slate-700 shadow-lg flex flex-col gap-1 z-20 w-32" id="vision-preview">
+<span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest text-center border-b border-slate-700 pb-1">Perceived
                         Image</span>
-                    <div
-                        class="h-20 w-full flex items-center justify-center bg-slate-800 rounded overflow-hidden relative">
-                        <div id="img-target" class="text-3xl transition-all duration-300">🍎</div>
-                    </div>
-                </div>
-
-                <div
-                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
-                    <button id="btn-zoom-in"
-                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
-                    <button id="btn-zoom-out"
-                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
-                    <button id="btn-zoom-reset"
-                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
-                </div>
-            </section>
-
-            <section
-                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
-
-                <div>
-                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
+<div class="h-20 w-full flex items-center justify-center bg-slate-800 rounded overflow-hidden relative">
+<div class="text-3xl transition-all duration-300" id="img-target">🍎</div>
+</div>
+</div>
+<div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-in">+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-out">-</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]" id="btn-zoom-reset">RST</button>
+</div>
+</section>
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div>
+<span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
                         Desk</span>
-                    <div class="flex justify-between items-center mt-0.5">
-                        <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
-                        <span id="viva-score"
-                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
-                            0 / 4</span>
-                    </div>
-                </div>
-
-                <div class="space-y-3 pb-4">
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Myopia
+<div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div>
+</div><div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Myopia
                                 Correction]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
-                                id="q1-text">
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
                                 A student has difficulty reading the blackboard while sitting in the last row. What
                                 could be the defect the child is suffering from, and how is it corrected?
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-                            <p id="q1-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Hypermetropia]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
-                                id="q2-text">
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback">
+</p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Hypermetropia]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
                                 In Hypermetropia (far-sightedness), where does the image of a nearby object form before
                                 correction?
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-                            <p id="q2-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Presbyopia]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
-                                id="q3-text">
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback">
+</p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Presbyopia]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
                                 Which condition is caused by the gradual weakening of ciliary muscles and diminishing
                                 flexibility of the eye lens due to aging?
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-                            <p id="q3-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Persistence
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback">
+</p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Persistence
                                 of Vision]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
-                                id="q4-text">
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
                                 The ability to see motion in a rapidly spinning thaumatrope (or a movie) is due to a
                                 phenomenon where the eye retains an image for about 1/16th of a second. This is called:
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-                            <p id="q4-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <div id="user-guide-modal"
-        class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div
-            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
-                    <span>📘</span> OPTICS PROTOCOLS
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback">
+</p>
+</div>
+</div>
+</div></section>
+</main>
+</div>
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-4">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> OPTICS PROTOCOLS
                 </h3>
-                <button id="btn-close-guide"
-                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
-            </div>
-            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-                <p>Welcome to the <strong>Eye Defects & Optics Simulator</strong>! Visualize how light interacts with
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Welcome to the <strong>Eye Defects &amp; Optics Simulator</strong>! Visualize how light interacts with
                     the human eye and how physics corrects biological imperfections.</p>
-
-                <div class="space-y-2">
-                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core
                         Controls</h4>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Select Condition</strong>: Choose a defect like Myopia or Cataract. Watch how the
+<ul class="list-disc pl-5 space-y-2">
+<li><strong>Select Condition</strong>: Choose a defect like Myopia or Cataract. Watch how the
                             rays fail to converge properly on the retina.</li>
-                        <li><strong>Object Distance</strong>: Drag the red apple object directly on the canvas or slide
+<li><strong>Object Distance</strong>: Drag the red apple object directly on the canvas or slide
                             the Object Distance slider. Notice how Myopia and Hypermetropia manifest at different
                             distances!</li>
-                        <li><strong>Apply Correction</strong>: Click the glasses icon to drop in the correct lens
+<li><strong>Apply Correction</strong>: Click the glasses icon to drop in the correct lens
                             (Concave, Convex, or Cylindrical) and watch the focal point snap back to the retina.</li>
-                        <li><strong>Persistence of Vision</strong>: Select this special mode at the bottom of the list.
+<li><strong>Persistence of Vision</strong>: Select this special mode at the bottom of the list.
                             Spin the disc to see how your brain blends two separate images into one!</li>
-                    </ul>
-                </div>
-
-                <div class="space-y-2 border-t border-slate-100 pt-3">
-                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎓
+</ul>
+</div>
+<div class="space-y-2 border-t border-slate-100 pt-3">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🎓
                         Learning Outcomes</h4>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Mechanism of Vision</strong>: Understand light refraction through the cornea and
+<ul class="list-disc pl-5 space-y-2">
+<li><strong>Mechanism of Vision</strong>: Understand light refraction through the cornea and
                             lens to focus an image on the retina.</li>
-                        <li><strong>Pathophysiology of Defects</strong>: Define focal displacements for Myopia,
+<li><strong>Pathophysiology of Defects</strong>: Define focal displacements for Myopia,
                             Hypermetropia, Astigmatism, and Presbyopia.</li>
-                        <li><strong>Correction Principles</strong>: Learn how diverging (concave), converging (convex),
+<li><strong>Correction Principles</strong>: Learn how diverging (concave), converging (convex),
                             and cylindrical lenses correct focal placement.</li>
-                        <li><strong>Temporal Perception</strong>: Grasp the persistence of vision physics and
+<li><strong>Temporal Perception</strong>: Grasp the persistence of vision physics and
                             thaumatrope principles.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="pt-4 border-t border-slate-100 flex justify-end">
-                <button id="btn-close-guide-confirm"
-                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
-                    Acknowledge
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
+</ul>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<script>
         // --- VIVA MCQS DECK STATE & DATA ---
         const appState = {
             vivaScore: 0,
@@ -1280,5 +1146,4 @@
         });
     </script>
 </body>
-
 </html>

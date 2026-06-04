@@ -1,17 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avg Speed vs Avg Velocity: CyberGrid Lab</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Avg Speed vs Avg Velocity: CyberGrid Lab</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -23,11 +21,9 @@
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -59,244 +55,200 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
-      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-8 object-contain" onerror="this.style.display='none'">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Avg Speed vs Avg Velocity</h1>
-          <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">CyberGrid Drone Navigation Laboratory</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-3">
-        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
-          <span>📘</span> User Guide
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Avg Speed vs Avg Velocity</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">CyberGrid Drone Navigation Laboratory</p>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> User Guide
         </button>
-        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
-          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
-          <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Network Active</span>
-        </div>
-      </div>
-    </header>
-
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
-      <div class="flex items-center space-x-2">
-        <button id="btn-run" class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
-          <span>🛸</span> Launch Drone
+<div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+<span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Network Active</span>
+</div>
+</div>
+</header>
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-run">
+<span>🛸</span> Launch Drone
         </button>
-        <button id="btn-pause" class="px-5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
-          <span>⏸</span> Pause
+<button class="px-5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5" id="btn-pause">
+<span>⏸</span> Pause
         </button>
-        <button id="btn-reset" class="px-5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
-          <span>🔄</span> Abort
+<button class="px-5 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5" id="btn-reset">
+<span>🔄</span> Abort
         </button>
-      </div>
-
-      <div class="flex items-center space-x-4">
-        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
-          <input type="checkbox" id="chk-displacement" checked class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
-          <span>Show Displacement Vector</span>
-        </label>
-      </div>
-    </div>
-
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-        
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block mb-2">Select Drone Flight Path</span>
-          <select id="select-path" class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm">
-            <option value="manhattan" selected>Manhattan Grid (City Blocks)</option>
-            <option value="perimeter">Perimeter Defense (Square)</option>
-            <option value="scan">Sector Scan (Zig-Zag)</option>
-            <option value="linear">Direct Intercept (Straight)</option>
-          </select>
-        </div>
-
-        <div class="space-y-3">
-          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block mb-2">Live Flight Telemetry</span>
-          
-          <div class="flex flex-col gap-2">
-            
-            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
-              <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span> Average Speed
+</div>
+<div class="flex items-center space-x-4">
+<label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4" id="chk-displacement" type="checkbox"/>
+<span>Show Displacement Vector</span>
+</label>
+</div>
+</div>
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar"><div class="space-y-5"><div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block mb-2">Select Drone Flight Path</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm" id="select-path">
+<option selected="" value="manhattan">Manhattan Grid (City Blocks)</option>
+<option value="perimeter">Perimeter Defense (Square)</option>
+<option value="scan">Sector Scan (Zig-Zag)</option>
+<option value="linear">Direct Intercept (Straight)</option>
+</select>
+</div><div class="flex flex-col gap-2">
+<div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+<div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span> Average Speed
               </div>
-              <div class="text-2xl font-bold font-mono tracking-widest grad-pink uppercase drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]" id="tel-speed">0.0 m/s</div>
-            </div>
-            
-            <div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
-              <div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span> Avg Velocity
+<div class="text-2xl font-bold font-mono tracking-widest grad-pink uppercase drop-shadow-[0_0_8px_rgba(236,72,153,0.4)]" id="tel-speed">0.0 m/s</div>
+</div>
+<div class="bg-[#0f172a] p-4 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+<div class="text-[11px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span> Avg Velocity
               </div>
-              <div class="text-2xl font-bold font-mono tracking-widest grad-cyan uppercase drop-shadow-[0_0_8px_rgba(6,184,212,0.4)]" id="tel-vel">0.0 m/s</div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2 mt-1">
-              <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Distance</div>
-                <div class="text-lg font-bold font-mono tracking-widest text-pink-400" id="tel-dist">0.0m</div>
-              </div>
-              <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Displacement</div>
-                <div class="text-lg font-bold font-mono tracking-widest text-cyan-400" id="tel-disp">0.0m</div>
-              </div>
-              <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Time</div>
-                <div class="text-lg font-bold font-mono tracking-widest text-emerald-400" id="tel-time">0.0s</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="pt-4 border-t border-slate-200">
-          <div class="bg-slate-900 text-slate-100 rounded-xl p-5 shadow-sm space-y-4">
-            <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Kinematic Algorithms</span>
-            <div class="space-y-3">
-              
-              <div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-pink-500">
-                <div class="flex justify-between items-center mb-1.5">
-                  <span class="text-pink-400 font-bold text-xs uppercase tracking-wider">Avg Speed</span>
-                  <span class="bg-pink-500/20 text-pink-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-pink-500/30">Scalar</span>
-                </div>
-                <span class="text-xs font-medium text-slate-300 leading-relaxed block">
+<div class="text-2xl font-bold font-mono tracking-widest grad-cyan uppercase drop-shadow-[0_0_8px_rgba(6,184,212,0.4)]" id="tel-vel">0.0 m/s</div>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-1">
+<div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Distance</div>
+<div class="text-lg font-bold font-mono tracking-widest text-pink-400" id="tel-dist">0.0m</div>
+</div>
+<div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Displacement</div>
+<div class="text-lg font-bold font-mono tracking-widest text-cyan-400" id="tel-disp">0.0m</div>
+</div>
+<div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1.5">Time</div>
+<div class="text-lg font-bold font-mono tracking-widest text-emerald-400" id="tel-time">0.0s</div>
+</div>
+</div>
+</div><div class="pt-4 border-t border-slate-200">
+<div class="bg-slate-900 text-slate-100 rounded-xl p-5 shadow-sm space-y-4">
+<span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Kinematic Algorithms</span>
+<div class="space-y-3">
+<div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-pink-500">
+<div class="flex justify-between items-center mb-1.5">
+<span class="text-pink-400 font-bold text-xs uppercase tracking-wider">Avg Speed</span>
+<span class="bg-pink-500/20 text-pink-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-pink-500/30">Scalar</span>
+</div>
+<span class="text-xs font-medium text-slate-300 leading-relaxed block">
                   The total distance covered by the moving object divided by the total elapsed time.
                 </span>
-                <div class="mt-2 text-xs text-pink-300 bg-slate-950/60 p-2.5 rounded border border-pink-500/10 text-center font-mono">
+<div class="mt-2 text-xs text-pink-300 bg-slate-950/60 p-2.5 rounded border border-pink-500/10 text-center font-mono">
                   $$v_{\text{avg}} = \frac{\text{Total Distance}}{\text{Total Time}}$$
                 </div>
-              </div>
-              
-              <div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-cyan-500">
-                <div class="flex justify-between items-center mb-1.5">
-                  <span class="text-cyan-400 font-bold text-xs uppercase tracking-wider">Avg Velocity</span>
-                  <span class="bg-cyan-500/20 text-cyan-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-cyan-500/30">Vector</span>
-                </div>
-                <span class="text-xs font-medium text-slate-300 leading-relaxed block">
+</div>
+<div class="bg-slate-800 p-3.5 rounded-lg border-l-2 border-cyan-500">
+<div class="flex justify-between items-center mb-1.5">
+<span class="text-cyan-400 font-bold text-xs uppercase tracking-wider">Avg Velocity</span>
+<span class="bg-cyan-500/20 text-cyan-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-widest border border-cyan-500/30">Vector</span>
+</div>
+<span class="text-xs font-medium text-slate-300 leading-relaxed block">
                   The net displacement of the object divided by the total time. Depends on the direct change in position.
                 </span>
-                <div class="mt-2 text-xs text-cyan-300 bg-slate-950/60 p-2.5 rounded border border-cyan-500/10 text-center font-mono">
+<div class="mt-2 text-xs text-cyan-300 bg-slate-950/60 p-2.5 rounded border border-cyan-500/10 text-center font-mono">
                   $$\vec{v}_{\text{avg}} = \frac{\text{Net Displacement}}{\text{Total Time}}$$
                 </div>
-              </div>
-              
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]">
-        <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
-        
-        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-lg flex items-center gap-2 pointer-events-none select-none z-20">
-          <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
-          <span id="simStatusText" class="text-[10px] font-extrabold text-white uppercase tracking-wider">Drone Standby</span>
-        </div>
-
-        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
-            <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
-            <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
-            <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
-        </div>
-      </section>
-
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
-        
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab Desk</span>
-          <div class="flex justify-between items-center mt-0.5">
-            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessment</h2>
-            <span id="viva-score" class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score: 0 / 4</span>
-          </div>
-        </div>
-
-        <div class="space-y-3 pb-4">
-          
-          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-            <div class="space-y-2">
-              <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2011]</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-pink-800 group-hover:text-sm" id="q1-text">
+</div>
+</div>
+</div>
+</div></div></section>
+<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]">
+<canvas class="w-full h-full block z-10" id="simCanvas"></canvas>
+<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-lg flex items-center gap-2 pointer-events-none select-none z-20">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-500" id="status-dot"></span>
+<span class="text-[10px] font-extrabold text-white uppercase tracking-wider" id="simStatusText">Drone Standby</span>
+</div>
+<div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-in">+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-out">-</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]" id="btn-zoom-reset">RST</button>
+</div>
+</section>
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2011]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-pink-800 group-hover:text-sm" id="q1-text">
                 A particle covers half of its total distance with speed $v_1$ and the rest half distance with speed $v_2$. Its average speed during the complete journey is:
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-            <div class="space-y-2">
-              <span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE Class 9]</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-cyan-800 group-hover:text-sm" id="q2-text">
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE Class 9]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-cyan-800 group-hover:text-sm" id="q2-text">
                 A drone flies from A to B at 20 m/s and returns from B to A at 30 m/s. The average speed and average velocity of the drone for the whole journey are:
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main 2021]</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-emerald-800 group-hover:text-sm" id="q3-text">
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main 2021]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-emerald-800 group-hover:text-sm" id="q3-text">
                 A drone travels along a straight line for half the TIME with velocity $v_1$ and the second half TIME with velocity $v_2$. The mean velocity $v$ is given by:
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-            <div class="space-y-2">
-              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2019]</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-amber-800 group-hover:text-sm" id="q4-text">
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2019]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.05] group-hover:text-amber-800 group-hover:text-sm" id="q4-text">
                 An object travels 16m in 4s and then another 16m in 2s. What is the average speed of the object?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
-          <span>📘</span> CYBERGRID PROTOCOLS
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
+</div>
+</div>
+</div></section>
+</main>
+</div>
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-4">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> CYBERGRID PROTOCOLS
         </h3>
-        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
-      </div>
-      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-        <p>Welcome to the <strong>Average Speed vs Average Velocity Cyber Lab</strong>! Watch how the passage of time affects scalar and vector rates differently across a 3D city grid.</p>
-        
-        <div class="space-y-2">
-          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
-          <ul class="list-disc pl-5 space-y-2">
-            <li><strong>Select Drive Route</strong>: Try the "Perimeter Defense" route. Notice how Average Speed remains steady, but Average Velocity plummets to 0 m/s as the drone returns to the launch pad!</li>
-            <li><strong>Animation</strong>: Click "Launch Drone" to watch the 3D drone fly between the server pillars. The <strong>Neon Pink Line</strong> traces Distance. The <strong>Neon Cyan Arrow</strong> tracks Displacement.</li>
-            <li><strong>Formulas in Action</strong>: Both metrics divide by Total Time, but Speed uses Path Length while Velocity uses the straight-line Displacement Vector.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="pt-4 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
-          Initialize Systems
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Welcome to the <strong>Average Speed vs Average Velocity Cyber Lab</strong>! Watch how the passage of time affects scalar and vector rates differently across a 3D city grid.</p>
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
+<ul class="list-disc pl-5 space-y-2">
+<li><strong>Select Drive Route</strong>: Try the "Perimeter Defense" route. Notice how Average Speed remains steady, but Average Velocity plummets to 0 m/s as the drone returns to the launch pad!</li>
+<li><strong>Animation</strong>: Click "Launch Drone" to watch the 3D drone fly between the server pillars. The <strong>Neon Pink Line</strong> traces Distance. The <strong>Neon Cyan Arrow</strong> tracks Displacement.</li>
+<li><strong>Formulas in Action</strong>: Both metrics divide by Total Time, but Speed uses Path Length while Velocity uses the straight-line Displacement Vector.</li>
+</ul>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<script>
     // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
       vivaScore: 0,

@@ -1,20 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Spectral Lines Laboratory</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quantum Spectral Lines Laboratory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -26,11 +21,9 @@
             }
         };
     </script>
-    <script type="text/javascript" id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-        </script>
-
-    <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f1f5f9;
@@ -123,324 +116,211 @@
         }
     </style>
 </head>
-
 <body class="min-h-screen flex items-center justify-center p-4">
-
-    <div
-        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-
-        <header
-            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
-            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-                <div
-                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
-                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
-                        class="h-8 object-contain" onerror="this.style.display='none'">
-                </div>
-                <div>
-                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Atomic Spectral Lines</h1>
-                    <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Quantum De-excitation
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Atomic Spectral Lines</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Quantum De-excitation
                         Laboratory</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button id="btn-open-guide"
-                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
-                    <span>📘</span> User Guide
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> User Guide
                 </button>
-                <div
-                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
-                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
-                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Bohr Engine
+<div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+<span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Bohr Engine
                         Active</span>
-                </div>
-            </div>
-        </header>
-
-        <div
-            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
-            <div class="flex items-center space-x-2">
-                <button id="btn-trigger"
-                    class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
-                    <span>⚡</span> Trigger Emission Cascade
+</div>
+</div>
+</header>
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-trigger">
+<span>⚡</span> Trigger Emission Cascade
                 </button>
-                <button id="btn-reset"
-                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
-                    <span>🔄</span> Reset Core
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5" id="btn-reset">
+<span>🔄</span> Reset Core
                 </button>
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
-                    <input type="checkbox" id="chk-grid" checked
-                        class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
-                    <span>Show Quantum Grid</span>
-                </label>
-            </div>
-        </div>
-
-        <main
-            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-
-            <section
-                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-                <div class="space-y-4">
-
-                    <!-- 1. Controls -->
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <span
-                            class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Electron
+</div>
+<div class="flex items-center space-x-4">
+<label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4" id="chk-grid" type="checkbox"/>
+<span>Show Quantum Grid</span>
+</label>
+</div>
+</div>
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar"><div class="space-y-5"><div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+<span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Electron
                             Energy Level</span>
-
-                        <div>
-                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1">
-                                <span class="text-cyan-600 flex items-center gap-1">■ Excited State ($n_2$)</span>
-                                <span id="val-n"
-                                    class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">n =
+<div>
+<div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1">
+<span class="text-cyan-600 flex items-center gap-1">■ Excited State ($n_2$)</span>
+<span class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs" id="val-n">n =
                                     5</span>
-                            </div>
-                            <input type="range" id="slider-n" min="2" max="7" step="1" value="5">
-                            <p class="text-[9px] text-slate-400 mt-1 text-right">Ground state fixed at $n_1 = 1$</p>
-                        </div>
-                    </div>
-
-                    <!-- 2. Telemetry -->
-                    <div class="space-y-3">
-                        <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-600 block">Live
+</div>
+<input id="slider-n" max="7" min="2" step="1" type="range" value="5"/>
+<p class="text-[9px] text-slate-400 mt-1 text-right">Ground state fixed at $n_1 = 1$</p>
+</div>
+</div><div class="text-xs text-slate-300 mb-1">Number of lines produced when an electron drops from
+                        $n$ to ground state:</div><div class="space-y-3">
+<span class="text-xs font-extrabold uppercase tracking-widest text-cyan-600 block">Live
                             Emission Telemetry</span>
-
-                        <div class="flex flex-col gap-2">
-
-                            <div
-                                class="bg-[#0f172a] p-3.5 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
-                                <div
-                                    class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span>
+<div class="flex flex-col gap-2">
+<div class="bg-[#0f172a] p-3.5 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+<div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span>
                                     Total Spectral Lines
                                 </div>
-                                <div class="text-xl font-bold font-mono tracking-widest grad-cyan uppercase drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]"
-                                    id="tel-total">10</div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 mt-1">
-                                <div
-                                    class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                                    <div
-                                        class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-purple-400">
+<div class="text-xl font-bold font-mono tracking-widest grad-cyan uppercase drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" id="tel-total">10</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-purple-400">
                                         Lyman ($n \to 1$)</div>
-                                    <div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-lyman">4
+<div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-lyman">4
                                     </div>
-                                </div>
-
-                                <div
-                                    class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                                    <div
-                                        class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-cyan-400">
+</div>
+<div class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-cyan-400">
                                         Balmer ($n \to 2$)</div>
-                                    <div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-balmer">3
+<div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-balmer">3
                                     </div>
-                                </div>
-
-                                <div
-                                    class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                                    <div
-                                        class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-red-400">
+</div>
+<div class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-red-400">
                                         Paschen ($n \to 3$)</div>
-                                    <div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-paschen">2
+<div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-paschen">2
                                     </div>
-                                </div>
-
-                                <div
-                                    class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
-                                    <div
-                                        class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-amber-400">
+</div>
+<div class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1 text-amber-400">
                                         Brackett/Pfund</div>
-                                    <div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-rest">1
+<div class="text-[14px] font-bold font-mono tracking-wide text-white" id="tel-rest">1
                                     </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- 3. Formula block at the bottom -->
-                <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2 border border-slate-800 mt-4">
-                    <span
-                        class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Spectral
-                        Lines Formula</span>
-                    <div class="text-xs text-slate-300 mb-1">Number of lines produced when an electron drops from
-                        $n$ to ground state:</div>
-                    <div
-                        class="text-base font-mono text-center py-2 bg-slate-800 rounded-lg border border-slate-700 shadow-inner">
+</div>
+</div>
+</div>
+</div><div class="text-base font-mono text-center py-2 bg-slate-800 rounded-lg border border-slate-700 shadow-inner">
                         $$N = \frac{n(n-1)}{2}$$
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 shadow-inner min-h-[500px]">
-                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
-
-                <div
-                    class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
-                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
-                    <span id="simStatusText"
-                        class="text-[10px] font-extrabold text-white uppercase tracking-wider">Awaiting
+                    </div></div></section>
+<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 shadow-inner min-h-[500px]">
+<canvas class="w-full h-full block z-10" id="simCanvas"></canvas>
+<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-500" id="status-dot"></span>
+<span class="text-[10px] font-extrabold text-white uppercase tracking-wider" id="simStatusText">Awaiting
                         Excitation</span>
-                </div>
-
-                <div
-                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
-                    <button id="btn-zoom-in"
-                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">+</button>
-                    <button id="btn-zoom-out"
-                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors">-</button>
-                    <button id="btn-zoom-reset"
-                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]">RST</button>
-                </div>
-            </section>
-
-            <section
-                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
-
-                <div
-                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
-                        Desk</span>
-                    <div class="flex justify-between items-center mt-0.5">
-                        <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
-                        <span id="viva-score"
-                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
-                            0 / 4</span>
-                    </div>
-                </div>
-
-                <div class="space-y-3 pb-4">
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
-                                id="q1-text">
+</div>
+<div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-in">+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-out">-</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]" id="btn-zoom-reset">RST</button>
+</div>
+</section>
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
                                 The number of spectral lines obtained when an electron transitions from $n=5$ to the
                                 ground state is:
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-                            <p id="q1-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback">
+</p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
                                 Main]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
-                                id="q2-text">
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
                                 An electron in a hydrogen atom makes a transition from an excited state $n$ to ground
                                 state. If the total number of possible spectral lines is 15, what is the value of $n$?
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-                            <p id="q2-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback">
+</p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
                                 Main]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
-                                id="q3-text">
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
                                 In a hydrogen atom, if the electron falls from $n=6$ to $n=2$, the number of spectral
                                 lines observed in the visible region (Balmer series) is:
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-                            <p id="q3-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
-                        <div class="space-y-2">
-                            <span
-                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET]</span>
-                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
-                                id="q4-text">
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback">
+</p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+<div class="space-y-2">
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
                                 How many spectral lines are theoretically emitted by atomic hydrogen excited to the
                                 $n^{th}$ energy level?
                             </h4>
-                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-                            <p id="q4-feedback"
-                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
-                            </p>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <div id="user-guide-modal"
-        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div
-            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
-                    <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> QUANTUM PROTOCOLS
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback">
+</p>
+</div>
+</div>
+</div></section>
+</main>
+</div>
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-4">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> QUANTUM PROTOCOLS
                 </h3>
-                <button id="btn-close-guide"
-                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
-            </div>
-            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-                <p>Welcome to the <strong>Atomic Spectral Lines Visualizer</strong>! Explore how electrons de-excite to
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Welcome to the <strong>Atomic Spectral Lines Visualizer</strong>! Explore how electrons de-excite to
                     produce unique photon emission spectra.</p>
-
-                <div class="space-y-2">
-                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Excited State ($n$)</strong>: Use the slider to set the highest energy level of the
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
+<ul class="list-disc pl-5 space-y-2">
+<li><strong>Excited State ($n$)</strong>: Use the slider to set the highest energy level of the
                             electron. The 3D reactor core will highlight the active disc.</li>
-                        <li><strong>Trigger Emission</strong>: Click to release the electrons! Watch them cascade down
+<li><strong>Trigger Emission</strong>: Click to release the electrons! Watch them cascade down
                             to lower energy states. Each distinct jump emits a unique spectral line.</li>
-                        <li><strong>The Telemetry</strong>: The dashboard automatically calculates the total lines using
+<li><strong>The Telemetry</strong>: The dashboard automatically calculates the total lines using
                             $n(n-1)/2$ and sorts them by series (Lyman = Purple, Balmer = Cyan, Paschen = Red).</li>
-                    </ul>
-                </div>
-
-                <div class="space-y-2 pt-2 border-t border-slate-100">
-                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🎓 Learning Outcomes</h4>
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li><strong>Energy Quantization</strong>: Comprehend that electrons exist in discrete, quantized energy levels within an atom.</li>
-                        <li><strong>De-excitation and Emission</strong>: Understand how transitions from higher excited states to lower states emit photons of specific wavelengths.</li>
-                        <li><strong>Spectral Series Identifier</strong>: Classify emission spectral lines into named series (Lyman, Balmer, Paschen) depending on their terminal ground state.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="pt-4 border-t border-slate-100 flex justify-end">
-                <button id="btn-close-guide-confirm"
-                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
-                    Acknowledge
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
+</ul>
+</div>
+<div class="space-y-2 pt-2 border-t border-slate-100">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🎓 Learning Outcomes</h4>
+<ul class="list-disc pl-5 space-y-2">
+<li><strong>Energy Quantization</strong>: Comprehend that electrons exist in discrete, quantized energy levels within an atom.</li>
+<li><strong>De-excitation and Emission</strong>: Understand how transitions from higher excited states to lower states emit photons of specific wavelengths.</li>
+<li><strong>Spectral Series Identifier</strong>: Classify emission spectral lines into named series (Lyman, Balmer, Paschen) depending on their terminal ground state.</li>
+</ul>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<script>
         // --- VIVA MCQS DECK STATE & DATA ---
         const appState = {
             vivaScore: 0,
@@ -971,5 +851,4 @@
         });
     </script>
 </body>
-
 </html>

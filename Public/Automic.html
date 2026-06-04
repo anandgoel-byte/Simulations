@@ -1,20 +1,18 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hydrogen Atom Energy Levels & Spectra Virtual Laboratory</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hydrogen Atom Energy Levels &amp; Spectra Virtual Laboratory</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- MathJax for rendering gorgeous physical LaTeX equations -->
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -26,11 +24,9 @@
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -88,528 +84,440 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <!-- Main Premium Dashboard Container -->
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <!-- Top Header & Brand -->
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight">HYDROGEN ATOM MODEL &amp; SPECTROSCOPY</h1>
-          <p class="text-[11px] text-slate-400 font-medium">Bohr, de Broglie, &amp; Schrödinger wave mechanics virtual laboratory</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-3">
-        <!-- User Guide Trigger Button -->
-        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
-          <span>📘</span> Laboratory Guide
+<!-- Main Premium Dashboard Container -->
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<!-- Top Header & Brand -->
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+<img alt="Sparkl Alpha Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight">HYDROGEN ATOM MODEL &amp; SPECTROSCOPY</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Bohr, de Broglie, &amp; Schrödinger wave mechanics virtual laboratory</p>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<!-- User Guide Trigger Button -->
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> Laboratory Guide
         </button>
-        <button id="btn-reset" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-          <span>🔄</span> Reset Simulation
+<button class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5" id="btn-reset">
+<span>🔄</span> Reset Simulation
         </button>
-      </div>
-    </header>
-
-    <!-- Simulation Toolbar Controls (Auto Rotate, View Overlays) -->
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      
-      <!-- Run / Pause Simulation Speed -->
-      <div class="flex items-center space-x-3">
-        <button id="btn-play-pause" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
-          <span>⏸</span> Pause
+</div>
+</header>
+<!-- Simulation Toolbar Controls (Auto Rotate, View Overlays) -->
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+<!-- Run / Pause Simulation Speed -->
+<div class="flex items-center space-x-3">
+<button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5" id="btn-play-pause">
+<span>⏸</span> Pause
         </button>
-        <div class="flex items-center space-x-1.5">
-          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Sim Speed:</span>
-          <button id="speed-slow" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all">0.5x</button>
-          <button id="speed-normal" class="px-3 py-1 bg-indigo-600 text-white font-semibold text-xs rounded transition-all shadow-xs">1.0x</button>
-          <button id="speed-fast" class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all">2.0x</button>
-        </div>
-      </div>
-
-      <!-- Light gun status check -->
-      <div class="flex items-center">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
-          <input type="checkbox" id="gun-toggle" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Enable Emission Light Gun stream</span>
-        </label>
-      </div>
-
-      <!-- Manual Jump Selector -->
-      <div class="flex items-center space-x-2">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Manual Jump:</span>
-        <select id="manual-jump-select" class="bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-          <option value="">-- Select Orbit --</option>
-          <option value="1">n = 1 (Ground)</option>
-          <option value="2">n = 2 (1st Excited)</option>
-          <option value="3">n = 3 (2nd Excited)</option>
-          <option value="4">n = 4 (3rd Excited)</option>
-          <option value="5">n = 5 (4th Excited)</option>
-          <option value="6">n = 6 (5th Excited)</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (8 Columns) -->
-      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
-        
-        <!-- Interactive Controls (4 Columns of 8) -->
-        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-6">
-            
-            <!-- Model Representation select-state buttons deck -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Model Representation</span>
-              <div class="grid grid-cols-1 gap-2 text-xs font-bold">
-                <button id="btn-bohr" class="py-2.5 px-3 rounded-lg border text-left flex items-center justify-between transition-all bg-indigo-600 border-indigo-600 text-white shadow-xs">
-                  <div>
-                    <p class="font-bold text-[13px]">Bohr Model</p>
-                    <p class="text-[9px] opacity-80 font-normal">Classical circular orbits</p>
-                  </div>
-                  <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
-                </button>
-                <button id="btn-debroglie" class="py-2.5 px-3 rounded-lg border text-left flex items-center justify-between transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">
-                  <div>
-                    <p class="font-bold text-[13px]">de Broglie Wave</p>
-                    <p class="text-[9px] text-slate-400 font-normal">Electron standing waves</p>
-                  </div>
-                  <span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span>
-                </button>
-                <button id="btn-schrodinger" class="py-2.5 px-3 rounded-lg border text-left flex items-center justify-between transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">
-                  <div>
-                    <p class="font-bold text-[13px]">Schrödinger Cloud</p>
-                    <p class="text-[9px] text-slate-400 font-normal">Probability density orbitals</p>
-                  </div>
-                  <span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Light Source Selection -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Light Gun Spectrum</span>
-              <div class="flex rounded-lg bg-slate-200 p-1 border border-slate-300 w-full mb-3">
-                <button id="btn-src-white" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs">
+<div class="flex items-center space-x-1.5">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Sim Speed:</span>
+<button class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all" id="speed-slow">0.5x</button>
+<button class="px-3 py-1 bg-indigo-600 text-white font-semibold text-xs rounded transition-all shadow-xs" id="speed-normal">1.0x</button>
+<button class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all" id="speed-fast">2.0x</button>
+</div>
+</div>
+<!-- Light gun status check -->
+<div class="flex items-center">
+<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="gun-toggle" type="checkbox"/>
+<span>Enable Emission Light Gun stream</span>
+</label>
+</div>
+<!-- Manual Jump Selector -->
+<div class="flex items-center space-x-2">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Manual Jump:</span>
+<select class="bg-white border border-slate-300 rounded-lg px-2 py-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500" id="manual-jump-select">
+<option value="">-- Select Orbit --</option>
+<option value="1">n = 1 (Ground)</option>
+<option value="2">n = 2 (1st Excited)</option>
+<option value="3">n = 3 (2nd Excited)</option>
+<option value="4">n = 4 (3rd Excited)</option>
+<option value="5">n = 5 (4th Excited)</option>
+<option value="6">n = 6 (5th Excited)</option>
+</select>
+</div>
+</div>
+<!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (8 Columns) -->
+<section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+<!-- Interactive Controls (4 Columns of 8) -->
+<div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6"><div class="space-y-5"><div>
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Model Representation</span>
+<div class="grid grid-cols-1 gap-2 text-xs font-bold">
+<button class="py-2.5 px-3 rounded-lg border text-left flex items-center justify-between transition-all bg-indigo-600 border-indigo-600 text-white shadow-xs" id="btn-bohr">
+<div>
+<p class="font-bold text-[13px]">Bohr Model</p>
+<p class="text-[9px] opacity-80 font-normal">Classical circular orbits</p>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
+</button>
+<button class="py-2.5 px-3 rounded-lg border text-left flex items-center justify-between transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100" id="btn-debroglie">
+<div>
+<p class="font-bold text-[13px]">de Broglie Wave</p>
+<p class="text-[9px] text-slate-400 font-normal">Electron standing waves</p>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span>
+</button>
+<button class="py-2.5 px-3 rounded-lg border text-left flex items-center justify-between transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100" id="btn-schrodinger">
+<div>
+<p class="font-bold text-[13px]">Schrödinger Cloud</p>
+<p class="text-[9px] text-slate-400 font-normal">Probability density orbitals</p>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span>
+</button>
+</div>
+</div><div>
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Light Gun Spectrum</span>
+<div class="flex rounded-lg bg-slate-200 p-1 border border-slate-300 w-full mb-3">
+<button class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs" id="btn-src-white">
                   White Light
                 </button>
-                <button id="btn-src-mono" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900">
+<button class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900" id="btn-src-mono">
                   Monochromatic
                 </button>
-              </div>
-
-              <!-- Monochromatic settings panel -->
-              <div id="mono-controls" class="space-y-3 opacity-40 pointer-events-none transition-all duration-200">
-                <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  <span>Laser Wavelength</span>
-                  <input type="number" id="num-wavelength" step="0.1" min="90.0" max="1500.0" value="121.6" class="w-20 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="slider-wavelength" min="90.0" max="1500.0" step="0.1" value="121.6" class="w-full">
-                <div class="flex justify-between text-[9px] text-slate-400">
-                  <span>90 nm (UV)</span>
-                  <span>656 nm (Vis)</span>
-                  <span>1500 nm (IR)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Custom Info Tips HUD -->
-            <div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex flex-col justify-center text-[10px] shadow-sm">
-              <span class="text-indigo-800 block text-[9px] uppercase tracking-wide font-extrabold mb-1 flex items-center gap-1">
-                <span>💡</span> Did you know?
+</div>
+<!-- Monochromatic settings panel -->
+<div class="space-y-3 opacity-40 pointer-events-none transition-all duration-200" id="mono-controls">
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider">
+<span>Laser Wavelength</span>
+<input class="w-20 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-wavelength" max="1500.0" min="90.0" step="0.1" type="number" value="121.6"/>
+</div>
+<input class="w-full" id="slider-wavelength" max="1500.0" min="90.0" step="0.1" type="range" value="121.6"/>
+<div class="flex justify-between text-[9px] text-slate-400">
+<span>90 nm (UV)</span>
+<span>656 nm (Vis)</span>
+<span>1500 nm (IR)</span>
+</div>
+</div>
+</div><div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex flex-col justify-center text-[10px] shadow-sm">
+<span class="text-indigo-800 block text-[9px] uppercase tracking-wide font-extrabold mb-1 flex items-center gap-1">
+<span>💡</span> Did you know?
               </span>
-              <p id="tip-text" class="text-slate-600 leading-relaxed min-h-[45px] transition-opacity duration-300"></p>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Canvas and Spectrometer workbench (8 Columns of 8) -->
-        <div class="md:col-span-8 relative bg-slate-950 flex flex-col justify-between min-h-[480px]">
-          
-          <!-- Top: Interactive 2D atom + Energy levels split -->
-          <div class="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-[280px]">
-            
-            <!-- Left: 2D Atom Space (8 Cols of 12) -->
-            <div class="md:col-span-8 relative lab-circuit-stage min-h-[260px]">
-              <div class="absolute top-4 left-4 z-10 pointer-events-none">
-                <span class="text-[9px] font-bold tracking-widest text-emerald-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 uppercase">
+<p class="text-slate-600 leading-relaxed min-h-[45px] transition-opacity duration-300" id="tip-text"></p>
+</div></div></div>
+<!-- Canvas and Spectrometer workbench (8 Columns of 8) -->
+<div class="md:col-span-8 relative bg-slate-950 flex flex-col justify-between min-h-[480px]">
+<!-- Top: Interactive 2D atom + Energy levels split -->
+<div class="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-[280px]">
+<!-- Left: 2D Atom Space (8 Cols of 12) -->
+<div class="md:col-span-8 relative lab-circuit-stage min-h-[260px]"><div class="absolute top-4 left-4 z-10 pointer-events-none">
+<span class="text-[9px] font-bold tracking-widest text-emerald-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 uppercase">
                   Continuous Orbital Quantum Space
                 </span>
-              </div>
-
-              <!-- H Lamp Visual asset nozzle on left -->
-              <div class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-10">
-                <div class="w-10 h-14 bg-gradient-to-r from-slate-800 to-slate-900 border-y border-r border-slate-700 rounded-r-lg flex flex-col justify-between p-1.5 shadow-lg shadow-black/50">
-                  <div class="text-[8px] font-bold text-slate-400 text-center tracking-wider font-mono">H LAMP</div>
-                  <div class="h-3 w-3 rounded-full mx-auto bg-orange-500/20 border border-orange-500/80 animate-pulse flex items-center justify-center">
-                    <div class="w-1 h-1 rounded-full bg-orange-400"></div>
-                  </div>
-                  <div class="w-full bg-slate-950 h-1 rounded-full overflow-hidden border border-slate-850">
-                    <div id="lamp-charge-bar" class="bg-orange-500 h-full w-full transition-all"></div>
-                  </div>
-                </div>
-                <div class="w-1.5 h-3 bg-slate-700 rounded-r"></div>
-              </div>
-
-              <!-- Main Canvas -->
-              <canvas id="atomCanvas" class="absolute inset-0 w-full h-full"></canvas>
-
-              <!-- Flash overlay -->
-              <div id="absorption-flash" class="absolute inset-0 bg-transparent transition-colors duration-75 pointer-events-none"></div>
-            </div>
-
-            <!-- Right: Vertical Energy levels (4 Cols of 12) -->
-            <div class="md:col-span-4 bg-slate-950 border-l border-slate-900 relative p-3 flex flex-col justify-between select-none">
-              <span class="text-[9px] font-bold tracking-wider text-slate-400 uppercase">
+</div><div class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-10">
+<div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div>
+<div class="w-1.5 h-3 bg-slate-700 rounded-r"></div>
+</div><canvas class="absolute inset-0 w-full h-full" id="atomCanvas"></canvas><div class="absolute inset-0 bg-transparent transition-colors duration-75 pointer-events-none" id="absorption-flash"></div></div>
+<!-- Right: Vertical Energy levels (4 Cols of 12) -->
+<div class="md:col-span-4 bg-slate-950 border-l border-slate-900 relative p-3 flex flex-col justify-between select-none">
+<span class="text-[9px] font-bold tracking-wider text-slate-400 uppercase">
                 Bohr Energy Levels Chart
               </span>
-              
-              <div class="relative w-full h-[220px] my-auto">
-                <!-- Vertical axis line -->
-                <div class="absolute left-6 top-2 bottom-6 w-0.5 bg-slate-800"></div>
-                <div class="absolute left-0.5 top-1/2 -translate-y-1/2 -rotate-90 text-[7px] uppercase tracking-widest text-slate-500 font-bold">
+<div class="relative w-full h-[220px] my-auto">
+<!-- Vertical axis line -->
+<div class="absolute left-6 top-2 bottom-6 w-0.5 bg-slate-800"></div>
+<div class="absolute left-0.5 top-1/2 -translate-y-1/2 -rotate-90 text-[7px] uppercase tracking-widest text-slate-500 font-bold">
                   Energy (eV)
                 </div>
-
-                <div id="energy-lines-container" class="relative w-full h-full">
-                  <!-- Quantized Level Lines -->
-                  <div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 91.5%;">
-                    <span class="text-[9px] font-mono text-slate-400">n=6</span>
-                    <span class="text-[8px] font-mono text-slate-500">-0.38 eV</span>
-                  </div>
-                  <div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 90.4%;">
-                    <span class="text-[9px] font-mono text-slate-400">n=5</span>
-                    <span class="text-[8px] font-mono text-slate-500">-0.54 eV</span>
-                  </div>
-                  <div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 88.0%;">
-                    <span class="text-[9px] font-mono text-slate-400">n=4</span>
-                    <span class="text-[8px] font-mono text-slate-500">-0.85 eV</span>
-                  </div>
-                  <div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 83.1%;">
-                    <span class="text-[9px] font-mono text-slate-400">n=3</span>
-                    <span class="text-[8px] font-mono text-slate-500">-1.51 eV</span>
-                  </div>
-                  <div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 69.2%;">
-                    <span class="text-[9px] font-mono text-slate-400">n=2</span>
-                    <span class="text-[8px] font-mono text-slate-500">-3.40 eV</span>
-                  </div>
-                  <div class="absolute left-8 right-2 border-t border-emerald-500/80 flex justify-between items-start pt-0.5" style="bottom: 5.0%;">
-                    <span class="text-[9px] font-mono text-emerald-400 font-bold">n=1 (Gnd)</span>
-                    <span class="text-[8px] font-mono text-emerald-400 font-bold">-13.60 eV</span>
-                  </div>
-
-                  <!-- Active Level highlight box -->
-                  <div id="energy-state-indicator" class="absolute left-8 right-2 h-5 bg-cyan-500/10 border-y border-cyan-400/40 rounded transition-all duration-300 flex items-center justify-end px-1.5" style="bottom: 5.0%; transform: translateY(-50%);">
-                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-                  </div>
-
-                  <!-- Arrow animations SVG overlay -->
-                  <svg class="absolute left-8 right-2 top-0 bottom-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs>
-                      <marker id="arrow-up" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316"/>
-                      </marker>
-                      <marker id="arrow-down" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
-                      </marker>
-                    </defs>
-                    <path id="transition-path" d="" fill="none" stroke-width="2" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Bottom: Dynamic Spectrometer accumulated peaks -->
-          <div class="bg-slate-950 border-t border-slate-900 p-4 space-y-4">
-            
-            <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-850 pb-2">
-              <div class="flex items-center space-x-2">
-                <span class="text-xs font-bold text-white uppercase tracking-wider">Accumulated Spectrometer Sensor Peaks</span>
-                <span class="text-[9px] bg-slate-900 text-slate-500 border border-slate-800 px-1.5 py-0.5 rounded font-mono">photons count logs</span>
-              </div>
-              <button id="btn-clear-spectrometer" class="text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 rounded-lg px-2.5 py-1 transition flex items-center gap-1">
-                <span>🔄</span> Clear Sensor Counts
+<div class="relative w-full h-full" id="energy-lines-container">
+<!-- Quantized Level Lines -->
+<div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 91.5%;">
+<span class="text-[9px] font-mono text-slate-400">n=6</span>
+<span class="text-[8px] font-mono text-slate-500">-0.38 eV</span>
+</div>
+<div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 90.4%;">
+<span class="text-[9px] font-mono text-slate-400">n=5</span>
+<span class="text-[8px] font-mono text-slate-500">-0.54 eV</span>
+</div>
+<div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 88.0%;">
+<span class="text-[9px] font-mono text-slate-400">n=4</span>
+<span class="text-[8px] font-mono text-slate-500">-0.85 eV</span>
+</div>
+<div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 83.1%;">
+<span class="text-[9px] font-mono text-slate-400">n=3</span>
+<span class="text-[8px] font-mono text-slate-500">-1.51 eV</span>
+</div>
+<div class="absolute left-8 right-2 border-t border-dashed border-slate-700/60 flex justify-between items-start pt-0.5" style="bottom: 69.2%;">
+<span class="text-[9px] font-mono text-slate-400">n=2</span>
+<span class="text-[8px] font-mono text-slate-500">-3.40 eV</span>
+</div>
+<div class="absolute left-8 right-2 border-t border-emerald-500/80 flex justify-between items-start pt-0.5" style="bottom: 5.0%;">
+<span class="text-[9px] font-mono text-emerald-400 font-bold">n=1 (Gnd)</span>
+<span class="text-[8px] font-mono text-emerald-400 font-bold">-13.60 eV</span>
+</div>
+<!-- Active Level highlight box -->
+<div class="absolute left-8 right-2 h-5 bg-cyan-500/10 border-y border-cyan-400/40 rounded transition-all duration-300 flex items-center justify-end px-1.5" id="energy-state-indicator" style="bottom: 5.0%; transform: translateY(-50%);">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+</div>
+<!-- Arrow animations SVG overlay -->
+<svg class="absolute left-8 right-2 top-0 bottom-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<marker id="arrow-up" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="5" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#f97316"></path>
+</marker>
+<marker id="arrow-down" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="5" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"></path>
+</marker>
+</defs>
+<path d="" fill="none" id="transition-path" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom: Dynamic Spectrometer accumulated peaks -->
+<div class="bg-slate-950 border-t border-slate-900 p-4 space-y-4">
+<div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-850 pb-2">
+<div class="flex items-center space-x-2">
+<span class="text-xs font-bold text-white uppercase tracking-wider">Accumulated Spectrometer Sensor Peaks</span>
+<span class="text-[9px] bg-slate-900 text-slate-500 border border-slate-800 px-1.5 py-0.5 rounded font-mono">photons count logs</span>
+</div>
+<button class="text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 rounded-lg px-2.5 py-1 transition flex items-center gap-1" id="btn-clear-spectrometer">
+<span>🔄</span> Clear Sensor Counts
               </button>
-            </div>
-
-            <!-- Spectral scale labels -->
-            <div class="space-y-1">
-              <div class="flex justify-between px-2 text-[9px] text-slate-500 font-mono font-bold">
-                <span>91 nm (UV Limit)</span>
-                <span class="text-indigo-400">121.6 nm (Lyman-α)</span>
-                <span class="text-violet-400">410.2 nm (H-δ)</span>
-                <span class="text-blue-400">434.0 nm (H-γ)</span>
-                <span class="text-teal-400">486.1 nm (H-β)</span>
-                <span class="text-red-400">656.3 nm (H-α)</span>
-                <span>1000+ nm (Infrared)</span>
-              </div>
-              
-              <!-- Live peaks wrapper -->
-              <div class="relative h-12 bg-black rounded-lg border border-slate-900 overflow-hidden">
-                <div id="spectrometer-peaks-layer" class="absolute inset-0 pointer-events-none"></div>
-                <!-- Ambient rainbow backdrop indicator -->
-                <div class="absolute inset-0 opacity-15 bg-gradient-to-r from-purple-900 via-blue-900 to-red-900 pointer-events-none"></div>
-              </div>
-            </div>
-
-            <!-- Series transitions table and decays links -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
-              <!-- Lyman -->
-              <div class="bg-slate-900/40 border border-slate-850 p-2.5 rounded-lg">
-                <div class="flex justify-between items-center mb-1.5 border-b border-slate-800 pb-0.5">
-                  <span class="font-bold text-violet-400 text-[10px]">Lyman Series (to n=1)</span>
-                  <span class="text-[8px] bg-violet-950/60 text-violet-400 px-1 rounded">UV</span>
-                </div>
-                <div class="space-y-1 font-mono text-[10px]">
-                  <button onclick="triggerSpecificTransition(2, 1)" class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300">
-                    <span>n = 2➔1 (Lyman-α)</span>
-                    <span class="font-bold text-violet-400">121.6 nm</span>
-                  </button>
-                  <button onclick="triggerSpecificTransition(3, 1)" class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300">
-                    <span>n = 3➔1 (Lyman-β)</span>
-                    <span class="font-bold text-violet-400">102.6 nm</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Balmer -->
-              <div class="bg-slate-900/40 border border-slate-850 p-2.5 rounded-lg">
-                <div class="flex justify-between items-center mb-1.5 border-b border-slate-800 pb-0.5">
-                  <span class="font-bold text-emerald-400 text-[10px]">Balmer Series (to n=2)</span>
-                  <span class="text-[8px] bg-emerald-950/60 text-emerald-400 px-1 rounded">Visible</span>
-                </div>
-                <div class="space-y-1 font-mono text-[10px]">
-                  <button onclick="triggerSpecificTransition(3, 2)" class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-red-500/20 text-slate-300">
-                    <span>n = 3➔2 (H-α / Red)</span>
-                    <span class="font-bold text-red-400">656.3 nm</span>
-                  </button>
-                  <button onclick="triggerSpecificTransition(4, 2)" class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-teal-500/20 text-slate-300">
-                    <span>n = 4➔2 (H-β / Teal)</span>
-                    <span class="font-bold text-teal-400">486.1 nm</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Paschen -->
-              <div class="bg-slate-900/40 border border-slate-850 p-2.5 rounded-lg">
-                <div class="flex justify-between items-center mb-1.5 border-b border-slate-800 pb-0.5">
-                  <span class="font-bold text-orange-400 text-[10px]">Paschen Series (to n=3)</span>
-                  <span class="text-[8px] bg-orange-950/60 text-orange-400 px-1 rounded">Infrared</span>
-                </div>
-                <div class="space-y-1 font-mono text-[10px]">
-                  <button onclick="triggerSpecificTransition(4, 3)" class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300">
-                    <span>n = 4➔3 (Paschen-α)</span>
-                    <span class="font-bold text-orange-400">1875 nm</span>
-                  </button>
-                  <button onclick="triggerSpecificTransition(5, 3)" class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300">
-                    <span>n = 5➔3 (Paschen-β)</span>
-                    <span class="font-bold text-orange-400">1282 nm</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- RIGHT PANEL: Diagnostics & Viva Workspace (4 Columns) -->
-      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
-        
-        <!-- Live physics variables telemetry dashboard -->
-        <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
-          <h3 class="text-[11px] font-bold uppercase tracking-widest text-indigo-800 flex items-center gap-1.5">⚡ QUANTUM STATE ENGINE</h3>
-          <div class="grid grid-cols-2 gap-3">
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Current Orbit</span>
-              <span id="telemetry-orbit" class="text-xs font-bold text-purple-600 leading-tight block">n = 1</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Energy Level</span>
-              <span id="telemetry-energy" class="text-xs font-bold text-emerald-600 leading-tight block">-13.60 eV</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Orbit Radius</span>
-              <span id="telemetry-radius" class="text-xs font-bold text-amber-600 leading-tight block">0.529 Å</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Electron Speed</span>
-              <span id="telemetry-speed" class="text-xs font-bold text-indigo-600 leading-tight block">2.19 × 10⁶ m/s</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Viva Voce Lab Desk Banner -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-          <div class="flex justify-between items-center mt-0.5">
-            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
-            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
-          </div>
-        </div>
-
-        <div class="space-y-3">
-          
-          <!-- QUESTION 1 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+<!-- Spectral scale labels -->
+<div class="space-y-1">
+<div class="flex justify-between px-2 text-[9px] text-slate-500 font-mono font-bold">
+<span>91 nm (UV Limit)</span>
+<span class="text-indigo-400">121.6 nm (Lyman-α)</span>
+<span class="text-violet-400">410.2 nm (H-δ)</span>
+<span class="text-blue-400">434.0 nm (H-γ)</span>
+<span class="text-teal-400">486.1 nm (H-β)</span>
+<span class="text-red-400">656.3 nm (H-α)</span>
+<span>1000+ nm (Infrared)</span>
+</div>
+<!-- Live peaks wrapper -->
+<div class="relative h-12 bg-black rounded-lg border border-slate-900 overflow-hidden">
+<div class="absolute inset-0 pointer-events-none" id="spectrometer-peaks-layer"></div>
+<!-- Ambient rainbow backdrop indicator -->
+<div class="absolute inset-0 opacity-15 bg-gradient-to-r from-purple-900 via-blue-900 to-red-900 pointer-events-none"></div>
+</div>
+</div>
+<!-- Series transitions table and decays links -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs pt-1">
+<!-- Lyman -->
+<div class="bg-slate-900/40 border border-slate-850 p-2.5 rounded-lg">
+<div class="flex justify-between items-center mb-1.5 border-b border-slate-800 pb-0.5">
+<span class="font-bold text-violet-400 text-[10px]">Lyman Series (to n=1)</span>
+<span class="text-[8px] bg-violet-950/60 text-violet-400 px-1 rounded">UV</span>
+</div>
+<div class="space-y-1 font-mono text-[10px]">
+<button class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300" onclick="triggerSpecificTransition(2, 1)">
+<span>n = 2➔1 (Lyman-α)</span>
+<span class="font-bold text-violet-400">121.6 nm</span>
+</button>
+<button class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300" onclick="triggerSpecificTransition(3, 1)">
+<span>n = 3➔1 (Lyman-β)</span>
+<span class="font-bold text-violet-400">102.6 nm</span>
+</button>
+</div>
+</div>
+<!-- Balmer -->
+<div class="bg-slate-900/40 border border-slate-850 p-2.5 rounded-lg">
+<div class="flex justify-between items-center mb-1.5 border-b border-slate-800 pb-0.5">
+<span class="font-bold text-emerald-400 text-[10px]">Balmer Series (to n=2)</span>
+<span class="text-[8px] bg-emerald-950/60 text-emerald-400 px-1 rounded">Visible</span>
+</div>
+<div class="space-y-1 font-mono text-[10px]">
+<button class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-red-500/20 text-slate-300" onclick="triggerSpecificTransition(3, 2)">
+<span>n = 3➔2 (H-α / Red)</span>
+<span class="font-bold text-red-400">656.3 nm</span>
+</button>
+<button class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-teal-500/20 text-slate-300" onclick="triggerSpecificTransition(4, 2)">
+<span>n = 4➔2 (H-β / Teal)</span>
+<span class="font-bold text-teal-400">486.1 nm</span>
+</button>
+</div>
+</div>
+<!-- Paschen -->
+<div class="bg-slate-900/40 border border-slate-850 p-2.5 rounded-lg">
+<div class="flex justify-between items-center mb-1.5 border-b border-slate-800 pb-0.5">
+<span class="font-bold text-orange-400 text-[10px]">Paschen Series (to n=3)</span>
+<span class="text-[8px] bg-orange-950/60 text-orange-400 px-1 rounded">Infrared</span>
+</div>
+<div class="space-y-1 font-mono text-[10px]">
+<button class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300" onclick="triggerSpecificTransition(4, 3)">
+<span>n = 4➔3 (Paschen-α)</span>
+<span class="font-bold text-orange-400">1875 nm</span>
+</button>
+<button class="w-full flex justify-between bg-slate-950 hover:bg-slate-850 p-1 rounded border border-slate-850 text-slate-300" onclick="triggerSpecificTransition(5, 3)">
+<span>n = 5➔3 (Paschen-β)</span>
+<span class="font-bold text-orange-400">1282 nm</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT PANEL: Diagnostics & Viva Workspace (4 Columns) -->
+<section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+<!-- Live physics variables telemetry dashboard -->
+<!-- Viva Voce Lab Desk Banner -->
+<!-- Category Filter -->
+<div class="space-y-5"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
+<span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
+<span class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+<h3 class="text-[11px] font-bold uppercase tracking-widest text-indigo-800 flex items-center gap-1.5">⚡ QUANTUM STATE ENGINE</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Current Orbit</span>
+<span class="text-xs font-bold text-purple-600 leading-tight block" id="telemetry-orbit">n = 1</span>
+</div>
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Energy Level</span>
+<span class="text-xs font-bold text-emerald-600 leading-tight block" id="telemetry-energy">-13.60 eV</span>
+</div>
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Orbit Radius</span>
+<span class="text-xs font-bold text-amber-600 leading-tight block" id="telemetry-radius">0.529 Å</span>
+</div>
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Electron Speed</span>
+<span class="text-xs font-bold text-indigo-600 leading-tight block" id="telemetry-speed">2.19 × 10⁶ m/s</span>
+</div>
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 How does de Broglie's hypothesis explain the quantization of stable Bohr orbits?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-              
-              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Scientific Verification</span>
-                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(1)">
+<span id="btn-text-1">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-1">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-1">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
                 An electron in a circular orbit of radius $r$ forms a stable standing wave only when its circumference is an integer multiple of its de Broglie wavelength:
                 $$2\pi r = n \lambda, \quad n \in \mathbb{N}$$
                 Substituting de Broglie's relation $\lambda = \frac{h}{p} = \frac{h}{m_e v}$ yields Bohr's quantization condition:
                 $$2\pi r = n \frac{h}{m_e v} \implies m_e v r = n \frac{h}{2\pi} = n\hbar$$
               </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 2 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What does the Schrödinger wave model represent that the Bohr model fails to address?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-
-              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Scientific Verification</span>
-                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(2)">
+<span id="btn-text-2">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-2">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-2">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500 leading-relaxed">
                 The Schrödinger equation yields the spatial wavefunction $\psi(r,\theta,\phi)$. The probability of finding the electron in a volume element $dV$ is given by:
                 $$P(dV) = |\psi(r,\theta,\phi)|^2 dV$$
                 Unlike Bohr's classical tracks, the electron does not have a definite position or trajectory, but exists as a three-dimensional probability density cloud.
               </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 3 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What happens to the spacing between adjacent atomic energy levels ($E_n$ and $E_{n+1}$) as $n \to \infty$?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-
-              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Scientific Verification</span>
-                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(3)">
+<span id="btn-text-3">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-3">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-3">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500 leading-relaxed">
                 The difference between adjacent energy levels is:
                 $$\Delta E = E_{n+1} - E_n = -E_0 Z^2 \left( \frac{1}{(n+1)^2} - \frac{1}{n^2} \right) = E_0 Z^2 \frac{2n+1}{n^2(n+1)^2}$$
                 Taking the limit:
                 $$\lim_{n\to\infty} \Delta E = \lim_{n\to\infty} E_0 Z^2 \frac{2n}{n^4} = 0$$
                 Thus, the energy states converge towards a continuous unbound limit at $E=0$ eV (ionization threshold).
               </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 4 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 Why does white light produce discrete dark absorption lines when passing through cool Hydrogen gas?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-
-              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-4">Show Scientific Verification</span>
-                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(4)">
+<span id="btn-text-4">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-4">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-4">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500 leading-relaxed">
                 As a continuous spectrum of photons passes through the gas, only those photons whose energy matches an available transition ($h f = \Delta E = E_f - E_i$) are absorbed. The absorbed energy is subsequently re-emitted in all directions (spontaneous isotropic decay), leaving narrow dark gaps (Fraunhofer absorption lines) in the transmitted beam's direction.
               </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Calibration Footer -->
-    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
-      <span>* Copyright © 2026 Sparkl Quantum Mechanics Laboratory Modules. Rebuilt via structural clean-room modular code patterns for modern browser interpretation.</span>
-      <span>Apparatus Calibration: Rydberg Constant R_H = 1.097373 &times; 10^7 m^-1</span>
-    </footer>
-
-  </div>
-
-  <!-- User Guide Modal Popup -->
-  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>📘</span> QUANTUM SPECTROSCOPY - User Guide
+</div>
+</div></div></section>
+</main>
+<!-- Calibration Footer -->
+<footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+<span>* Copyright © 2026 Sparkl Quantum Mechanics Laboratory Modules. Rebuilt via structural clean-room modular code patterns for modern browser interpretation.</span>
+<span>Apparatus Calibration: Rydberg Constant R_H = 1.097373 × 10^7 m^-1</span>
+</footer>
+</div>
+<!-- User Guide Modal Popup -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> QUANTUM SPECTROSCOPY - User Guide
         </h3>
-        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
-      </div>
-      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-        <p>Welcome to the <strong>Hydrogen Atom Spectroscopy Virtual Lab</strong>! Use this simulation to explore quantum transitions and spectral series emission lines.</p>
-        
-        <div class="space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Functions</h4>
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Model Selections</strong>: Toggle between Bohr Model, de Broglie Wave, and Schrödinger Probability Cloud to see different interpretations of atomic structure.</li>
-            <li><strong>Light Gun Source</strong>: Fire white light containing all wavelengths, or select monochromatic light using the wavelength slider/numeric boxes.</li>
-            <li><strong>Sensors &amp; Graphs</strong>: The bottom spectrograph registers all emitted photons, mapping peaks corresponding to UV Lyman, Visible Balmer, and Infrared Paschen series.</li>
-          </ul>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 Canvas Indicators</h4>
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>2D Quantum Orbit</strong>: Watch photon wavepackets interact, excite, and collapse orbital paths in real-time.</li>
-            <li><strong>Bohr Energy Levels Chart</strong>: Highlights the electron's current energy state, showing dynamic transition arrows.</li>
-            <li><strong>Quick Match Series buttons</strong>: Located at the bottom spectrometer, click these to instantly trigger transition series.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
-          Get Started
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Real-time Interactive Physics Solver & Spectrograph -->
-  <script>
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Welcome to the <strong>Hydrogen Atom Spectroscopy Virtual Lab</strong>! Use this simulation to explore quantum transitions and spectral series emission lines.</p>
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Functions</h4>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>Model Selections</strong>: Toggle between Bohr Model, de Broglie Wave, and Schrödinger Probability Cloud to see different interpretations of atomic structure.</li>
+<li><strong>Light Gun Source</strong>: Fire white light containing all wavelengths, or select monochromatic light using the wavelength slider/numeric boxes.</li>
+<li><strong>Sensors &amp; Graphs</strong>: The bottom spectrograph registers all emitted photons, mapping peaks corresponding to UV Lyman, Visible Balmer, and Infrared Paschen series.</li>
+</ul>
+</div>
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🔍 Canvas Indicators</h4>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>2D Quantum Orbit</strong>: Watch photon wavepackets interact, excite, and collapse orbital paths in real-time.</li>
+<li><strong>Bohr Energy Levels Chart</strong>: Highlights the electron's current energy state, showing dynamic transition arrows.</li>
+<li><strong>Quick Match Series buttons</strong>: Located at the bottom spectrometer, click these to instantly trigger transition series.</li>
+</ul>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<!-- Real-time Interactive Physics Solver & Spectrograph -->
+<script>
     // --- Core Physics Constants ---
     const ENERGY_LEVELS = {
       1: -13.60,

@@ -1,20 +1,18 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Molecular Orbital Hybridization Virtual Laboratory</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>3D Molecular Orbital Hybridization Virtual Laboratory</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- MathJax for rendering gorgeous physical LaTeX equations -->
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -26,15 +24,12 @@
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-  
-  <!-- Three.js and OrbitControls -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<!-- Three.js and OrbitControls -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -92,481 +87,407 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <!-- Main Premium Dashboard Container -->
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <!-- Top Header & Brand -->
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Alpha Logo" class="h-10 object-contain">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight">3D MOLECULAR ORBITAL HYBRIDIZATION</h1>
-          <p class="text-[11px] text-slate-400 font-medium">Quantum Chemistry &amp; Bonding Orbitals Laboratory</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-3">
-        <!-- User Guide Trigger Button -->
-        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
-          <span>📘</span> Laboratory Guide
+<!-- Main Premium Dashboard Container -->
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<!-- Top Header & Brand -->
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+<img alt="Sparkl Alpha Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight">3D MOLECULAR ORBITAL HYBRIDIZATION</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Quantum Chemistry &amp; Bonding Orbitals Laboratory</p>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<!-- User Guide Trigger Button -->
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> Laboratory Guide
         </button>
-        <button id="btn-reset" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5">
-          <span>🔄</span> Reset Simulation
+<button class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5" id="btn-reset">
+<span>🔄</span> Reset Simulation
         </button>
-      </div>
-    </header>
-
-    <!-- Simulation Toolbar Controls (Auto Rotate, View Overlays) -->
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <!-- Rotation Toggle -->
-      <div class="flex items-center space-x-2">
-        <button id="btn-rotate-toggle" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
-          <span>⏸</span> Pause Auto-Rotation
+</div>
+</header>
+<!-- Simulation Toolbar Controls (Auto Rotate, View Overlays) -->
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+<!-- Rotation Toggle -->
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5" id="btn-rotate-toggle">
+<span>⏸</span> Pause Auto-Rotation
         </button>
-        <button id="btn-recenter" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5">
-          <span>🎥</span> Recenter View
+<button class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5" id="btn-recenter">
+<span>🎥</span> Recenter View
         </button>
-      </div>
-
-      <!-- Overlays Toggles -->
-      <div class="flex flex-wrap items-center gap-6">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
-          <input type="checkbox" id="chk-hybrid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Hybrid Orbitals (σ)</span>
-        </label>
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer" id="lbl-unhybridized">
-          <input type="checkbox" id="chk-unhybridized" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Unhybridized p-Orbitals (π)</span>
-        </label>
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
-          <input type="checkbox" id="chk-guide" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Geometric Guide Cage</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (8 Columns) -->
-      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
-        
-        <!-- Interactive Controls (4 Columns of 8) -->
-        <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-6">
-            
-            <!-- Plot Mode Navigation Tab Bar Selector -->
-            <div>
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Workspace Tab View</span>
-              <div class="flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 w-full">
-                <button id="tab-simulation" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs">
+</div>
+<!-- Overlays Toggles -->
+<div class="flex flex-wrap items-center gap-6">
+<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-hybrid" type="checkbox"/>
+<span>Show Hybrid Orbitals (σ)</span>
+</label>
+<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer" id="lbl-unhybridized">
+<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-unhybridized" type="checkbox"/>
+<span>Show Unhybridized p-Orbitals (π)</span>
+</label>
+<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-guide" type="checkbox"/>
+<span>Show Geometric Guide Cage</span>
+</label>
+</div>
+</div>
+<!-- Master Layout Split: Left (Lab Panel & Canvas), Right (Viva Workspace) -->
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<!-- LEFT + CENTER WORKSPACE: Simulation & Canvas Panel (8 Columns) -->
+<section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+<!-- Interactive Controls (4 Columns of 8) -->
+<div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6"><div class="space-y-5"><div>
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">Workspace Tab View</span>
+<div class="flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 w-full">
+<button class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-xs" id="tab-simulation">
                   ⚛️ 3D Sandbox
                 </button>
-                <button id="tab-analogies" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950">
+<button class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950" id="tab-analogies">
                   🎨 Analogy
                 </button>
-              </div>
-            </div>
-
-            <!-- Configuration select-state buttons deck -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Hybridization Preset states</span>
-              <div class="grid grid-cols-5 gap-1.5 text-xs font-bold">
-                <button id="btn-state-sp" class="py-2 rounded border transition-all bg-indigo-600 border-indigo-600 text-white">sp</button>
-                <button id="btn-state-sp2" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp²</button>
-                <button id="btn-state-sp3" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp³</button>
-                <button id="btn-state-sp3d" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp³d</button>
-                <button id="btn-state-sp3d2" class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100">sp³d²</button>
-              </div>
-            </div>
-
-            <!-- Slider 1: Orbital Opacity -->
-            <div>
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Orbital Lobe Opacity</span>
-                <input type="number" id="num-opacity" step="0.05" min="0.20" max="1.00" value="0.80" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="slider-opacity" min="0.20" max="1.00" step="0.05" value="0.80" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>20%</span>
-                <span>100%</span>
-              </div>
-            </div>
-
-            <!-- Slider 2: Auto-Rotate Speed -->
-            <div>
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Auto-Rotation Speed</span>
-                <input type="number" id="num-rotate-speed" step="0.1" min="0.0" max="3.0" value="1.0" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="slider-rotate-speed" min="0.0" max="3.0" step="0.1" value="1.0" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>0.0x</span>
-                <span>3.0x</span>
-              </div>
-            </div>
-
-            <!-- Slider 3: Orbital Lobe Scale -->
-            <div>
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Orbital Scale (Size)</span>
-                <input type="number" id="num-scale" step="0.05" min="0.50" max="1.50" value="1.00" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="slider-scale" min="0.50" max="1.50" step="0.05" value="1.00" class="w-full">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                <span>50%</span>
-                <span>150%</span>
-              </div>
-            </div>
-
-            <!-- Mathematical Wave Blending equation display card -->
-            <div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex flex-col justify-center text-[10px] shadow-sm">
-              <span class="text-indigo-800 block text-[9px] uppercase tracking-wide font-extrabold mb-1.5">Wave Blending Lobe Equation</span>
-              <div class="bg-white p-2.5 rounded border border-indigo-100/80 text-center flex items-center justify-center min-h-[50px] shadow-2xs">
-                <div id="equation-display" class="text-[10px] w-full text-slate-800"></div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Canvas and Analogy Container (8 Columns of 8) -->
-        <div class="md:col-span-8 relative bg-slate-950 overflow-hidden min-h-[480px]">
-          
-          <!-- Tab 1: WebGL 3D Sandbox -->
-          <div id="view-simulation" class="absolute inset-0 w-full h-full lab-circuit-stage flex flex-col justify-between p-4">
-            <div class="flex justify-between items-center z-10 pointer-events-none">
-              <span class="text-[9px] font-bold tracking-widest text-emerald-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 uppercase">
-                Continuous WebGL Probability Space
-              </span>
-              <div class="flex gap-4 text-[9px] text-slate-400 font-mono bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
-                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span> (+) Wave Phase</span>
-                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> (−) Wave Phase</span>
-              </div>
-            </div>
-
-            <!-- Three.js Container Mount Point -->
-            <div id="three-container" class="absolute inset-0 w-full h-full z-0 cursor-grab active:cursor-grabbing"></div>
-          </div>
-
-          <!-- Tab 2: The Paint Bucket Analogy -->
-          <div id="view-analogies" class="hidden absolute inset-0 w-full h-full bg-slate-900 p-6 flex flex-col gap-6 text-white overflow-y-auto z-10 viva-scrollbar">
-            <div>
-              <h2 class="text-xl font-bold mb-2 text-purple-400">🎨 The Paint Bucket Analogy</h2>
-              <p class="text-xs text-slate-300 leading-relaxed">
-                In quantum chemistry, atomic orbitals are individual wavefunctions representing different energy levels. 
-                Hybridization is exactly like mixing paint. If you blend distinct buckets of color together, you produce a set of completely uniform, equivalent, directional hybrid shades.
-              </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col justify-between">
-                <div>
-                  <span class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Before Hybridization</span>
-                  <h3 class="text-base font-bold text-slate-200 mt-1">Distinct Ingredients</h3>
-                  <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                    We start with spherical $s$-orbitals (yellow paint) and dumbbell-shaped $p$-orbitals (blue paint), each holding different energies and coordinates.
-                  </p>
-                </div>
-                <div class="mt-4 flex gap-3 justify-center">
-                  <div class="flex flex-col items-center gap-1">
-                    <div class="w-8 h-10 rounded-t border border-amber-600 bg-amber-500/10 flex flex-col justify-end overflow-hidden">
-                      <div class="h-5 w-full bg-amber-500"></div>
-                    </div>
-                    <span class="text-[9px] text-amber-400 font-bold font-mono">1 x s (yellow)</span>
-                  </div>
-                  <div class="text-slate-500 flex items-center text-lg font-bold">+</div>
-                  <div class="flex flex-col items-center gap-1">
-                    <div class="w-8 h-10 rounded-t border border-indigo-600 bg-indigo-50/10 flex flex-col justify-end overflow-hidden">
-                      <div class="h-5 w-full bg-indigo-500"></div>
-                    </div>
-                    <span class="text-[9px] text-indigo-400 font-bold font-mono">3 x p (blue)</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col justify-between">
-                <div>
-                  <span class="text-[9px] uppercase font-bold text-purple-400 tracking-wider">After Hybridization</span>
-                  <h3 class="text-base font-bold text-slate-200 mt-1">Blended Equivalent Results</h3>
-                  <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                    Once blended (e.g. for $sp^3$), the wave ingredients are combined. We pour them back into **four identical buckets of green-purple paint**, each identical in properties.
-                  </p>
-                </div>
-                <div class="mt-4 flex gap-1.5 justify-center">
-                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
-                    <div class="h-4 w-full bg-purple-600"></div>
-                  </div>
-                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
-                    <div class="h-4 w-full bg-purple-600"></div>
-                  </div>
-                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
-                    <div class="h-4 w-full bg-purple-600"></div>
-                  </div>
-                  <div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
-                    <div class="h-4 w-full bg-purple-600"></div>
-                  </div>
-                  <div class="flex flex-col justify-center ml-2">
-                    <span class="text-[9px] text-purple-400 font-bold font-mono">4 x sp³ lobes</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-850 text-xs">
-              <h4 class="font-bold text-slate-200 mb-1 flex items-center gap-1">🔬 Sigma (σ) vs. Pi (π) Bonding Mechanics</h4>
-              <p class="text-slate-400 leading-normal mb-2">
-                Understanding single and multiple bonds is impossible without overlapping shapes:
-              </p>
-              <ul class="list-disc list-inside text-slate-400 space-y-1.5 ml-1 leading-normal">
-                <li><strong>Sigma Bonds (σ):</strong> Formed by **head-on** overlapping along the internuclear axis. These have cylindrical symmetry and allow free rotation of atoms.</li>
-                <li><strong>Pi Bonds (π):</strong> Formed by **sideways** overlapping of remaining unhybridized p-orbitals. These lock atomic rotation, enabling double/triple structures.</li>
-              </ul>
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- RIGHT PANEL: Diagnostics & Viva Workspace (4 Columns) -->
-      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
-        
-        <!-- Live physics variables telemetry dashboard -->
-        <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
-          <h3 class="text-[11px] font-bold uppercase tracking-widest text-indigo-800 flex items-center gap-1.5">⚡ QUANTUM HYBRID TELEMETRY</h3>
-          <div class="grid grid-cols-2 gap-3">
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Orbital Geometry</span>
-              <span id="telemetry-geometry" class="text-xs font-bold text-purple-600 leading-tight block">Linear</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Ideal Bond Angle</span>
-              <span id="telemetry-angle" class="text-xs font-bold text-emerald-600 leading-tight block">180°</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">S-Character</span>
-              <span id="telemetry-schar" class="text-xs font-bold text-amber-600 leading-tight block">50.0%</span>
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
-              <span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">P/D-Character</span>
-              <span id="telemetry-pdchar" class="text-xs font-bold text-indigo-600 leading-tight block">50.0% p / 0.0% d</span>
-            </div>
-          </div>
-          
-          <!-- Real molecule example tip block -->
-          <div class="bg-white p-2.5 rounded-xl border border-indigo-100/60 shadow-xs text-[10px]">
-            <span class="font-bold text-slate-500 uppercase tracking-wide block mb-0.5">Molecule Examples</span>
-            <span id="telemetry-example" class="text-slate-700 leading-normal block font-medium"></span>
-          </div>
-        </div>
-
-        <!-- Dynamic Lobe Character Balance Gauge -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
-          <h3 class="text-xs font-bold uppercase text-slate-700 tracking-wider">📋 Orbital Lobe Character Balance</h3>
-          
-          <div class="space-y-2.5 text-[11px] font-medium text-slate-600">
-            <!-- s-Character bar gauge -->
-            <div>
-              <div class="flex justify-between font-bold mb-0.5">
-                <span class="text-amber-500">s-Character Percentage</span>
-                <span id="gauge-s-text" class="font-mono text-slate-700">50.0%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div id="gauge-s-bar" class="bg-amber-500 h-full transition-all duration-300" style="width: 50%"></div>
-              </div>
-            </div>
-
-            <!-- p-Character bar gauge -->
-            <div>
-              <div class="flex justify-between font-bold mb-0.5">
-                <span class="text-blue-500">p-Character Percentage</span>
-                <span id="gauge-p-text" class="font-mono text-slate-700">50.0%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div id="gauge-p-bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 50%"></div>
-              </div>
-            </div>
-
-            <!-- d-Character bar gauge -->
-            <div>
-              <div class="flex justify-between font-bold mb-0.5">
-                <span class="text-purple-500">d-Character Percentage</span>
-                <span id="gauge-d-text" class="font-mono text-slate-700">0.0%</span>
-              </div>
-              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                <div id="gauge-d-bar" class="bg-purple-500 h-full transition-all duration-300" style="width: 0%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Viva Voce Lab Desk Banner -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-          <div class="flex justify-between items-center mt-0.5">
-            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
-            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
-          </div>
-        </div>
-
-        <div class="space-y-3">
-          
-          <!-- QUESTION 1 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div>
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">Hybridization Preset states</span>
+<div class="grid grid-cols-5 gap-1.5 text-xs font-bold">
+<button class="py-2 rounded border transition-all bg-indigo-600 border-indigo-600 text-white" id="btn-state-sp">sp</button>
+<button class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100" id="btn-state-sp2">sp²</button>
+<button class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100" id="btn-state-sp3">sp³</button>
+<button class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100" id="btn-state-sp3d">sp³d</button>
+<button class="py-2 rounded border transition-all bg-white border-slate-200 text-slate-700 hover:bg-slate-100" id="btn-state-sp3d2">sp³d²</button>
+</div>
+</div><div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Orbital Lobe Opacity</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-opacity" max="1.00" min="0.20" step="0.05" type="number" value="0.80"/>
+</div>
+<input class="w-full" id="slider-opacity" max="1.00" min="0.20" step="0.05" type="range" value="0.80"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>20%</span>
+<span>100%</span>
+</div>
+</div><div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Auto-Rotation Speed</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-rotate-speed" max="3.0" min="0.0" step="0.1" type="number" value="1.0"/>
+</div>
+<input class="w-full" id="slider-rotate-speed" max="3.0" min="0.0" step="0.1" type="range" value="1.0"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>0.0x</span>
+<span>3.0x</span>
+</div>
+</div><div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Orbital Scale (Size)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-scale" max="1.50" min="0.50" step="0.05" type="number" value="1.00"/>
+</div>
+<input class="w-full" id="slider-scale" max="1.50" min="0.50" step="0.05" type="range" value="1.00"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>50%</span>
+<span>150%</span>
+</div>
+</div><div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+<h3 class="text-[11px] font-bold uppercase tracking-widest text-indigo-800 flex items-center gap-1.5">⚡ QUANTUM HYBRID TELEMETRY</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Orbital Geometry</span>
+<span class="text-xs font-bold text-purple-600 leading-tight block" id="telemetry-geometry">Linear</span>
+</div>
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">Ideal Bond Angle</span>
+<span class="text-xs font-bold text-emerald-600 leading-tight block" id="telemetry-angle">180°</span>
+</div>
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">S-Character</span>
+<span class="text-xs font-bold text-amber-600 leading-tight block" id="telemetry-schar">50.0%</span>
+</div>
+<div class="bg-white p-3 rounded-xl border border-indigo-100/60 shadow-xs">
+<span class="text-[9px] text-slate-400 uppercase font-bold block mb-0.5">P/D-Character</span>
+<span class="text-xs font-bold text-indigo-600 leading-tight block" id="telemetry-pdchar">50.0% p / 0.0% d</span>
+</div>
+</div>
+<!-- Real molecule example tip block -->
+<div class="bg-white p-2.5 rounded-xl border border-indigo-100/60 shadow-xs text-[10px]">
+<span class="font-bold text-slate-500 uppercase tracking-wide block mb-0.5">Molecule Examples</span>
+<span class="text-slate-700 leading-normal block font-medium" id="telemetry-example"></span>
+</div>
+</div><div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex flex-col justify-center text-[10px] shadow-sm">
+<span class="text-indigo-800 block text-[9px] uppercase tracking-wide font-extrabold mb-1.5">Wave Blending Lobe Equation</span>
+<div class="bg-white p-2.5 rounded border border-indigo-100/80 text-center flex items-center justify-center min-h-[50px] shadow-2xs">
+<div class="text-[10px] w-full text-slate-800" id="equation-display"></div>
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What is the orbital hybridization of the central carbon atoms in Acetylene ($H-C\equiv C-H$)?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q1-options">
-                <!-- Option buttons dynamically generated -->
-              </div>
-              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-              
-              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Scientific Verification</span>
-                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options">
+<!-- Option buttons dynamically generated -->
+</div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(1)">
+<span id="btn-text-1">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-1">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-1">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500 leading-relaxed">
                 Linear combination mixing equations of $s$ and $p_z$ atomic wavefunctions:
                 $$\psi_{\text{hybrid}} = \frac{1}{\sqrt{2}}\psi_s \pm \frac{1}{\sqrt{2}}\psi_z$$
                 The remaining two perpendicular unhybridized $p$-orbitals ($p_x$, $p_y$) overlap laterally to form two $\pi$ bonds:
                 $$\pi_x = p_x^A + p_x^B, \quad \pi_y = p_y^A + p_y^B$$
               </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 2 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 Which of the following molecular geometries corresponds to $sp^3d^2$ hybridization of the central atom?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-
-              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Scientific Verification</span>
-                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(2)">
+<span id="btn-text-2">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-2">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-2">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500 leading-relaxed">
                 Octahedral geometries mix one $s$, three $p$, and two $d$ atomic orbitals together:
                 $$\text{Linear Combination: } s + p_x + p_y + p_z + d_{z^2} + d_{x^2-y^2}$$
                 The resulting six hybrid orbitals are mutually orthogonal and point along the spatial Cartesian coordinates.
               </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 3 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What is the theoretical bond angle of methane ($CH_4$), which exhibits $sp^3$ hybridization?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-
-              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Scientific Verification</span>
-                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(3)">
+<span id="btn-text-3">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-3">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-3">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500 leading-relaxed">
                 By solving the spatial dot product of the hybrid orbital axes:
                 $$\vec{\psi}_i \cdot \vec{\psi}_j = \cos\theta$$
                 For tetrahedral $sp^3$ hybrids, the coefficients dictate:
                 $$\cos\theta = -\frac{1}{3} \implies \theta = \arccos\left(-\frac{1}{3}\right) \approx 109.47^\circ$$
               </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 4 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 How are Pi ($\pi$) bonds formed in a double or triple bond?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-
-              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-4">Show Scientific Verification</span>
-                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500 leading-relaxed">
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
+<button class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100" onclick="toggleVerification(4)">
+<span id="btn-text-4">Show Scientific Verification</span>
+<span class="transform transition-transform" id="btn-arrow-4">▼</span>
+</button>
+</div>
+<div class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2" id="viva-panel-4">
+<div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500 leading-relaxed">
                 Pi ($\pi$) bonds are characterized by a planar nodal surface passing through the internuclear axis:
                 $$\psi_{\pi}(\vec{r}) = c_1 \phi_{2p_x}^A(\vec{r}) + c_2 \phi_{2p_x}^B(\vec{r})$$
                 Formed via sideways, lateral overlap of unhybridized $p$-orbitals perpendicular to the sigma bond axis.
               </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Calibration Footer -->
-    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
-      <span>* Copyright © 2026 Sparkl Quantum Electrodynamics Laboratory Modules. Rebuilt via structural clean-room modular code patterns for modern browser interpretation.</span>
-      <span>Apparatus: Bohr-Hamiltonian Probability Wave Fields</span>
-    </footer>
-
-  </div>
-
-  <!-- User Guide Modal Popup -->
-  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>📘</span> QUANTUM MOLECULAR OPERATIONS PROTOCOLS
+</div>
+</div></div></div>
+<!-- Canvas and Analogy Container (8 Columns of 8) -->
+<div class="md:col-span-8 relative bg-slate-950 overflow-hidden min-h-[480px]">
+<!-- Tab 1: WebGL 3D Sandbox -->
+<div class="absolute inset-0 w-full h-full lab-circuit-stage flex flex-col justify-between p-4" id="view-simulation">
+<div class="flex justify-between items-center z-10 pointer-events-none">
+<span class="text-[9px] font-bold tracking-widest text-emerald-400 bg-slate-900/90 px-3 py-1.5 rounded-full border border-slate-800 uppercase">
+                Continuous WebGL Probability Space
+              </span>
+<div class="flex gap-4 text-[9px] text-slate-400 font-mono bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span> (+) Wave Phase</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> (−) Wave Phase</span>
+</div>
+</div>
+<!-- Three.js Container Mount Point -->
+<div class="absolute inset-0 w-full h-full z-0 cursor-grab active:cursor-grabbing" id="three-container"></div>
+</div>
+<!-- Tab 2: The Paint Bucket Analogy -->
+<div class="hidden absolute inset-0 w-full h-full bg-slate-900 p-6 flex flex-col gap-6 text-white overflow-y-auto z-10 viva-scrollbar" id="view-analogies">
+<div>
+<h2 class="text-xl font-bold mb-2 text-purple-400">🎨 The Paint Bucket Analogy</h2>
+<p class="text-xs text-slate-300 leading-relaxed">
+                In quantum chemistry, atomic orbitals are individual wavefunctions representing different energy levels. 
+                Hybridization is exactly like mixing paint. If you blend distinct buckets of color together, you produce a set of completely uniform, equivalent, directional hybrid shades.
+              </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col justify-between">
+<div>
+<span class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Before Hybridization</span>
+<h3 class="text-base font-bold text-slate-200 mt-1">Distinct Ingredients</h3>
+<p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    We start with spherical $s$-orbitals (yellow paint) and dumbbell-shaped $p$-orbitals (blue paint), each holding different energies and coordinates.
+                  </p>
+</div>
+<div class="mt-4 flex gap-3 justify-center">
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 h-10 rounded-t border border-amber-600 bg-amber-500/10 flex flex-col justify-end overflow-hidden">
+<div class="h-5 w-full bg-amber-500"></div>
+</div>
+<span class="text-[9px] text-amber-400 font-bold font-mono">1 x s (yellow)</span>
+</div>
+<div class="text-slate-500 flex items-center text-lg font-bold">+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-8 h-10 rounded-t border border-indigo-600 bg-indigo-50/10 flex flex-col justify-end overflow-hidden">
+<div class="h-5 w-full bg-indigo-500"></div>
+</div>
+<span class="text-[9px] text-indigo-400 font-bold font-mono">3 x p (blue)</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-950 border border-slate-850 rounded-xl p-4 flex flex-col justify-between">
+<div>
+<span class="text-[9px] uppercase font-bold text-purple-400 tracking-wider">After Hybridization</span>
+<h3 class="text-base font-bold text-slate-200 mt-1">Blended Equivalent Results</h3>
+<p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                    Once blended (e.g. for $sp^3$), the wave ingredients are combined. We pour them back into **four identical buckets of green-purple paint**, each identical in properties.
+                  </p>
+</div>
+<div class="mt-4 flex gap-1.5 justify-center">
+<div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+<div class="h-4 w-full bg-purple-600"></div>
+</div>
+<div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+<div class="h-4 w-full bg-purple-600"></div>
+</div>
+<div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+<div class="h-4 w-full bg-purple-600"></div>
+</div>
+<div class="w-6 h-8 rounded-t border border-purple-600 bg-purple-500/10 flex flex-col justify-end overflow-hidden">
+<div class="h-4 w-full bg-purple-600"></div>
+</div>
+<div class="flex flex-col justify-center ml-2">
+<span class="text-[9px] text-purple-400 font-bold font-mono">4 x sp³ lobes</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-slate-950 p-4 rounded-xl border border-slate-850 text-xs">
+<h4 class="font-bold text-slate-200 mb-1 flex items-center gap-1">🔬 Sigma (σ) vs. Pi (π) Bonding Mechanics</h4>
+<p class="text-slate-400 leading-normal mb-2">
+                Understanding single and multiple bonds is impossible without overlapping shapes:
+              </p>
+<ul class="list-disc list-inside text-slate-400 space-y-1.5 ml-1 leading-normal">
+<li><strong>Sigma Bonds (σ):</strong> Formed by **head-on** overlapping along the internuclear axis. These have cylindrical symmetry and allow free rotation of atoms.</li>
+<li><strong>Pi Bonds (π):</strong> Formed by **sideways** overlapping of remaining unhybridized p-orbitals. These lock atomic rotation, enabling double/triple structures.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT PANEL: Diagnostics & Viva Workspace (4 Columns) -->
+<section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar"><div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+<h3 class="text-xs font-bold uppercase text-slate-700 tracking-wider">📋 Orbital Lobe Character Balance</h3>
+<div class="space-y-2.5 text-[11px] font-medium text-slate-600">
+<!-- s-Character bar gauge -->
+<div>
+<div class="flex justify-between font-bold mb-0.5">
+<span class="text-amber-500">s-Character Percentage</span>
+<span class="font-mono text-slate-700" id="gauge-s-text">50.0%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-amber-500 h-full transition-all duration-300" id="gauge-s-bar" style="width: 50%"></div>
+</div>
+</div>
+<!-- p-Character bar gauge -->
+<div>
+<div class="flex justify-between font-bold mb-0.5">
+<span class="text-blue-500">p-Character Percentage</span>
+<span class="font-mono text-slate-700" id="gauge-p-text">50.0%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-blue-500 h-full transition-all duration-300" id="gauge-p-bar" style="width: 50%"></div>
+</div>
+</div>
+<!-- d-Character bar gauge -->
+<div>
+<div class="flex justify-between font-bold mb-0.5">
+<span class="text-purple-500">d-Character Percentage</span>
+<span class="font-mono text-slate-700" id="gauge-d-text">0.0%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-purple-500 h-full transition-all duration-300" id="gauge-d-bar" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</div><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div></section>
+</main>
+<!-- Calibration Footer -->
+<footer class="bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+<span>* Copyright © 2026 Sparkl Quantum Electrodynamics Laboratory Modules. Rebuilt via structural clean-room modular code patterns for modern browser interpretation.</span>
+<span>Apparatus: Bohr-Hamiltonian Probability Wave Fields</span>
+</footer>
+</div>
+<!-- User Guide Modal Popup -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> QUANTUM MOLECULAR OPERATIONS PROTOCOLS
         </h3>
-        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
-      </div>
-      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-        <p>Welcome to the <strong>3D Molecular Orbital Hybridization Virtual Lab</strong>! Use this workspace to explore hybrid coordinate orbitals, characters, and wave blends:</p>
-        
-        <div class="space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Functions</h4>
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Hybrid Presets</strong>: Select different hybrid states (sp, sp², sp³, etc.) to immediately re-orient orbital major and minor wave phases along ideal geometric vertices.</li>
-            <li><strong>Interactive Sliders</strong>: Finely tune the opacity, auto-rotation speed, and coordinate orbital size. Change them on range inputs or type values directly in adjacent numerical input boxes.</li>
-            <li><strong>Tab Selector Views</strong>: Switch between the 3D Sandbox and the educational Paint Bucket Analogy mode to see the intuitive representation of wave blend mathematics.</li>
-          </ul>
-        </div>
-
-        <div class="space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🔍 3D Viewport Controls</h4>
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Rotate Viewport</strong>: Click, hold, and drag directly inside the dark probability space canvas to rotate the camera.</li>
-            <li><strong>Pinch / Scroll to Zoom</strong>: Use your mouse scroll wheel or gesture to zoom in and out of the molecular structure.</li>
-            <li><strong>Toggles</strong>: Dynamically show/hide sigma lobes, unhybridized pi dumbbells, or geometric skeleton outlines.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
-          Initialize Experiments
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Real-time Interactive Physics Solver & WebGL Renderer -->
-  <script>
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Welcome to the <strong>3D Molecular Orbital Hybridization Virtual Lab</strong>! Use this workspace to explore hybrid coordinate orbitals, characters, and wave blends:</p>
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Functions</h4>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>Hybrid Presets</strong>: Select different hybrid states (sp, sp², sp³, etc.) to immediately re-orient orbital major and minor wave phases along ideal geometric vertices.</li>
+<li><strong>Interactive Sliders</strong>: Finely tune the opacity, auto-rotation speed, and coordinate orbital size. Change them on range inputs or type values directly in adjacent numerical input boxes.</li>
+<li><strong>Tab Selector Views</strong>: Switch between the 3D Sandbox and the educational Paint Bucket Analogy mode to see the intuitive representation of wave blend mathematics.</li>
+</ul>
+</div>
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🔍 3D Viewport Controls</h4>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>Rotate Viewport</strong>: Click, hold, and drag directly inside the dark probability space canvas to rotate the camera.</li>
+<li><strong>Pinch / Scroll to Zoom</strong>: Use your mouse scroll wheel or gesture to zoom in and out of the molecular structure.</li>
+<li><strong>Toggles</strong>: Dynamically show/hide sigma lobes, unhybridized pi dumbbells, or geometric skeleton outlines.</li>
+</ul>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<!-- Real-time Interactive Physics Solver & WebGL Renderer -->
+<script>
     // Configuration states data dictionary
     const StateConfigs = {
       sp: {

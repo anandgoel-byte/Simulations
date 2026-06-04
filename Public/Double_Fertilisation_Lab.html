@@ -1,17 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Double Fertilisation Animation Virtual Laboratory</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Double Fertilisation Animation Virtual Laboratory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -23,11 +21,9 @@
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -82,215 +78,174 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Double Fertilisation Animation</h1>
-          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Angiosperm Sexual Reproduction Virtual Laboratory</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-3">
-        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
-          <span>📘</span> User Guide
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Double Fertilisation Animation</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Angiosperm Sexual Reproduction Virtual Laboratory</p>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
+<span>📘</span> User Guide
         </button>
-        <div class="hidden sm:flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Bio-Kinetic Engine Active</span>
-        </div>
-      </div>
-    </header>
-
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center space-x-2">
-        <button id="btn-play" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5">
+<div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+<span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Bio-Kinetic Engine Active</span>
+</div>
+</div>
+</header>
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5" id="btn-play">
           ▶ Auto-Play Animation
         </button>
-        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all shadow-sm">
-          <span>🔄</span> Reset Ovary
+<button class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all shadow-sm" id="btn-reset">
+<span>🔄</span> Reset Ovary
         </button>
-      </div>
-
-      <div class="flex items-center space-x-4">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-          <input type="checkbox" id="chk-labels" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Biological Labels</span>
-        </label>
-      </div>
-    </div>
-
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-        <div class="space-y-6">
-
-          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
-             <span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1">Cellular Map</span>
-             <p class="text-xs font-medium text-slate-700 leading-relaxed">
+</div>
+<div class="flex items-center space-x-4">
+<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-labels" type="checkbox"/>
+<span>Show Biological Labels</span>
+</label>
+</div>
+</div>
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar"><div class="space-y-5"><div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
+<span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1">Cellular Map</span>
+<p class="text-xs font-medium text-slate-700 leading-relaxed">
                The mature embryo sac (female gametophyte) is a 7-celled, 8-nucleate structure:
-               <br><br>
-               • <b>3 Antipodals</b> (top, chalazal end)<br>
-               • <b>1 Central Cell</b> with 2 polar nuclei<br>
-               • <b>2 Synergids</b> (bottom, guiding cells)<br>
+               <br/><br/>
+               • <b>3 Antipodals</b> (top, chalazal end)<br/>
+               • <b>1 Central Cell</b> with 2 polar nuclei<br/>
+               • <b>2 Synergids</b> (bottom, guiding cells)<br/>
                • <b>1 Egg Cell</b> (bottom, female gamete)
              </p>
-          </div>
-
-          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
-            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
-              <span class="flex items-center gap-1.5"><span class="uppercase text-rose-700">Fertilisation Timeline</span></span>
-              <span id="lbl-time" class="font-mono text-rose-600 text-sm">0%</span>
-            </div>
-            <input type="range" id="sl-time" min="0" max="100" step="0.5" value="0" class="w-full mt-2 slider-rose">
-            
-            <div class="grid grid-cols-1 gap-2 mt-4">
-              <button onclick="jumpTo(25)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-slate-400">
+</div><div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
+<div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+<span class="flex items-center gap-1.5"><span class="uppercase text-rose-700">Fertilisation Timeline</span></span>
+<span class="font-mono text-rose-600 text-sm" id="lbl-time">0%</span>
+</div>
+<input class="w-full mt-2 slider-rose" id="sl-time" max="100" min="0" step="0.5" type="range" value="0"/>
+<div class="grid grid-cols-1 gap-2 mt-4">
+<button class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-slate-400" onclick="jumpTo(25)">
                 Pollen Tube Growth
               </button>
-              <button onclick="jumpTo(55)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-indigo-400">
+<button class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-indigo-400" onclick="jumpTo(55)">
                 Syngamy (Egg Fertilisation)
               </button>
-              <button onclick="jumpTo(85)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-amber-400">
+<button class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-amber-400" onclick="jumpTo(85)">
                 Triple Fusion (Endosperm)
               </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
-        <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
-        
-        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
-          <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Phase: Pollination</span>
-        </div>
-
-        <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
-          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-sky-400 rounded-full shadow-sm"></span> Male Gametes (Sperm)</div>
-          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-fuchsia-400 rounded-full shadow-sm"></span> Egg Cell</div>
-          <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-amber-400 rounded-full shadow-sm"></span> Polar Nuclei (Central)</div>
-        </div>
-      </section>
-
-      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
-        
-        <div class="space-y-3">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Biological Ploidy Telemetry</span>
-          
-          <div class="grid grid-cols-1 gap-2">
-            
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
-              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Zygote State</div>
-              <div class="text-sm font-bold font-mono tracking-widest text-slate-400" id="tel-zygote">Unfertilized (n)</div>
-            </div>
-
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
-              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Endosperm State</div>
-              <div class="text-sm font-bold font-mono tracking-widest text-slate-400" id="tel-endosperm">Central Cell (n+n)</div>
-            </div>
-
-            <div class="bg-slate-900 text-slate-100 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-1">
-              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Active Event Marker</div>
-              <div class="text-sm font-bold font-mono tracking-widest text-rose-500 uppercase" id="tel-event">Pollen Tube Growing</div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-          <div class="flex justify-between items-center mt-0.5">
-            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
-            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
-          </div>
-        </div>
-
-        <div class="space-y-3 pb-4">
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+</div>
+</div><div class="space-y-3">
+<span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Biological Ploidy Telemetry</span>
+<div class="grid grid-cols-1 gap-2">
+<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
+<div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Zygote State</div>
+<div class="text-sm font-bold font-mono tracking-widest text-slate-400" id="tel-zygote">Unfertilized (n)</div>
+</div>
+<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
+<div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Endosperm State</div>
+<div class="text-sm font-bold font-mono tracking-widest text-slate-400" id="tel-endosperm">Central Cell (n+n)</div>
+</div>
+<div class="bg-slate-900 text-slate-100 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-1">
+<div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Active Event Marker</div>
+<div class="text-sm font-bold font-mono tracking-widest text-rose-500 uppercase" id="tel-event">Pollen Tube Growing</div>
+</div>
+</div>
+</div></div></section>
+<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+<canvas class="absolute inset-0 w-full h-full block z-10" id="simCanvas"></canvas>
+<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+<span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Phase: Pollination</span>
+</div>
+<div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-sky-400 rounded-full shadow-sm"></span> Male Gametes (Sperm)</div>
+<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-fuchsia-400 rounded-full shadow-sm"></span> Egg Cell</div>
+<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-amber-400 rounded-full shadow-sm"></span> Polar Nuclei (Central)</div>
+</div>
+</section>
+<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="space-y-3 pb-4">
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What are the two distinct fusion events that make up "Double Fertilisation"?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
+</div>
+</div>
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What is the final ploidy level of the Primary Endosperm Nucleus (PEN)?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
+</div>
+</div>
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 Which structures guide the pollen tube directly into the embryo sac?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
+</div>
+</div>
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="space-y-2">
+<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug">
                 Why do angiosperms invest energy in creating triploid Endosperm?
               </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-    </main>
-
-  </div>
-
-  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>📘</span> FERTILISATION LAB PROTOCOLS
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
+</div>
+</div>
+</div></section>
+</main>
+</div>
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+<div class="flex items-center justify-between border-b border-slate-100 pb-3">
+<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> FERTILISATION LAB PROTOCOLS
         </h3>
-        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
-      </div>
-      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-        <p>Welcome to the <strong>Angiosperm Reproduction Laboratory</strong>! Observe the simultaneous genetic fusion events required to create a seed.</p>
-        
-        <div class="space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
-          <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Auto-Play Animation</strong>: Click play to watch the complete process uninterrupted. The pollen tube will burrow through the style to deliver the two sperm nuclei.</li>
-            <li><strong>Manual Timeline Slider</strong>: Pause and manually drag the red slider. Notice exactly when Syngamy occurs (forming the 2n Zygote) and when Triple Fusion occurs (forming the 3n Endosperm).</li>
-            <li><strong>Telemetry Dashboard</strong>: Watch the right-hand panel. As the sperm fuse, the ploidy trackers will dynamically shift from unfertilized (n) to their final state (2n and 3n).</li>
-          </ul>
-        </div>
-      </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
-          Acknowledge
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script>
+<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+</div>
+<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+<p>Welcome to the <strong>Angiosperm Reproduction Laboratory</strong>! Observe the simultaneous genetic fusion events required to create a seed.</p>
+<div class="space-y-2">
+<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
+<ul class="list-disc pl-5 space-y-1">
+<li><strong>Auto-Play Animation</strong>: Click play to watch the complete process uninterrupted. The pollen tube will burrow through the style to deliver the two sperm nuclei.</li>
+<li><strong>Manual Timeline Slider</strong>: Pause and manually drag the red slider. Notice exactly when Syngamy occurs (forming the 2n Zygote) and when Triple Fusion occurs (forming the 3n Endosperm).</li>
+<li><strong>Telemetry Dashboard</strong>: Watch the right-hand panel. As the sperm fuse, the ploidy trackers will dynamically shift from unfertilized (n) to their final state (2n and 3n).</li>
+</ul>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 flex justify-end">
+<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+</div>
+</div>
+</div>
+<script>
     // --- VIVA MCQS DECK ---
     const appState = {
       vivaScore: 0,

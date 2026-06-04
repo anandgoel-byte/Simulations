@@ -1,23 +1,20 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Energy Forms &amp; Changes Virtual Laboratory</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Energy Forms &amp; Changes Virtual Laboratory</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- MathJax for rendering gorgeous physical LaTeX equations -->
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -29,11 +26,9 @@
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -85,335 +80,215 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <!-- Main Premium Dashboard Container -->
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <!-- Top Header & Brand -->
-    <header class="bg-slate-900 px-6 py-4 flex flex-col md:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 md:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Energy Forms &amp; Changes Lab</h1>
-          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Precision Mechanical, Thermal, Radiant &amp; Electrical Physics</p>
-        </div>
-      </div>
-      
-      <div class="flex items-center space-x-3">
-        <button onclick="resetWorkspace()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-750 transition-all flex items-center gap-1.5">
-          <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Workspace
+<!-- Main Premium Dashboard Container -->
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<!-- Top Header & Brand -->
+<header class="bg-slate-900 px-6 py-4 flex flex-col md:flex-row items-center justify-between border-b border-slate-800">
+<div class="flex items-center space-x-4 mb-3 md:mb-0">
+<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Energy Forms &amp; Changes Lab</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Precision Mechanical, Thermal, Radiant &amp; Electrical Physics</p>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<button class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-750 transition-all flex items-center gap-1.5" onclick="resetWorkspace()">
+<i class="w-4 h-4" data-lucide="rotate-ccw"></i> Reset Workspace
         </button>
-      </div>
-    </header>
-
-    <!-- Simulation Toolbar Controls -->
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      <!-- Play/Pause Controls -->
-      <div class="flex items-center space-x-2">
-        <button id="btnPlayPause" onclick="togglePlayPause()" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5">
-          <i data-lucide="pause" id="playIcon" class="w-4 h-4"></i> <span id="playText">Pause</span>
-        </button>
-      </div>
-
-      <!-- Toggles -->
-      <div class="flex items-center space-x-6">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-          <input type="checkbox" id="chkShowEnergy" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
-          <span>Show Energy Symbols</span>
-        </label>
-      </div>
-
-      <!-- Efficiency & Active status -->
-      <div class="flex items-center">
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Status: </span>
-        <span class="ml-1.5 text-xs font-extrabold text-indigo-600 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full font-mono">Thermodynamics Engine Online</span>
-      </div>
-    </div>
-
-    <!-- Master Layout Split -->
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <!-- LEFT + CENTER WORKSPACE (9 Columns) -->
-      <section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 bg-slate-50">
-        
-        <!-- Interactive Controls (5 Columns) -->
-        <div class="md:col-span-5 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-5">
-            
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-              <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i> Apparatus Setup
+</div>
+</header>
+<!-- Simulation Toolbar Controls -->
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+<!-- Play/Pause Controls -->
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded shadow-sm transition-all flex items-center gap-1.5" id="btnPlayPause" onclick="togglePlayPause()">
+<i class="w-4 h-4" data-lucide="pause" id="playIcon"></i> <span id="playText">Pause</span>
+</button>
+</div>
+<!-- Toggles -->
+<div class="flex items-center space-x-6">
+<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
+<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chkShowEnergy" type="checkbox"/>
+<span>Show Energy Symbols</span>
+</label>
+</div>
+<!-- Efficiency & Active status -->
+<div class="flex items-center">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Status: </span>
+<span class="ml-1.5 text-xs font-extrabold text-indigo-600 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full font-mono">Thermodynamics Engine Online</span>
+</div>
+</div>
+<!-- Master Layout Split -->
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<!-- LEFT + CENTER WORKSPACE (9 Columns) -->
+<section class="lg:col-span-8 grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 bg-slate-50">
+<!-- Interactive Controls (5 Columns) -->
+<div class="md:col-span-5 bg-slate-50 p-6 flex flex-col justify-between space-y-6"><div class="space-y-5"><div class="space-y-5">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+<i class="w-4 h-4 text-indigo-500" data-lucide="sliders"></i> Apparatus Setup
             </h3>
-
-            <!-- Select Source -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">1. Choose Energy Source</span>
-              <div class="grid grid-cols-2 gap-2">
-                <button id="src-bicycle" onclick="setSource('bicycle')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>🚴</span> Bicycle
+<!-- Select Source -->
+<div>
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">1. Choose Energy Source</span>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="src-bicycle" onclick="setSource('bicycle')">
+<span>🚴</span> Bicycle
                 </button>
-                <button id="src-faucet" onclick="setSource('faucet')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>💧</span> Faucet
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="src-faucet" onclick="setSource('faucet')">
+<span>💧</span> Faucet
                 </button>
-                <button id="src-sun" onclick="setSource('sun')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>☀️</span> Sunlight
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="src-sun" onclick="setSource('sun')">
+<span>☀️</span> Sunlight
                 </button>
-                <button id="src-teakettle" onclick="setSource('teakettle')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>🫖</span> Kettle
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="src-teakettle" onclick="setSource('teakettle')">
+<span>🫖</span> Kettle
                 </button>
-              </div>
-            </div>
-
-            <!-- Select Converter -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">2. Choose Energy Changer</span>
-              <div class="grid grid-cols-2 gap-2">
-                <button id="chg-wheel" onclick="setChanger('wheel')" class="py-2 px-2 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>⚙️</span> Generator
+</div>
+</div>
+<!-- Select Converter -->
+<div>
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">2. Choose Energy Changer</span>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-2 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="chg-wheel" onclick="setChanger('wheel')">
+<span>⚙️</span> Generator
                 </button>
-                <button id="chg-solar" onclick="setChanger('solar')" class="py-2 px-2 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>🎛️</span> Solar Panel
+<button class="py-2 px-2 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="chg-solar" onclick="setChanger('solar')">
+<span>🎛️</span> Solar Panel
                 </button>
-              </div>
-            </div>
-
-            <!-- Select User -->
-            <div>
-              <span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">3. Choose Output User</span>
-              <div class="grid grid-cols-2 gap-2">
-                <button id="usr-beaker" onclick="setUser('beaker')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>🧪</span> Beaker
+</div>
+</div>
+<!-- Select User -->
+<div>
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-2">3. Choose Output User</span>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="usr-beaker" onclick="setUser('beaker')">
+<span>🧪</span> Beaker
                 </button>
-                <button id="usr-bulb" onclick="setUser('bulb')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>💡</span> Incand. Bulb
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="usr-bulb" onclick="setUser('bulb')">
+<span>💡</span> Incand. Bulb
                 </button>
-                <button id="usr-cfl" onclick="setUser('cfl')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>🌀</span> CFL Bulb
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="usr-cfl" onclick="setUser('cfl')">
+<span>🌀</span> CFL Bulb
                 </button>
-                <button id="usr-fan" onclick="setUser('fan')" class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5">
-                  <span>🎐</span> Fan
+<button class="py-2 px-1 text-xs rounded-lg font-bold transition-all border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1.5" id="usr-fan" onclick="setUser('fan')">
+<span>🎐</span> Fan
                 </button>
-              </div>
-            </div>
-
-            <!-- Flow Rate Slider -->
-            <div>
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Energy Source Flow Rate (%)</span>
-                <input type="number" id="numFlow" min="0" max="100" value="50" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="rngFlow" min="0" max="100" value="50" class="w-full">
-            </div>
-
-            <!-- Cloud Cover Slider (Sunlight exclusive) -->
-            <div id="panelClouds" class="hidden">
-              <div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                <span>Cloud Cover (%)</span>
-                <input type="number" id="numClouds" min="0" max="100" value="0" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-              </div>
-              <input type="range" id="rngClouds" min="0" max="100" value="0" class="w-full">
-            </div>
-
-          </div>
-
-          <!-- Live Telemetry feed -->
-          <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2">
-            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <i data-lucide="activity" class="w-3.5 h-3.5 text-indigo-500"></i> System Telemetry
+</div>
+</div>
+<!-- Flow Rate Slider -->
+<div>
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Energy Source Flow Rate (%)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="numFlow" max="100" min="0" type="number" value="50"/>
+</div>
+<input class="w-full" id="rngFlow" max="100" min="0" type="range" value="50"/>
+</div>
+<!-- Cloud Cover Slider (Sunlight exclusive) -->
+<div class="hidden" id="panelClouds">
+<div class="flex justify-between items-center text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>Cloud Cover (%)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-slate-800 bg-white border border-slate-300 rounded shadow-sm focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="numClouds" max="100" min="0" type="number" value="0"/>
+</div>
+<input class="w-full" id="rngClouds" max="100" min="0" type="range" value="0"/>
+</div>
+</div><div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2">
+<h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+<i class="w-3.5 h-3.5 text-indigo-500" data-lucide="activity"></i> System Telemetry
             </h4>
-            <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Efficiency</div>
-                <div id="lblEfficiency" class="text-sm font-extrabold text-indigo-600 mt-0.5">98%</div>
-              </div>
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Power Output</div>
-                <div id="lblPower" class="text-sm font-extrabold text-emerald-600 mt-0.5">0 W</div>
-              </div>
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">Temperature</div>
-                <div id="lblTemp" class="text-sm font-extrabold text-rose-600 mt-0.5">25.0 °C</div>
-              </div>
-              <div class="bg-slate-50 p-2 rounded border border-slate-100">
-                <div class="text-[9px] font-bold text-slate-400 uppercase">CO₂ Saved</div>
-                <div id="lblCo2" class="text-sm font-extrabold text-teal-600 mt-0.5">0.000 g</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Simulation Screen (7 Columns) -->
-        <div class="md:col-span-7 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[500px]">
-          <canvas id="simCanvas" class="absolute inset-0 w-full h-full"></canvas>
-        </div>
-
-      </section>
-
-      <!-- RIGHT PANEL: Viva Assessment Workspace (4 Columns) -->
-      <section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[780px] overflow-y-auto viva-scrollbar">
-        
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-            <h2 class="text-sm font-bold tracking-tight mt-0.5">Conceptual Assessments</h2>
-          </div>
-          <div class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950 border border-emerald-800 px-2.5 py-1 rounded">
-            SCORE: <span id="lblScore">0</span> / 4
-          </div>
-        </div>
-
-        <div class="space-y-4">
-          
-          <!-- QUESTION 1 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                How does the Energy Forms &amp; Changes suite demonstrate the First Law of Thermodynamics?
-              </h4>
-              
-              <div class="flex flex-col gap-2 pt-2">
-                <button onclick="submitAnswer(1, 'A', true)" id="q1-optA" class="q1-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>A) </strong> Thermal energy of steam kettle converts to mechanical turbine work, electrical current, and back to thermal energy in beaker: $\sum E_{\text{in}} = \sum E_{\text{out}}$.
-                </button>
-                <button onclick="submitAnswer(1, 'B', false)" id="q1-optB" class="q1-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>B) </strong> Chemical energy is completely destroyed during cycling, producing heat out of nothing: $\Delta U < 0$.
-                </button>
-              </div>
-
-              <button onclick="toggleVerification(1)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-1">Show Scientific Verification</span>
-                <span id="btn-arrow-1" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-1" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-indigo-500">
-                The First Law states that energy cannot be created or destroyed, only transformed:
-                $$\Delta U = Q - W$$
-                In the Kettle-Generator-Beaker system, thermal energy of steam ($Q_{\text{steam}}$) transforms into mechanical work ($W_{\text{wheel}}$), which converts to electrical energy ($E_e$), and finally dissipates as thermal heat in the beaker:
-                $$\sum E_{\text{in}} = \sum E_{\text{out}}$$
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 2 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why does a photovoltaic solar cell fail to extract energy from a bicycle wheel or water faucet?
-              </h4>
-
-              <div class="flex flex-col gap-2 pt-2">
-                <button onclick="submitAnswer(2, 'A', true)" id="q2-optA" class="q2-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>A) </strong> Solar cells rely on the photoelectric effect, requiring photons with energy $h\nu \ge E_g$ to excite electrons. Kinetic masses lack photon fields.
-                </button>
-                <button onclick="submitAnswer(2, 'B', false)" id="q2-optB" class="q2-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>B) </strong> Kinetic energy streams generate high voltage waves that block silicon semiconductors.
-                </button>
-              </div>
-
-              <button onclick="toggleVerification(2)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-2">Show Scientific Verification</span>
-                <span id="btn-arrow-2" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-2" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-emerald-500">
-                Solar cells operate on the **photoelectric effect**. Photons with energy $h\nu$ greater than the semiconductor bandgap $E_g$ excite valence electrons to the conduction band:
-                $$h\nu \ge E_g$$
-                Kinetic streams (water/steam) or thermal vibrations have energies in the sub-eV range, which are far below the silicon bandgap threshold ($E_g \approx 1.11\text{ eV}$), yielding zero quantum conversion:
-                $$\text{Quantum Yield } \Phi = 0$$
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 3 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why does a Fluorescent CFL bulb operate at a much higher luminous efficacy than an Incandescent bulb?
-              </h4>
-
-              <div class="flex flex-col gap-2 pt-2">
-                <button onclick="submitAnswer(3, 'A', false)" id="q3-optA" class="q3-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>A) </strong> Incandescent bulbs emit purely mechanical light, whereas CFL tubes utilize chemical voltage.
-                </button>
-                <button onclick="submitAnswer(3, 'B', true)" id="q3-optB" class="q3-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>B) </strong> Incandescent filaments lose 90% of energy as invisible infrared heat, whereas CFL phosphors emit mostly visible wave bands.
-                </button>
-              </div>
-
-              <button onclick="toggleVerification(3)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-3">Show Scientific Verification</span>
-                <span id="btn-arrow-3" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-3" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-purple-500">
-                The luminous efficiency $\eta$ is the ratio of visible light power output to total electrical power input. Incandescent bulbs emit light via blackbody radiation at $T \approx 2800\text{ K}$, where the peak emission is in the infrared spectrum:
-                $$\lambda_{\text{peak}} T = b \implies \lambda_{\text{peak}} \approx 1000\text{ nm}$$
-                This results in $\approx 90\%$ lost as heat ($E_{th}$). CFLs excite mercury vapor to emit UV light which is converted by phosphor coatings, yielding higher visible efficacy:
-                $$\eta_{\text{CFL}} \approx 4.5 \times \eta_{\text{incandescent}}$$
-              </div>
-            </div>
-          </div>
-
-          <!-- QUESTION 4 -->
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why can we never achieve exactly 100% conversion efficiency in any of these setups?
-              </h4>
-
-              <div class="flex flex-col gap-2 pt-2">
-                <button onclick="submitAnswer(4, 'A', false)" id="q4-optA" class="q4-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>A) </strong> Fluid flow rates compress air molecule structures to create negative electrical fields.
-                </button>
-                <button onclick="submitAnswer(4, 'B', true)" id="q4-optB" class="q4-opt text-left p-2.5 rounded-lg text-xs transition border bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium">
-                  <strong>B) </strong> Mechanical friction and electrical resistance inevitably disperse energy into thermal entropy.
-                </button>
-              </div>
-
-              <button onclick="toggleVerification(4)" class="w-full text-left text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-all flex items-center justify-between pt-1 border-t border-slate-100">
-                <span id="btn-text-4">Show Scientific Verification</span>
-                <span id="btn-arrow-4" class="transform transition-transform">▼</span>
-              </button>
-            </div>
-            <div id="viva-panel-4" class="hidden mt-2.5 pt-2.5 border-t border-slate-100 text-[11px] text-slate-600 space-y-2">
-              <div class="bg-slate-50 p-2 rounded font-mono text-[10px] text-slate-700 border-l-2 border-orange-500">
-                Mechanical friction and electrical resistance inevitably degrade some energy into thermal heat (entropy increase), as dictated by the Second Law of Thermodynamics:
-                $$\Delta S_{\text{universe}} > 0$$
-                This means absolute 100% mechanical-to-electrical conversion is physically impossible.
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Legend Footer -->
-    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-semibold gap-3">
-      <div class="flex flex-wrap items-center gap-3">
-        <span class="text-slate-500">Energy Tokens:</span>
-        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-emerald-650 inline-block text-center text-white text-[9px] font-extrabold leading-3">C</span> Chemical</span>
-        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-indigo-600 inline-block text-center text-white text-[9px] font-extrabold leading-3">M</span> Mechanical</span>
-        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-blue-600 inline-block text-center text-white text-[9px] font-extrabold leading-3">E</span> Electrical</span>
-        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-amber-500 inline-block text-center text-white text-[9px] font-extrabold leading-3">L</span> Light</span>
-        <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-rose-650 inline-block text-center text-white text-[9px] font-extrabold leading-3">T</span> Thermal</span>
-      </div>
-      <span>* Real-time Kinetic &amp; Spectral thermodynamics simulation framework.</span>
-    </footer>
-
-  </div>
-
-  <!-- Interactive Canvas Simulation Logic -->
-  <script>
+<div class="grid grid-cols-2 gap-2 text-xs font-mono">
+<div class="bg-slate-50 p-2 rounded border border-slate-100">
+<div class="text-[9px] font-bold text-slate-400 uppercase">Efficiency</div>
+<div class="text-sm font-extrabold text-indigo-600 mt-0.5" id="lblEfficiency">98%</div>
+</div>
+<div class="bg-slate-50 p-2 rounded border border-slate-100">
+<div class="text-[9px] font-bold text-slate-400 uppercase">Power Output</div>
+<div class="text-sm font-extrabold text-emerald-600 mt-0.5" id="lblPower">0 W</div>
+</div>
+<div class="bg-slate-50 p-2 rounded border border-slate-100">
+<div class="text-[9px] font-bold text-slate-400 uppercase">Temperature</div>
+<div class="text-sm font-extrabold text-rose-600 mt-0.5" id="lblTemp">25.0 °C</div>
+</div>
+<div class="bg-slate-50 p-2 rounded border border-slate-100">
+<div class="text-[9px] font-bold text-slate-400 uppercase">CO₂ Saved</div>
+<div class="text-sm font-extrabold text-teal-600 mt-0.5" id="lblCo2">0.000 g</div>
+</div>
+</div>
+</div></div></div>
+<!-- Simulation Screen (7 Columns) -->
+<div class="md:col-span-7 relative bg-slate-950 overflow-hidden flex items-center justify-center min-h-[500px]">
+<canvas class="absolute inset-0 w-full h-full" id="simCanvas"></canvas>
+</div>
+</section>
+<!-- RIGHT PANEL: Viva Assessment Workspace (4 Columns) -->
+<section class="lg:col-span-4 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[780px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+<div class="space-y-2">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+                        How does the Energy Forms &amp; Changes suite demonstrate the First Law of Thermodynamics?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="space-y-2">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+                        Why does a photovoltaic solar cell fail to extract energy from a bicycle wheel or water faucet?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+                        Why does a Fluorescent CFL bulb operate at a much higher luminous efficacy than an Incandescent bulb?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+</div>
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+<div class="space-y-2">
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
+                        Why can we never achieve exactly 100% conversion efficiency in any of these setups?
+                      </h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
+</div>
+</div></section>
+</main>
+<!-- Legend Footer -->
+<footer class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-semibold gap-3">
+<div class="flex flex-wrap items-center gap-3">
+<span class="text-slate-500">Energy Tokens:</span>
+<span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-emerald-650 inline-block text-center text-white text-[9px] font-extrabold leading-3">C</span> Chemical</span>
+<span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-indigo-600 inline-block text-center text-white text-[9px] font-extrabold leading-3">M</span> Mechanical</span>
+<span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-blue-600 inline-block text-center text-white text-[9px] font-extrabold leading-3">E</span> Electrical</span>
+<span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-amber-500 inline-block text-center text-white text-[9px] font-extrabold leading-3">L</span> Light</span>
+<span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-rose-650 inline-block text-center text-white text-[9px] font-extrabold leading-3">T</span> Thermal</span>
+</div>
+<span>* Real-time Kinetic &amp; Spectral thermodynamics simulation framework.</span>
+</footer>
+</div>
+<!-- Interactive Canvas Simulation Logic -->
+<script>
     // Initialize Lucide Icons
     lucide.createIcons();
 
@@ -625,21 +500,7 @@
       }
     }
 
-    function toggleVerification(id) {
-      const panel = document.getElementById(`viva-panel-${id}`);
-      const arrow = document.getElementById(`btn-arrow-${id}`);
-      const btnText = document.getElementById(`btn-text-${id}`);
-      
-      if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-        arrow.style.transform = 'rotate(180deg)';
-        btnText.innerText = 'Hide Scientific Verification';
-      } else {
-        panel.classList.add('hidden');
-        arrow.style.transform = 'rotate(0deg)';
-        btnText.innerText = 'Show Scientific Verification';
-      }
-    }
+    
 
     // Particles Spawning and Dynamics
     const ENERGY_BADGES = {
@@ -1245,6 +1106,176 @@
     // Start simulation loop
     setSource('bicycle');
     requestAnimationFrame(updateSimulation);
-  </script>
+  
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = {
+        vivaScore: 0,
+        answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+        q1: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "The First Law states that energy cannot be created or destroyed, only transformed: $$\Delta U = Q - W$$...", isCorrect: true, exp: "Correct! The First Law states that energy cannot be created or destroyed, only transformed: $$\Delta U = Q - W$$ In the Kettle-Generator-Beaker system, thermal energy of steam ($Q_{\text{steam}}$) transforms into mechanical work ($W_{\text{wheel}}$), which converts to electrical energy ($E_e$), and finally dissipates as thermal heat in the beaker: $$\sum E_{\text{in}} = \sum E_{\text{out}}$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q2: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "Solar cells operate on the **photoelectric effect**.", isCorrect: true, exp: "Correct! Solar cells operate on the **photoelectric effect**. Photons with energy $h\nu$ greater than the semiconductor bandgap $E_g$ excite valence electrons to the conduction band: $$h\nu \ge E_g$$ Kinetic streams (water/steam) or thermal vibrations have energies in the sub-eV range, which are far below the silicon bandgap threshold ($E_g \approx 1.11\text{ eV}$), yielding zero quantum conversion: $$\text{Quantum Yield } \Phi = 0$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q3: {
+            options: [
+                { text: "The luminous efficiency $\eta$ is not the ratio of visible light power output to total electrical power input.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "The luminous efficiency $\eta$ is the ratio of visible light power output to total electrical power input.", isCorrect: true, exp: "Correct! The luminous efficiency $\eta$ is the ratio of visible light power output to total electrical power input. Incandescent bulbs emit light via blackbody radiation at $T \approx 2800\text{ K}$, where the peak emission is in the infrared spectrum: $$\lambda_{\text{peak}} T = b \implies \lambda_{\text{peak}} \approx 1000\text{ nm}$$ This results in $\approx 90\%$ lost as heat ($E_{th}$). CFLs excite mercury vapor to emit UV light which is converted by phosphor coatings, yielding higher visible efficacy: $$\eta_{\text{CFL}} \approx 4.5 \times \eta_{\text{incandescent}}$$" },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+        q4: {
+            options: [
+                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "Mechanical friction and electrical resistance inevitably degrade some energy into thermal heat (entropy...", isCorrect: true, exp: "Correct! Mechanical friction and electrical resistance inevitably degrade some energy into thermal heat (entropy increase), as dictated by the Second Law of Thermodynamics: $$\Delta S_{\text{universe}} &gt; 0$$ This means absolute 100% mechanical-to-electrical conversion is physically impossible." },
+                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
+                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+            ]
+        },
+    };
+
+    const colorsMap = {
+        q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+        q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' },
+        q5: { hoverBg: 'hover:bg-rose-50', hoverBorder: 'hover:border-rose-400', labelText: 'text-rose-600' }
+    };
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    function renderQuestions() {
+        const scoreLabel = document.getElementById('viva-score');
+
+        Object.keys(vivaData).forEach(qKey => {
+            const data = vivaData[qKey];
+            const optionsContainer = document.getElementById(`${qKey}-options`);
+            const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+            if (!optionsContainer || !feedbackContainer) return;
+            optionsContainer.innerHTML = '';
+
+            data.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+
+                let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+
+                btn.addEventListener('click', () => {
+                    if (appState.answers[qKey] !== null) return;
+
+                    appState.answers[qKey] = idx;
+                    if (opt.isCorrect) {
+                        appState.vivaScore++;
+                        triggerConfetti();
+                    }
+                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                    const buttons = optionsContainer.querySelectorAll('button');
+                    buttons.forEach((b, i) => {
+                        b.disabled = true;
+                        b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+                        b.classList.add('cursor-not-allowed', 'shadow-none');
+
+                        if (appState.answers[qKey] === i) {
+                            if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                            else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                        } else if (data.options[i].isCorrect) {
+                            b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                        } else {
+                            b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                        }
+                    });
+
+                    feedbackContainer.innerHTML = opt.exp;
+                    feedbackContainer.classList.remove('hidden');
+                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                });
+                optionsContainer.appendChild(btn);
+            });
+        });
+
+        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+    }
+
+    // Category Filter Handler
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    try { renderQuestions(); } catch(e) { console.error(e); }
+</script>
 </body>
 </html>

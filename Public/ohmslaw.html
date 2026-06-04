@@ -1,20 +1,18 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ohm's Law &amp; Electronic Transport Virtual Laboratory</title>
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- MathJax for rendering gorgeous physical LaTeX equations -->
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ohm's Law &amp; Electronic Transport Virtual Laboratory</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- MathJax for rendering gorgeous physical LaTeX equations -->
+<script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -26,17 +24,13 @@
       }
     };
   </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Chart.js for real-time physics graphing -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <style>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
+</script>
+<!-- FontAwesome Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Chart.js for real-time physics graphing -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
@@ -87,379 +81,317 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-
-  <!-- Main Premium Dashboard Container -->
-  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-    
-    <!-- Top Header & Brand -->
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
-      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'">
-        </div>
-        <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Ohm’s Law &amp; Circuit Principles</h1>
-          <p class="text-[11px] text-slate-400 font-medium">Precision Solid State Transport &amp; Electrodynamics Simulator</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-3">
-        <div class="hidden sm:flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Circuit Loop Active</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- Simulation Toolbar Controls -->
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-      
-      <!-- Primary Tab Navigation -->
-      <div class="flex items-center space-x-2">
-        <button id="tab-simulator" onclick="switchTab('simulator')" class="px-5 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-sm transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-flask-vial"></i> Simulator Workbench
+<!-- Main Premium Dashboard Container -->
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+<!-- Top Header & Brand -->
+<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+<div class="flex items-center space-x-4 mb-3 sm:mb-0">
+<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
+<div>
+<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Ohm’s Law &amp; Circuit Principles</h1>
+<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Precision Solid State Transport &amp; Electrodynamics Simulator</p>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+<span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Circuit Loop Active</span>
+</div>
+</div>
+</header>
+<!-- Simulation Toolbar Controls -->
+<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+<!-- Primary Tab Navigation -->
+<div class="flex items-center space-x-2">
+<button class="px-5 py-1.5 bg-indigo-600 text-white font-bold text-xs rounded shadow-sm transition-all flex items-center gap-1.5" id="tab-simulator" onclick="switchTab('simulator')">
+<i class="fa-solid fa-flask-vial"></i> Simulator Workbench
         </button>
-        <button id="tab-theory" onclick="switchTab('theory')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-book-open"></i> Theory &amp; Formulas
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5" id="tab-theory" onclick="switchTab('theory')">
+<i class="fa-solid fa-book-open"></i> Theory &amp; Formulas
         </button>
-        <button id="tab-procedure" onclick="switchTab('procedure')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-list-ol"></i> Procedure
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5" id="tab-procedure" onclick="switchTab('procedure')">
+<i class="fa-solid fa-list-ol"></i> Procedure
         </button>
-        <button id="tab-observation" onclick="switchTab('observation')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-table-list"></i> Observation Log
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5" id="tab-observation" onclick="switchTab('observation')">
+<i class="fa-solid fa-table-list"></i> Observation Log
         </button>
-        <button id="tab-graphs" onclick="switchTab('graphs')" class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-chart-line"></i> Graph Analyzer
+<button class="px-5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-700 font-bold text-xs rounded transition-all flex items-center gap-1.5" id="tab-graphs" onclick="switchTab('graphs')">
+<i class="fa-solid fa-chart-line"></i> Graph Analyzer
         </button>
-      </div>
-
-      <!-- Action Toggles -->
-      <div class="flex items-center space-x-2" id="toolbar-actions">
-        <button onclick="recordReading()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded shadow-sm transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-plus"></i> Record Data Point
+</div>
+<!-- Action Toggles -->
+<div class="flex items-center space-x-2" id="toolbar-actions">
+<button class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded shadow-sm transition-all flex items-center gap-1.5" onclick="recordReading()">
+<i class="fa-solid fa-plus"></i> Record Data Point
         </button>
-        <button onclick="resetLab()" class="px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs rounded transition-all">
+<button class="px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs rounded transition-all" onclick="resetLab()">
           Reset Workspace
         </button>
-      </div>
-
-    </div>
-
-    <!-- Master Layout Split: Left (Workbench), Right (Viva and Telemetry Sidebar) -->
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-      
-      <!-- LEFT + CENTER WORKSPACE: Simulation panels (9 Columns) -->
-      <section class="lg:col-span-9 flex flex-col divide-y divide-slate-200" id="workbench-container">
-        
-        <!-- SECTION 1: SIMULATOR WORKBENCH (Active by default) -->
-        <div id="panel-simulator" class="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 flex-1">
-          
-          <!-- Interactive Controls Sidebar (4 Columns of 9) -->
-          <div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6">
-            <div class="space-y-6">
-              
-              <!-- 1. Wire Material Select -->
-              <div>
-                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">1. Specimen Wire Material</label>
-                <select id="wireMaterial" onchange="onMaterialChange()" class="w-full px-3 py-2 bg-white border border-slate-350 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-xs">
-                  <option value="silver">Silver (&rho; = 1.59 × 10⁻⁸ &Omega;·m)</option>
-                  <option value="copper" selected>Copper (&rho; = 1.68 × 10⁻⁸ &Omega;·m)</option>
-                  <option value="aluminum">Aluminum (&rho; = 2.82 × 10⁻⁸ &Omega;·m)</option>
-                  <option value="iron">Iron (&rho; = 9.71 × 10⁻⁸ &Omega;·m)</option>
-                  <option value="tungsten">Tungsten (&rho; = 5.60 × 10⁻⁸ &Omega;·m)</option>
-                  <option value="constantan">Constantan (&rho; = 4.90 × 10⁻⁷ &Omega;·m)</option>
-                  <option value="nichrome">Nichrome (&rho; = 1.10 × 10⁻⁶ &Omega;·m)</option>
-                </select>
-              </div>
-
-              <!-- 2. Wire Length (L) Slider & Input -->
-              <div>
-                <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>2. Wire Length (L)</span>
-                  <input type="number" id="num-length" step="0.5" min="10" max="100" value="50" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-indigo-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="slider-length" min="10" max="100" step="0.5" value="50" class="w-full">
-                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>10 cm</span>
-                  <span>100 cm</span>
-                </div>
-              </div>
-
-              <!-- 3. Wire Diameter (d) Slider & Input -->
-              <div>
-                <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>3. Wire Diameter (d)</span>
-                  <input type="number" id="num-diameter" step="0.05" min="0.1" max="2.0" value="0.5" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-indigo-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="slider-diameter" min="0.1" max="2.0" step="0.05" value="0.5" class="w-full">
-                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>0.1 mm</span>
-                  <span>2.0 mm</span>
-                </div>
-              </div>
-
-              <!-- 4. Voltage (Vs) Slider & Input -->
-              <div>
-                <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>4. Battery Voltage (Vs)</span>
-                  <input type="number" id="num-voltage" step="0.2" min="0" max="20" value="6" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-emerald-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="slider-voltage" min="0" max="20" step="0.2" value="6" class="w-full">
-                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>0 V (Off)</span>
-                  <span>20 V</span>
-                </div>
-              </div>
-
-              <!-- 5. Rheostat Resistance (Rh) Slider & Input -->
-              <div>
-                <div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  <span>5. Rheostat resistance (Rh)</span>
-                  <input type="number" id="num-rheostat" step="1" min="0" max="100" value="10" class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-amber-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]">
-                </div>
-                <input type="range" id="slider-rheostat" min="0" max="100" step="1" value="10" class="w-full">
-                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                  <span>0 &Omega;</span>
-                  <span>100 &Omega;</span>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Circuit switch toggler -->
-            <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-700">Circuit Key (Switch)</span>
-              <button id="switchBtn" onclick="toggleCircuit()" class="px-4 py-2 rounded-xl text-[10px] font-black tracking-wider uppercase transition-all flex items-center gap-1.5 bg-emerald-500 text-slate-900 hover:bg-emerald-600">
-                <i class="fa-solid fa-circle-play"></i> <span id="switchTxt">Circuit ON</span>
-              </button>
-            </div>
-
-          </div>
-
-          <!-- Interactive Circuit Canvas Area (8 Columns of 9) -->
-          <div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex flex-col justify-between min-h-[480px]">
-            <canvas id="circuitCanvas" class="w-full h-full block"></canvas>
-          </div>
-
-        </div>
-
-        <!-- SECTION 2: THEORY & FORMULAS (Hidden by default) -->
-        <div id="panel-theory" class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar">
-          <div class="max-w-4xl mx-auto space-y-6">
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm prose prose-slate">
-              <h2 class="text-xl font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
-                <i class="fa-solid fa-book text-indigo-600"></i> Ohm's Law &amp; Electrical Resistance Theory
+</div>
+</div>
+<!-- Master Layout Split: Left (Workbench), Right (Viva and Telemetry Sidebar) -->
+<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+<!-- LEFT + CENTER WORKSPACE: Simulation panels (9 Columns) -->
+<section class="lg:col-span-9 flex flex-col divide-y divide-slate-200" id="workbench-container">
+<!-- SECTION 1: SIMULATOR WORKBENCH (Active by default) -->
+<div class="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 flex-1" id="panel-simulator">
+<!-- Interactive Controls Sidebar (4 Columns of 9) -->
+<div class="md:col-span-4 bg-slate-50 p-6 flex flex-col justify-between space-y-6"><div class="space-y-5"><div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+<span class="text-xs font-bold text-slate-700">Circuit Key (Switch)</span>
+<button class="px-4 py-2 rounded-xl text-[10px] font-black tracking-wider uppercase transition-all flex items-center gap-1.5 bg-emerald-500 text-slate-900 hover:bg-emerald-600" id="switchBtn" onclick="toggleCircuit()">
+<i class="fa-solid fa-circle-play"></i> <span id="switchTxt">Circuit ON</span>
+</button>
+</div><div class="space-y-6">
+<!-- 1. Wire Material Select -->
+<div>
+<label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">1. Specimen Wire Material</label>
+<select class="w-full px-3 py-2 bg-white border border-slate-350 rounded-xl text-xs font-semibold text-slate-800 outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer shadow-xs" id="wireMaterial" onchange="onMaterialChange()">
+<option value="silver">Silver (ρ = 1.59 × 10⁻⁸ Ω·m)</option>
+<option selected="" value="copper">Copper (ρ = 1.68 × 10⁻⁸ Ω·m)</option>
+<option value="aluminum">Aluminum (ρ = 2.82 × 10⁻⁸ Ω·m)</option>
+<option value="iron">Iron (ρ = 9.71 × 10⁻⁸ Ω·m)</option>
+<option value="tungsten">Tungsten (ρ = 5.60 × 10⁻⁸ Ω·m)</option>
+<option value="constantan">Constantan (ρ = 4.90 × 10⁻⁷ Ω·m)</option>
+<option value="nichrome">Nichrome (ρ = 1.10 × 10⁻⁶ Ω·m)</option>
+</select>
+</div>
+<!-- 2. Wire Length (L) Slider & Input -->
+<div>
+<div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>2. Wire Length (L)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-indigo-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-length" max="100" min="10" step="0.5" type="number" value="50"/>
+</div>
+<input class="w-full" id="slider-length" max="100" min="10" step="0.5" type="range" value="50"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>10 cm</span>
+<span>100 cm</span>
+</div>
+</div>
+<!-- 3. Wire Diameter (d) Slider & Input -->
+<div>
+<div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>3. Wire Diameter (d)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-indigo-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-diameter" max="2.0" min="0.1" step="0.05" type="number" value="0.5"/>
+</div>
+<input class="w-full" id="slider-diameter" max="2.0" min="0.1" step="0.05" type="range" value="0.5"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>0.1 mm</span>
+<span>2.0 mm</span>
+</div>
+</div>
+<!-- 4. Voltage (Vs) Slider & Input -->
+<div>
+<div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>4. Battery Voltage (Vs)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-emerald-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-voltage" max="20" min="0" step="0.2" type="number" value="6"/>
+</div>
+<input class="w-full" id="slider-voltage" max="20" min="0" step="0.2" type="range" value="6"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>0 V (Off)</span>
+<span>20 V</span>
+</div>
+</div>
+<!-- 5. Rheostat Resistance (Rh) Slider & Input -->
+<div>
+<div class="flex justify-between items-center text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2">
+<span>5. Rheostat resistance (Rh)</span>
+<input class="w-16 px-1.5 py-0.5 text-center font-mono font-bold text-amber-600 bg-white border border-slate-350 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none text-[11px]" id="num-rheostat" max="100" min="0" step="1" type="number" value="10"/>
+</div>
+<input class="w-full" id="slider-rheostat" max="100" min="0" step="1" type="range" value="10"/>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>0 Ω</span>
+<span>100 Ω</span>
+</div>
+</div>
+</div></div></div>
+<!-- Interactive Circuit Canvas Area (8 Columns of 9) -->
+<div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex flex-col justify-between min-h-[480px]">
+<canvas class="w-full h-full block" id="circuitCanvas"></canvas>
+</div>
+</div>
+<!-- SECTION 2: THEORY & FORMULAS (Hidden by default) -->
+<div class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar" id="panel-theory">
+<div class="max-w-4xl mx-auto space-y-6">
+<div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm prose prose-slate">
+<h2 class="text-xl font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
+<i class="fa-solid fa-book text-indigo-600"></i> Ohm's Law &amp; Electrical Resistance Theory
               </h2>
-              
-              <div class="text-xs text-slate-600 space-y-4 leading-relaxed font-medium">
-                <p>
+<div class="text-xs text-slate-600 space-y-4 leading-relaxed font-medium">
+<p>
                   Ohm’s law states that at a constant physical temperature, the electric current ($I$) flowing through a metallic conductor is directly proportional to the potential difference ($V$) applied across its ends.
                 </p>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-650 font-mono text-xs">
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-650 font-mono text-xs">
                   $$V \propto I \implies V = I \cdot R$$
                 </div>
-
-                <h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">1. Microscopic Origin of Resistance</h3>
-                <p>
+<h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">1. Microscopic Origin of Resistance</h3>
+<p>
                   Resistance arises due to the collision of drifting electrons with the vibrating positive metallic ions inside the crystal lattice. According to Drude-Lorentz model:
                 </p>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-650 font-mono text-xs">
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-650 font-mono text-xs">
                   $$R = \left(\frac{m}{n e^2 \tau}\right) \frac{L}{A} \implies R = \rho \frac{L}{A}$$
                 </div>
-                <p class="font-bold text-slate-700">Where fundamental parameters are defined as:</p>
-                <ul class="list-disc list-inside space-y-1 ml-4 font-mono">
-                  <li>$m = 9.11 \times 10^{-31}\text{ kg}$ (Electron mass)</li>
-                  <li>$n$ is the free electron density of the metal</li>
-                  <li>$e = 1.6 \times 10^{-19}\text{ C}$ (Electron charge)</li>
-                  <li>$\tau$ is the average relaxation time between collisions</li>
-                  <li>$\rho$ is the specific resistivity of the wire material</li>
-                </ul>
-
-                <h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">2. Geometrical Dependencies</h3>
-                <p>
+<p class="font-bold text-slate-700">Where fundamental parameters are defined as:</p>
+<ul class="list-disc list-inside space-y-1 ml-4 font-mono">
+<li>$m = 9.11 \times 10^{-31}\text{ kg}$ (Electron mass)</li>
+<li>$n$ is the free electron density of the metal</li>
+<li>$e = 1.6 \times 10^{-19}\text{ C}$ (Electron charge)</li>
+<li>$\tau$ is the average relaxation time between collisions</li>
+<li>$\rho$ is the specific resistivity of the wire material</li>
+</ul>
+<h3 class="text-sm font-bold text-slate-800 mt-6 mb-2">2. Geometrical Dependencies</h3>
+<p>
                   Resistance scales directly with the length ($L$) of the wire and inversely with the cross-sectional area ($A = \pi \cdot (d/2)^2$):
                 </p>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-650 font-mono text-xs">
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 my-4 text-center font-bold text-indigo-650 font-mono text-xs">
                   $$R = \rho \frac{L}{\pi \left(\frac{d}{2}\right)^2} = \frac{4 \rho L}{\pi d^2}$$
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 3: PROCEDURE (Hidden by default) -->
-        <div id="panel-procedure" class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar">
-          <div class="max-w-4xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-clipboard-list text-indigo-600"></i> Laboratory Experimental Procedure
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 3: PROCEDURE (Hidden by default) -->
+<div class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar" id="panel-procedure">
+<div class="max-w-4xl mx-auto space-y-6">
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+<h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+<i class="fa-solid fa-clipboard-list text-indigo-600"></i> Laboratory Experimental Procedure
               </h2>
-              <p class="text-xs text-slate-500 mb-6">
+<p class="text-xs text-slate-500 mb-6">
                 Follow these precise board practical steps to verify relationships between current, voltage, and geometry:
               </p>
-              
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-650 leading-relaxed font-medium">
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                  <div class="h-6 w-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
-                  <h3 class="font-bold text-slate-800">Verify V vs I</h3>
-                  <p>Keep length, material (Copper), and diameter constant. Toggle the Key ON. Vary battery voltage from 0V to 20V. Click <strong>"Record Data Point"</strong> to register the readings into the observation log.</p>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                  <div class="h-6 w-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
-                  <h3 class="font-bold text-slate-800">Analyze R vs Length</h3>
-                  <p>Fix voltage (e.g. 6.0 V), material, and diameter. Slide length from 10cm to 100cm. Notice how resistance climbs linearly while current drops, indicating direct proportionality ($R \propto L$).</p>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                  <div class="h-6 w-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
-                  <h3 class="font-bold text-slate-800">Verify R vs Area</h3>
-                  <p>Fix length and voltage. Vary wire diameter from 0.1mm to 2.0mm. Record readings to establish that resistance is inversely proportional to diameter squared ($R \propto 1/d^2$).</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 4: OBSERVATION LOG (Hidden by default) -->
-        <div id="panel-observation" class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar">
-          <div class="max-w-5xl mx-auto space-y-6">
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-slate-100 pb-4">
-                <div>
-                  <h2 class="text-base font-bold text-slate-800">Virtual Laboratory Logbook</h2>
-                  <p class="text-[11px] text-slate-500">Experimental recordings registered dynamically from the laboratory workbench.</p>
-                </div>
-                <div class="flex gap-2">
-                  <button onclick="clearObservations()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">Clear Log</button>
-                  <button onclick="loadSampleObservations()" class="px-3 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold transition">Load Ideal Sample Data</button>
-                  <button onclick="exportCSV()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow-sm">Export CSV</button>
-                </div>
-              </div>
-
-              <div class="overflow-x-auto rounded-xl border border-slate-200">
-                <table class="w-full text-left text-xs text-slate-650 border-collapse">
-                  <thead class="bg-slate-50 text-slate-700 uppercase tracking-wider text-[9px] border-b border-slate-200 font-bold font-mono">
-                    <tr>
-                      <th class="p-3">S.No.</th>
-                      <th class="p-3">Material</th>
-                      <th class="p-3">Length (cm)</th>
-                      <th class="p-3">Diameter (mm)</th>
-                      <th class="p-3">Area (mm²)</th>
-                      <th class="p-3">Source (Vs)</th>
-                      <th class="p-3">Voltage (V_wire)</th>
-                      <th class="p-3">Current (I)</th>
-                      <th class="p-3 text-indigo-600 font-bold">Obs. Resistance (&Omega;)</th>
-                    </tr>
-                  </thead>
-                  <tbody id="observationTableBody">
-                    <tr id="emptyRow">
-                      <td colspan="9" class="p-8 text-center text-slate-400 italic">No readings recorded yet. Go to "Simulator Workbench" and click "Record Data Point" to collect experimental values.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SECTION 5: GRAPH ANALYZER (Hidden by default) -->
-        <div id="panel-graphs" class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar">
-          <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- Sidebar Plot Selector -->
-            <div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-5 space-y-3 h-fit shadow-xs">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Plot Mode</span>
-              <div class="flex flex-col space-y-1.5">
-                <button onclick="setGraphType('VI')" id="btn-graph-VI" class="w-full text-left px-3.5 py-2 text-xs font-bold rounded bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-between transition-all">
-                  <span>V vs I (Ohm's Law)</span>
-                  <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </button>
-                <button onclick="setGraphType('RL')" id="btn-graph-RL" class="w-full text-left px-3.5 py-2 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center justify-between transition-all">
-                  <span>R vs Length</span>
-                  <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </button>
-                <button onclick="setGraphType('RD')" id="btn-graph-RD" class="w-full text-left px-3.5 py-2 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center justify-between transition-all">
-                  <span>R vs Diameter</span>
-                  <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                </button>
-              </div>
-              <div class="p-3.5 bg-slate-50 border border-slate-200 rounded text-[10px] text-slate-500 leading-relaxed font-semibold">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-650 leading-relaxed font-medium">
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+<div class="h-6 w-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+<h3 class="font-bold text-slate-800">Verify V vs I</h3>
+<p>Keep length, material (Copper), and diameter constant. Toggle the Key ON. Vary battery voltage from 0V to 20V. Click <strong>"Record Data Point"</strong> to register the readings into the observation log.</p>
+</div>
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+<div class="h-6 w-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+<h3 class="font-bold text-slate-800">Analyze R vs Length</h3>
+<p>Fix voltage (e.g. 6.0 V), material, and diameter. Slide length from 10cm to 100cm. Notice how resistance climbs linearly while current drops, indicating direct proportionality ($R \propto L$).</p>
+</div>
+<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+<div class="h-6 w-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+<h3 class="font-bold text-slate-800">Verify R vs Area</h3>
+<p>Fix length and voltage. Vary wire diameter from 0.1mm to 2.0mm. Record readings to establish that resistance is inversely proportional to diameter squared ($R \propto 1/d^2$).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 4: OBSERVATION LOG (Hidden by default) -->
+<div class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar" id="panel-observation">
+<div class="max-w-5xl mx-auto space-y-6">
+<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+<div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-slate-100 pb-4">
+<div>
+<h2 class="text-base font-bold text-slate-800">Virtual Laboratory Logbook</h2>
+<p class="text-[11px] text-slate-500">Experimental recordings registered dynamically from the laboratory workbench.</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition" onclick="clearObservations()">Clear Log</button>
+<button class="px-3 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold transition" onclick="loadSampleObservations()">Load Ideal Sample Data</button>
+<button class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition shadow-sm" onclick="exportCSV()">Export CSV</button>
+</div>
+</div>
+<div class="overflow-x-auto rounded-xl border border-slate-200">
+<table class="w-full text-left text-xs text-slate-650 border-collapse">
+<thead class="bg-slate-50 text-slate-700 uppercase tracking-wider text-[9px] border-b border-slate-200 font-bold font-mono">
+<tr>
+<th class="p-3">S.No.</th>
+<th class="p-3">Material</th>
+<th class="p-3">Length (cm)</th>
+<th class="p-3">Diameter (mm)</th>
+<th class="p-3">Area (mm²)</th>
+<th class="p-3">Source (Vs)</th>
+<th class="p-3">Voltage (V_wire)</th>
+<th class="p-3">Current (I)</th>
+<th class="p-3 text-indigo-600 font-bold">Obs. Resistance (Ω)</th>
+</tr>
+</thead>
+<tbody id="observationTableBody">
+<tr id="emptyRow">
+<td class="p-8 text-center text-slate-400 italic" colspan="9">No readings recorded yet. Go to "Simulator Workbench" and click "Record Data Point" to collect experimental values.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 5: GRAPH ANALYZER (Hidden by default) -->
+<div class="hidden p-8 bg-slate-50 flex-1 overflow-y-auto max-h-[720px] viva-scrollbar" id="panel-graphs">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+<!-- Sidebar Plot Selector -->
+<div class="lg:col-span-1 bg-white rounded-2xl border border-slate-200 p-5 space-y-3 h-fit shadow-xs">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Plot Mode</span>
+<div class="flex flex-col space-y-1.5">
+<button class="w-full text-left px-3.5 py-2 text-xs font-bold rounded bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-between transition-all" id="btn-graph-VI" onclick="setGraphType('VI')">
+<span>V vs I (Ohm's Law)</span>
+<i class="fa-solid fa-chevron-right text-[10px]"></i>
+</button>
+<button class="w-full text-left px-3.5 py-2 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center justify-between transition-all" id="btn-graph-RL" onclick="setGraphType('RL')">
+<span>R vs Length</span>
+<i class="fa-solid fa-chevron-right text-[10px]"></i>
+</button>
+<button class="w-full text-left px-3.5 py-2 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center justify-between transition-all" id="btn-graph-RD" onclick="setGraphType('RD')">
+<span>R vs Diameter</span>
+<i class="fa-solid fa-chevron-right text-[10px]"></i>
+</button>
+</div>
+<div class="p-3.5 bg-slate-50 border border-slate-200 rounded text-[10px] text-slate-500 leading-relaxed font-semibold">
                 Plotting requires recorded data in the observation logbook. If charts appear blank, load the ideal sample dataset first!
               </div>
-            </div>
-
-            <!-- Main Canvas Chart -->
-            <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
-              <h2 id="chartTitle" class="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-wide">
-                <i class="fa-solid fa-chart-line text-indigo-600"></i> Ohm's Law Verification Graph (V vs I)
+</div>
+<!-- Main Canvas Chart -->
+<div class="lg:col-span-3 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+<h2 class="text-xs font-bold text-slate-800 mb-4 flex items-center gap-2 uppercase tracking-wide" id="chartTitle">
+<i class="fa-solid fa-chart-line text-indigo-600"></i> Ohm's Law Verification Graph (V vs I)
               </h2>
-              <div class="relative bg-slate-50 rounded-xl border border-slate-200 p-4 aspect-[16/10] flex items-center justify-center">
-                <canvas id="physicsChart" class="w-full h-full block"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- RIGHT PANEL: Live Telemetry & Viva Questions (3 Columns) -->
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar" id="sidebar-viva">
-        
-        <!-- Live Instrument Dashboard -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm space-y-3">
-          <div class="border-b border-slate-700 pb-1.5 flex items-center justify-between">
-            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Multimeter Multi-Gauge</span>
-            <span class="text-[8px] text-emerald-400 font-bold uppercase tracking-wider animate-pulse font-mono">active feed</span>
-          </div>
-          <div class="space-y-2 text-xs">
-            <div class="flex justify-between font-mono">
-              <span class="text-slate-400 font-semibold">Wire Voltage (V):</span>
-              <span class="font-bold text-rose-500 font-mono" id="tel-v-wire">-- V</span>
-            </div>
-            <div class="flex justify-between font-mono">
-              <span class="text-slate-400 font-semibold">Ammeter current (I):</span>
-              <span class="font-bold text-emerald-400 font-mono" id="tel-current">-- A</span>
-            </div>
-            <div class="flex justify-between font-mono">
-              <span class="text-slate-400 font-semibold">Wire Resistance (R):</span>
-              <span class="font-bold text-amber-400 font-mono" id="tel-resistance">-- &Omega;</span>
-            </div>
-            <div class="flex justify-between font-mono">
-              <span class="text-slate-400 font-semibold">Power Density (P):</span>
-              <span class="font-bold text-white font-mono" id="tel-power">-- W</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Viva Score Banner -->
-        <div class="bg-indigo-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span class="text-[9px] font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
-            <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Challenges</h2>
-          </div>
-          <div class="bg-indigo-850 px-2.5 py-1 rounded text-xs font-bold font-mono text-pink-400" id="viva-score-tag">
+<div class="relative bg-slate-50 rounded-xl border border-slate-200 p-4 aspect-[16/10] flex items-center justify-center">
+<canvas class="w-full h-full block" id="physicsChart"></canvas>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT PANEL: Live Telemetry & Viva Questions (3 Columns) -->
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar" id="sidebar-viva"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 0</span>
+</div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div><div class="bg-indigo-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
+<div>
+<span class="text-[9px] font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
+<h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Challenges</h2>
+</div>
+<div class="bg-indigo-850 px-2.5 py-1 rounded text-xs font-bold font-mono text-pink-400" id="viva-score-tag">
             SCORE: 0 / 4
           </div>
-        </div>
-
-        <!-- viva cards list -->
-        <div class="space-y-3" id="viva-cards-container">
-          <!-- Populated dynamically in script -->
-        </div>
-
-      </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-200 bg-slate-50 px-6 py-4 mt-auto text-xs text-slate-500">
-      <div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-        <p>© 2026 Sparkl Electrodynamics Virtual Laboratories. All rights reserved.</p>
-        <p class="font-medium text-slate-450">Apparatus ID: SP-OHMS-7290</p>
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- Simulation Application Logic Script -->
-  <script>
+</div></section>
+</main>
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-slate-50 px-6 py-4 mt-auto text-xs text-slate-500">
+<div class="max-w-[1600px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+<p>© 2026 Sparkl Electrodynamics Virtual Laboratories. All rights reserved.</p>
+<p class="font-medium text-slate-450">Apparatus ID: SP-OHMS-7290</p>
+</div>
+</footer>
+</div>
+<!-- Simulation Application Logic Script -->
+<script>
     // --- PHYSICS CONSTANTS & MATERIALS ---
     const materials = {
       silver: { name: 'Silver', rho: 1.59e-8, drawColor: '#e2e8f0' },
