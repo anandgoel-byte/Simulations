@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heights & Distances 3D Laboratory</title>
+    <meta name="description"
+        content="Explore trigonometric ratios, angles of elevation, and line of sight dynamically with this interactive 3D virtual laboratory for Heights & Distances.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- MathJax -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+            options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Three.js & OrbitControls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Scrollbars */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Range Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            background: #334155;
+            border-radius: 9999px;
+            height: 6px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -5px;
+            background-color: #06b6d4;
+            border-radius: 9999px;
+            height: 16px;
+            width: 16px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+            transition: 0.2s;
+        }
+
+        input[type="range"].slider-pink::-webkit-slider-thumb {
+            background-color: #ec4899;
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+        }
+
+        /* 3D Canvas Background */
+        .lab-stage {
+            background-color: #020617 !important;
+            background-image:
+                radial-gradient(rgba(34, 211, 238, 0.15) 1px, transparent 1px),
+                linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px, 40px 40px, 40px 40px;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 1);
+        }
+
+        /* Gradients */
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-amber {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-emerald {
+            background: linear-gradient(to right, #10b981, #34d399);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div
+        class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+
+        <!-- Header -->
+        <header
+            class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div
+                    class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Heights & Distances</h1>
+                    <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Class 10 Trigonometry
+                        Laboratory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> User Guide
+                </button>
+                <div
+                    class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">3D Geometry
+                        Active</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Toolbar -->
+        <div
+            class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button onclick="resetSim()"
+                    class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Reset Plane
+                </button>
+            </div>
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-grid" checked
+                        class="rounded border-slate-300 text-cyan-600 focus:ring-cyan-500 h-4 w-4">
+                    <span>Show Ground Grid</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Main Layout Split: 3 | 6 | 3 -->
+        <main
+            class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+
+            <!-- LEFT WORKSPACE: Controls & Telemetry -->
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+                <div class="space-y-4">
+
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                        <span
+                            class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Flight
+                            Parameters</span>
+
+                        <!-- Altitude -->
+                        <div>
+                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-2">
+                                <span class="text-pink-600 flex items-center gap-1">■ Altitude / Height
+                                    (Opposite)</span>
+                                <span id="val-h"
+                                    class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-xs">4000
+                                    m</span>
+                            </div>
+                            <input type="range" id="slider-h" min="1000" max="8000" step="100" value="4000"
+                                class="slider-pink">
+                        </div>
+
+                        <!-- Horizontal Distance -->
+                        <div>
+                            <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-4">
+                                <span class="text-cyan-600 flex items-center gap-1">■ Ground Distance (Adjacent)</span>
+                                <span id="val-d"
+                                    class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">4000
+                                    m</span>
+                            </div>
+                            <input type="range" id="slider-d" min="1000" max="10000" step="100" value="4000">
+                        </div>
+
+                    </div>
+
+                    <!-- Telemetry Dashboard -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                        <span
+                            class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Live
+                            Geometric Telemetry</span>
+
+                        <div class="flex flex-col gap-2">
+                            <div
+                                class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                                <div
+                                    class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <span
+                                        class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] block"></span>
+                                    Angle of Elevation ($\theta$)
+                                </div>
+                                <div class="text-[16px] font-bold font-mono tracking-widest grad-amber uppercase"
+                                    id="tel-angle">
+                                    45.0°
+                                </div>
+                            </div>
+
+                            <div
+                                class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800 mt-1">
+                                <div
+                                    class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <span
+                                        class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"></span>
+                                    Line of Sight (Hyp)
+                                </div>
+                                <div class="text-[14px] font-bold font-mono tracking-widest text-white uppercase"
+                                    id="tel-hyp">
+                                    5656.8 m
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formula Box -->
+                    <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2">
+                        <span
+                            class="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-2">Trigonometric
+                            Ratios</span>
+                        <div class="text-[12px] font-mono py-2 space-y-3">
+                            <div class="bg-[#0f172a] p-2 rounded border border-slate-800">
+                                <div class="text-emerald-400 mb-1 text-[10px]">TANGENT (Direction/Slope)</div>
+                                <div>$\tan(\theta) = \frac{\text{Opp}}{\text{Adj}} = $ <span id="math-tan"
+                                        class="text-white">1.000</span></div>
+                            </div>
+                            <div class="bg-[#0f172a] p-2 rounded border border-slate-800">
+                                <div class="text-pink-400 mb-1 text-[10px]">SINE (Altitude Ratio)</div>
+                                <div>$\sin(\theta) = \frac{\text{Opp}}{\text{Hyp}} = $ <span id="math-sin"
+                                        class="text-white">0.707</span></div>
+                            </div>
+                            <div class="bg-[#0f172a] p-2 rounded border border-slate-800">
+                                <div class="text-cyan-400 mb-1 text-[10px]">COSINE (Distance Ratio)</div>
+                                <div>$\cos(\theta) = \frac{\text{Adj}}{\text{Hyp}} = $ <span id="math-cos"
+                                        class="text-white">0.707</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- CENTER: 3D Three.js Canvas -->
+            <section
+                class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]"
+                id="three-container">
+
+                <!-- HUD Overlay -->
+                <div
+                    class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+                    <span class="text-[10px] font-extrabold text-emerald-400 uppercase tracking-wider">Observer View
+                        Active</span>
+                </div>
+
+                <div
+                    class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset"
+                        class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <!-- RIGHT: Viva Voce Desk -->
+            <section
+                class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                    <span
+                        class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question
+                        Filter</span>
+                    <select
+                        class="w-full bg-slate-50 border border-slate-300 text-cyan-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm"
+                        id="select-category">
+                        <option value="all">All Categories</option>
+                        <option value="jee">JEE Main / Advanced</option>
+                        <option value="cbse">School Board PYQ</option>
+                        <option value="neet">NEET Prep</option>
+                    </select>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab
+                        Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-base font-bold tracking-tight">Class 10 PYQs</h2>
+                        <span id="viva-score"
+                            class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score:
+                            0 / 4</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-4">
+
+                    <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+                        data-category="cbse">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School
+                                Board PYQ]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
+                                id="q1-text">
+                                A tower stands vertically on the ground. From a point on the ground, which is 15 m away
+                                from the foot of the tower, the angle of elevation of the top of the tower is found to
+                                be 60°. The height of the tower is:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+                            <p id="q1-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+                        data-category="jee">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
+                                Main]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
+                                id="q2-text">
+                                The shadow of a tower standing on a level ground is found to be 40 m longer when the
+                                Sun's altitude is 30° than when it is 60°. Find the height of the tower.
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+                            <p id="q2-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+                        data-category="jee">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE
+                                Main]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
+                                id="q3-text">
+                                Two poles of equal heights are standing opposite each other on either side of the road,
+                                which is 80 m wide. From a point between them on the road, the angles of elevation of
+                                the top of the poles are 60° and 30°, respectively. The height of the poles is:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+                            <p id="q3-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+                        data-category="neet">
+                        <div class="space-y-2">
+                            <span
+                                class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET
+                                PYQ]</span>
+                            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
+                                id="q4-text">
+                                As observed from the top of a 75 m high lighthouse from the sea-level, the angles of
+                                depression of two ships are 30° and 45°. If one ship is exactly behind the other on the
+                                same side of the lighthouse, the distance between the two ships is:
+                            </h4>
+                            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+                            <p id="q4-feedback"
+                                class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100">
+                            </p>
+                        </div>
+                    </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- User Guide Modal -->
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div
+            class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span>📘</span> TRIGONOMETRY PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>Heights & Distances 3D Simulator</strong>! Visualize how trigonometric ratios
+                    link physical distances to angles.</p>
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core
+                        Controls</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Altitude ($H$):</strong> This is the <strong>Opposite</strong> side of the
+                            right-angled triangle. Adjusting it physically moves the plane up and down.</li>
+                        <li><strong>Ground Distance ($D$):</strong> This is the <strong>Adjacent</strong> side.
+                            Adjusting it moves the plane left and right relative to the observer.</li>
+                        <li><strong>Angle of Elevation ($\theta$):</strong> Automatically calculated. Notice that when
+                            Altitude = Distance, the angle is exactly $45^\circ$!</li>
+                        <li><strong>Line of Sight:</strong> This is the <strong>Hypotenuse</strong>. Watch the Live
+                            Telemetry panel recalculate Sine, Cosine, and Tangent dynamically as the 3D geometry
+                            changes.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- VIVA MCQS DECK STATE & DATA ---
+        const appState = { vivaScore: 0, answers: { q1: null, q2: null, q3: null, q4: null } };
+
+        const vivaData = {
+            q1: {
+                question: "A tower stands vertically on the ground. From a point on the ground, which is 15 m away from the foot of the tower, the angle of elevation of the top of the tower is found to be 60°. The height of the tower is: [CBSE 2015]",
+                options: [
+                    { text: "15 m", isCorrect: false, exp: "Incorrect. This would be the height if the angle of elevation was 45°." },
+                    { text: "15√3 m", isCorrect: true, exp: "Correct! Let the height be h. tan(60°) = Perpendicular / Base = h / 15. Since tan(60°) = √3, we get √3 = h / 15, which means h = 15√3 m." },
+                    { text: "5√3 m", isCorrect: false, exp: "Incorrect. You may have divided by √3 instead of multiplying by it." },
+                    { text: "30 m", isCorrect: false, exp: "Incorrect. Check your trigonometric ratios; you need tangent, not cosine or sine." }
+                ]
+            },
+            q2: {
+                question: "The shadow of a tower standing on a level ground is found to be 40 m longer when the Sun's altitude is 30° than when it is 60°. Find the height of the tower. [CBSE 2012]",
+                options: [
+                    { text: "10√3 m", isCorrect: false, exp: "Incorrect. Check your algebraic substitution when combining the two triangle equations." },
+                    { text: "20√3 m", isCorrect: true, exp: "Correct! Let height be h and initial shadow be x. In the smaller triangle: tan(60°) = h/x, so h = x√3. In the larger triangle: tan(30°) = h/(x+40), so 1/√3 = h/(x+40). Substituting h: x+40 = (x√3)√3 = 3x. 2x = 40, so x = 20. Therefore, h = 20√3 m." },
+                    { text: "30√3 m", isCorrect: false, exp: "Incorrect. You might have added the distances incorrectly." },
+                    { text: "40√3 m", isCorrect: false, exp: "Incorrect. 40 m is the difference in shadow length, not the base of the smaller triangle." }
+                ]
+            },
+            q3: {
+                question: "Two poles of equal heights are standing opposite each other on either side of the road, which is 80 m wide. From a point between them on the road, the angles of elevation of the top of the poles are 60° and 30°, respectively. The height of the poles is: [CBSE 2019]",
+                options: [
+                    { text: "10√3 m", isCorrect: false, exp: "Incorrect. Ensure you set up the base of one triangle as x and the other as (80 - x)." },
+                    { text: "20√3 m", isCorrect: true, exp: "Correct! Let height be h, and point distance be x from pole 1. tan(60°) = h/x → h = x√3. For pole 2: tan(30°) = h/(80-x) → 1/√3 = h/(80-x). Substitute h: 80-x = x(√3)(√3) = 3x. 4x = 80 → x = 20. So, h = 20√3 m." },
+                    { text: "40√3 m", isCorrect: false, exp: "Incorrect. You may have assumed the point was exactly in the middle of the 80m road, which would make both angles 45°." },
+                    { text: "20 m", isCorrect: false, exp: "Incorrect. You found the distance from the point to the base of the first pole, but forgot to multiply by √3 to get the height." }
+                ]
+            },
+            q4: {
+                question: "As observed from the top of a 75 m high lighthouse from the sea-level, the angles of depression of two ships are 30° and 45°. If one ship is exactly behind the other on the same side of the lighthouse, the distance between the two ships is: [CBSE 2014]",
+                options: [
+                    { text: "75(√3 + 1) m", isCorrect: false, exp: "Incorrect. You added the distances from the lighthouse instead of subtracting them." },
+                    { text: "75(√3 - 1) m", isCorrect: true, exp: "Correct! The angle of depression equals the angle of elevation. Distance to ship 1 (45°): tan(45°) = 75/x → x = 75m. Distance to ship 2 (30°): tan(30°) = 75/y → y = 75√3m. Distance between ships = y - x = 75√3 - 75 = 75(√3 - 1) m." },
+                    { text: "75√3 m", isCorrect: false, exp: "Incorrect. This is the distance from the lighthouse to the further ship, not the distance between the two ships." },
+                    { text: "75 m", isCorrect: false, exp: "Incorrect. This is the distance from the lighthouse to the closer ship." }
+                ]
+            }
+        };
+
+        const colorsMap = {
+            q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+            q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+            q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+            q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+        };
+
+        function triggerConfetti() {
+            const container = document.body;
+            const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+            const numParticles = 120;
+
+            for (let i = 0; i < numParticles; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+
+                const isRibbon = Math.random() > 0.8;
+                const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+                const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+
+                confetti.style.width = `${w}px`;
+                confetti.style.height = `${h}px`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+
+                const fromLeft = i < numParticles / 2;
+                confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+                confetti.style.top = 'calc(100vh + 10px)';
+
+                const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+                const velocity = Math.random() * 500 + 400;
+
+                const dx = Math.cos(angle) * velocity;
+                const dy = -Math.sin(angle) * velocity;
+
+                const fallDuration = Math.random() * 1.5 + 2.0;
+                const spinRotation = Math.random() * 1080 - 540;
+
+                confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+                container.appendChild(confetti);
+
+                confetti.offsetHeight; // force reflow
+
+                confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+                confetti.style.opacity = '0';
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, fallDuration * 1000);
+            }
+        }
+
+        function renderQuestions() {
+            const scoreLabel = document.getElementById('viva-score');
+            Object.keys(vivaData).forEach(qKey => {
+                const data = vivaData[qKey];
+                const optionsContainer = document.getElementById(`${qKey}-options`);
+                const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+                if (!optionsContainer || !feedbackContainer) return;
+                optionsContainer.innerHTML = '';
+                data.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+                    let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+                    btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+                    btn.addEventListener('click', () => {
+                        if (appState.answers[qKey] !== null) return;
+                        appState.answers[qKey] = idx;
+                        if (opt.isCorrect) {
+                            appState.vivaScore++;
+                            triggerConfetti();
+                        }
+                        if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+
+                        const buttons = optionsContainer.querySelectorAll('button');
+                        buttons.forEach((b, i) => {
+                            b.disabled = true;
+                            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+                            b.classList.add('cursor-not-allowed', 'shadow-none');
+                            if (appState.answers[qKey] === i) {
+                                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+                            } else if (data.options[i].isCorrect) {
+                                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+                            } else {
+                                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                            }
+                        });
+                        feedbackContainer.innerHTML = opt.exp;
+                        feedbackContainer.classList.remove('hidden');
+                        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    });
+                    optionsContainer.appendChild(btn);
+                });
+            });
+            if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        }
+
+        // --- STATE MANAGEMENT & MATH ---
+        const slH = document.getElementById('slider-h');
+        const slD = document.getElementById('slider-d');
+        const chkGrid = document.getElementById('chk-grid');
+
+        const valH = document.getElementById('val-h');
+        const valD = document.getElementById('val-d');
+
+        const mathTan = document.getElementById('math-tan');
+        const mathSin = document.getElementById('math-sin');
+        const mathCos = document.getElementById('math-cos');
+
+        const telAngle = document.getElementById('tel-angle');
+        const telHyp = document.getElementById('tel-hyp');
+
+        let pState = { H: 4000, D: 4000, Hyp: 5656.8, Theta: 45.0 };
+
+        function updateState() {
+            pState.H = parseFloat(slH.value);
+            pState.D = parseFloat(slD.value);
+
+            // Calculations
+            pState.Hyp = Math.sqrt(pState.H ** 2 + pState.D ** 2);
+            pState.Theta = Math.atan2(pState.H, pState.D) * (180 / Math.PI);
+
+            let tanVal = pState.H / pState.D;
+            let sinVal = pState.H / pState.Hyp;
+            let cosVal = pState.D / pState.Hyp;
+
+            // Update UI Telemetry
+            valH.innerText = `${pState.H} m`;
+            valD.innerText = `${pState.D} m`;
+
+            mathTan.innerText = tanVal.toFixed(3);
+            mathSin.innerText = sinVal.toFixed(3);
+            mathCos.innerText = cosVal.toFixed(3);
+
+            telAngle.innerText = `${pState.Theta.toFixed(1)}°`;
+            telHyp.innerText = `${pState.Hyp.toFixed(1)} m`;
+
+            update3DScene();
+        }
+
+        slH.addEventListener('input', updateState);
+        slD.addEventListener('input', updateState);
+
+        function resetSim() {
+            slH.value = 4000; slD.value = 4000;
+            controls.reset();
+            updateState();
+        }
+
+        // --- THREE.JS 3D ENGINE ---
+        const container = document.getElementById('three-container');
+        const scene = new THREE.Scene();
+
+        // Scale down physical units so 1000m = 10 units in Three.js
+        const SCALE = 0.01;
+
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(40, 30, 80);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+        // Set target slightly to the right to frame the triangle better
+        controls.target.set(30, 15, 0);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(20, 50, 20);
+        scene.add(dirLight);
+
+        // Objects
+        let gridHelper;
+        let planeMesh;
+        let linesGroup = new THREE.Group();
+        scene.add(linesGroup);
+
+        // Materials
+        const matPlane = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 });
+        const matAcc = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+        const matLineHyp = new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 3 }); // Emerald
+        const matLineOpp = new THREE.LineDashedMaterial({ color: 0xec4899, dashSize: 1, gapSize: 1 }); // Pink
+        const matLineAdj = new THREE.LineBasicMaterial({ color: 0x06b6d4, linewidth: 3 }); // Cyan
+        const matArc = new THREE.LineBasicMaterial({ color: 0xf59e0b, linewidth: 2 }); // Amber
+
+        function createAeroplane() {
+            let group = new THREE.Group();
+            // Fuselage
+            let body = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 6, 16), matPlane);
+            body.rotation.z = Math.PI / 2;
+            group.add(body);
+            // Wings
+            let wings = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 8), matPlane);
+            wings.position.set(0.5, 0, 0);
+            group.add(wings);
+            // Tail
+            let tail = new THREE.Mesh(new THREE.BoxGeometry(1, 1.5, 0.2), matAcc);
+            tail.position.set(-2.5, 0.75, 0);
+            group.add(tail);
+            return group;
+        }
+
+        function init3D() {
+            // Ground Grid
+            gridHelper = new THREE.GridHelper(200, 40, 0x334155, 0x1e293b);
+            gridHelper.position.x = 50;
+            scene.add(gridHelper);
+
+            // Observer (Simple sphere at origin)
+            let observer = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), new THREE.MeshStandardMaterial({ color: 0x10b981 }));
+            scene.add(observer);
+
+            // Plane
+            planeMesh = createAeroplane();
+            scene.add(planeMesh);
+        }
+
+        function update3DScene() {
+            gridHelper.visible = chkGrid.checked;
+
+            let x = pState.D * SCALE;
+            let y = pState.H * SCALE;
+
+            // Move plane
+            planeMesh.position.set(x, y, 0);
+
+            // Rebuild Triangle Lines
+            linesGroup.clear();
+
+            // Adjacent (Ground) - Cyan
+            let geoAdj = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, 0, 0)]);
+            linesGroup.add(new THREE.Line(geoAdj, matLineAdj));
+
+            // Opposite (Altitude) - Pink Dashed
+            let geoOpp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, 0, 0), new THREE.Vector3(x, y, 0)]);
+            let lineOpp = new THREE.Line(geoOpp, matLineOpp);
+            lineOpp.computeLineDistances(); // Required for dashed lines
+            linesGroup.add(lineOpp);
+
+            // Hypotenuse (Line of Sight) - Emerald
+            let geoHyp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, 0)]);
+            linesGroup.add(new THREE.Line(geoHyp, matLineHyp));
+
+            // Angle Arc (Amber)
+            let arcRadius = Math.min(x, y, 15) * 0.4; // Scale arc to fit nicely
+            let thetaRad = pState.Theta * (Math.PI / 180);
+            let arcCurve = new THREE.EllipseCurve(0, 0, arcRadius, arcRadius, 0, thetaRad, false, 0);
+            let arcPoints = arcCurve.getPoints(30);
+            let geoArc = new THREE.BufferGeometry().setFromPoints(arcPoints);
+            let lineArc = new THREE.Line(geoArc, matArc);
+            linesGroup.add(lineArc);
+        }
+
+        chkGrid.addEventListener('change', update3DScene);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            // Slight hover effect on plane
+            if (planeMesh) {
+                planeMesh.rotation.x = Math.sin(Date.now() * 0.002) * 0.05;
+                planeMesh.position.z = Math.sin(Date.now() * 0.001) * 0.5;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            const container = document.getElementById('three-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { camera.position.multiplyScalar(0.8); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { camera.position.multiplyScalar(1.2); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { controls.reset(); camera.position.set(40, 30, 80); controls.target.set(30, 15, 0); });
+
+        // --- Category Filter Handler ---
+        const selectCategory = document.getElementById('select-category');
+        if (selectCategory) {
+            selectCategory.addEventListener('change', () => {
+                const cat = selectCategory.value;
+                const questions = document.querySelectorAll('[data-category]');
+                questions.forEach(q => {
+                    const qCat = q.getAttribute('data-category');
+                    if (cat === 'all' || qCat === cat) {
+                        q.classList.remove('hidden');
+                    } else {
+                        q.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        // --- Modal Guide Handlers ---
+        const userGuideModal = document.getElementById('user-guide-modal');
+        document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+        const closeGuide = () => userGuideModal.classList.add('hidden');
+        document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+        document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+        userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+        // Boot
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            init3D();
+            updateState();
+            animate();
+
+            userGuideModal.classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>

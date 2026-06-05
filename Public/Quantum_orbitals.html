@@ -138,15 +138,7 @@
 </header>
 <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
 <div class="flex items-center space-x-4">
-<div class="flex items-center space-x-2">
-<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Slicing Plane:</span>
-<select class="bg-white border border-slate-300 text-slate-800 text-xs font-bold rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer shadow-sm" id="select-plane">
-<option selected="" value="NONE">No Slicing Plane</option>
-<option value="XY">XY Plane (Z = 0)</option>
-<option value="XZ">XZ Plane (Y = 0)</option>
-<option value="YZ">YZ Plane (X = 0)</option>
-</select>
-</div>
+<select id="select-plane" class="hidden"><option value="NONE" selected>No Slicing Plane</option></select>
 </div>
 <div class="flex flex-wrap items-center gap-4">
 <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
@@ -157,10 +149,7 @@
 <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4" id="chk-lobes" type="checkbox"/>
 <span>Show Textbook Lobes</span>
 </label>
-<label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
-<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4" id="chk-plane" type="checkbox"/>
-<span>Show Slicing Plane</span>
-</label>
+<label class="hidden"><input id="chk-plane" class="hidden" type="checkbox"/></label>
 <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
 <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4" id="chk-grid" type="checkbox"/>
 <span>Show Spatial Grid</span>
@@ -283,7 +272,6 @@
 <li><strong>Principal ($n$):</strong> Defines the energy shell (Size/Bound).</li>
 <li><strong>Azimuthal ($l$):</strong> Defines the subshell shape (s, p, d, f). Note that $l$ is strictly capped at $n-1$.</li>
 <li><strong>Magnetic ($m_l$):</strong> Defines orbital orientation in space. Restricted from $-l$ to $+l$.</li>
-<li><strong>Slicing Plane:</strong> Projects a 2D cross-section heatmap of wavefunction intensity directly through the center of the 3D orbital.</li>
 </ul>
 </div>
 <div class="space-y-2 pt-2 border-t border-slate-100">

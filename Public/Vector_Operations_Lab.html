@@ -5,6 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Vector Operations 3D Virtual Laboratory</title>
+<meta name="description" content="Explore vector addition, dot product, and cross product in interactive 3D space with this linear algebra virtual laboratory.">
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -173,18 +174,19 @@
 <div class="mt-3 pt-2 border-t border-slate-100 text-center text-[11px] font-bold font-mono text-rose-600">
               $\vec{v} = \langle$ <span id="disp-v">2.0, 4.0, 0.0</span> $\rangle$
             </div>
-</div><div class="space-y-3">
-<span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Calculated Telemetry</span>
+</div><!-- Telemetry Dashboard -->
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+<span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Calculated Telemetry</span>
 <div class="grid grid-cols-2 gap-2 text-center">
-<div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+<div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
 <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnitude $|\vec{u}|$</div>
 <div class="text-sm font-bold font-mono text-cyan-600" id="tel-mag-u">3.00</div>
 </div>
-<div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+<div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
 <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnitude $|\vec{v}|$</div>
 <div class="text-sm font-bold font-mono text-rose-500" id="tel-mag-v">4.47</div>
 </div>
-<div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm col-span-2 flex justify-between items-center px-4">
+<div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200 shadow-sm col-span-2 flex justify-between items-center px-4">
 <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Angle ($\theta$)</div>
 <div class="text-sm font-bold font-mono text-indigo-600 tracking-widest" id="tel-theta">63.4°</div>
 </div>
@@ -210,11 +212,23 @@
 <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-0.5 bg-amber-400 block" id="leg-res-color"></span> Resultant Operation</div>
 </div>
 </section>
-<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div>
+
+<div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 3</span>
 </div>
 </div><div class="space-y-3 pb-4">
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
