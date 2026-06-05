@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sets Classifications & Properties Laboratory</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar for Panels */
+        .viva-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Cyber-Math Grid Background */
+        .lab-stage {
+            background-color: #020617 !important;
+            background-image:
+                radial-gradient(rgba(34, 211, 238, 0.1) 2px, transparent 2px),
+                linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(236, 72, 153, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px, 30px 30px, 30px 30px;
+            background-position: 0 0, 15px 15px, 15px 15px;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 1);
+        }
+
+        /* Vibrant Text Gradients */
+        .grad-cyan {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-pink {
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-emerald {
+            background: linear-gradient(to right, #10b981, #34d399);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .grad-amber {
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Confetti Canvas for MCQs -->
+    <canvas id="confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full"></canvas>
+
+    <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+        
+        <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+            <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+                <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+                    <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo"
+                        class="h-8 object-contain" onerror="this.style.display='none'">
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Sets Classifications & Properties</h1>
+                    <p class="text-[11px] text-pink-400 font-medium tracking-wider uppercase">Discrete Mathematics Laboratory</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button id="btn-open-guide"
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+                    <span>📘</span> User Guide
+                </button>
+                <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_#ec4899]"></span>
+                    <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Discrete Engine Active</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sub-header bar for action items -->
+        <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+            <div class="flex items-center space-x-2">
+                <button onclick="triggerEvaluation()" id="btn-eval"
+                    class="px-5 py-1.5 bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                    <span>⚡</span> Evaluate Set
+                </button>
+                <button onclick="resetSim()"
+                    class="px-5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-lg transition-all flex items-center gap-1.5">
+                    <span>🔄</span> Reset
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="chk-elements" checked
+                        class="rounded border-slate-300 text-pink-600 focus:ring-pink-500 h-4 w-4">
+                    <span>Show Set Elements</span>
+                </label>
+            </div>
+        </div>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+            
+            <!-- Left Sidebar (Controls & Telemetry) -->
+            <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+                
+                <!-- Topic Selector Card -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Active Topic Selector</span>
+                    
+                    <select id="select-topic"
+                        class="w-full bg-slate-50 border border-slate-300 text-pink-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all cursor-pointer shadow-sm">
+                        <option value="finite_infinite">Finite and Infinite Sets</option>
+                        <option value="equal_sets">Equal Sets</option>
+                        <option value="subsets">Subsets (Proper & Improper)</option>
+                        <option value="intervals">Intervals as Subsets of ℝ</option>
+                        <option value="power_set">Power Set</option>
+                        <option value="universal_set">Universal Set</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Controls Card (changes based on active topic) -->
+                <div id="dynamic-controls" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Dynamic Parameters</span>
+                    
+                    <!-- Controls for Finite/Infinite -->
+                    <div id="ctrl-finite_infinite" class="space-y-3">
+                        <label class="block text-xs font-bold text-slate-700">Set Characteristics:</label>
+                        <div class="flex items-center justify-center p-1 bg-slate-100 rounded-lg border border-slate-200">
+                            <button id="btn-set-finite" class="w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all">Finite</button>
+                            <button id="btn-set-infinite" class="w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all">Infinite</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls for Equal Sets -->
+                    <div id="ctrl-equal_sets" class="space-y-3 hidden">
+                        <label class="block text-xs font-bold text-slate-700">Element Arrangement:</label>
+                        <div class="flex items-center justify-center p-1 bg-slate-100 rounded-lg border border-slate-200">
+                            <button id="btn-match-exact" class="w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all">Match Exactly</button>
+                            <button id="btn-scrambled" class="w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all">Order Scrambled</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls for Subsets -->
+                    <div id="ctrl-subsets" class="space-y-3 hidden">
+                        <label class="block text-xs font-bold text-slate-700">Subset Type:</label>
+                        <div class="flex items-center justify-center p-1 bg-slate-100 rounded-lg border border-slate-200">
+                            <button id="btn-subset-proper" class="w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all">Proper Subset (B ⊂ A)</button>
+                            <button id="btn-subset-improper" class="w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all">Improper (B = A)</button>
+                        </div>
+                    </div>
+
+                    <!-- Controls for Intervals -->
+                    <div id="ctrl-intervals" class="space-y-3 hidden">
+                        <label class="block text-xs font-bold text-slate-700">Interval Bracket Type:</label>
+                        <select id="select-interval-mode"
+                            class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2.5 py-2 outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500/20 transition-all cursor-pointer">
+                            <option value="open">Open (a, b)</option>
+                            <option value="closed">Closed [a, b]</option>
+                            <option value="semi_open">Semi-Open [a, b)</option>
+                            <option value="semi_closed">Semi-Closed (a, b]</option>
+                        </select>
+                        <div class="text-[11px] text-slate-500 font-medium leading-relaxed bg-slate-50 p-2 rounded border border-slate-150 mt-1">
+                            ℹ️ Drag the glowing endpoints <span class="text-pink-600 font-bold">a</span> and <span class="text-emerald-600 font-bold">b</span> on the number line to change values.
+                        </div>
+                    </div>
+
+                    <!-- Controls for Power Set -->
+                    <div id="ctrl-power_set" class="space-y-3 hidden">
+                        <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+                            <span>Base Set Size n:</span>
+                            <span id="val-n" class="font-mono text-pink-600">2</span>
+                        </div>
+                        <input type="range" id="slider-n" min="0" max="3" value="2" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-pink-600">
+                        <div class="text-[11px] text-slate-500 font-medium leading-relaxed bg-slate-50 p-2 rounded border border-slate-150 mt-1">
+                            ℹ️ Adjust base set $A$ size. Evaluate to fly out the $2^n$ subsets!
+                        </div>
+                    </div>
+
+                    <!-- Controls for Universal Set -->
+                    <div id="ctrl-universal_set" class="space-y-3 hidden">
+                        <label class="flex items-center space-x-2 text-xs font-bold text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="chk-show-ab" checked
+                                class="rounded border-slate-300 text-pink-600 focus:ring-pink-500 h-4 w-4">
+                            <span>Show Subsets A & B</span>
+                        </label>
+                        <div class="text-[11px] text-slate-500 font-medium leading-relaxed bg-slate-50 p-2 rounded border border-slate-150 mt-1">
+                            ℹ️ The universal set $U$ bounds sets $A$ and $B$. Notice elements outside $A$ and $B$ but inside $U$.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Analytical Telemetry Card -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Live Analytical Telemetry</span>
+                    
+                    <div class="flex flex-col gap-2">
+                        <div class="bg-[#0f172a] p-3 rounded-xl border border-slate-800 flex justify-between items-center px-4">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span>
+                                Set Notation
+                            </div>
+                            <div class="text-[13px] font-bold font-mono tracking-wide text-pink-400" id="tel-notation">
+                                A = { x | x &ge; 1 }
+                            </div>
+                        </div>
+
+                        <div class="bg-[#020617] p-4 rounded-xl border border-slate-800 text-center">
+                            <div class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest mb-1">Set Elements Representative</div>
+                            <div class="text-sm font-bold font-mono tracking-wide text-white" id="tel-elements">
+                                { 1, 2, 3, 4, ... }
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0f172a] p-3 rounded-xl border border-slate-800 flex justify-between items-center px-4">
+                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"></span>
+                                Cardinality
+                            </div>
+                            <div class="text-xs font-bold font-mono tracking-wider text-white" id="tel-cardinality">
+                                Infinite
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mathematical Definition Card -->
+                <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-3">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400 block border-b border-slate-700 pb-2">Formal Definition</span>
+                    <div id="math-definition-text" class="text-xs font-medium leading-relaxed space-y-2">
+                        <!-- Filled dynamically with MathJax -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center Stage Canvas -->
+            <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 shadow-inner min-h-[500px]">
+                
+                <canvas id="simCanvas" class="w-full h-full block z-10"></canvas>
+
+                <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+                    <span id="simStatusText" class="text-[10px] font-extrabold text-white uppercase tracking-wider">Awaiting Evaluation</span>
+                </div>
+
+                <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+                    <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors">+</button>
+                    <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors">-</button>
+                    <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors text-[9px]">RST</button>
+                </div>
+            </section>
+
+            <!-- Right Sidebar (MCQ Assess Desk) -->
+            <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+                
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-400">Viva Voce Lab Desk</span>
+                    <div class="flex justify-between items-center mt-0.5">
+                        <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
+                        <span id="viva-score" class="text-[10px] font-mono font-bold text-white bg-cyan-500/30 border border-cyan-400/50 px-2 py-0.5 rounded-full">Score: 0 / 6</span>
+                    </div>
+                </div>
+
+                <!-- MCQ Category Filter -->
+                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">Category</span>
+                        <select id="viva-category"
+                            class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all cursor-pointer shadow-sm">
+                            <option value="all" selected>All Questions</option>
+                            <option value="school">School Board PYQ</option>
+                            <option value="jee">JEE Main</option>
+                            <option value="neet">NEET Prep</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="viva-questions-container" class="space-y-3 pb-4">
+                    <!-- Dynamic MCQs -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- User Guide Modal -->
+    <div id="user-guide-modal"
+        class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+                    <span>📘</span> CLASSIFICATIONS PROTOCOLS
+                </h3>
+                <button id="btn-close-guide"
+                    class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+                <p>Welcome to the <strong>Set Classifications & Properties Laboratory</strong>! Explore the structural differences, mappings, bounds, and combinations of sets.</p>
+
+                <div class="space-y-2">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">🎯 Sandbox Topics</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Finite vs Infinite Sets</strong>: Observe elements bouncing in closed containers versus a stream spawning and escaping to infinity.</li>
+                        <li><strong>Equal Sets</strong>: Scramble element orders to see how sets $A = B$ remain equivalent since order does not affect identity.</li>
+                        <li><strong>Subsets</strong>: Toggle proper ($B \subset A$) versus improper ($B = A$) containment with circle-merging animations.</li>
+                        <li><strong>Intervals as Subsets of ℝ</strong>: Drag endpoints directly on the 1D real coordinate line. Toggle bracket structures to explore open and closed bounds.</li>
+                        <li><strong>Power Set</strong>: Scale the base set size slider. Trigger "Evaluate Set" to animate all $2^n$ subsets floating outward.</li>
+                        <li><strong>Universal Set</strong>: Visualize subsets $A$ and $B$ contained within the universal bounding box $U$.</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-2 border-t border-slate-100 pt-3">
+                    <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">🎓 Learning Outcomes</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>Set Types classification</strong>: Differentiate countable bounds from infinite processes.</li>
+                        <li><strong>Equivalence and Order</strong>: Comprehend why order-scrambled set representations are equal.</li>
+                        <li><strong>Interval Boundaries</strong>: Master standard mathematical intervals using open and closed coordinates.</li>
+                        <li><strong>Cardinality Expansion</strong>: Visually verify that a set of size $n$ has a power set of cardinality $2^n$.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button id="btn-close-guide-confirm"
+                    class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- MCQ VIVA DECK STATE & DATA ---
+        const appState = {
+            vivaScore: 0,
+            answers: {},
+            activeTopic: 'finite_infinite',
+            isEvaluated: false,
+            zoomLevel: 1.0,
+            
+            // Topic sub-states
+            finiteInfinite: 'finite', // 'finite' or 'infinite'
+            equalMode: 'exact', // 'exact' or 'scrambled'
+            subsetMode: 'proper', // 'proper' or 'improper'
+            intervalMode: 'open', // 'open', 'closed', 'semi_open', 'semi_closed'
+            baseSetSize: 2, // 0 to 3
+            showUniversalAB: true,
+            
+            // Draggable Interval bounds (relative values from -5.0 to +5.0)
+            intervalValA: -2.0,
+            intervalValB: 2.0
+        };
+
+        const questionsData = [
+            {
+                id: "q1",
+                category: "jee",
+                tag: "JEE Main",
+                colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+                question: "Which of the following is an infinite set?",
+                options: [
+                    { text: "$\\{x \\in \\mathbb{Z} \\mid x^2 - 5x + 6 = 0\\}$", isCorrect: false, exp: "Incorrect. This set has exactly two elements, $\\{2, 3\\}$, so it is finite." },
+                    { text: "$\\{x \\in \\mathbb{R} \\mid 0 < x < 1\\}$", isCorrect: true, exp: "Correct! The set of real numbers $\\mathbb{R}$ is dense. There are infinitely many real numbers between 0 and 1, making it an infinite set." },
+                    { text: "$\\{x \\in \\mathbb{N} \\mid x < 10^{10}\\}$", isCorrect: false, exp: "Incorrect. The natural numbers less than $10^{10}$ form a finite collection." },
+                    { text: "$\\{x \\in \\mathbb{Z} \\mid x \\text{ is a factor of } 100\\}$", isCorrect: false, exp: "Incorrect. 100 has a finite number of integer factors." }
+                ]
+            },
+            {
+                id: "q2",
+                category: "school",
+                tag: "School Board PYQ",
+                colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                question: "Let $A = \\{1, 2, 3\\}$. What is the power set $\\mathcal{P}(A)$ of $A$, and how many elements does it contain?",
+                options: [
+                    { text: "$\\{\\emptyset, \\{1\\}, \\{2\\}, \\{3\\}\\}$ with 4 elements", isCorrect: false, exp: "Incorrect. This omits subsets containing two or three elements." },
+                    { text: "$\\{\\emptyset, \\{1\\}, \\{2\\}, \\{3\\}, \\{1,2\\}, \\{2,3\\}, \\{1,3\\}, \\{1,2,3\\}\\}$ with 8 elements", isCorrect: true, exp: "Correct! The power set $\\mathcal{P}(A)$ contains all subsets of $A$. With $n=3$ elements, the power set size is $2^3 = 8$." },
+                    { text: "$\\{\\{1\\}, \\{2\\}, \\{3\\}, \\{1,2\\}, \\{2,3\\}, \\{1,3\\}, \\{1,2,3\\}\\}$ with 7 elements", isCorrect: false, exp: "Incorrect. The empty set $\\emptyset$ is always a subset of any set." },
+                    { text: "$\\{\\emptyset, \\{1,2,3\\}\\}$ with 2 elements", isCorrect: false, exp: "Incorrect. This contains only the trivial subsets." }
+                ]
+            },
+            {
+                id: "q3",
+                category: "neet",
+                tag: "NEET Prep",
+                colorClass: "bg-cyan-50 text-cyan-700 border-cyan-200",
+                question: "Which interval represents the set $\\{x \\in \\mathbb{R} \\mid -2 \\le x < 5\\}$?",
+                options: [
+                    { text: "$[-2, 5]$", isCorrect: false, exp: "Incorrect. The endpoint 5 is excluded from the inequality ($<$), so it should have a parenthesis." },
+                    { text: "$(-2, 5]$", isCorrect: false, exp: "Incorrect. The endpoint -2 is included ($\\le$), so it should have a square bracket." },
+                    { text: "$[-2, 5)$", isCorrect: true, exp: "Correct! The inequality $-2 \\le x < 5$ includes -2 (square bracket $[$) but excludes 5 (parenthesis $)$). Thus, it is $[-2, 5)$." },
+                    { text: "$(-2, 5)$", isCorrect: false, exp: "Incorrect. Endpoint -2 is included." }
+                ]
+            },
+            {
+                id: "q4",
+                category: "jee",
+                tag: "JEE Main",
+                colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+                question: "If $A \\subset B$ and $A \\ne B$, then set $A$ is called a:",
+                options: [
+                    { text: "Proper subset of B", isCorrect: true, exp: "Correct! When $A$ is a subset of $B$ but is not equal to $B$ (meaning $B$ has at least one element not in $A$), $A$ is a proper subset of $B$." },
+                    { text: "Improper subset of B", isCorrect: false, exp: "Incorrect. An improper subset is equal to the set itself." },
+                    { text: "Equal set of B", isCorrect: false, exp: "Incorrect. We are given $A \\ne B$." },
+                    { text: "Universal set of B", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            {
+                id: "q5",
+                category: "school",
+                tag: "School Board PYQ",
+                colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                question: "If $A = \\{x, y\\}$ and $B = \\{y, x\\}$, then which statement is correct?",
+                options: [
+                    { text: "$A \\neq B$ because order is different.", isCorrect: false, exp: "Incorrect. Sets are unordered collections." },
+                    { text: "$A = B$ because they contain the exact same elements.", isCorrect: true, exp: "Correct! Two sets are equal if they contain the same elements, regardless of listing order: $\\{x, y\\} = \\{y, x\\}$." },
+                    { text: "$A$ is a proper subset of $B$.", isCorrect: false, exp: "Incorrect. Both sets contain identical elements." },
+                    { text: "$B$ is a proper subset of $A$.", isCorrect: false, exp: "Incorrect." }
+                ]
+            },
+            {
+                id: "q6",
+                category: "neet",
+                tag: "NEET Prep",
+                colorClass: "bg-cyan-50 text-cyan-700 border-cyan-200",
+                question: "If the universal set is $\\mathbb{U} = \\{1, 2, \\dots, 10\\}$ and $A = \\{2, 4, 6, 8, 10\\}$, what is the complement $A'$?",
+                options: [
+                    { text: "$\\{1, 3, 5, 7, 9\\}$", isCorrect: true, exp: "Correct! The complement $A'$ consists of all elements in $\\mathbb{U}$ that are not in $A$. Since $A$ is even numbers, $A'$ is the odd numbers." },
+                    { text: "$\\{2, 4, 6, 8, 10\\}$", isCorrect: false, exp: "Incorrect. This is set $A$ itself." },
+                    { text: "$\\emptyset$", isCorrect: false, exp: "Incorrect." },
+                    { text: "$\\mathbb{U}$", isCorrect: false, exp: "Incorrect." }
+                ]
+            }
+        ];
+
+        function renderQuestions() {
+            const filterVal = document.getElementById('viva-category').value;
+            const container = document.getElementById('viva-questions-container');
+            const scoreLabel = document.getElementById('viva-score');
+            
+            if (!container) return;
+            container.innerHTML = '';
+            
+            const filtered = questionsData.filter(q => filterVal === 'all' || q.category === filterVal);
+            
+            let answeredInFilter = 0;
+            let correctInFilter = 0;
+            
+            filtered.forEach(q => {
+                if (appState.answers[q.id] !== undefined && appState.answers[q.id] !== null) {
+                    answeredInFilter++;
+                    const selectedIdx = appState.answers[q.id];
+                    if (q.options[selectedIdx].isCorrect) {
+                        correctInFilter++;
+                    }
+                }
+            });
+            
+            if (scoreLabel) {
+                scoreLabel.textContent = `Score: ${correctInFilter} / ${filtered.length}`;
+            }
+            
+            filtered.forEach(q => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-200 rounded-xl p-4 hover:border-cyan-400 hover:shadow-md transition-all duration-300";
+                
+                const header = document.createElement('div');
+                header.className = "flex items-center justify-between mb-2";
+                header.innerHTML = `<span class="inline-block ${q.colorClass} text-[10px] font-extrabold px-2 py-0.5 rounded border font-mono uppercase tracking-wider">${q.tag}</span>`;
+                card.appendChild(header);
+                
+                const qText = document.createElement('h4');
+                qText.className = "text-sm font-bold text-slate-800 leading-snug mb-3";
+                qText.innerHTML = q.question;
+                card.appendChild(qText);
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = "flex flex-col gap-2";
+                
+                const hasBeenAnswered = appState.answers[q.id] !== undefined && appState.answers[q.id] !== null;
+                
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    
+                    let hoverClass = "hover:bg-cyan-50/50 hover:border-cyan-400";
+                    if (q.category === 'jee') {
+                        hoverClass = "hover:bg-pink-50/50 hover:border-pink-400";
+                    } else if (q.category === 'school') {
+                        hoverClass = "hover:bg-emerald-50/50 hover:border-emerald-400";
+                    }
+                    
+                    btn.className = "text-left p-3 rounded-lg text-sm border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
+                        (hasBeenAnswered 
+                            ? "cursor-not-allowed" 
+                            : `bg-white border-slate-200 text-slate-700 ${hoverClass} active:bg-slate-100 cursor-pointer shadow-sm`);
+                    
+                    const letter = String.fromCharCode(65 + idx) + ")";
+                    btn.innerHTML = `<span class="font-extrabold text-cyan-600 w-4">${letter}</span> <span class="flex-grow">${opt.text}</span>`;
+                    
+                    if (hasBeenAnswered) {
+                        const selectedIdx = appState.answers[q.id];
+                        if (selectedIdx === idx) {
+                            if (opt.isCorrect) {
+                                btn.className += " bg-emerald-50 border-emerald-400 text-emerald-950 font-bold";
+                            } else {
+                                btn.className += " bg-rose-50 border-rose-400 text-rose-950 font-bold";
+                            }
+                        } else if (opt.isCorrect) {
+                            btn.className += " bg-emerald-50/40 border-emerald-300 text-emerald-900 opacity-80";
+                        } else {
+                            btn.className += " bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+                        }
+                    } else {
+                        btn.addEventListener('click', () => {
+                            appState.answers[q.id] = idx;
+                            if (!opt.isCorrect) {
+                                triggerConfetti();
+                            }
+                            renderQuestions();
+                        });
+                    }
+                    optionsDiv.appendChild(btn);
+                });
+                
+                card.appendChild(optionsDiv);
+                
+                if (hasBeenAnswered) {
+                    const selectedIdx = appState.answers[q.id];
+                    const selectedOpt = q.options[selectedIdx];
+                    const feedback = document.createElement('p');
+                    feedback.className = "text-xs mt-3 text-slate-600 italic font-medium leading-relaxed bg-slate-50 border border-slate-150 p-2.5 rounded-lg";
+                    feedback.innerHTML = selectedOpt.exp;
+                    card.appendChild(feedback);
+                }
+                
+                container.appendChild(card);
+            });
+            
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([container]).catch(err => console.log(err));
+            }
+        }
+
+        // --- MCQ DUAL CORNER CANVAS CONFETTI ---
+        let confettiActive = false;
+        let confettiParticles = [];
+        let confettiCanvas = document.getElementById('confetti-canvas');
+        let confettiCtx = confettiCanvas.getContext('2d');
+        let confettiAnimationId = null;
+
+        function resizeConfettiCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfettiCanvas);
+        resizeConfettiCanvas();
+
+        function triggerConfetti() {
+            if (!confettiActive) {
+                confettiActive = true;
+                confettiParticles = [];
+                const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#14b8a6', '#f97316', '#a855f7'];
+                
+                const count = 75;
+                for (let i = 0; i < count; i++) {
+                    createConfettiParticle(0, confettiCanvas.height, true, colors);
+                    createConfettiParticle(confettiCanvas.width, confettiCanvas.height, false, colors);
+                }
+                
+                if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+                animateConfetti();
+            }
+        }
+
+        function createConfettiParticle(x, y, isLeft, colors) {
+            const angle = isLeft 
+                ? (-45 - Math.random() * 35) * Math.PI / 180 
+                : (-135 + Math.random() * 35) * Math.PI / 180;
+            const speed = 14 + Math.random() * 15;
+            
+            confettiParticles.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                gravity: 0.28 + Math.random() * 0.15,
+                drag: 0.965,
+                size: 5 + Math.random() * 8,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                spin: -10 + Math.random() * 20,
+                shape: Math.random() > 0.4 ? 'rect' : 'circle',
+                opacity: 1
+            });
+        }
+
+        function animateConfetti() {
+            if (confettiParticles.length === 0) {
+                confettiActive = false;
+                confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                return;
+            }
+            
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            for (let i = confettiParticles.length - 1; i >= 0; i--) {
+                const p = confettiParticles[i];
+                p.vx *= p.drag;
+                p.vy += p.gravity;
+                p.vy *= p.drag;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rotation += p.spin;
+                
+                if (p.y > confettiCanvas.height * 0.7) {
+                    p.opacity -= 0.02;
+                }
+                
+                if (p.opacity <= 0 || p.y > confettiCanvas.height || p.x < -20 || p.x > confettiCanvas.width + 20) {
+                    confettiParticles.splice(i, 1);
+                    continue;
+                }
+                
+                confettiCtx.save();
+                confettiCtx.globalAlpha = p.opacity;
+                confettiCtx.translate(p.x, p.y);
+                confettiCtx.rotate(p.rotation * Math.PI / 180);
+                confettiCtx.fillStyle = p.color;
+                
+                if (p.shape === 'rect') {
+                    confettiCtx.fillRect(-p.size / 2, -p.size, p.size, p.size * 1.5);
+                } else {
+                    confettiCtx.beginPath();
+                    confettiCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                    confettiCtx.fill();
+                }
+                confettiCtx.restore();
+            }
+            
+            confettiAnimationId = requestAnimationFrame(animateConfetti);
+        }
+
+        // --- MATH & CANVAS LOGIC ---
+        const simCanvas = document.getElementById('simCanvas');
+        const ctx = simCanvas.getContext('2d');
+
+        // Telemetry DOM nodes
+        const telNotation = document.getElementById('tel-notation');
+        const telElements = document.getElementById('tel-elements');
+        const telCardinality = document.getElementById('tel-cardinality');
+        const mathDefBox = document.getElementById('math-definition-text');
+        
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('simStatusText');
+        const btnEval = document.getElementById('btn-eval');
+
+        // Dynamic parameters controls elements
+        const selectTopic = document.getElementById('select-topic');
+        
+        // Finite/Infinite control DOM
+        const btnSetFinite = document.getElementById('btn-set-finite');
+        const btnSetInfinite = document.getElementById('btn-set-infinite');
+        
+        // Equal sets control DOM
+        const btnMatchExact = document.getElementById('btn-match-exact');
+        const btnScrambled = document.getElementById('btn-scrambled');
+        
+        // Subsets control DOM
+        const btnSubsetProper = document.getElementById('btn-subset-proper');
+        const btnSubsetImproper = document.getElementById('btn-subset-improper');
+        
+        // Intervals control DOM
+        const selectIntervalMode = document.getElementById('select-interval-mode');
+        
+        // Power set control DOM
+        const sliderN = document.getElementById('slider-n');
+        const valN = document.getElementById('val-n');
+        
+        // Universal set control DOM
+        const chkShowAB = document.getElementById('chk-show-ab');
+
+        // Toggles mapping for showing topic controls
+        const topicCtrlIds = ['finite_infinite', 'equal_sets', 'subsets', 'intervals', 'power_set', 'universal_set'];
+
+        // Draggable interval coordinates scaling: X range -150 to +150 corresponds to values -5.0 to +5.0
+        const intervalScaleX = 30; // 30px per unit
+        
+        // Geometry values
+        let dragTarget = null; // 'interval_a' or 'interval_b'
+        let mouseHoveredTarget = null; // 'interval_a' or 'interval_b'
+
+        // Offscreen canvas for power set flying particles or overlays
+        const offCanvas = document.createElement('canvas');
+        const octx = offCanvas.getContext('2d');
+
+        // Interactive Particle definition for set animations
+        class DisplayParticle {
+            constructor(val, x, y, boundsType, customData = {}) {
+                this.val = val;
+                this.x = x;
+                this.y = y;
+                this.boundsType = boundsType; // 'finite', 'infinite', 'equal_a', 'equal_b', 'subset_a', 'subset_b', 'universal_a', 'universal_b', 'universal_outer'
+                this.vx = (Math.random() - 0.5) * 1.5;
+                this.vy = (Math.random() - 0.5) * 1.5;
+                this.scale = 1.0;
+                this.opacity = 1.0;
+                this.glow = 0;
+                this.phase = Math.random() * Math.PI * 2;
+                this.driftSpeed = 0.02 + Math.random() * 0.02;
+                this.customData = customData; // for custom spawn variables
+            }
+
+            update(time) {
+                // Update based on boundsType
+                if (this.boundsType === 'finite') {
+                    // Ellipse boundary center (0, 0), radii rx=150, ry=90
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    const rx = 150, ry = 90;
+                    const val = (this.x*this.x)/(rx*rx) + (this.y*this.y)/(ry*ry);
+                    if (val >= 0.75) {
+                        let nx = 2 * this.x / (rx * rx);
+                        let ny = 2 * this.y / (ry * ry);
+                        const len = Math.hypot(nx, ny);
+                        nx /= len;
+                        ny /= len;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                } 
+                else if (this.boundsType === 'infinite') {
+                    // Spawns from center, flows rightwards and fades
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    // Fade out as it crosses to the right
+                    if (this.x > 0) {
+                        this.opacity = Math.max(0, 1 - (this.x / 140));
+                    } else {
+                        this.opacity = 1.0;
+                    }
+                } 
+                else if (this.boundsType === 'equal_a') {
+                    // Circle center (-120, 0), radius 75
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    const cx = -120, cy = 0, R = 75;
+                    const dist = Math.hypot(this.x - cx, this.y - cy);
+                    if (dist >= R - 15) {
+                        let nx = (this.x - cx) / dist;
+                        let ny = (this.y - cy) / dist;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+                else if (this.boundsType === 'equal_b') {
+                    // Circle center (120, 0), radius 75
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    const cx = 120, cy = 0, R = 75;
+                    const dist = Math.hypot(this.x - cx, this.y - cy);
+                    if (dist >= R - 15) {
+                        let nx = (this.x - cx) / dist;
+                        let ny = (this.y - cy) / dist;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+                else if (this.boundsType === 'subset_b') {
+                    // Circle B slides dynamically based on subset mode
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    // target center and radius
+                    const targetCx = appState.subsetMode === 'proper' ? 45 : -20;
+                    const targetR = appState.subsetMode === 'proper' ? 55 : 120;
+                    
+                    const dist = Math.hypot(this.x - targetCx, this.y - this.customData.cy);
+                    if (dist >= targetR - 15) {
+                        let nx = (this.x - targetCx) / dist;
+                        let ny = (this.y - this.customData.cy) / dist;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                    
+                    // Smoothly slide base coordinates towards targetCx
+                    if (Math.abs(this.customData.cx - targetCx) > 0.1) {
+                        this.customData.cx += (targetCx - this.customData.cx) * 0.05;
+                        this.x += (targetCx - this.customData.cx) * 0.05;
+                    }
+                }
+                else if (this.boundsType === 'subset_a') {
+                    // Outer Set A: Circle center -20, radius 120
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    const cxA = -20, cyA = 0, rA = 120;
+                    const distA = Math.hypot(this.x - cxA, this.y - cyA);
+                    
+                    // If proper subset, we must also bounce off inner Circle B (center 45, radius 55)
+                    if (appState.subsetMode === 'proper') {
+                        const cxB = 45, cyB = 0, rB = 55;
+                        const distB = Math.hypot(this.x - cxB, this.y - cyB);
+                        
+                        if (distB < rB + 12) {
+                            // Bounce outwards from circle B
+                            let nx = (this.x - cxB) / distB;
+                            let ny = (this.y - cyB) / distB;
+                            const dot = this.vx * nx + this.vy * ny;
+                            this.vx -= 2 * dot * nx;
+                            this.vy -= 2 * dot * ny;
+                            this.x += this.vx;
+                            this.y += this.vy;
+                        }
+                    }
+                    
+                    if (distA >= rA - 15) {
+                        let nx = (this.x - cxA) / distA;
+                        let ny = (this.y - cyA) / distA;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+                else if (this.boundsType === 'universal_a') {
+                    // Set A: center -45, radius 70
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    const cxA = -45, cyA = 0, R = 70;
+                    const cxB = 45, cyB = 0, rB = 70;
+                    
+                    const distA = Math.hypot(this.x - cxA, this.y - cyA);
+                    
+                    // Bounce off circle B boundary to stay outside B
+                    if (appState.showUniversalAB) {
+                        const distB = Math.hypot(this.x - cxB, this.y - cyB);
+                        if (distB < rB + 12) {
+                            let nx = (this.x - cxB) / distB;
+                            let ny = (this.y - cyB) / distB;
+                            const dot = this.vx * nx + this.vy * ny;
+                            this.vx -= 2 * dot * nx;
+                            this.vy -= 2 * dot * ny;
+                            this.x += this.vx;
+                            this.y += this.vy;
+                        }
+                    }
+
+                    if (distA >= R - 15) {
+                        let nx = (this.x - cxA) / distA;
+                        let ny = (this.y - cyA) / distA;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+                else if (this.boundsType === 'universal_b') {
+                    // Set B: center 45, radius 70
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    const cxB = 45, cyB = 0, R = 70;
+                    const cxA = -45, cyA = 0, rA = 70;
+                    
+                    const distB = Math.hypot(this.x - cxB, this.y - cyB);
+                    
+                    // Bounce off circle A boundary to stay outside A
+                    if (appState.showUniversalAB) {
+                        const distA = Math.hypot(this.x - cxA, this.y - cyA);
+                        if (distA < rA + 12) {
+                            let nx = (this.x - cxA) / distA;
+                            let ny = (this.y - cyA) / distA;
+                            const dot = this.vx * nx + this.vy * ny;
+                            this.vx -= 2 * dot * nx;
+                            this.vy -= 2 * dot * ny;
+                            this.x += this.vx;
+                            this.y += this.vy;
+                        }
+                    }
+
+                    if (distB >= R - 15) {
+                        let nx = (this.x - cxB) / distB;
+                        let ny = (this.y - cyB) / distB;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+                else if (this.boundsType === 'universal_intersection') {
+                    // Stays inside the intersection of circle A (-45, 0, R=70) and circle B (45, 0, R=70)
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    const cxA = -45, cyA = 0;
+                    const cxB = 45, cyB = 0;
+                    const R = 70;
+                    
+                    const distA = Math.hypot(this.x - cxA, this.y - cyA);
+                    const distB = Math.hypot(this.x - cxB, this.y - cyB);
+                    
+                    if (distA >= R - 15) {
+                        let nx = (this.x - cxA) / distA;
+                        let ny = (this.y - cyA) / distA;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                    else if (distB >= R - 15) {
+                        let nx = (this.x - cxB) / distB;
+                        let ny = (this.y - cyB) / distB;
+                        const dot = this.vx * nx + this.vy * ny;
+                        this.vx -= 2 * dot * nx;
+                        this.vy -= 2 * dot * ny;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                }
+                else if (this.boundsType === 'universal_outer') {
+                    // Rect bounds -210 to +210, -130 to +130
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    const bx = 210, by = 130;
+                    
+                    // Bounce off boundary rect
+                    if (Math.abs(this.x) >= bx - 10) {
+                        this.vx *= -1;
+                        this.x = Math.sign(this.x) * (bx - 10);
+                    }
+                    if (Math.abs(this.y) >= by - 10) {
+                        this.vy *= -1;
+                        this.y = Math.sign(this.y) * (by - 10);
+                    }
+                    
+                    // Bounce off A and B circles if shown
+                    if (appState.showUniversalAB) {
+                        const rA = 70, cxA = -45, cyA = 0;
+                        const rB = 70, cxB = 45, cyB = 0;
+                        
+                        const distA = Math.hypot(this.x - cxA, this.y - cyA);
+                        const distB = Math.hypot(this.x - cxB, this.y - cyB);
+                        
+                        if (distA < rA + 12) {
+                            let nx = (this.x - cxA) / distA;
+                            let ny = (this.y - cyA) / distA;
+                            const dot = this.vx * nx + this.vy * ny;
+                            this.vx -= 2 * dot * nx;
+                            this.vy -= 2 * dot * ny;
+                        }
+                        else if (distB < rB + 12) {
+                            let nx = (this.x - cxB) / distB;
+                            let ny = (this.y - cyB) / distB;
+                            const dot = this.vx * nx + this.vy * ny;
+                            this.vx -= 2 * dot * nx;
+                            this.vy -= 2 * dot * ny;
+                        }
+                    }
+                }
+            }
+
+            draw(ctx) {
+                if (this.opacity <= 0.01) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+                ctx.scale(this.scale, this.scale);
+                
+                ctx.font = 'bold 15px JetBrains Mono';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Add soft neon drop shadow to symbols
+                ctx.shadowColor = this.color;
+                ctx.shadowBlur = this.glow;
+                ctx.fillStyle = this.color;
+                
+                ctx.fillText(this.val, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        // Active particles pool
+        let activeParticles = [];
+
+        // Dynamic intervals elements dots for subset ℝ density
+        let intervalDots = [];
+
+        // Power set bubbles layout array
+        let powerSetBubbles = [];
+        let powerSetFlyProgress = 0.0; // 0.0 to 1.0 animation slider
+
+        // Initialization helper for topic states
+        function initTopicState() {
+            activeParticles = [];
+            intervalDots = [];
+            powerSetBubbles = [];
+            powerSetFlyProgress = 0.0;
+            appState.isEvaluated = false;
+
+            // Reset evaluation labels
+            statusText.innerText = "Awaiting Evaluation";
+            statusText.className = "text-[10px] font-extrabold text-white uppercase tracking-wider";
+            statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500 shadow-none";
+
+            const t = appState.activeTopic;
+            if (t === 'finite_infinite') {
+                if (appState.finiteInfinite === 'finite') {
+                    // Factor of 12: {1, 2, 3, 4, 6, 12}
+                    const vals = [1, 2, 3, 4, 6, 12];
+                    vals.forEach((v) => {
+                        const px = (Math.random() - 0.5) * 80;
+                        const py = (Math.random() - 0.5) * 50;
+                        activeParticles.push(new DisplayParticle(v, px, py, 'finite', {}));
+                    });
+                }
+                // Infinite is generated dynamically inside rendering loops
+            } 
+            else if (t === 'equal_sets') {
+                const valsA = [1, 2, 3];
+                const valsB = appState.equalMode === 'scrambled' ? [3, 1, 2] : [1, 2, 3];
+                
+                valsA.forEach((v) => {
+                    const px = -120 + (Math.random() - 0.5) * 40;
+                    const py = (Math.random() - 0.5) * 40;
+                    activeParticles.push(new DisplayParticle(v, px, py, 'equal_a', {}));
+                });
+
+                valsB.forEach((v) => {
+                    const px = 120 + (Math.random() - 0.5) * 40;
+                    const py = (Math.random() - 0.5) * 40;
+                    activeParticles.push(new DisplayParticle(v, px, py, 'equal_b', {}));
+                });
+            }
+            else if (t === 'subsets') {
+                // Outer A only: {1, 3, 5}
+                const outerVals = [1, 3, 5];
+                outerVals.forEach(v => {
+                    // Position them carefully in outer ring (left-ish)
+                    const px = -80 + (Math.random() - 0.5) * 40;
+                    const py = (Math.random() - 0.5) * 40;
+                    activeParticles.push(new DisplayParticle(v, px, py, 'subset_a', {}));
+                });
+
+                // Inner B: {2, 4}
+                const innerVals = [2, 4];
+                innerVals.forEach(v => {
+                    // Initialized inside B circle center (45)
+                    const px = 45 + (Math.random() - 0.5) * 20;
+                    const py = (Math.random() - 0.5) * 20;
+                    activeParticles.push(new DisplayParticle(v, px, py, 'subset_b', { cx: 45, cy: 0 }));
+                });
+            }
+            else if (t === 'intervals') {
+                // Initialize 80 fluid background dots
+                for (let i = 0; i < 80; i++) {
+                    intervalDots.push({
+                        val: (Math.random() - 0.5), // ratio along the line
+                        offsetY: (Math.random() - 0.5) * 12,
+                        phase: Math.random() * Math.PI * 2,
+                        speed: 0.01 + Math.random() * 0.02
+                    });
+                }
+            }
+            else if (t === 'power_set') {
+                // Base set elements bounce inside base circle
+                const chars = ['a', 'b', 'c'];
+                const count = appState.baseSetSize;
+                for (let i = 0; i < count; i++) {
+                    const px = (Math.random() - 0.5) * 50;
+                    const py = (Math.random() - 0.5) * 50;
+                    activeParticles.push(new DisplayParticle(chars[i], px, py, 'finite', {}));
+                }
+                
+                // Set up Power set bubbles
+                // Subsets generated:
+                let subsets = [[]];
+                if (count >= 1) subsets.push(['a']);
+                if (count >= 2) { subsets.push(['b']); subsets.push(['a', 'b']); }
+                if (count >= 3) {
+                    subsets.push(['c']);
+                    subsets.push(['a', 'c']);
+                    subsets.push(['b', 'c']);
+                    subsets.push(['a', 'b', 'c']);
+                }
+
+                // Map subsets to bubble definitions
+                subsets.forEach((sub, idx) => {
+                    let label = "";
+                    if (sub.length === 0) label = "∅";
+                    else label = "{" + sub.join(",") + "}";
+
+                    // Calculate radial target coordinates
+                    const angle = (idx / subsets.length) * Math.PI * 2;
+                    const targetRadius = 150;
+                    const tx = Math.cos(angle) * targetRadius;
+                    const ty = Math.sin(angle) * targetRadius;
+
+                    powerSetBubbles.push({
+                        label: label,
+                        x: 0,
+                        y: 0,
+                        tx: tx,
+                        ty: ty,
+                        color: idx === 0 ? '#f43f5e' : (sub.length === 1 ? '#06b6d4' : (sub.length === 2 ? '#10b981' : '#f59e0b')),
+                        scale: 1.0,
+                        angleOffset: Math.random() * Math.PI * 2
+                    });
+                });
+            }
+            else if (t === 'universal_set') {
+                // A: {1, 2}, Intersect: {3}, B: {4, 5}, Outer U: {6, 7, 8}
+                activeParticles.push(new DisplayParticle(1, -75, -15, 'universal_a', {}));
+                activeParticles.push(new DisplayParticle(2, -70, 20, 'universal_a', {}));
+                
+                activeParticles.push(new DisplayParticle(3, 0, (Math.random() - 0.5) * 20, 'universal_intersection', {}));
+
+                activeParticles.push(new DisplayParticle(4, 75, -15, 'universal_b', {}));
+                activeParticles.push(new DisplayParticle(5, 70, 20, 'universal_b', {}));
+
+                activeParticles.push(new DisplayParticle(6, -160, -90, 'universal_outer', {}));
+                activeParticles.push(new DisplayParticle(7, 160, 90, 'universal_outer', {}));
+                activeParticles.push(new DisplayParticle(8, -120, 80, 'universal_outer', {}));
+            }
+
+            updateUI();
+        }
+
+        // Toggle dynamic parameter card configurations
+        function updateControlPanelVisibility() {
+            const active = appState.activeTopic;
+            topicCtrlIds.forEach(id => {
+                const el = document.getElementById(`ctrl-${id}`);
+                if (id === active) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        // Topic change listener
+        selectTopic.addEventListener('change', (e) => {
+            appState.activeTopic = e.target.value;
+            updateControlPanelVisibility();
+            initTopicState();
+        });
+
+        // Finite/Infinite buttons
+        btnSetFinite.addEventListener('click', () => {
+            appState.finiteInfinite = 'finite';
+            btnSetFinite.className = "w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all";
+            btnSetInfinite.className = "w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all";
+            initTopicState();
+        });
+        btnSetInfinite.addEventListener('click', () => {
+            appState.finiteInfinite = 'infinite';
+            btnSetInfinite.className = "w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all";
+            btnSetFinite.className = "w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all";
+            initTopicState();
+        });
+
+        // Equal sets buttons
+        btnMatchExact.addEventListener('click', () => {
+            appState.equalMode = 'exact';
+            btnMatchExact.className = "w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all";
+            btnScrambled.className = "w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all";
+            initTopicState();
+        });
+        btnScrambled.addEventListener('click', () => {
+            appState.equalMode = 'scrambled';
+            btnScrambled.className = "w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all";
+            btnMatchExact.className = "w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all";
+            initTopicState();
+        });
+
+        // Subsets buttons
+        btnSubsetProper.addEventListener('click', () => {
+            appState.subsetMode = 'proper';
+            btnSubsetProper.className = "w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all";
+            btnSubsetImproper.className = "w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all";
+            initTopicState();
+        });
+        btnSubsetImproper.addEventListener('click', () => {
+            appState.subsetMode = 'improper';
+            btnSubsetImproper.className = "w-1/2 text-xs font-bold py-1.5 rounded shadow-sm bg-white text-slate-800 transition-all";
+            btnSubsetProper.className = "w-1/2 text-xs font-bold py-1.5 rounded text-slate-500 hover:text-slate-800 transition-all";
+            initTopicState();
+        });
+
+        // Intervals dropdown
+        selectIntervalMode.addEventListener('change', (e) => {
+            appState.intervalMode = e.target.value;
+            initTopicState();
+        });
+
+        // Power set slider
+        sliderN.addEventListener('input', (e) => {
+            appState.baseSetSize = parseInt(e.target.value);
+            valN.textContent = appState.baseSetSize;
+            initTopicState();
+        });
+
+        // Universal Set checkbox
+        chkShowAB.addEventListener('change', (e) => {
+            appState.showUniversalAB = e.target.checked;
+            initTopicState();
+        });
+
+        // Zoom Controls
+        document.getElementById('btn-zoom-in').addEventListener('click', () => { appState.zoomLevel = Math.min(2.0, appState.zoomLevel + 0.1); });
+        document.getElementById('btn-zoom-out').addEventListener('click', () => { appState.zoomLevel = Math.max(0.5, appState.zoomLevel - 0.1); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { appState.zoomLevel = 1.0; });
+
+        function triggerEvaluation() {
+            appState.isEvaluated = true;
+            updateUI();
+
+            statusText.innerText = "Evaluation Active";
+            statusText.className = "text-[10px] font-extrabold text-pink-500 uppercase tracking-wider";
+            statusDot.className = "w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899]";
+        }
+
+        function resetSim() {
+            appState.isEvaluated = false;
+            appState.zoomLevel = 1.0;
+            appState.intervalValA = -2.0;
+            appState.intervalValB = 2.0;
+            initTopicState();
+        }
+
+        function updateUI() {
+            const topic = appState.activeTopic;
+            let notationText = "";
+            let elementsText = "";
+            let cardinalityText = "";
+            let definitionText = "";
+
+            if (topic === 'finite_infinite') {
+                if (appState.finiteInfinite === 'finite') {
+                    notationText = "A = \\{x \\in \\mathbb{N} \\mid x \\text{ is a factor of } 12\\}";
+                    elementsText = appState.isEvaluated ? "{ 1, 2, 3, 4, 6, 12 }" : "{ ? }";
+                    cardinalityText = appState.isEvaluated ? "6 Elements" : "-";
+                    definitionText = "<p>A <strong>Finite Set</strong> is a set that contains a countable or limited number of elements. The process of listing elements in such a set terminates.</p><p class='mt-2'>$\\text{Cardinality } |A| = n(A) = 6$</p>";
+                } else {
+                    notationText = "A = \\{x \\in \\mathbb{N} \\mid x \\text{ is odd}\\}";
+                    elementsText = appState.isEvaluated ? "{ 1, 3, 5, 7, 9, ... }" : "{ ? }";
+                    cardinalityText = appState.isEvaluated ? "Infinite (ℵ₀)" : "-";
+                    definitionText = "<p>An <strong>Infinite Set</strong> is a set whose elements are unlimited and endless. The listing process goes on forever without termination.</p><p class='mt-2'>$\\text{Cardinality } |A| = \\aleph_0 \\text{ (aleph-null)}$</p>";
+                }
+            } 
+            else if (topic === 'equal_sets') {
+                notationText = "A = B \\iff (x \\in A \\leftrightarrow x \\in B)";
+                if (appState.equalMode === 'scrambled') {
+                    elementsText = appState.isEvaluated ? "A={1,2,3}, B={3,1,2} ∴ A=B" : "A={1,2,3}, B={3,1,2}";
+                } else {
+                    elementsText = appState.isEvaluated ? "A={1,2,3}, B={1,2,3} ∴ A=B" : "A={1,2,3}, B={1,2,3}";
+                }
+                cardinalityText = appState.isEvaluated ? "n(A) = n(B) = 3" : "-";
+                definitionText = "<p>Two sets $A$ and $B$ are <strong>Equal Sets</strong> if they have exactly the same elements. The order of elements does not matter.</p><p class='mt-2'>$\\text{Identity: } \\{1, 2, 3\\} = \\{3, 1, 2\\}$</p>";
+            }
+            else if (topic === 'subsets') {
+                if (appState.subsetMode === 'proper') {
+                    notationText = "B \\subset A \\iff (B \\subseteq A \\land B \\ne A)";
+                    elementsText = appState.isEvaluated ? "B={2,4}, A={1,2,3,4,5}" : "B={2,4}, A={1,3,5} ∪ B";
+                    cardinalityText = appState.isEvaluated ? "n(B) = 2 < n(A) = 5" : "-";
+                    definitionText = "<p>Set $B$ is a <strong>Proper Subset</strong> of $A$ ($B \\subset A$) if all elements in $B$ are in $A$ and there is at least one element in $A$ not in $B$.</p>";
+                } else {
+                    notationText = "B = A \\iff (B \\subseteq A \\land A \\subseteq B)";
+                    elementsText = appState.isEvaluated ? "B = A = {1,2,3,4,5}" : "B ⊆ A, A ⊆ B";
+                    cardinalityText = appState.isEvaluated ? "n(B) = n(A) = 5" : "-";
+                    definitionText = "<p>When $B = A$, it is an **improper subset** because they share every element in common, satisfying the subset bounds reflexively.</p>";
+                }
+            }
+            else if (topic === 'intervals') {
+                const aStr = appState.intervalValA.toFixed(1);
+                const bStr = appState.intervalValB.toFixed(1);
+                
+                if (appState.intervalMode === 'open') {
+                    notationText = `I = (a, b) = \\{x \\in \\mathbb{R} \\mid ${aStr} < x < bStr\\}`;
+                    elementsText = appState.isEvaluated ? `(${aStr}, ${bStr})` : `{ ? }`;
+                } else if (appState.intervalMode === 'closed') {
+                    notationText = `I = [a, b] = \\{x \\in \\mathbb{R} \\mid ${aStr} \\le x \\le bStr\\}`;
+                    elementsText = appState.isEvaluated ? `[${aStr}, ${bStr}]` : `{ ? }`;
+                } else if (appState.intervalMode === 'semi_open') {
+                    notationText = `I = [a, b) = \\{x \\in \\mathbb{R} \\mid ${aStr} \\le x < bStr\\}`;
+                    elementsText = appState.isEvaluated ? `[${aStr}, ${bStr})` : `{ ? }`;
+                } else {
+                    notationText = `I = (a, b] = \\{x \\in \\mathbb{R} \\mid ${aStr} < x \\le bStr\\}`;
+                    elementsText = appState.isEvaluated ? `(${aStr}, ${bStr}]` : `{ ? }`;
+                }
+                cardinalityText = appState.isEvaluated ? "Infinite (Uncountable, c)" : "-";
+                definitionText = "<p><strong>Intervals</strong> represent continuous ranges on the real line. Square brackets $[, ]$ include endpoints, while parentheses $(, )$ exclude them.</p>";
+            }
+            else if (topic === 'power_set') {
+                notationText = "|\\mathcal{P}(A)| = 2^n \\text{ where } n = |A|";
+                const baseChar = appState.baseSetSize === 0 ? "∅" : (appState.baseSetSize === 1 ? "{a}" : (appState.baseSetSize === 2 ? "{a,b}" : "{a,b,c}"));
+                elementsText = `Base A = ${baseChar}`;
+                cardinalityText = appState.isEvaluated ? `2^${appState.baseSetSize} = ${Math.pow(2, appState.baseSetSize)} Subsets` : "-";
+                definitionText = "<p>The <strong>Power Set</strong> $\\mathcal{P}(A)$ is the set of all subsets of $A$. It always includes the empty set $\\emptyset$ and $A$ itself.</p>";
+            }
+            else if (topic === 'universal_set') {
+                notationText = "\\forall X, X \\subseteq U";
+                elementsText = appState.isEvaluated ? "U = {1, 2, 3, 4, 5, 6, 7, 8}" : "U contains A={1,2,3}, B={3,4,5}";
+                cardinalityText = appState.isEvaluated ? "n(U) = 8" : "-";
+                definitionText = "<p>The <strong>Universal Set</strong> $U$ acts as the outer context container, encompassing all other sets and elements under consideration.</p>";
+            }
+
+            // Render dynamic texts
+            telNotation.innerHTML = `\\(${notationText}\\)`;
+            telElements.textContent = elementsText;
+            telCardinality.textContent = cardinalityText;
+            mathDefBox.innerHTML = definitionText;
+
+            // Render LaTeX
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([telNotation, mathDefBox]).catch(err => console.log(err));
+            }
+        }
+
+        // Coordinate calculations for canvas
+        function getMousePos(e) {
+            const rect = simCanvas.getBoundingClientRect();
+            const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX);
+            const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY);
+            
+            if (clientX === undefined || clientY === undefined) return { x: 0, y: 0 };
+
+            const mouseX = (clientX - rect.left) * (simCanvas.width / rect.width) / window.devicePixelRatio;
+            const mouseY = (clientY - rect.top) * (simCanvas.height / rect.height) / window.devicePixelRatio;
+
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+
+            const localX = (mouseX - W / 2) / appState.zoomLevel;
+            const localY = (mouseY - H / 2) / appState.zoomLevel;
+
+            return { x: localX, y: localY };
+        }
+
+        // Mouse handlers
+        simCanvas.addEventListener('mousedown', (e) => {
+            if (appState.activeTopic !== 'intervals') return;
+            const pos = getMousePos(e);
+            
+            const xA = appState.intervalValA * intervalScaleX;
+            const xB = appState.intervalValB * intervalScaleX;
+            
+            const threshold = 18;
+            if (Math.hypot(pos.x - xA, pos.y) < threshold) {
+                dragTarget = 'interval_a';
+            } else if (Math.hypot(pos.x - xB, pos.y) < threshold) {
+                dragTarget = 'interval_b';
+            }
+        });
+
+        simCanvas.addEventListener('mousemove', (e) => {
+            const pos = getMousePos(e);
+            
+            if (appState.activeTopic === 'intervals') {
+                const xA = appState.intervalValA * intervalScaleX;
+                const xB = appState.intervalValB * intervalScaleX;
+                
+                const threshold = 18;
+                if (Math.hypot(pos.x - xA, pos.y) < threshold) {
+                    mouseHoveredTarget = 'interval_a';
+                    simCanvas.style.cursor = 'ew-resize';
+                } else if (Math.hypot(pos.x - xB, pos.y) < threshold) {
+                    mouseHoveredTarget = 'interval_b';
+                    simCanvas.style.cursor = 'ew-resize';
+                } else {
+                    mouseHoveredTarget = null;
+                    simCanvas.style.cursor = 'default';
+                }
+
+                if (dragTarget) {
+                    // Calculate relative real-line value clamped to [-5.0, 5.0]
+                    let val = Math.max(-5.0, Math.min(5.0, pos.x / intervalScaleX));
+                    
+                    if (dragTarget === 'interval_a') {
+                        appState.intervalValA = Math.min(val, appState.intervalValB - 0.2);
+                    } else if (dragTarget === 'interval_b') {
+                        appState.intervalValB = Math.max(val, appState.intervalValA + 0.2);
+                    }
+                    updateUI();
+                }
+            } else {
+                simCanvas.style.cursor = 'default';
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            dragTarget = null;
+        });
+
+        // Touch event handlers for mobile devices
+        simCanvas.addEventListener('touchstart', (e) => {
+            if (appState.activeTopic !== 'intervals') return;
+            if (e.touches.length === 1) {
+                const pos = getMousePos(e);
+                const xA = appState.intervalValA * intervalScaleX;
+                const xB = appState.intervalValB * intervalScaleX;
+                const threshold = 22; // larger tap target
+                
+                if (Math.hypot(pos.x - xA, pos.y) < threshold) {
+                    dragTarget = 'interval_a';
+                    e.preventDefault();
+                } else if (Math.hypot(pos.x - xB, pos.y) < threshold) {
+                    dragTarget = 'interval_b';
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+
+        simCanvas.addEventListener('touchmove', (e) => {
+            if (appState.activeTopic !== 'intervals' || !dragTarget) return;
+            if (e.touches.length === 1) {
+                const pos = getMousePos(e);
+                let val = Math.max(-5.0, Math.min(5.0, pos.x / intervalScaleX));
+                
+                if (dragTarget === 'interval_a') {
+                    appState.intervalValA = Math.min(val, appState.intervalValB - 0.2);
+                } else if (dragTarget === 'interval_b') {
+                    appState.intervalValB = Math.max(val, appState.intervalValA + 0.2);
+                }
+                updateUI();
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        simCanvas.addEventListener('touchend', () => {
+            dragTarget = null;
+        });
+
+        function resizeCanvas() {
+            const container = simCanvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+
+            simCanvas.width = container.clientWidth * dpr;
+            simCanvas.height = container.clientHeight * dpr;
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+
+            offCanvas.width = simCanvas.width;
+            offCanvas.height = simCanvas.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // --- SIMULATION RENDER LOOP ---
+        let lastInfiniteSpawn = 0;
+        let infiniteElementCount = 1;
+
+        function renderLoop() {
+            const W = simCanvas.width / window.devicePixelRatio;
+            const H = simCanvas.height / window.devicePixelRatio;
+            ctx.clearRect(0, 0, W, H);
+
+            ctx.save();
+            ctx.translate(W / 2, H / 2);
+            ctx.scale(appState.zoomLevel, appState.zoomLevel);
+
+            const topic = appState.activeTopic;
+            const time = Date.now();
+
+            if (topic === 'finite_infinite') {
+                const rx = 150, ry = 90;
+                
+                if (appState.finiteInfinite === 'finite') {
+                    // Draw Closed Oval Set container
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#06b6d4'; // Cyan
+                    ctx.shadowColor = '#06b6d4';
+                    ctx.shadowBlur = 10;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    
+                    // Oval label
+                    ctx.font = 'bold 16px monospace';
+                    ctx.fillStyle = '#06b6d4';
+                    ctx.fillText("Set A", -rx + 15, -ry + 10);
+
+                    // Update and draw elements
+                    activeParticles.forEach(p => {
+                        p.update();
+                        p.glow = appState.isEvaluated ? (8 + Math.sin(time * 0.005) * 3) : 0;
+                        p.color = appState.isEvaluated ? '#10b981' : '#ffffff'; // Emerald if evaluated
+                        p.scale = appState.isEvaluated ? 1.2 : 1.0;
+                        if (document.getElementById('chk-elements').checked) {
+                            p.draw(ctx);
+                        }
+                    });
+                } 
+                else {
+                    // Infinite Set container: fading right boundaries
+                    ctx.beginPath();
+                    // Left curve half oval
+                    ctx.ellipse(0, 0, rx, ry, 0, Math.PI * 0.5, Math.PI * 1.5);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#ec4899'; // Pink
+                    ctx.shadowColor = '#ec4899';
+                    ctx.shadowBlur = 10;
+                    ctx.stroke();
+                    
+                    // Draw upper and lower straight lines fading to dashed
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.setLineDash([6, 6]);
+                    ctx.moveTo(0, -ry);
+                    ctx.lineTo(120, -ry);
+                    ctx.moveTo(0, ry);
+                    ctx.lineTo(120, ry);
+                    ctx.strokeStyle = 'rgba(236, 72, 153, 0.4)';
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // Oval label
+                    ctx.font = 'bold 16px monospace';
+                    ctx.fillStyle = '#ec4899';
+                    ctx.fillText("Set A (Unbounded)", -rx + 15, -ry + 10);
+
+                    // Spawner of odd elements representative
+                    if (time - lastInfiniteSpawn > 1200 && activeParticles.length < 15 && appState.isEvaluated) {
+                        // Spawn one element
+                        const py = (Math.random() - 0.5) * 60;
+                        const p = new DisplayParticle(infiniteElementCount, -120, py, 'infinite', {});
+                        p.vx = 0.8 + Math.random() * 0.8;
+                        p.vy = (Math.random() - 0.5) * 0.3;
+                        p.color = '#e11d48';
+                        activeParticles.push(p);
+                        
+                        infiniteElementCount += 2;
+                        lastInfiniteSpawn = time;
+                    }
+
+                    // Render ellipsis at the right
+                    if (appState.isEvaluated) {
+                        ctx.fillStyle = '#fda4af';
+                        ctx.font = 'bold 24px JetBrains Mono';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(". . .", 140, 0);
+                    } else {
+                        ctx.fillStyle = '#e2e8f0';
+                        ctx.font = 'bold 15px JetBrains Mono';
+                        ctx.textAlign = 'center';
+                        ctx.fillText("Evaluate to spawn elements", 0, 0);
+                    }
+
+                    // Update & draw
+                    activeParticles.forEach((p, idx) => {
+                        p.update();
+                        p.glow = 6;
+                        if (document.getElementById('chk-elements').checked) {
+                            p.draw(ctx);
+                        }
+                    });
+
+                    // Remove faded out particles
+                    activeParticles = activeParticles.filter(p => p.opacity > 0.05);
+                }
+            }
+            else if (topic === 'equal_sets') {
+                const R = 75;
+                const cxA = -120, cxB = 120;
+                
+                // Draw set borders
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#06b6d4'; // Cyan
+                ctx.beginPath(); ctx.arc(cxA, 0, R, 0, Math.PI * 2);
+                ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 10; ctx.stroke(); ctx.shadowBlur = 0;
+                
+                ctx.strokeStyle = '#10b981'; // Emerald
+                ctx.beginPath(); ctx.arc(cxB, 0, R, 0, Math.PI * 2);
+                ctx.shadowColor = '#10b981'; ctx.shadowBlur = 10; ctx.stroke(); ctx.shadowBlur = 0;
+                
+                // Labels
+                ctx.font = 'bold 16px monospace';
+                ctx.fillStyle = '#06b6d4'; ctx.fillText("Set A", cxA - R + 10, -R - 10);
+                ctx.fillStyle = '#10b981'; ctx.fillText("Set B", cxB - R + 10, -R - 10);
+
+                // Update particles
+                activeParticles.forEach(p => {
+                    p.update();
+                    if (document.getElementById('chk-elements').checked) {
+                        p.draw(ctx);
+                    }
+                });
+
+                // Mapping connections on evaluation
+                if (appState.isEvaluated && document.getElementById('chk-elements').checked) {
+                    const A_parts = activeParticles.filter(p => p.boundsType === 'equal_a');
+                    const B_parts = activeParticles.filter(p => p.boundsType === 'equal_b');
+                    
+                    // Draw curves mapping equivalent numbers
+                    A_parts.forEach(pa => {
+                        const pb = B_parts.find(p => p.val === pa.val);
+                        if (pb) {
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(pa.x, pa.y);
+                            
+                            // Quadratic curve bowing down or up
+                            const midX = (pa.x + pb.x) / 2;
+                            const midY = (pa.y + pb.y) / 2 + 50; 
+                            ctx.quadraticCurveTo(midX, midY, pb.x, pb.y);
+                            
+                            ctx.lineWidth = 2.5;
+                            ctx.strokeStyle = 'rgba(236, 72, 153, 0.7)'; // Neon pink mapping
+                            ctx.shadowColor = '#ec4899';
+                            ctx.shadowBlur = 8;
+                            ctx.setLineDash([4, 4]);
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    });
+                }
+            }
+            else if (topic === 'subsets') {
+                const cxA = -20, rA = 120;
+                let cxB = appState.subsetMode === 'proper' ? 45 : -20;
+                let rB = appState.subsetMode === 'proper' ? 55 : 120;
+
+                // Draw set borders
+                ctx.lineWidth = 3;
+                
+                // Set A circle (Cyan)
+                ctx.strokeStyle = '#06b6d4';
+                ctx.beginPath(); ctx.arc(cxA, 0, rA, 0, Math.PI * 2);
+                ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 10; ctx.stroke(); ctx.shadowBlur = 0;
+                
+                // Set B circle (Emerald)
+                ctx.strokeStyle = '#10b981';
+                ctx.beginPath(); ctx.arc(cxB, 0, rB, 0, Math.PI * 2);
+                ctx.shadowColor = '#10b981'; ctx.shadowBlur = 10; ctx.stroke(); ctx.shadowBlur = 0;
+
+                // Labels
+                ctx.font = 'bold 15px monospace';
+                ctx.fillStyle = '#06b6d4'; ctx.fillText("Set A", cxA - rA + 15, -rA + 10);
+                
+                if (appState.subsetMode === 'proper') {
+                    ctx.fillStyle = '#10b981'; ctx.fillText("Set B", cxB + rB - 35, -rB + 10);
+                } else {
+                    ctx.fillStyle = '#10b981'; ctx.fillText("Set B (Merged)", cxA - rA + 15, -rA + 30);
+                }
+
+                // Update particles
+                activeParticles.forEach(p => {
+                    p.update();
+                    p.glow = appState.isEvaluated ? 6 : 0;
+                    if (document.getElementById('chk-elements').checked) {
+                        p.draw(ctx);
+                    }
+                });
+            }
+            else if (topic === 'intervals') {
+                // Draw 1D Real line
+                ctx.beginPath();
+                ctx.moveTo(-180, 0);
+                ctx.lineTo(180, 0);
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#475569'; // slate
+                ctx.stroke();
+
+                // Draw arrows at ends of ℝ
+                ctx.beginPath();
+                ctx.moveTo(-185, -5); ctx.lineTo(-195, 0); ctx.lineTo(-185, 5);
+                ctx.moveTo(185, -5); ctx.lineTo(195, 0); ctx.lineTo(185, 5);
+                ctx.strokeStyle = '#475569'; ctx.stroke();
+
+                // Tick marks and numbers
+                ctx.font = 'bold 11px JetBrains Mono';
+                ctx.fillStyle = '#94a3b8';
+                ctx.textAlign = 'center';
+                for (let i = -5; i <= 5; i++) {
+                    const tx = i * intervalScaleX;
+                    ctx.beginPath();
+                    ctx.moveTo(tx, -6);
+                    ctx.lineTo(tx, 6);
+                    ctx.stroke();
+                    ctx.fillText(i, tx, 20);
+                }
+
+                // Selected bounds
+                const xA = appState.intervalValA * intervalScaleX;
+                const xB = appState.intervalValB * intervalScaleX;
+
+                // Highlight interval segment
+                ctx.beginPath();
+                ctx.moveTo(xA, 0);
+                ctx.lineTo(xB, 0);
+                ctx.lineWidth = 6;
+                ctx.strokeStyle = '#ec4899'; // Pink glow
+                ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 10;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                // Draw fluid glowing interval density particles
+                if (appState.isEvaluated && document.getElementById('chk-elements').checked) {
+                    intervalDots.forEach(dot => {
+                        const px = xA + (dot.val + 0.5) * (xB - xA);
+                        // Oscillate vertically
+                        const py = dot.offsetY + Math.sin(time * dot.speed + dot.phase) * 3;
+                        
+                        ctx.beginPath();
+                        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+                        ctx.fillStyle = '#fda4af'; // light pink
+                        ctx.shadowColor = '#f43f5e'; ctx.shadowBlur = 5;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    });
+                }
+
+                // Draw endpoints
+                const isA_Open = appState.intervalMode === 'open' || appState.intervalMode === 'semi_closed';
+                const isB_Open = appState.intervalMode === 'open' || appState.intervalMode === 'semi_open';
+
+                function drawEndpointMarker(x, isOpen, label, isHovered) {
+                    ctx.beginPath();
+                    ctx.arc(x, 0, 9, 0, Math.PI * 2);
+                    
+                    if (isOpen) {
+                        ctx.fillStyle = '#020617'; // hollow
+                        ctx.fill();
+                        ctx.lineWidth = 3.5;
+                        ctx.strokeStyle = '#ec4899';
+                        ctx.stroke();
+                    } else {
+                        ctx.fillStyle = '#ec4899'; // solid
+                        ctx.fill();
+                        ctx.lineWidth = 1.5;
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.stroke();
+                    }
+
+                    if (isHovered) {
+                        ctx.beginPath();
+                        ctx.arc(x, 0, 15, 0, Math.PI * 2);
+                        ctx.lineWidth = 1.5;
+                        ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+                        ctx.stroke();
+                    }
+
+                    // labels
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 13px JetBrains Mono';
+                    ctx.fillText(label, x, -18);
+                }
+
+                drawEndpointMarker(xA, isA_Open, 'a', mouseHoveredTarget === 'interval_a');
+                drawEndpointMarker(xB, isB_Open, 'b', mouseHoveredTarget === 'interval_b');
+            }
+            else if (topic === 'power_set') {
+                const cx = 0, cy = 0, R = 90;
+
+                // Base set border
+                ctx.lineWidth = 3.5;
+                ctx.strokeStyle = '#ec4899';
+                ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+                ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 10; ctx.stroke(); ctx.shadowBlur = 0;
+
+                ctx.font = 'bold 15px monospace';
+                ctx.fillStyle = '#ec4899'; ctx.fillText("Set A", cx - R + 15, -R + 10);
+
+                // Animate flyOutProgress based on evaluation
+                if (appState.isEvaluated) {
+                    powerSetFlyProgress = Math.min(1.0, powerSetFlyProgress + 0.05);
+                }
+
+                // If not fully flown out, draw bouncing elements
+                if (powerSetFlyProgress < 0.95) {
+                    ctx.save();
+                    ctx.globalAlpha = 1.0 - powerSetFlyProgress;
+                    activeParticles.forEach(p => {
+                        p.update();
+                        if (document.getElementById('chk-elements').checked) {
+                            p.draw(ctx);
+                        }
+                    });
+                    ctx.restore();
+                }
+
+                // Render Subsets flying out
+                if (appState.isEvaluated) {
+                    powerSetBubbles.forEach(b => {
+                        // Interpolate position from center to target
+                        const curX = b.tx * powerSetFlyProgress;
+                        const curY = b.ty * powerSetFlyProgress;
+                        const bubbleR = 26;
+
+                        // Float bobbing effect
+                        const bx = curX + Math.sin(time * 0.003 + b.angleOffset) * 4;
+                        const by = curY + Math.cos(time * 0.003 + b.angleOffset) * 4;
+
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(bx, by, bubbleR, 0, Math.PI * 2);
+                        ctx.fillStyle = '#0f172a';
+                        ctx.fill();
+                        ctx.lineWidth = 2.5;
+                        ctx.strokeStyle = b.color;
+                        ctx.shadowColor = b.color; ctx.shadowBlur = 8;
+                        ctx.stroke();
+                        ctx.shadowBlur = 0;
+
+                        // Inner label
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = 'bold 11px JetBrains Mono';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(b.label, bx, by);
+                        ctx.restore();
+                    });
+                }
+            }
+            else if (topic === 'universal_set') {
+                const bx = 210, by = 135;
+
+                // Draw Rect U
+                ctx.beginPath();
+                ctx.roundRect(-bx, -by, bx * 2, by * 2, 8);
+                ctx.lineWidth = 3.5;
+                ctx.strokeStyle = '#64748b'; // slate
+                ctx.stroke();
+                
+                ctx.font = 'bold 16px monospace';
+                ctx.fillStyle = '#64748b';
+                ctx.fillText("Universal Set U", -bx + 20, -by + 20);
+
+                if (appState.showUniversalAB) {
+                    // Draw subset A and B circles
+                    const r = 70;
+                    ctx.lineWidth = 2.5;
+                    
+                    ctx.strokeStyle = '#06b6d4'; // A
+                    ctx.beginPath(); ctx.arc(-45, 0, r, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fillStyle = '#06b6d4'; ctx.fillText("A", -110, -55);
+
+                    ctx.strokeStyle = '#10b981'; // B
+                    ctx.beginPath(); ctx.arc(45, 0, r, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fillStyle = '#10b981'; ctx.fillText("B", 100, -55);
+                }
+
+                // Update particles
+                activeParticles.forEach(p => {
+                    p.update();
+                    p.glow = appState.isEvaluated ? 6 : 0;
+                    if (document.getElementById('chk-elements').checked) {
+                        p.draw(ctx);
+                    }
+                });
+            }
+
+            ctx.restore();
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Boot operations
+        window.addEventListener('load', () => {
+            try { renderQuestions(); } catch (e) { console.error(e); }
+            
+            resizeCanvas();
+            initTopicState();
+            
+            // Set up Modal listeners
+            document.getElementById('user-guide-modal').classList.remove('hidden');
+
+            document.getElementById('btn-close-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+            document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.add('hidden');
+            });
+
+            document.getElementById('btn-open-guide').addEventListener('click', () => {
+                document.getElementById('user-guide-modal').classList.remove('hidden');
+            });
+
+            // Backdrop click handler
+            const userGuideModal = document.getElementById('user-guide-modal');
+            userGuideModal.addEventListener('click', (e) => {
+                if (e.target === userGuideModal) {
+                    userGuideModal.classList.add('hidden');
+                }
+            });
+
+            // Handle dropdown filtering change for questions categories
+            document.getElementById('viva-category').addEventListener('change', () => {
+                renderQuestions();
+            });
+
+            requestAnimationFrame(renderLoop);
+        });
+    </script>
+</body>
+
+</html>

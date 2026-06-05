@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magnetic Materials 3D Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Scrollbars */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Range Sliders */
+    input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; width: 100%; }
+    input[type="range"]::-webkit-slider-runnable-track { background: #334155; border-radius: 9999px; height: 6px; }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; margin-top: -5px;
+      background-color: #06b6d4; border-radius: 9999px; height: 16px; width: 16px;
+      border: 2px solid #ffffff; box-shadow: 0 0 8px rgba(6, 182, 212, 0.6); transition: 0.2s;
+    }
+    input[type="range"].slider-pink::-webkit-slider-thumb { background-color: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.6); }
+    input[type="range"].slider-amber::-webkit-slider-thumb { background-color: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.6); }
+
+    /* 3D Canvas Background */
+    .lab-stage { 
+      background-color: #020617 !important; 
+      background-image: 
+        radial-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(236, 72, 153, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px, 25px 25px, 25px 25px;
+      box-shadow: inset 0 0 100px rgba(0,0,0,1);
+    }
+
+    /* Gradients */
+    .grad-cyan { background: linear-gradient(to right, #06b6d4, #3b82f6); -webkit-background-clip: text; color: transparent; }
+    .grad-pink { background: linear-gradient(to right, #ec4899, #f43f5e); -webkit-background-clip: text; color: transparent; }
+    .grad-amber { background: linear-gradient(to right, #f59e0b, #fbbf24); -webkit-background-clip: text; color: transparent; }
+    .grad-emerald { background: linear-gradient(to right, #10b981, #34d399); -webkit-background-clip: text; color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <!-- Confetti Canvas for MCQs -->
+  <canvas id="confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full"></canvas>
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-8 object-contain" onerror="this.style.display='none'">
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Magnetic Materials Properties</h1>
+          <p class="text-xs text-pink-400 font-bold tracking-wider uppercase">Atomic Dipole & Domain Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+          <span>📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse shadow-[0_0_8px_#ec4899]"></span>
+          <span class="text-xs text-slate-300 font-bold font-mono uppercase tracking-widest">Quantum Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-2">
+        <button onclick="resetSim()" class="px-5 py-1.5 bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Substance
+        </button>
+      </div>
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-pink-600 focus:ring-pink-500 h-4 w-4">
+          <span>Show Atomic Lattice</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+            <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <!-- Controls Card -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <span class="text-sm font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Substance Type</span>
+          
+          <select id="select-mat" class="w-full bg-slate-50 border border-slate-300 text-pink-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all cursor-pointer shadow-sm">
+            <option value="diamagnetic" selected>Diamagnetic (e.g., Water, Bismuth)</option>
+            <option value="paramagnetic">Paramagnetic (e.g., Aluminum, O2)</option>
+            <option value="ferromagnetic">Ferromagnetic (e.g., Iron, Cobalt)</option>
+          </select>
+
+          <div>
+            <div class="flex justify-between text-sm font-bold text-slate-700 mb-1 mt-4">
+              <span class="text-cyan-600 flex items-center gap-1">■ External Magnetic Field ($B_{ext}$)</span>
+              <span id="val-b" class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">0.0 T</span>
+            </div>
+            <input type="range" id="slider-b" min="0" max="100" value="0">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-sm font-bold text-slate-700 mb-1 mt-4">
+              <span class="text-amber-600 flex items-center gap-1">■ Temperature ($T$)</span>
+              <span id="val-t" class="font-mono bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded text-xs">300 K</span>
+            </div>
+            <input type="range" id="slider-t" min="10" max="1000" value="300" class="slider-amber">
+          </div>
+        </div>
+
+        <!-- Telemetry Card (Moved above Theory) -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="text-sm font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Live Magnetization Telemetry</span>
+          
+          <div class="flex flex-col gap-2">
+            <div class="bg-[#0f172a] p-3 rounded-xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+              <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block" id="dot-net"></span> Net Magnetization ($\vec{M}$)
+              </div>
+              <div class="text-lg font-bold font-mono tracking-widest text-white uppercase" id="tel-m">
+                0.00
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-1">
+              <div class="bg-[#0f172a] p-2.5 rounded-xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1 text-cyan-400">Alignment Bias</div>
+                <div class="text-lg font-bold font-mono tracking-wide text-white" id="tel-align">0%</div>
+              </div>
+              
+              <div class="bg-[#0f172a] p-2.5 rounded-xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1 text-amber-400">Thermal Jitter</div>
+                <div class="text-lg font-bold font-mono tracking-wide text-white" id="tel-jitter">Low</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Material Properties Card (Theory) -->
+        <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-3">
+          <span class="text-sm font-extrabold uppercase tracking-widest text-pink-400 block border-b border-slate-700 pb-2">Material Properties</span>
+          <div class="text-sm text-slate-300 font-medium leading-relaxed" id="ui-desc">
+            Diamagnetic materials have NO unpaired electrons. An external field induces a very weak opposing magnetic moment. They are weakly repelled by magnets.
+          </div>
+          <div class="text-xs font-mono mt-2 pt-2 border-t border-slate-700 text-center text-emerald-400" id="ui-chi">
+            Susceptibility $\chi < 0$
+          </div>
+        </div>
+      </section>
+
+      <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-pink-900 min-h-[500px]" id="three-container">
+        
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></span>
+          <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">External Field: <span id="hud-bext">0.0 T</span></span>
+        </div>
+
+        <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+            <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors">+</button>
+            <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors">-</button>
+            <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-pink-400 font-bold rounded transition-colors text-xs">RST</button>
+        </div>
+      </section>
+
+            <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-sm font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-xs font-mono font-bold text-white bg-pink-500/30 border border-pink-400/50 px-2 py-0.5 rounded-full">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <!-- MCQ Category Filter -->
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Category</span>
+            <select id="viva-category"
+              class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-all cursor-pointer shadow-sm">
+              <option value="all" selected>All Questions</option>
+              <option value="school">School Board PYQ</option>
+              <option value="jee">JEE Main</option>
+              <option value="neet">NEET Prep</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4" id="viva-questions-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span>📘</span> MAGNETIC PROPERTIES PROTOCOL
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Magnetic Materials 3D Simulator</strong>! Observe how atomic dipoles react to external fields and heat.</p>
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Diamagnetic:</strong> Notice that when $B_{ext} = 0$, there are no dipoles. When you apply a field, tiny arrows appear pointing <em>exactly opposite</em> to the field.</li>
+            <li><strong>Paramagnetic:</strong> Atoms have permanent dipoles, but they point randomly due to thermal jitter. When you apply a field, they try to align upwards, but the <strong>Temperature (T)</strong> slider will randomize them (Curie's Law).</li>
+            <li><strong>Ferromagnetic:</strong> Atoms are locked together in chunks called <strong>Magnetic Domains</strong>. Applying a field causes massive, rigid alignment. Even if you drop $B_{ext}$ back to 0, they retain some alignment (Hysteresis), unless you crank the Temperature past the Curie Point!</li>
+          </ul>
+        <div class="space-y-2 pt-2 border-t border-slate-100">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-600">🎓 Learning Outcomes</h4>
+          <ul class="list-disc pl-5 space-y-2 text-xs">
+            <li><strong>Magnetic Phase Space:</strong> Understand how Diamagnetic, Paramagnetic, and Ferromagnetic materials differ at the quantum/atomic level.</li>
+            <li><strong>Curie's Law & Hysteresis:</strong> Observe how thermal energy breaks magnetic alignment, and how domain walls exhibit memory (hysteresis).</li>
+            <li><strong>Magnetic Susceptibility ($\chi$):</strong> Study the sign and magnitude of $\chi$ and how it defines repulsion vs attraction.</li>
+          </ul>
+        </div>
+
+        </div>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = {
+      answers: { q1: null, q2: null, q3: null, q4: null }
+    };
+
+    const vivaData = {
+      q1: {
+        category: "jee",
+        tag: "JEE Main",
+        colorClass: "bg-cyan-50 text-cyan-700 border-cyan-200",
+        question: "The magnetic susceptibility ($\\chi$) is negative for:",
+        options: [
+          { text: "Diamagnetic materials", isCorrect: true, exp: "Correct! Diamagnetic materials develop an induced magnetic moment in the direction opposite to the applied magnetic field, hence their susceptibility ($\\chi$) is small and negative." },
+          { text: "Paramagnetic materials", isCorrect: false, exp: "Incorrect. It is small and positive." },
+          { text: "Ferromagnetic materials", isCorrect: false, exp: "Incorrect. It is large and positive." },
+          { text: "All of the above", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        category: "neet",
+        tag: "NEET Prep",
+        colorClass: "bg-amber-50 text-amber-700 border-amber-200",
+        question: "According to Curie's law, the magnetic susceptibility of a paramagnetic substance at absolute temperature T is proportional to:",
+        options: [
+          { text: "$T$", isCorrect: false, exp: "Incorrect." },
+          { text: "$1 / T$", isCorrect: true, exp: "Correct! Curie's Law states that magnetization $M$ of a paramagnetic material is directly proportional to the applied magnetic field $B$ and inversely proportional to absolute temperature $T$. Hence $\\chi \\propto 1/T$." },
+          { text: "$T^2$", isCorrect: false, exp: "Incorrect." },
+          { text: "Independent of $T$", isCorrect: false, exp: "Incorrect. Diamagnetism is independent of T, but paramagnetism is highly dependent on it." }
+        ]
+      },
+      q3: {
+        category: "school",
+        tag: "School Board PYQ",
+        colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+        question: "In ferromagnetic materials, the incredibly strong magnetic properties are due to the formation of:",
+        options: [
+          { text: "Randomly oriented dipoles", isCorrect: false, exp: "Incorrect." },
+          { text: "Absence of unpaired electrons", isCorrect: false, exp: "Incorrect." },
+          { text: "Formation of Magnetic Domains", isCorrect: true, exp: "Correct! In ferromagnetic materials, strong exchange interactions force neighboring atomic dipoles to align parallel to each other, forming macroscopic regions of uniform magnetization called domains." },
+          { text: "Orbital motion of electrons", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        category: "jee",
+        tag: "JEE Main",
+        colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        question: "When a diamagnetic substance is brought near the north or south pole of a strong bar magnet, it is:",
+        options: [
+          { text: "Repelled by both the north and south poles", isCorrect: true, exp: "Correct! Because diamagnetic materials always induce a magnetic field that opposes the external field (Lenz's Law effect at the atomic level), they are always weakly repelled by magnets, regardless of the pole." },
+          { text: "Attracted by both poles", isCorrect: false, exp: "Incorrect." },
+          { text: "Repelled by North, attracted by South", isCorrect: false, exp: "Incorrect." },
+          { text: "Attracted by North, repelled by South", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+    function renderQuestions() {
+      const filterVal = document.getElementById('viva-category').value;
+      const container = document.getElementById('viva-questions-container');
+      const scoreLabel = document.getElementById('viva-score');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const keys = Object.keys(vivaData).filter(k => filterVal === 'all' || vivaData[k].category === filterVal);
+      
+      let answeredCount = 0;
+      let correctCount = 0;
+      keys.forEach(k => {
+        if (appState.answers[k] !== null) {
+          answeredCount++;
+          if (vivaData[k].options[appState.answers[k]].isCorrect) {
+            correctCount++;
+          }
+        }
+      });
+      if (scoreLabel) scoreLabel.textContent = `Score: ${correctCount} / ${keys.length}`;
+
+      keys.forEach(qKey => {
+        const q = vivaData[qKey];
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-200 rounded-xl p-4 hover:border-pink-400 hover:shadow-md transition-all duration-300";
+        
+        const header = document.createElement('div');
+        header.className = "flex items-center justify-between mb-2";
+        header.innerHTML = `<span class="inline-block ${q.colorClass} text-xs font-extrabold px-2 py-0.5 rounded border font-mono uppercase tracking-wider">${q.tag}</span>`;
+        card.appendChild(header);
+
+        const qText = document.createElement('h4');
+        qText.className = "text-base font-bold text-slate-800 leading-snug mb-3";
+        qText.innerHTML = q.question;
+        card.appendChild(qText);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = "flex flex-col gap-2";
+
+        const hasBeenAnswered = appState.answers[qKey] !== null;
+
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          let hoverClass = "hover:bg-pink-50/50 hover:border-pink-400";
+          if (q.category === 'jee') {
+            hoverClass = "hover:bg-cyan-50/50 hover:border-cyan-400";
+          } else if (q.category === 'school') {
+            hoverClass = "hover:bg-emerald-50/50 hover:border-emerald-400";
+          }
+
+          btn.className = "text-left p-3 rounded-lg text-sm border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
+            (hasBeenAnswered 
+              ? "cursor-not-allowed" 
+              : `bg-white border-slate-200 text-slate-700 ${hoverClass} active:bg-slate-100 cursor-pointer shadow-sm`);
+
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold text-pink-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+
+          if (hasBeenAnswered) {
+            if (appState.answers[qKey] === idx) {
+              if (opt.isCorrect) btn.className += " bg-emerald-50 border-emerald-400 text-emerald-950 font-bold";
+              else btn.className += " bg-rose-50 border-rose-400 text-rose-950 font-bold";
+            } else if (opt.isCorrect) {
+              btn.className += " bg-emerald-50/40 border-emerald-300 text-emerald-900 opacity-80";
+            } else {
+              btn.className += " bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+            }
+          } else {
+            btn.addEventListener('click', () => {
+              appState.answers[qKey] = idx;
+              if (!opt.isCorrect) {
+                triggerConfetti();
+              }
+              renderQuestions();
+            });
+          }
+          optionsContainer.appendChild(btn);
+        });
+
+        card.appendChild(optionsContainer);
+
+        if (hasBeenAnswered) {
+          const feedback = document.createElement('p');
+          feedback.className = "text-xs mt-3 text-slate-600 italic font-medium leading-relaxed bg-slate-50 border border-slate-150 p-2.5 rounded-lg";
+          feedback.innerHTML = q.options[appState.answers[qKey]].exp;
+          card.appendChild(feedback);
+        }
+
+        container.appendChild(card);
+      });
+
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([container]).catch(err => console.log(err));
+      }
+    }
+
+    // --- MCQ DUAL CORNER CANVAS CONFETTI ---
+    let confettiActive = false;
+    let confettiParticles = [];
+    let confettiCanvas = document.getElementById('confetti-canvas');
+    let confettiCtx = confettiCanvas.getContext('2d');
+    let confettiAnimationId = null;
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    function triggerConfetti() {
+      if (!confettiActive) {
+        confettiActive = true;
+        confettiParticles = [];
+        const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#14b8a6', '#f97316', '#a855f7'];
+        const count = 75;
+        for (let i = 0; i < count; i++) {
+          createConfettiParticle(0, confettiCanvas.height, true, colors);
+          createConfettiParticle(confettiCanvas.width, confettiCanvas.height, false, colors);
+        }
+        if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+        animateConfetti();
+      }
+    }
+
+    function createConfettiParticle(x, y, isLeft, colors) {
+      const angle = isLeft 
+        ? (-45 - Math.random() * 35) * Math.PI / 180 
+        : (-135 + Math.random() * 35) * Math.PI / 180;
+      const speed = 14 + Math.random() * 15;
+      
+      confettiParticles.push({
+        x: x,
+        y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        gravity: 0.28 + Math.random() * 0.15,
+        drag: 0.965,
+        size: 5 + Math.random() * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        spin: -10 + Math.random() * 20,
+        shape: Math.random() > 0.4 ? 'rect' : 'circle',
+        opacity: 1
+      });
+    }
+
+    function animateConfetti() {
+      if (confettiParticles.length === 0) {
+        confettiActive = false;
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        return;
+      }
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.vx *= p.drag;
+        p.vy += p.gravity;
+        p.vy *= p.drag;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.spin;
+        if (p.y > confettiCanvas.height * 0.7) {
+          p.opacity -= 0.02;
+        }
+        if (p.opacity <= 0 || p.y > confettiCanvas.height || p.x < -20 || p.x > confettiCanvas.width + 20) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+        confettiCtx.save();
+        confettiCtx.globalAlpha = p.opacity;
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate(p.rotation * Math.PI / 180);
+        confettiCtx.fillStyle = p.color;
+        if (p.shape === 'rect') {
+          confettiCtx.fillRect(-p.size / 2, -p.size, p.size, p.size * 1.5);
+        } else {
+          confettiCtx.beginPath();
+          confettiCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          confettiCtx.fill();
+        }
+        confettiCtx.restore();
+      }
+      confettiAnimationId = requestAnimationFrame(animateConfetti);
+    }
+// --- STATE MANAGEMENT ---
+    const selMat = document.getElementById('select-mat');
+    const slB = document.getElementById('slider-b');
+    const slT = document.getElementById('slider-t');
+    const chkGrid = document.getElementById('chk-grid');
+    
+    const valB = document.getElementById('val-b');
+    const valT = document.getElementById('val-t');
+    const uiDesc = document.getElementById('ui-desc');
+    const uiChi = document.getElementById('ui-chi');
+    
+    const telM = document.getElementById('tel-m');
+    const telAlign = document.getElementById('tel-align');
+    const telJitter = document.getElementById('tel-jitter');
+    const hudBext = document.getElementById('hud-bext');
+    const dotNet = document.getElementById('dot-net');
+
+    const descriptions = {
+      diamagnetic: {
+        text: "Diamagnetic materials have NO unpaired electrons. An external field induces a very weak opposing magnetic moment. They are weakly repelled by magnets.",
+        chi: "Susceptibility $\\chi \\approx -10^{-5}$"
+      },
+      paramagnetic: {
+        text: "Paramagnetic materials have unpaired electrons acting as tiny permanent dipoles. They align weakly with an external field but are disrupted by thermal energy (Curie's Law).",
+        chi: "Susceptibility $\\chi \\approx +10^{-3}$"
+      },
+      ferromagnetic: {
+        text: "Ferromagnetic atoms have strong 'exchange interactions', forcing neighbors to align into massive blocks called Domains. They align strongly and retain magnetization (Hysteresis).",
+        chi: "Susceptibility $\\chi \\gg 1$ (Huge & Positive)"
+      }
+    };
+
+    let pState = { mat: 'diamagnetic', Bext: 0, Temp: 300 };
+    let curieTemp = 800; // arbitrary for scale
+
+    function updateUI() {
+      pState.mat = selMat.value;
+      pState.Bext = parseFloat(slB.value) / 10; // 0 to 10 Tesla
+      pState.Temp = parseFloat(slT.value);
+
+      valB.innerText = `${pState.Bext.toFixed(1)} T`;
+      hudBext.innerText = `${pState.Bext.toFixed(1)} T`;
+      valT.innerText = `${pState.Temp} K`;
+
+      if (uiDesc.getAttribute('data-mat') !== pState.mat) {
+          uiDesc.setAttribute('data-mat', pState.mat);
+          uiDesc.innerText = descriptions[pState.mat].text;
+          uiChi.innerHTML = descriptions[pState.mat].chi;
+          if (window.MathJax) MathJax.typesetPromise([uiChi]);
+          rebuildLattice(); // regenerate dipoles for new material
+      }
+
+      // Telemetry update happens in animation loop based on net vector
+    }
+
+    selMat.addEventListener('change', updateUI);
+    slB.addEventListener('input', updateUI);
+    slT.addEventListener('input', updateUI);
+    
+    function resetSim() {
+      slB.value = 0; slT.value = 300;
+      controls.reset();
+      updateUI();
+      rebuildLattice();
+    }
+
+    // --- THREE.JS 3D ENGINE ---
+    const container = document.getElementById('three-container');
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 15, 30); 
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.05;
+    
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(10, 20, 10);
+    scene.add(pointLight);
+
+    // Objects
+    let latticeGroup = new THREE.Group();
+    scene.add(latticeGroup);
+    let atoms = [];
+
+    // Materials
+    const matAtomBase = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 });
+    const matAtomDia = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7 });
+    const matAtomPara = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x047857 });
+    const matAtomFerro = new THREE.MeshStandardMaterial({ color: 0xec4899, emissive: 0xbe123c });
+
+    // B-field visual
+    const bFieldArrow = new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(-12, -8, 0), 0, 0x06b6d4, 1.5, 1);
+    scene.add(bFieldArrow);
+
+    function getRandomDir() {
+      let phi = Math.acos(-1 + (2 * Math.random()));
+      let theta = Math.sqrt(Math.random()) * 2 * Math.PI;
+      return new THREE.Vector3(Math.cos(theta)*Math.sin(phi), Math.cos(phi), Math.sin(theta)*Math.sin(phi));
+    }
+
+    function rebuildLattice() {
+      latticeGroup.clear();
+      atoms = [];
+
+      let size = 4; // 4x4x4 grid
+      let spacing = 3;
+      let offset = ((size - 1) * spacing) / 2;
+
+      let cMat = pState.mat === 'diamagnetic' ? matAtomDia : (pState.mat === 'paramagnetic' ? matAtomPara : matAtomFerro);
+      let arrColor = pState.mat === 'diamagnetic' ? 0x38bdf8 : (pState.mat === 'paramagnetic' ? 0x10b981 : 0xec4899);
+
+      for(let x=0; x<size; x++) {
+        for(let y=0; y<size; y++) {
+          for(let z=0; z<size; z++) {
+             let px = (x * spacing) - offset;
+             let py = (y * spacing) - offset;
+             let pz = (z * spacing) - offset;
+
+             let pos = new THREE.Vector3(px, py, pz);
+             
+             // Base atom sphere
+             let sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), cMat);
+             sphere.position.copy(pos);
+             sphere.visible = chkGrid.checked;
+             latticeGroup.add(sphere);
+
+             // Magnetic Dipole Arrow
+             let initDir = new THREE.Vector3(0,0,0);
+             let domainDir = new THREE.Vector3(0,0,0);
+             
+             if (pState.mat === 'paramagnetic') {
+                 initDir = getRandomDir();
+             } else if (pState.mat === 'ferromagnetic') {
+                 // Create 2 domains (Left/Right)
+                 if (px < 0) domainDir = new THREE.Vector3(-1, 1, 0).normalize();
+                 else domainDir = new THREE.Vector3(1, -1, 0).normalize();
+                 initDir.copy(domainDir);
+             }
+
+             let arrow = new THREE.ArrowHelper(initDir.length() > 0 ? initDir : new THREE.Vector3(0,1,0), pos, 1.5, arrColor, 0.5, 0.4);
+             if (pState.mat === 'diamagnetic') arrow.visible = false; // Hide until Bext applied
+             latticeGroup.add(arrow);
+
+             atoms.push({
+                 sphere: sphere, arrow: arrow,
+                 baseDir: initDir, currentDir: initDir.clone(),
+                 domainDir: domainDir
+             });
+          }
+        }
+      }
+    }
+
+    chkGrid.addEventListener('change', () => {
+      atoms.forEach(a => a.sphere.visible = chkGrid.checked);
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      // Update B-Field Visual
+      if (pState.Bext > 0.1) {
+          bFieldArrow.setLength(2 + pState.Bext, 1.5, 1);
+          bFieldArrow.visible = true;
+      } else {
+          bFieldArrow.visible = false;
+      }
+
+      let netMagnetization = new THREE.Vector3(0,0,0);
+      let jitterAmount = (pState.Temp / 1000); // 0 to 1
+
+      // Physics Iteration
+      atoms.forEach(a => {
+          let targetDir = new THREE.Vector3();
+          let length = 1.5;
+          let isVisible = true;
+
+          if (pState.mat === 'diamagnetic') {
+              if (pState.Bext < 0.1) {
+                  isVisible = false;
+              } else {
+                  targetDir.set(0, -1, 0); // Oppose field (Field is +Y)
+                  length = 0.5 + (pState.Bext * 0.1); // Small induced moment
+              }
+          } 
+          else if (pState.mat === 'paramagnetic') {
+              // Target is a mix of base random dir (entropy) and Bext (+Y)
+              let bWeight = pState.Bext / (jitterAmount * 5 + 0.1); // Curie's law proxy
+              targetDir.copy(a.baseDir).lerp(new THREE.Vector3(0,1,0), Math.min(1, bWeight));
+              
+              // Add live jitter
+              targetDir.x += (Math.random()-0.5) * jitterAmount * 2;
+              targetDir.z += (Math.random()-0.5) * jitterAmount * 2;
+              targetDir.normalize();
+          }
+          else if (pState.mat === 'ferromagnetic') {
+              // Strong alignment with Bext. 
+              // If Bext drops, it retains alignment (hysteresis) UNLESS Temp is high
+              let bWeight = pState.Bext / 2; // Fast alignment
+              
+              if (pState.Bext > 1) {
+                  // Magnetizing
+                  a.currentDir.lerp(new THREE.Vector3(0,1,0), bWeight * 0.1);
+              } else {
+                  // Field removed. Does it revert to domain? Depends on temp.
+                  if (pState.Temp > curieTemp) {
+                      // Loses ferromagnetism, acts paramagnetic
+                      a.currentDir.lerp(a.baseDir, 0.05); // Rapidly lose order
+                  } else {
+                      // Hysteresis: stays mostly aligned, slowly relaxes slightly
+                      a.currentDir.lerp(a.domainDir, 0.001); 
+                  }
+              }
+              targetDir.copy(a.currentDir);
+              
+              // Thermal Jitter is low unless near Curie temp
+              let ferroJitter = Math.max(0, (pState.Temp - 500)/500);
+              targetDir.x += (Math.random()-0.5) * ferroJitter;
+              targetDir.z += (Math.random()-0.5) * ferroJitter;
+              targetDir.normalize();
+          }
+
+          a.arrow.visible = isVisible;
+          if (isVisible) {
+              // Handle smooth transitioning for Para
+              if(pState.mat === 'paramagnetic') {
+                  a.currentDir.lerp(targetDir, 0.2);
+              } else {
+                  a.currentDir.copy(targetDir);
+              }
+              
+              a.arrow.setDirection(a.currentDir);
+              a.arrow.setLength(length, length*0.3, length*0.2);
+              
+              // Add to net
+              netMagnetization.add(a.currentDir.clone().multiplyScalar(length));
+          }
+      });
+
+      // Update Telemetry
+      let maxM = atoms.length * 1.5; // Max possible length
+      let currentM = netMagnetization.y; // Field is along Y
+      
+      if (pState.mat === 'diamagnetic') {
+          telM.innerText = pState.Bext > 0.1 ? (currentM / maxM).toFixed(3) : "0.00";
+          telM.className = "text-[14px] font-bold font-mono tracking-widest text-cyan-400 uppercase";
+          dotNet.className = "w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block";
+          telAlign.innerText = "100% Anti-Aligned";
+          telJitter.innerText = "None (Quantum)";
+      } else {
+          let percent = Math.max(0, (currentM / maxM) * 100);
+          telM.innerText = `+${(currentM / 10).toFixed(2)}`;
+          telM.className = pState.mat === 'ferromagnetic' ? "text-[14px] font-bold font-mono tracking-widest text-pink-400 uppercase" : "text-[14px] font-bold font-mono tracking-widest text-emerald-400 uppercase";
+          dotNet.className = pState.mat === 'ferromagnetic' ? "w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block" : "w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block";
+          telAlign.innerText = `${percent.toFixed(1)}%`;
+          
+          if (pState.mat === 'paramagnetic') {
+              telJitter.innerText = pState.Temp > 600 ? "High" : pState.Temp > 200 ? "Medium" : "Low";
+          } else {
+              telJitter.innerText = pState.Temp > curieTemp ? "High (Curie Limit)" : "Locked (Domains)";
+          }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      const container = document.getElementById('three-container');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    document.getElementById('btn-zoom-in').addEventListener('click', () => { camera.position.multiplyScalar(0.8); });
+    document.getElementById('btn-zoom-out').addEventListener('click', () => { camera.position.multiplyScalar(1.2); });
+    document.getElementById('btn-zoom-reset').addEventListener('click', () => { controls.reset(); camera.position.set(0, 15, 30); });
+
+    // Boot
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      updateUI();
+      rebuildLattice();
+      animate();
+
+      const userGuideModal = document.getElementById('user-guide-modal');
+      userGuideModal.classList.remove('hidden');
+
+      document.getElementById('btn-open-guide').addEventListener('click', () => {
+        userGuideModal.classList.remove('hidden');
+      });
+      document.getElementById('btn-close-guide').addEventListener('click', () => {
+        userGuideModal.classList.add('hidden');
+      });
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+        userGuideModal.classList.add('hidden');
+      });
+      userGuideModal.addEventListener('click', (e) => {
+        if (e.target === userGuideModal) {
+          userGuideModal.classList.add('hidden');
+        }
+      });
+      document.getElementById('viva-category').addEventListener('change', () => {
+        renderQuestions();
+      });
+    });
+  </script>
+</body>
+</html>

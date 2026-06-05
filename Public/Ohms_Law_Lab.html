@@ -85,45 +85,47 @@
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
+  <!-- Confetti Canvas for MCQs -->
+  <canvas id="confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full"></canvas>
 
   <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
     
-    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
       <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-10 object-contain">
+        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" alt="Sparkl Logo" class="h-8 object-contain" onerror="this.style.display='none'">
         </div>
         <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Ohm's Law V-I Characteristic Simulator</h1>
-          <p class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Electromagnetism & Circuit Dynamics Laboratory</p>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Ohm's Law V-I Characteristic</h1>
+          <p class="text-xs text-indigo-400 font-bold tracking-wider uppercase">Electromagnetism & Circuit Dynamics Laboratory</p>
         </div>
       </div>
       <div class="flex items-center space-x-3">
-        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
           <span>📘</span> User Guide
         </button>
-        <div class="hidden sm:flex items-center space-x-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-[11px] text-slate-400 font-semibold font-mono uppercase">Physics Engine Active</span>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+          <span class="text-xs text-slate-300 font-bold font-mono uppercase tracking-widest">Physics Engine Active</span>
         </div>
       </div>
     </header>
 
-    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
       <div class="flex items-center space-x-2">
-        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Test Component:</span>
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-2">Test Component:</span>
         <select id="select-preset" class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
           <option value="ohmic">Standard Ohmic Resistor (Linear)</option>
           <option value="nonohmic">Filament Bulb (Non-Ohmic/Heating)</option>
         </select>
-        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm">
+        <button id="btn-reset" class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 shadow-sm">
           <span>🔄</span> Reset Circuit
         </button>
       </div>
 
       <div class="flex items-center space-x-4">
-        <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-          <input type="checkbox" id="chk-electrons" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer select-none">
+          <input type="checkbox" id="chk-electrons" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
           <span>Visualize Electron Flow</span>
         </label>
       </div>
@@ -131,140 +133,117 @@
 
     <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
       
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-        <div class="space-y-6">
-
-          <div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2">
-            <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Mathematical Model</span>
-            <div class="text-[12px] font-mono text-center py-2 font-bold">
-              $$V = I \cdot R \quad \Rightarrow \quad I = \frac{V}{R}$$
-            </div>
-          </div>
-
-          <div class="bg-white p-4 rounded-xl border border-blue-200 shadow-sm transition-colors duration-300">
-            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Variable Power Supply (V)</span></span>
+      <!-- LEFT SIDEBAR -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-start space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <!-- Controls Card -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Circuit Adjustments</span>
+          
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase text-blue-700">Variable Power Supply ($V$)</span></span>
               <span id="lbl-voltage" class="font-mono text-blue-600 text-sm">6.0 V</span>
             </div>
             <input type="range" id="sl-voltage" min="0" max="24" step="0.5" value="6" class="w-full mt-2" style="accent-color: #3b82f6;">
-            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+            <div class="flex justify-between text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
               <span>0V</span>
               <span>24V</span>
             </div>
-            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100">
+            <div class="text-xs font-medium text-slate-500 mt-3 leading-tight bg-blue-50 p-2 rounded border border-blue-100">
               The potential difference (Voltage) pushes the electrons through the circuit. Measured in Volts (V).
             </div>
           </div>
 
-          <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm transition-colors duration-300">
-            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
-              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 block"></span> <span class="uppercase text-amber-600">Base Resistance (R)</span></span>
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1 mt-4">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 block"></span> <span class="uppercase text-amber-600">Base Resistance ($R$)</span></span>
               <span id="lbl-resistance" class="font-mono text-amber-600 text-sm">10 Ω</span>
             </div>
             <input type="range" id="sl-resistance" min="1" max="100" step="1" value="10" class="w-full mt-2 slider-amber">
-            <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+            <div class="flex justify-between text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
               <span>1 Ω</span>
               <span>100 Ω</span>
             </div>
-            <div class="text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-amber-50 p-2 rounded border border-amber-100" id="desc-resistance">
+            <div class="text-xs font-medium text-slate-500 mt-3 leading-tight bg-amber-50 p-2 rounded border border-amber-100" id="desc-resistance">
               Resistance opposes the flow of current. Measured in Ohms (Ω).
             </div>
           </div>
+        </div>
 
+        <!-- Live Multimeter Telemetry Card (Moved above theory card) -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block border-b border-slate-100 pb-2">Live Multimeter Telemetry</span>
+          
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Ammeter Reading (Current)</div>
+              <div class="text-3xl font-bold font-mono tracking-widest text-emerald-400" id="tel-current">0.60 A</div>
+            </div>
+
+            <div class="bg-slate-900/10 p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Voltmeter</div>
+              <div class="text-base font-bold font-mono text-blue-600" id="tel-volt-read">6.0 V</div>
+            </div>
+
+            <div class="bg-slate-900/10 p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Power</div>
+              <div class="text-base font-bold font-mono text-rose-500" id="tel-power">3.6 W</div>
+            </div>
+
+            <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-sm col-span-2 flex flex-col items-center h-[130px] relative">
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 absolute top-2 left-2">V-I Plot</span>
+              <canvas id="graphCanvas" class="w-full h-full"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mathematical Model Card (Theory Card) -->
+        <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-3 min-h-[70px] flex flex-col justify-center">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-2">Mathematical Model</span>
+          <div class="text-sm font-mono text-center py-2 bg-slate-800 rounded-lg border border-slate-700 shadow-inner overflow-x-auto">
+            $$V = I \cdot R \quad \Rightarrow \quad I = \frac{V}{R}$$
+          </div>
+          <p class="text-xs text-slate-400 leading-normal text-center">Current ($I$) is directly proportional to voltage ($V$) and inversely proportional to resistance ($R$).</p>
         </div>
       </section>
 
+      <!-- CENTER DISPLAY CANVAS -->
       <section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
         <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
         
         <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
-          <span class="text-[10px] font-bold text-indigo-400 tracking-wider uppercase" id="canvas-hud">Circuit Schematic Simulator</span>
+          <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase" id="canvas-hud">Circuit Schematic Simulator</span>
         </div>
       </section>
 
-      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+      <!-- RIGHT SIDEBAR (Viva assessments with category filter) -->
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
         
-        <div class="space-y-3">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Live Multimeter Telemetry</span>
-          
-          <div class="grid grid-cols-2 gap-2 text-center">
-            
-            <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
-              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Ammeter Reading (Current)</div>
-              <div class="text-3xl font-bold font-mono tracking-widest text-emerald-400" id="tel-current">0.60 A</div>
-            </div>
-
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
-              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Voltmeter Reading</div>
-              <div class="text-lg font-bold font-mono text-blue-600" id="tel-volt-read">6.0 V</div>
-            </div>
-
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
-              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Power Dissipation</div>
-              <div class="text-lg font-bold font-mono text-rose-500" id="tel-power">3.6 W</div>
-            </div>
-
-            <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-sm col-span-2 flex flex-col items-center h-[120px] relative">
-              <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-1 absolute top-2 left-2">V-I Plot</span>
-              <canvas id="graphCanvas" class="w-full h-full"></canvas>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-sm mt-4">
-          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
           <div class="flex justify-between items-center mt-0.5">
-            <h2 class="text-sm font-bold tracking-tight">Conceptual Assessments</h2>
-            <span id="viva-score" class="text-[11px] font-mono font-bold text-indigo-400 bg-slate-900/60 border border-slate-700 px-2 py-0.5 rounded">Score: 0 / 4</span>
+            <h2 class="text-base font-bold tracking-tight">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-xs font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full">Score: 0 / 4</span>
           </div>
         </div>
 
-        <div class="space-y-3 pb-4">
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                For a perfect Ohmic conductor, what does the slope of the V-I graph represent?
-              </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
+        <!-- MCQ Category Filter -->
+        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Category</span>
+            <select id="viva-category"
+              class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+              <option value="all" selected>All Questions</option>
+              <option value="cbse">CBSE Board</option>
+              <option value="jee">JEE Main</option>
+              <option value="neet">NEET Prep</option>
+            </select>
           </div>
+        </div>
 
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why does a Filament Bulb not obey Ohm's Law perfectly?
-              </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                If the voltage is doubled across an Ohmic resistor, what happens to the current?
-              </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-            <div class="space-y-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-              <h4 class="text-xs font-bold text-slate-800 leading-snug">
-                How must an Ammeter and a Voltmeter be connected in a circuit?
-              </h4>
-              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100"></p>
-            </div>
-          </div>
-
+        <div class="space-y-3 pb-4" id="viva-questions-container">
+          <!-- Dynamically populated -->
         </div>
       </section>
 
@@ -272,29 +251,39 @@
 
   </div>
 
+  <!-- User Guide Modal -->
   <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <span>📘</span> OHM'S LAW LAB PROTOCOLS
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span>📘</span> OHM'S LAW PROTOCOLS
         </h3>
-        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-xl p-1 transition-all">&times;</button>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
       </div>
-      <div class="space-y-3.5 text-sm text-slate-600 overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
         <p>Welcome to the <strong>Electromagnetism Laboratory</strong>! Explore the fundamental relationship between Voltage, Current, and Resistance.</p>
         
         <div class="space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">🎯 Core Controls</h4>
-          <ul class="list-disc pl-5 space-y-1">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🎯 Core Controls</h4>
+          <ul class="list-disc pl-5 space-y-2">
             <li><strong>Voltage Slider</strong>: Increase the battery voltage to push more electrons through the circuit. Watch the physical speed of the electrons increase!</li>
             <li><strong>Resistance Slider</strong>: Increase the resistance to constrict the flow. You will see the current drop and the electrons slow down.</li>
             <li><strong>Test Component Toggle</strong>: Switch from an ideal Resistor to a Filament Bulb. Notice how the bulb gets hotter as voltage increases, which physically increases its resistance, causing the V-I graph to curve!</li>
-            <li><strong>V-I Graph</strong>: Watch the live plotter in the bottom right corner. The slope of this line is directly tied to the resistance.</li>
+            <li><strong>V-I Graph</strong>: Watch the live plotter in the left sidebar. The slope of this line is directly tied to the resistance.</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-slate-100">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🎓 Learning Outcomes</h4>
+          <ul class="list-disc pl-5 space-y-2 text-xs">
+            <li><strong>Ohm's Law Proportionality:</strong> Observe the direct linear relation between voltage ($V$) and current ($I$) in Ohmic materials.</li>
+            <li><strong>Non-Ohmic Behavior:</strong> Understand how temperature increments in filaments yield dynamic resistance variations, curving the V-I slope.</li>
+            <li><strong>Circuit Telemetry:</strong> Gain hands-on competence reading Ammeters, Voltmeters, and calculating electrical power dissipation ($P = VI$).</li>
           </ul>
         </div>
       </div>
-      <div class="pt-3 border-t border-slate-100 flex justify-end">
-        <button id="btn-close-guide-confirm" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-lg transition-all shadow-sm">
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
           Acknowledge
         </button>
       </div>
@@ -302,7 +291,7 @@
   </div>
 
   <script>
-    // --- VIVA MCQS DECK ---
+    // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
       vivaScore: 0,
       answers: { q1: null, q2: null, q3: null, q4: null }
@@ -310,86 +299,309 @@
 
     const vivaData = {
       q1: {
-        question: "For a perfect Ohmic conductor, what does the slope of the V-I graph represent?",
+        category: "cbse",
+        tag: "CBSE Board",
+        colorClass: "bg-indigo-50 text-indigo-700 border-indigo-200",
+        question: "For a perfect Ohmic conductor, what does the slope of the $V-I$ graph represent?",
         options: [
-          { text: "Voltage", isCorrect: false, exp: "Incorrect." },
-          { text: "Current", isCorrect: false, exp: "Incorrect." },
-          { text: "Resistance", isCorrect: true, exp: "Correct! If Voltage (V) is on the Y-axis and Current (I) is on the X-axis, the slope (rise over run, or V/I) is equal to Resistance (R)." },
-          { text: "Power", isCorrect: false, exp: "Incorrect. Power is V multiplied by I, not V divided by I." }
+          { text: "Voltage ($V$)", isCorrect: false, exp: "Incorrect. Voltage is the independent variable on the Y-axis." },
+          { text: "Current ($I$)", isCorrect: false, exp: "Incorrect. Current is the dependent variable on the X-axis." },
+          { text: "Resistance ($R$)", isCorrect: true, exp: "Correct! By Ohm's Law, $V = IR$. If Voltage ($V$) is plotted on the Y-axis and Current ($I$) on the X-axis, the slope is $\\frac{\\Delta V}{\\Delta I} = R$." },
+          { text: "Power ($P$)", isCorrect: false, exp: "Incorrect. Power is calculated as $P = VI$, not the ratio $V/I$." }
         ]
       },
       q2: {
-        question: "Why does a Filament Bulb not obey Ohm's Law perfectly?",
+        category: "jee",
+        tag: "JEE Main",
+        colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+        question: "Why does a Filament Bulb not obey Ohm's Law perfectly at high voltages?",
         options: [
-          { text: "Because it emits light, which steals electrons.", isCorrect: false, exp: "Incorrect." },
-          { text: "Because as voltage increases, the filament heats up. Higher temperature causes atoms to vibrate more, increasing resistance and curving the graph.", isCorrect: true, exp: "Correct! Ohm's law requires constant physical conditions. A filament bulb gets white-hot. As the metal lattice heats up and vibrates, it is harder for electrons to pass through, so resistance goes up at higher voltages." },
-          { text: "Because it operates on AC current only.", isCorrect: false, exp: "Incorrect. The non-ohmic nature applies to DC as well." },
-          { text: "Because the glass bulb creates a vacuum.", isCorrect: false, exp: "Incorrect. The vacuum prevents combustion, but doesn't affect resistance." }
+          { text: "Because it emits light, which depletes drifting electrons.", isCorrect: false, exp: "Incorrect. Light emission is a secondary thermal result, not the cause of resistance non-linearity." },
+          { text: "Because temperature rises, increasing lattice vibrations and scattering charge carriers.", isCorrect: true, exp: "Correct! As current flows, heating ($P = I^2R$) increases the metallic temperature. This amplifies lattice vibrations, increasing the collision rate of free electrons and causing resistance to rise dynamically." },
+          { text: "Because it operates exclusively on AC current.", isCorrect: false, exp: "Incorrect. The non-ohmic heating characteristics apply equally under both AC and DC regimes." },
+          { text: "Because the vacuum/inert gas inside blocks electron drift.", isCorrect: false, exp: "Incorrect. The gas is inert and insulated; it does not interact with the enclosed wire loop." }
         ]
       },
       q3: {
-        question: "If the voltage is doubled across an Ohmic resistor, what happens to the current?",
+        category: "cbse",
+        tag: "CBSE Board",
+        colorClass: "bg-indigo-50 text-indigo-700 border-indigo-200",
+        question: "If the potential difference across an Ohmic resistor is doubled, what happens to the current?",
         options: [
-          { text: "It halves.", isCorrect: false, exp: "Incorrect." },
-          { text: "It remains the same.", isCorrect: false, exp: "Incorrect." },
-          { text: "It doubles.", isCorrect: true, exp: "Correct! V and I are directly proportional (V = IR). If R is constant, doubling the push (V) will exactly double the flow (I)." },
+          { text: "It is halved.", isCorrect: false, exp: "Incorrect. In Ohmic devices, current is directly proportional to voltage." },
+          { text: "It remains completely unchanged.", isCorrect: false, exp: "Incorrect." },
+          { text: "It doubles.", isCorrect: true, exp: "Correct! In Ohmic conductors under constant temperature, $I \\propto V$. Doubling the electrical potential difference doubles the electron flow rate." },
           { text: "It quadruples.", isCorrect: false, exp: "Incorrect." }
         ]
       },
       q4: {
-        question: "How must an Ammeter and a Voltmeter be connected in a circuit?",
+        category: "neet",
+        tag: "NEET Prep",
+        colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        question: "How must an Ammeter and a Voltmeter be connected to measure a component's attributes?",
         options: [
-          { text: "Both in series.", isCorrect: false, exp: "Incorrect. A voltmeter in series would block the current due to its high resistance." },
-          { text: "Both in parallel.", isCorrect: false, exp: "Incorrect. An ammeter in parallel would create a short circuit." },
-          { text: "Ammeter in series; Voltmeter in parallel.", isCorrect: true, exp: "Correct! An ammeter has low resistance and must be IN the path (series) to count the electrons flowing through. A voltmeter has high resistance and must be placed ACROSS a component (parallel) to measure the potential difference without altering the main flow." },
-          { text: "Ammeter in parallel; Voltmeter in series.", isCorrect: false, exp: "Incorrect. This would break the circuit and cause a short." }
+          { text: "Both connected in series.", isCorrect: false, exp: "Incorrect. A voltmeter in series blocks current due to its extremely high input impedance." },
+          { text: "Both connected in parallel.", isCorrect: false, exp: "Incorrect. An ammeter in parallel short-circuits the test component." },
+          { text: "Ammeter in series; Voltmeter in parallel.", isCorrect: true, exp: "Correct! An ammeter has nearly zero resistance and must be connected IN series to measure the rate of charge flow. A voltmeter has near-infinite resistance and must be connected ACROSS (in parallel) to measure potential difference without drawing current." },
+          { text: "Ammeter in parallel; Voltmeter in series.", isCorrect: false, exp: "Incorrect. This configuration prevents normal circuit operation." }
         ]
       }
     };
 
     function renderQuestions() {
+      const filterVal = document.getElementById('viva-category').value;
+      const container = document.getElementById('viva-questions-container');
       const scoreLabel = document.getElementById('viva-score');
-      Object.keys(vivaData).forEach(qKey => {
-        const data = vivaData[qKey];
-        const optionsContainer = document.getElementById(`${qKey}-options`);
-        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      if (!container) return;
+      container.innerHTML = '';
+
+      const keys = Object.keys(vivaData).filter(k => filterVal === 'all' || vivaData[k].category === filterVal);
+      
+      let answeredCount = 0;
+      let correctCount = 0;
+      keys.forEach(k => {
+        if (appState.answers[k] !== null) {
+          answeredCount++;
+          if (vivaData[k].options[appState.answers[k]].isCorrect) {
+            correctCount++;
+          }
+        }
+      });
+      if (scoreLabel) scoreLabel.textContent = `Score: ${correctCount} / ${keys.length}`;
+
+      keys.forEach(qKey => {
+        const q = vivaData[qKey];
+        const card = document.createElement('div');
+        card.className = "bg-white border border-slate-200 rounded-xl p-4 hover:border-indigo-400 hover:shadow-md transition-all duration-300";
+        card.setAttribute('data-category', q.category);
         
-        if (!optionsContainer || !feedbackContainer) return; 
-        
-        optionsContainer.innerHTML = '';
-        
-        data.options.forEach((opt, idx) => {
+        const header = document.createElement('div');
+        header.className = "flex items-center justify-between mb-2";
+        header.innerHTML = `<span class="inline-block ${q.colorClass} text-[10px] font-extrabold px-2 py-0.5 rounded border font-mono uppercase tracking-wider">${q.tag}</span>`;
+        card.appendChild(header);
+
+        const qText = document.createElement('h4');
+        qText.className = "text-sm font-bold text-slate-800 leading-snug mb-3";
+        qText.innerHTML = q.question;
+        card.appendChild(qText);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.className = "flex flex-col gap-2";
+
+        const hasBeenAnswered = appState.answers[qKey] !== null;
+
+        q.options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
-          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
-          
-          btn.addEventListener('click', () => {
-            if (appState.answers[qKey] !== null) return; 
-            
-            appState.answers[qKey] = idx;
-            if (opt.isCorrect) appState.vivaScore++;
-            scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
-            
-            const buttons = optionsContainer.querySelectorAll('button');
-            buttons.forEach((b, i) => {
-              b.disabled = true;
-              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
-              b.classList.add('cursor-not-allowed');
-              if (appState.answers[qKey] === i) {
-                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
-                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
-              } else if (data.options[i].isCorrect) {
-                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+          let hoverClass = "hover:bg-indigo-50/50 hover:border-indigo-400";
+          if (q.category === 'jee') {
+            hoverClass = "hover:bg-pink-50/50 hover:border-pink-400";
+          } else if (q.category === 'neet') {
+            hoverClass = "hover:bg-emerald-50/50 hover:border-emerald-400";
+          }
+
+          btn.className = "text-left p-3 rounded-lg text-sm border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
+            (hasBeenAnswered 
+              ? "cursor-not-allowed" 
+              : `bg-white border-slate-200 text-slate-700 ${hoverClass} active:bg-slate-100 cursor-pointer shadow-sm`);
+
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold text-indigo-600 w-4">${letter}</span> <span>${opt.text}</span>`;
+
+          if (hasBeenAnswered) {
+            if (appState.answers[qKey] === idx) {
+              if (opt.isCorrect) btn.className += " bg-emerald-50 border-emerald-400 text-emerald-950 font-bold";
+              else btn.className += " bg-rose-50 border-rose-400 text-rose-950 font-bold";
+            } else if (opt.isCorrect) {
+              btn.className += " bg-emerald-50/40 border-emerald-300 text-emerald-900 opacity-85";
+            } else {
+              btn.className += " bg-slate-50 border-slate-200 text-slate-400 opacity-50";
+            }
+          } else {
+            btn.addEventListener('click', () => {
+              appState.answers[qKey] = idx;
+              if (opt.isCorrect) {
+                appState.vivaScore++;
+                triggerConfetti();
               } else {
-                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                triggerIncorrectPopper(btn);
               }
+              renderQuestions();
             });
-            feedbackContainer.textContent = opt.exp;
-            feedbackContainer.classList.remove('hidden');
-          });
+          }
           optionsContainer.appendChild(btn);
         });
+
+        card.appendChild(optionsContainer);
+
+        if (hasBeenAnswered) {
+          const feedback = document.createElement('p');
+          feedback.className = "text-xs mt-3 text-slate-600 italic font-medium leading-relaxed bg-slate-50 border border-slate-150 p-2.5 rounded-lg";
+          feedback.innerHTML = q.options[appState.answers[qKey]].exp;
+          card.appendChild(feedback);
+        }
+
+        container.appendChild(card);
       });
+
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([container]).catch(err => console.log(err));
+      }
+    }
+
+    // --- MCQ DUAL CORNER CANVAS CONFETTI ---
+    let confettiActive = false;
+    let confettiParticles = [];
+    let confettiCanvas = document.getElementById('confetti-canvas');
+    let confettiCtx = confettiCanvas.getContext('2d');
+    let confettiAnimationId = null;
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    function triggerConfetti() {
+      if (!confettiActive) {
+        confettiActive = true;
+        confettiParticles = [];
+        const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#14b8a6', '#f97316', '#a855f7'];
+        const count = 75;
+        for (let i = 0; i < count; i++) {
+          createConfettiParticle(0, confettiCanvas.height, true, colors);
+          createConfettiParticle(confettiCanvas.width, confettiCanvas.height, false, colors);
+        }
+        if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+        animateConfetti();
+      }
+    }
+
+    function createConfettiParticle(x, y, isLeft, colors) {
+      const angle = isLeft 
+        ? (-45 - Math.random() * 35) * Math.PI / 180 
+        : (-135 + Math.random() * 35) * Math.PI / 180;
+      const speed = 14 + Math.random() * 15;
+      
+      confettiParticles.push({
+        x: x,
+        y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        gravity: 0.28 + Math.random() * 0.15,
+        drag: 0.965,
+        size: 5 + Math.random() * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        spin: -10 + Math.random() * 20,
+        shape: Math.random() > 0.4 ? 'rect' : 'circle',
+        opacity: 1
+      });
+    }
+
+    function animateConfetti() {
+      if (confettiParticles.length === 0) {
+        confettiActive = false;
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        return;
+      }
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.vx *= p.drag;
+        p.vy += p.gravity;
+        p.vy *= p.drag;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.spin;
+        if (p.y > confettiCanvas.height * 0.7) {
+          p.opacity -= 0.02;
+        }
+        if (p.opacity <= 0 || p.y > confettiCanvas.height || p.x < -20 || p.x > confettiCanvas.width + 20) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+        confettiCtx.save();
+        confettiCtx.globalAlpha = p.opacity;
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate(p.rotation * Math.PI / 180);
+        confettiCtx.fillStyle = p.color;
+        if (p.shape === 'rect') {
+          confettiCtx.fillRect(-p.size / 2, -p.size, p.size, p.size * 1.5);
+        } else {
+          confettiCtx.beginPath();
+          confettiCtx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          confettiCtx.fill();
+        }
+        confettiCtx.restore();
+      }
+      confettiAnimationId = requestAnimationFrame(animateConfetti);
+    }
+
+    // --- CANVAS-FREE WRONG-ANSWER POPPER ---
+    function triggerIncorrectPopper(buttonEl) {
+      const rect = buttonEl.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2 + window.scrollX;
+      const centerY = rect.top + rect.height / 2 + window.scrollY;
+
+      const colors = ['#ef4444', '#f87171', '#dc2626', '#fca5a5', '#7f1d1d'];
+      const emojis = ['❌', '✖', '•'];
+      
+      for (let i = 0; i < 18; i++) {
+        const particle = document.createElement('div');
+        const isEmoji = Math.random() > 0.6;
+        
+        if (isEmoji) {
+          particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+          particle.style.fontSize = `${10 + Math.random() * 8}px`;
+        } else {
+          particle.style.width = `${6 + Math.random() * 6}px`;
+          particle.style.height = `${6 + Math.random() * 6}px`;
+          particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          particle.style.borderRadius = '50%';
+        }
+        
+        particle.style.position = 'absolute';
+        particle.style.pointerEvents = 'none';
+        particle.style.left = `${centerX}px`;
+        particle.style.top = `${centerY}px`;
+        particle.style.zIndex = '9999';
+        
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 6;
+        const vx = Math.cos(angle) * speed;
+        const vy = Math.sin(angle) * speed - 2;
+        
+        document.body.appendChild(particle);
+        
+        let x = centerX;
+        let y = centerY;
+        let opacity = 1;
+        
+        const startTime = performance.now();
+        const duration = 600 + Math.random() * 400;
+        
+        function updateParticle(time) {
+          const elapsed = time - startTime;
+          const progress = elapsed / duration;
+          
+          if (progress >= 1) {
+            particle.remove();
+          } else {
+            x += vx;
+            y += vy + 0.15;
+            opacity = 1 - progress;
+            
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            particle.style.opacity = opacity;
+            particle.style.transform = `translate(-50%, -50%) rotate(${progress * 360}deg)`;
+            
+            requestAnimationFrame(updateParticle);
+          }
+        }
+        requestAnimationFrame(updateParticle);
+      }
     }
 
     // --- PHYSICS ENGINE ---
@@ -467,10 +679,10 @@
         compType = e.target.value;
         if (compType === 'nonohmic') {
             descRes.innerText = "Filament Bulb selected. Notice how resistance dynamically increases as voltage (and heat) increases, creating a curved V-I plot.";
-            descRes.className = "text-[9px] font-bold text-amber-700 mt-3 leading-tight bg-amber-100 p-2 rounded border border-amber-300";
+            descRes.className = "text-xs font-bold text-amber-700 mt-3 leading-tight bg-amber-100 p-2 rounded border border-amber-300";
         } else {
             descRes.innerText = "Standard Resistor selected. Resistance remains perfectly constant regardless of voltage.";
-            descRes.className = "text-[9px] font-medium text-slate-500 mt-3 leading-tight bg-amber-50 p-2 rounded border border-amber-100";
+            descRes.className = "text-xs font-medium text-slate-500 mt-3 leading-tight bg-amber-50 p-2 rounded border border-amber-100";
         }
         calculatePhysics();
     });
@@ -666,7 +878,7 @@
 
         // Plot Maximums
         const maxV = 24;
-        const maxI = 24 / 1; // max current possible in sim is 24V / 1ohm = 24A. But usually much less. Let's cap graph Y at reasonable value based on R_base.
+        const maxI = 24 / 1; 
         const plotMaxI = Math.max(2, 24 / R_base * 1.2); 
 
         // Draw Line/Curve based on mode
@@ -713,6 +925,14 @@
       const closeGuide = () => userGuideModal.classList.add('hidden');
       document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
       document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+      
+      userGuideModal.addEventListener('click', (e) => {
+        if (e.target === userGuideModal) {
+          userGuideModal.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('viva-category').addEventListener('change', renderQuestions);
 
       initParticles();
       calculatePhysics();

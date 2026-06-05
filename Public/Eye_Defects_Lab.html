@@ -794,7 +794,7 @@
             const W = simCanvas.width / dpr;
             const H = simCanvas.height / dpr;
 
-            const objX = -400 + (objDistPercent / 100) * 150;
+            const objX = -250 - (objDistPercent / 100) * 150;
             const ox = (objX * zoomLevel) + W / 2 + panX;
             const oy = (0 * zoomLevel) + H / 2 + panY;
 
@@ -820,7 +820,7 @@
             const W = simCanvas.width / dpr;
             const H = simCanvas.height / dpr;
 
-            const objX = -400 + (objDistPercent / 100) * 150;
+            const objX = -250 - (objDistPercent / 100) * 150;
             const ox = (objX * zoomLevel) + W / 2 + panX;
             const oy = (0 * zoomLevel) + H / 2 + panY;
 
@@ -837,7 +837,7 @@
             if (isDraggingObj) {
                 const mx_translated = (mx - W / 2 - panX) / zoomLevel;
                 const clampedX = Math.max(-400, Math.min(-250, mx_translated));
-                const pct = ((clampedX - (-400)) / 150) * 100;
+                const pct = ((-250 - clampedX) / 150) * 100;
                 slDist.value = Math.round(pct);
                 updateState();
             } else if (isPanning) {
@@ -868,7 +868,7 @@
             const W = simCanvas.width / dpr;
             const H = simCanvas.height / dpr;
 
-            const objX = -400 + (objDistPercent / 100) * 150;
+            const objX = -250 - (objDistPercent / 100) * 150;
             const ox = (objX * zoomLevel) + W / 2 + panX;
             const oy = (0 * zoomLevel) + H / 2 + panY;
 
@@ -897,7 +897,7 @@
             if (isDraggingObj) {
                 const mx_translated = (mx - W / 2 - panX) / zoomLevel;
                 const clampedX = Math.max(-400, Math.min(-250, mx_translated));
-                const pct = ((clampedX - (-400)) / 150) * 100;
+                const pct = ((-250 - clampedX) / 150) * 100;
                 slDist.value = Math.round(pct);
                 updateState();
                 e.preventDefault();
@@ -1103,7 +1103,7 @@
         function drawRays(ctx) {
             if (!chkRays.checked) return;
 
-            const objX = -400 + (objDistPercent / 100) * 150; // Object pos
+            const objX = -250 - (objDistPercent / 100) * 150; // Object pos
             const lensX = -90;
             const f1 = opticData.focusX1;
             const f2 = opticData.focusX2;
@@ -1116,7 +1116,7 @@
 
             offsets.forEach(oy => {
                 ctx.beginPath();
-                
+
                 // Show bending at corrective lens
                 if (isCorrected && currentMode !== 'normal' && currentMode !== 'cataract') {
                     const lx = -180;
@@ -1140,30 +1140,89 @@
                 if (currentMode === 'cataract' && !isCorrected) {
                     // Scatter
                     ctx.lineTo(lensX + 40 + Math.random() * 50, oy + (Math.random() - 0.5) * 100);
+                    ctx.stroke();
                 } else if (currentMode === 'astigmatism' && !isCorrected) {
                     // Split focus
                     let fX = oy > 0 ? f1 : f2;
-                    ctx.lineTo(fX, 0);
-                    // Extend to retina or beyond
-                    if (fX < retinaX) ctx.lineTo(retinaX, (retinaX - fX) * (0 - oy) / (fX - lensX));
+                    if (fX < retinaX) {
+                        ctx.lineTo(fX, 0);
+                        ctx.lineTo(retinaX, (retinaX - fX) * (0 - oy) / (fX - lensX));
+                        ctx.stroke();
+                    } else {
+                        // Focus is behind retina: solid to retina
+                        let slope = (0 - oy) / (fX - lensX);
+                        let y_retina = oy + slope * (retinaX - lensX);
+                        ctx.lineTo(retinaX, y_retina);
+                        ctx.stroke();
+
+                        // Dashed virtual extension behind retina
+                        ctx.save();
+                        ctx.strokeStyle = 'rgba(250, 204, 21, 0.4)';
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(retinaX, y_retina);
+                        ctx.lineTo(fX, 0);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
                 } else {
                     // Normal focus or hyperopic/myopic convergence
                     if (f1 === retinaX) {
                         ctx.lineTo(retinaX, 0);
+                        ctx.stroke();
                     } else if (f1 < retinaX) {
                         // Myopia: converges in front, then spreads out to retina
                         ctx.lineTo(f1, 0);
                         let slope = (0 - oy) / (f1 - lensX);
                         ctx.lineTo(retinaX, slope * (retinaX - f1));
+                        ctx.stroke();
                     } else {
                         // Hypermetropia / Presbyopia: hits retina before converging
                         let slope = (0 - oy) / (f1 - lensX);
                         let y_retina = oy + slope * (retinaX - lensX);
                         ctx.lineTo(retinaX, y_retina);
+                        ctx.stroke();
+
+                        // Dashed virtual extension behind retina
+                        ctx.save();
+                        ctx.strokeStyle = 'rgba(250, 204, 21, 0.4)';
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.moveTo(retinaX, y_retina);
+                        ctx.lineTo(f1, 0);
+                        ctx.stroke();
+                        ctx.restore();
                     }
                 }
-                ctx.stroke();
             });
+
+            // Draw focus point indicators
+            if (currentMode !== 'cataract' || isCorrected) {
+                ctx.save();
+                ctx.fillStyle = '#facc15';
+                ctx.shadowColor = '#facc15';
+                ctx.shadowBlur = 10;
+                
+                if (currentMode === 'astigmatism' && !isCorrected) {
+                    // Draw f1 focus point
+                    ctx.beginPath();
+                    ctx.arc(f1, 0, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw f2 focus point
+                    ctx.beginPath();
+                    ctx.arc(f2, 0, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Single focus point
+                    ctx.beginPath();
+                    ctx.arc(f1, 0, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
 
             // Draw Object (Apple/Dot)
             ctx.fillStyle = '#ef4444'; ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 15;

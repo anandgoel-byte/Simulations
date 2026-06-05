@@ -138,7 +138,7 @@
             class="h-8 object-contain" onerror="this.style.display='none'">
         </div>
         <div>
-          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Bohr Model of the Atom</h1>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Bohr Model For Hydrogen Atom</h1>
           <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Quantum Atomic Theory Laboratory</p>
         </div>
       </div>
@@ -191,9 +191,9 @@
               <select id="select-z"
                 class="w-full bg-slate-50 border border-slate-300 text-pink-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all cursor-pointer shadow-sm">
                 <option value="1" selected>Hydrogen (H) [Z = 1]</option>
-                <option value="2">Helium Ion (He+) [Z = 2]</option>
-                <option value="3">Lithium Ion (Li2+) [Z = 3]</option>
-                <option value="4">Beryllium Ion (Be3+) [Z = 4]</option>
+                <option value="2">Helium Ion (He⁺) [Z = 2]</option>
+                <option value="3">Lithium Ion (Li⁺²) [Z = 3]</option>
+                <option value="4">Beryllium Ion (Be⁺³) [Z = 4]</option>
               </select>
             </div>
 
@@ -235,9 +235,10 @@
               <div
                 class="bg-[#0f172a] p-2.5 rounded-xl shadow-md flex justify-between items-center px-4 border border-slate-800">
                 <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"></span> Velocity ($v$)
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"></span> Velocity
+                  ($v$)
                 </div>
-                <div class="text-[13px] font-bold font-mono tracking-widest grad-emerald uppercase" id="tel-v">
+                <div class="text-[13px] font-bold font-mono tracking-widest grad-emerald " id="tel-v">
                   2.18e6 m/s
                 </div>
               </div>
@@ -248,7 +249,7 @@
                   <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] block"></span> Orbital Freq
                   ($f$)
                 </div>
-                <div class="text-[13px] font-bold font-mono tracking-widest grad-amber uppercase" id="tel-f">
+                <div class="text-[13px] font-bold font-mono tracking-widest grad-amber " id="tel-f">
                   6.56e15 Hz
                 </div>
               </div>
@@ -257,8 +258,11 @@
 
           <!-- Energy Level Diagram -->
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
-            <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Energy Levels</span>
-            <div class="relative w-full h-[180px] flex items-center justify-center bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner">
+            <span
+              class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Energy
+              Levels</span>
+            <div
+              class="relative w-full h-[180px] flex items-center justify-center bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner">
               <svg id="energy-svg" class="w-full h-full p-2 select-none" xmlns="http://www.w3.org/2000/svg">
                 <!-- Rendered dynamically -->
               </svg>
@@ -272,7 +276,7 @@
             <div class="space-y-2 text-[11px] font-mono text-slate-300">
               <div class="flex justify-between items-center bg-[#0f172a] p-2 rounded-lg border border-slate-800">
                 <span>Radius ($r_n$)</span>
-                <span>$0.529 \frac{n^2}{Z} \text{ \AA}$</span>
+                <span>$0.529 \frac{n^2}{Z} \text{ Å}$</span>
               </div>
               <div class="flex justify-between items-center bg-[#0f172a] p-2 rounded-lg border border-slate-800">
                 <span>Velocity ($v_n$)</span>
@@ -287,7 +291,7 @@
                 <span>$-13.6 \frac{Z^2}{n^2} \text{ eV}$</span>
               </div>
             </div>
-        </div>
+          </div>
       </section>
 
       <section
@@ -314,11 +318,15 @@
         <!-- Quantum Transition HUD -->
         <div id="transition-hud"
           class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-slate-950/85 backdrop-blur-md border border-slate-700/60 p-3.5 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.15)] flex items-center gap-3 z-20 transition-all duration-300 opacity-0 pointer-events-none w-[90%] max-w-[340px]">
-          <div id="hud-indicator" class="w-3.5 h-3.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] flex-shrink-0"></div>
+          <div id="hud-indicator" class="w-3.5 h-3.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] flex-shrink-0">
+          </div>
           <div class="flex-grow min-w-0">
-            <div class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest" id="hud-title">Photon Absorbed</div>
-            <div class="text-[13px] font-bold text-white font-mono truncate" id="hud-detail">λ = 121.6 nm | ΔE = 10.20 eV</div>
-            <div class="text-[10px] font-semibold text-cyan-400 font-mono mt-0.5" id="hud-series">Lyman Series (Ultraviolet)</div>
+            <div class="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest" id="hud-title">Photon
+              Absorbed</div>
+            <div class="text-[13px] font-bold text-white font-mono truncate" id="hud-detail">λ = 121.6 nm | ΔE = 10.20
+              eV</div>
+            <div class="text-[10px] font-semibold text-cyan-400 font-mono mt-0.5" id="hud-series">Lyman Series
+              (Ultraviolet)</div>
           </div>
         </div>
       </section>
@@ -387,11 +395,15 @@
           </ul>
         </div>
         <div class="space-y-2 pt-2 border-t border-slate-100">
-          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-500">🎓 Learning Outcomes</h4>
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-pink-500">🎓 Learning Outcomes
+          </h4>
           <ul class="list-disc pl-5 space-y-2">
-            <li><strong>Quantization of Angular Momentum:</strong> Understand why electrons can only reside in discrete, non-radiating Bohr orbits.</li>
-            <li><strong>Atomic Spacings & Energy:</strong> Learn how varying $Z$ and $n$ alters the radius, velocity, frequency, and total energy of the atom.</li>
-            <li><strong>Quantum Transitions:</strong> Visualize how absorption/emission of color-specific photons corresponds to transitions between energy levels.</li>
+            <li><strong>Quantization of Angular Momentum:</strong> Understand why electrons can only reside in discrete,
+              non-radiating Bohr orbits.</li>
+            <li><strong>Atomic Spacings & Energy:</strong> Learn how varying $Z$ and $n$ alters the radius, velocity,
+              frequency, and total energy of the atom.</li>
+            <li><strong>Quantum Transitions:</strong> Visualize how absorption/emission of color-specific photons
+              corresponds to transitions between energy levels.</li>
           </ul>
         </div>
       </div>
@@ -493,15 +505,15 @@
       const filterVal = document.getElementById('viva-category').value;
       const container = document.getElementById('viva-questions-container');
       const scoreLabel = document.getElementById('viva-score');
-      
+
       if (!container) return;
       container.innerHTML = '';
-      
+
       const filtered = questionsData.filter(q => filterVal === 'all' || q.category === filterVal);
-      
+
       let answeredInFilter = 0;
       let correctInFilter = 0;
-      
+
       filtered.forEach(q => {
         if (appState.answers[q.id] !== undefined && appState.answers[q.id] !== null) {
           answeredInFilter++;
@@ -511,48 +523,48 @@
           }
         }
       });
-      
+
       if (scoreLabel) {
         scoreLabel.textContent = `Score: ${correctInFilter} / ${filtered.length}`;
       }
-      
+
       filtered.forEach(q => {
         const card = document.createElement('div');
         card.className = "bg-white border border-slate-200 rounded-xl p-4 hover:border-cyan-400 hover:shadow-md transition-all duration-300";
-        
+
         const header = document.createElement('div');
         header.className = "flex items-center justify-between mb-2";
         header.innerHTML = `<span class="inline-block ${q.colorClass} text-[10px] font-extrabold px-2 py-0.5 rounded border font-mono uppercase tracking-wider">${q.tag}</span>`;
         card.appendChild(header);
-        
+
         const qText = document.createElement('h4');
         qText.className = "text-sm font-bold text-slate-800 leading-snug mb-3";
         qText.innerHTML = q.question;
         card.appendChild(qText);
-        
+
         const optionsDiv = document.createElement('div');
         optionsDiv.className = "flex flex-col gap-2";
-        
+
         const hasBeenAnswered = appState.answers[q.id] !== undefined && appState.answers[q.id] !== null;
-        
+
         q.options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          
+
           let hoverClass = "hover:bg-cyan-50/50 hover:border-cyan-400";
           if (q.category === 'jee') {
             hoverClass = "hover:bg-pink-50/50 hover:border-pink-400";
           } else if (q.category === 'school') {
             hoverClass = "hover:bg-emerald-50/50 hover:border-emerald-400";
           }
-          
+
           btn.className = "text-left p-3 rounded-lg text-sm border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
-            (hasBeenAnswered 
-              ? "cursor-not-allowed" 
+            (hasBeenAnswered
+              ? "cursor-not-allowed"
               : `bg-white border-slate-200 text-slate-700 ${hoverClass} active:bg-slate-100 cursor-pointer shadow-sm`);
-          
+
           const letter = String.fromCharCode(65 + idx) + ")";
           btn.innerHTML = `<span class="font-extrabold text-cyan-600 w-4">${letter}</span> <span class="flex-grow">${opt.text}</span>`;
-          
+
           if (hasBeenAnswered) {
             const selectedIdx = appState.answers[q.id];
             if (selectedIdx === idx) {
@@ -577,9 +589,9 @@
           }
           optionsDiv.appendChild(btn);
         });
-        
+
         card.appendChild(optionsDiv);
-        
+
         if (hasBeenAnswered) {
           const selectedIdx = appState.answers[q.id];
           const selectedOpt = q.options[selectedIdx];
@@ -588,10 +600,10 @@
           feedback.innerHTML = selectedOpt.exp;
           card.appendChild(feedback);
         }
-        
+
         container.appendChild(card);
       });
-      
+
       if (window.MathJax && MathJax.typesetPromise) {
         MathJax.typesetPromise([container]).catch(err => console.log(err));
       }
@@ -642,13 +654,13 @@
     }
 
     function createConfettiParticle(x, y, isLeft, colors) {
-      const angle = isLeft 
-        ? (Math.random() * 45 + 15) * Math.PI / 180 
+      const angle = isLeft
+        ? (Math.random() * 45 + 15) * Math.PI / 180
         : (Math.random() * 45 + 120) * Math.PI / 180;
-      
+
       const speed = Math.random() * 12 + 13;
       const shapes = ['rect', 'circle', 'triangle'];
-      
+
       return {
         x: x,
         y: y,
@@ -686,11 +698,11 @@
         p.x += p.vx;
         p.y += p.vy;
         p.rotation += p.spin;
-        
+
         if (p.y > confettiCanvas.height * 0.7) {
           p.opacity -= 0.02;
         }
-        
+
         if (p.opacity <= 0 || p.y > confettiCanvas.height || p.x < -20 || p.x > confettiCanvas.width + 20) {
           confettiParticles.splice(i, 1);
           continue;
@@ -767,7 +779,7 @@
     function wavelengthToColor(wl) {
       if (wl < 380) return 0xa855f7; // UV: Purple/violet
       if (wl > 780) return 0xef4444; // IR: Crimson/dark-red
-      
+
       let r, g, b;
       if (wl >= 380 && wl < 440) {
         r = -(wl - 440) / (440 - 380);
@@ -794,15 +806,15 @@
         g = 0;
         b = 0.2;
       }
-      
+
       let factor = 1.0;
       if (wl >= 380 && wl < 420) factor = 0.3 + 0.7 * (wl - 380) / (420 - 380);
       else if (wl >= 700 && wl <= 780) factor = 0.3 + 0.7 * (780 - wl) / (780 - 700);
-      
+
       r = Math.round(r * factor * 255);
       g = Math.round(g * factor * 255);
       b = Math.round(b * factor * 255);
-      
+
       return (r << 16) + (g << 8) + b;
     }
 
@@ -814,31 +826,31 @@
       const detail = document.getElementById('hud-detail');
       const seriesEl = document.getElementById('hud-series');
       const indicator = document.getElementById('hud-indicator');
-      
+
       if (!hud) return;
-      
+
       title.innerText = isExcitation ? "Photon Absorbed (Excitation)" : "Photon Emitted (Relaxation)";
       detail.innerText = `λ = ${wl.toFixed(1)} nm | ΔE = ${dE.toFixed(2)} eV`;
       seriesEl.innerText = series;
-      
+
       const colorHex = '#' + transition.photonColor.toString(16).padStart(6, '0');
       indicator.className = "w-3.5 h-3.5 rounded-full flex-shrink-0";
       indicator.style.backgroundColor = colorHex;
       indicator.style.boxShadow = `0 0 10px ${colorHex}`;
-      
+
       if (isExcitation) {
         indicator.classList.add('animate-pulse');
       } else {
         indicator.classList.add('animate-ping');
       }
-      
+
       seriesEl.style.color = colorHex;
       hud.style.borderColor = colorHex + '44';
       hud.style.boxShadow = `0 0 20px ${colorHex}22`;
-      
+
       hud.classList.remove('opacity-0', 'pointer-events-none');
       hud.classList.add('opacity-100');
-      
+
       if (hudTimeout) clearTimeout(hudTimeout);
       hudTimeout = setTimeout(() => {
         hud.classList.remove('opacity-100');
@@ -849,18 +861,18 @@
     function startTransition(nTarget) {
       if (transition.active) return;
       if (nTarget === qState.n) return;
-      
+
       const nSource = qState.n;
       transition.active = true;
       transition.nSource = nSource;
       transition.nTarget = nTarget;
       transition.startTime = performance.now();
       transition.electronPosAtTransition.copy(electron.position);
-      
+
       const dE = Math.abs((-13.6 * Math.pow(qState.Z, 2) / Math.pow(nTarget, 2)) - (-13.6 * Math.pow(qState.Z, 2) / Math.pow(nSource, 2)));
       const wl = 1242 / dE;
       transition.photonColor = wavelengthToColor(wl);
-      
+
       const nLower = Math.min(nSource, nTarget);
       let seriesName = "";
       if (nLower === 1) seriesName = "Lyman Series (Ultraviolet)";
@@ -868,7 +880,7 @@
       else if (nLower === 3) seriesName = "Paschen Series (Infrared)";
       else if (nLower === 4) seriesName = "Brackett Series (Infrared)";
       else if (nLower === 5) seriesName = "Pfund Series (Infrared)";
-      
+
       if (nSource < nTarget) {
         transition.type = 'excitation';
         transition.phase = 'photon';
@@ -882,12 +894,12 @@
         transition.duration = 800;
         showHud(nSource, nTarget, wl, dE, seriesName, false);
       }
-      
+
       // Update intermediate dashboard UI values (target values represent immediately what is happening)
       qState.n = nTarget;
       slN.value = nTarget;
       valN.innerText = `n = ${nTarget}`;
-      
+
       let r = R_BASE * (Math.pow(nTarget, 2) / qState.Z);
       let v = V_BASE * (qState.Z / nTarget);
       let f = F_BASE * (Math.pow(qState.Z, 2) / Math.pow(nTarget, 3));
@@ -897,7 +909,7 @@
       telV.innerText = `${v.toFixed(2)}e6 m/s`;
       telF.innerText = `${f.toFixed(2)}e15 Hz`;
       telE.innerText = `${e.toFixed(2)} eV`;
-      
+
       updateEnergyDiagram();
       update3DScene();
     }
@@ -928,7 +940,7 @@
       }
       updateState();
     });
-    
+
     slN.addEventListener('input', () => {
       const val = parseInt(slN.value);
       if (transition.active) {
@@ -942,7 +954,7 @@
 
     function resetSim() {
       if (transition.active) return;
-      selZ.value = 1; 
+      selZ.value = 1;
       slN.value = 1;
       qState.n = 1;
       qState.Z = 1;
@@ -966,7 +978,7 @@
     container.appendChild(renderer.domElement);
 
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; 
+    controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
@@ -1016,10 +1028,10 @@
         pts.push(new THREE.Vector3(Math.cos(theta) * radius, 0, Math.sin(theta) * radius));
       }
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
-      const mat = isActive 
-        ? new THREE.LineBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.9 }) 
+      const mat = isActive
+        ? new THREE.LineBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.9 })
         : new THREE.LineBasicMaterial({ color: 0x334155, transparent: true, opacity: 0.3 });
-      
+
       const line = new THREE.Line(geo, mat);
       line.userData = { orbitIndex: nVal };
       return line;
@@ -1054,38 +1066,38 @@
 
     function updatePhoton(progress, isIncoming) {
       if (!transition.active) return;
-      
+
       const start = isIncoming ? transition.photonStart : transition.electronPosAtTransition;
       const end = isIncoming ? transition.electronPosAtTransition : transition.photonStart;
-      
+
       const center = new THREE.Vector3().lerpVectors(start, end, progress);
       const dir = new THREE.Vector3().subVectors(end, start).normalize();
-      
+
       const perp = new THREE.Vector3();
       if (Math.abs(dir.y) < 0.9) {
         perp.crossVectors(dir, new THREE.Vector3(0, 1, 0)).normalize();
       } else {
         perp.crossVectors(dir, new THREE.Vector3(1, 0, 0)).normalize();
       }
-      
+
       const points = [];
       const numPoints = 60;
       const packetLength = 9;
-      
+
       for (let i = 0; i < numPoints; i++) {
         const s = (i / (numPoints - 1) - 0.5) * packetLength;
         const pt = center.clone().addScaledVector(dir, s);
-        
+
         // Sine wave w/ Gaussian envelope
         const wave = Math.sin(s * 3.5 + progress * 22) * Math.exp(-Math.pow(s / 2.3, 2));
         pt.addScaledVector(perp, wave * 1.6);
-        
+
         points.push(pt);
       }
-      
+
       photonGeometry.setFromPoints(points);
       photonMaterial.color.setHex(transition.photonColor);
-      
+
       let opacity = 1.0;
       if (progress < 0.12) opacity = progress / 0.12;
       if (progress > 0.88) opacity = (1.0 - progress) / 0.12;
@@ -1112,12 +1124,12 @@
             const iVal = child.userData.orbitIndex;
             const visualRadius = getVisualRadius(iVal, qState.Z);
             const isActive = (iVal === qState.n);
-            
+
             const pts = [];
             const segments = 120;
             const amplitude = isActive ? visualRadius * 0.045 : visualRadius * 0.015;
             const wavePhase = now * 0.0035;
-            
+
             for (let j = 0; j <= segments; j++) {
               const theta = (j / segments) * Math.PI * 2;
               const waveRad = visualRadius + amplitude * Math.sin(iVal * theta - wavePhase);
@@ -1136,14 +1148,14 @@
       if (transition.active) {
         let elapsed = now - transition.startTime;
         let progress = Math.min(elapsed / transition.duration, 1.0);
-        
+
         if (transition.type === 'excitation') {
           if (transition.phase === 'photon') {
             transition.electronPosAtTransition.copy(electron.position);
             updatePhoton(progress, true);
-            
+
             currentOrbitRadius = getVisualRadius(transition.nSource, qState.Z);
-            
+
             if (progress >= 1.0) {
               photonMesh.visible = false;
               transition.phase = 'slide';
@@ -1154,12 +1166,12 @@
           } else if (transition.phase === 'slide') {
             let targetRad = getVisualRadius(transition.nTarget, qState.Z);
             let sourceRad = getVisualRadius(transition.nSource, qState.Z);
-            
+
             currentOrbitRadius = sourceRad + (targetRad - sourceRad) * easeInOutQuad(progress);
-            
+
             let currentScale = 1.0 + 0.5 * (1.0 - progress);
             electron.scale.setScalar(currentScale);
-            
+
             if (progress >= 1.0) {
               transition.active = false;
               electron.scale.setScalar(1.0);
@@ -1171,15 +1183,15 @@
           if (transition.phase === 'slide') {
             let targetRad = getVisualRadius(transition.nTarget, qState.Z);
             let sourceRad = getVisualRadius(transition.nSource, qState.Z);
-            
+
             currentOrbitRadius = sourceRad + (targetRad - sourceRad) * easeInOutQuad(progress);
-            
+
             if (progress >= 1.0) {
               transition.phase = 'photon';
               transition.startTime = now;
               transition.duration = 1000;
               transition.electronPosAtTransition.copy(electron.position);
-              
+
               let angle = Math.random() * Math.PI * 2;
               transition.photonStart.set(Math.cos(angle) * 55, 0, Math.sin(angle) * 55);
               electron.scale.setScalar(1.5);
@@ -1187,10 +1199,10 @@
           } else if (transition.phase === 'photon') {
             updatePhoton(progress, false);
             currentOrbitRadius = getVisualRadius(transition.nTarget, qState.Z);
-            
+
             let currentScale = 1.0 + 0.5 * (1.0 - progress);
             electron.scale.setScalar(currentScale);
-            
+
             if (progress >= 1.0) {
               photonMesh.visible = false;
               transition.active = false;
@@ -1216,7 +1228,7 @@
           let elapsed = now - transition.startTime;
           let progress = Math.min(elapsed / transition.duration, 1.0);
           let currentN = sourceN + (targetN - sourceN) * easeInOutQuad(progress);
-          
+
           let amplitude = currentOrbitRadius * 0.045;
           const wavePhase = now * 0.0035;
           waveRadius = currentOrbitRadius + amplitude * Math.sin(currentN * electronAngle - wavePhase);
@@ -1226,7 +1238,7 @@
           const wavePhase = now * 0.0035;
           waveRadius = currentOrbitRadius + amplitude * Math.sin(activeN * electronAngle - wavePhase);
         }
-        
+
         electron.position.set(
           waveRadius * Math.cos(electronAngle),
           0,
@@ -1322,12 +1334,12 @@
     function updateEnergyDiagram() {
       const svg = document.getElementById('energy-svg');
       if (!svg) return;
-      
+
       svg.innerHTML = '';
-      
+
       const width = svg.clientWidth || 250;
       const height = 180;
-      
+
       const yMap = {
         1: 145,
         2: 95,
@@ -1335,12 +1347,12 @@
         4: 48,
         5: 32
       };
-      
+
       for (let i = 1; i <= 5; i++) {
         const y = yMap[i];
         const e_val = E_BASE * (Math.pow(qState.Z, 2) / Math.pow(i, 2));
         const isActive = (i === qState.n);
-        
+
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.setAttribute('class', 'cursor-pointer group');
         g.addEventListener('click', () => {
@@ -1348,7 +1360,7 @@
             startTransition(i);
           }
         });
-        
+
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', '40');
         line.setAttribute('y1', y.toString());
@@ -1357,11 +1369,11 @@
         line.setAttribute('stroke', isActive ? '#22d3ee' : '#334155');
         line.setAttribute('stroke-width', isActive ? '2.5' : '1');
         line.setAttribute('class', 'transition-all duration-300 group-hover:stroke-pink-500');
-        
+
         if (isActive) {
           line.setAttribute('filter', 'drop-shadow(0 0 3px rgba(34,211,238,0.5))');
         }
-        
+
         const textL = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         textL.setAttribute('x', '10');
         textL.setAttribute('y', (y + 3.5).toString());
@@ -1370,7 +1382,7 @@
         textL.setAttribute('font-weight', 'bold');
         textL.setAttribute('font-family', 'monospace');
         textL.textContent = `n=${i}`;
-        
+
         const textE = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         textE.setAttribute('x', (width - 10).toString());
         textE.setAttribute('y', (y + 3.5).toString());
@@ -1380,13 +1392,13 @@
         textE.setAttribute('text-anchor', 'end');
         textE.setAttribute('font-family', 'monospace');
         textE.textContent = `${e_val.toFixed(2)} eV`;
-        
+
         g.appendChild(line);
         g.appendChild(textL);
         g.appendChild(textE);
         svg.appendChild(g);
       }
-      
+
       const activeY = yMap[qState.n];
       const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       dot.setAttribute('cx', '48');
@@ -1397,12 +1409,12 @@
       dot.setAttribute('stroke-width', '1.5');
       dot.setAttribute('filter', 'drop-shadow(0 0 5px rgba(34,211,238,0.8))');
       svg.appendChild(dot);
-      
+
       if (transition.active) {
         const ySrc = yMap[transition.nSource];
         const yTgt = yMap[transition.nTarget];
         const colorHex = '#' + transition.photonColor.toString(16).padStart(6, '0');
-        
+
         const arrowLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         arrowLine.setAttribute('x1', '75');
         arrowLine.setAttribute('y1', ySrc.toString());
@@ -1413,13 +1425,13 @@
         arrowLine.setAttribute('stroke-width', '2');
         arrowLine.setAttribute('stroke-dasharray', '4 2');
         svg.appendChild(arrowLine);
-        
+
         const arrowhead = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         let pathD = "";
         if (ySrc > yTgt) {
-          pathD = `M 71,${yTgt+6} L 75,${yTgt} L 79,${yTgt+6} Z`;
+          pathD = `M 71,${yTgt + 6} L 75,${yTgt} L 79,${yTgt + 6} Z`;
         } else {
-          pathD = `M 71,${yTgt-6} L 75,${yTgt} L 79,${yTgt-6} Z`;
+          pathD = `M 71,${yTgt - 6} L 75,${yTgt} L 79,${yTgt - 6} Z`;
         }
         arrowhead.setAttribute('d', pathD);
         arrowhead.setAttribute('fill', colorHex);
@@ -1446,10 +1458,10 @@
       updateState();
       animate();
       renderQuestions();
-      
+
       const guideModal = document.getElementById('user-guide-modal');
       guideModal.classList.remove('hidden');
-      
+
       document.getElementById('btn-open-guide').addEventListener('click', () => {
         guideModal.classList.remove('hidden');
       });
