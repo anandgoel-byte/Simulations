@@ -165,46 +165,57 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
 </div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                If the pH of a solution drops from 5.0 to 4.0, what happens to the Hydrogen ion ($H^+$) concentration?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE 2021]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            How does a pH meter determine the acidity of a solution?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2018]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            Which indicator is best suited for the titration of a strong acid with a weak base?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What color will Phenolphthalein turn in a strongly basic solution (pH &gt; 10)?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[AIPMT 2010]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            If a pH meter shows a reading of $3$, the concentration of hydrogen ions $[H^+]$ in the solution is:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What makes the "Universal Indicator" different from indicators like Litmus or Methyl Orange?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                If a solution has a $[H^+]$ of $1.0 \times 10^{-9}$ M, is it acidic or basic?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
-</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            Phenolphthalein is a common pH indicator. What color does it exhibit in a basic solution?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -243,41 +254,48 @@
 
     const vivaData = {
       q1: {
-        question: "If the pH of a solution drops from 5.0 to 4.0, what happens to the Hydrogen ion (H+) concentration?",
+        question: "How does a pH meter determine the acidity of a solution?",
         options: [
-          { text: "It decreases by a factor of 10.", isCorrect: false, exp: "Incorrect. Lower pH means MORE acidic." },
-          { text: "It increases by a factor of 10.", isCorrect: true, exp: "Correct! Because the pH scale is a base-10 logarithmic scale (pH = -log[H+]), a drop of 1 pH unit represents a 10-fold INCREASE in the concentration of hydrogen ions." },
-          { text: "It increases by 1.", isCorrect: false, exp: "Incorrect. It is logarithmic, not linear." },
-          { text: "It remains the same.", isCorrect: false, exp: "Incorrect." }
+          { text: "By measuring light absorption", isCorrect: false, exp: "Incorrect. That describes a colorimeter or spectrophotometer." },
+          { text: "By measuring electrical potential", isCorrect: true, exp: "Correct! A pH meter measures the voltage difference (potential) between a glass electrode and a reference electrode, which is proportional to the $H^+$ ion activity in the solution." },
+          { text: "By reacting with the solution", isCorrect: false, exp: "Incorrect. The electrodes are designed to be non-reactive to maintain accuracy." },
+          { text: "By measuring conductivity", isCorrect: false, exp: "Incorrect. Conductivity measures the total ion content, not specifically $H^+$ activity." }
         ]
       },
       q2: {
-        question: "What color will Phenolphthalein turn in a strongly basic solution (pH > 10)?",
+        question: "Which indicator is best suited for the titration of a strong acid with a weak base?",
         options: [
-          { text: "Colorless", isCorrect: false, exp: "Incorrect. It is colorless in acidic and neutral solutions." },
-          { text: "Yellow", isCorrect: false, exp: "Incorrect." },
-          { text: "Pink / Magenta", isCorrect: true, exp: "Correct! Phenolphthalein transitions from colorless to a vivid pink/magenta between pH 8.2 and 10.0, making it perfect for identifying bases." },
-          { text: "Blue", isCorrect: false, exp: "Incorrect." }
+          { text: "Phenolphthalein", isCorrect: false, exp: "Incorrect. This is used for strong base-weak acid titrations." },
+          { text: "Methyl orange", isCorrect: true, exp: "Correct! The equivalence point of a strong acid-weak base titration is in the acidic range (pH < 7). Methyl orange changes color in the range of 3.1 to 4.4, making it ideal." },
+          { text: "Bromothymol blue", isCorrect: false, exp: "Incorrect. This is used when the equivalence point is near neutral (pH 7)." },
+          { text: "Universal indicator", isCorrect: false, exp: "Incorrect. This is a broad-range indicator, not specific enough for precise titration endpoints." }
         ]
       },
       q3: {
-        question: "What makes the 'Universal Indicator' different from indicators like Litmus or Methyl Orange?",
+        question: "If a pH meter shows a reading of $3$, the concentration of hydrogen ions $[H^+]$ in the solution is:",
         options: [
-          { text: "It is the only one that works in acids.", isCorrect: false, exp: "Incorrect." },
-          { text: "It is a blend of several different indicators, allowing it to display a smooth, continuous spectrum of colors from pH 0 to 14.", isCorrect: true, exp: "Correct! While most indicators only have one transition range (e.g., Litmus is just red or blue), Universal Indicator is a mixture (Water, Propanol, Phenolphthalein, Sodium salt, Bromothymol blue, etc.) that creates a rainbow spectrum across the entire pH scale." },
-          { text: "It is invisible.", isCorrect: false, exp: "Incorrect." },
-          { text: "It changes color based on temperature, not pH.", isCorrect: false, exp: "Incorrect." }
+          { text: "$3 \\times 10^{-1}\\text{ M}$", isCorrect: false, exp: "Incorrect. The pH is defined as $-\\log[H^+]$." },
+          { text: "$1 \\times 10^{-3}\\text{ M}$", isCorrect: true, exp: "Correct! $\\text{pH} = -\\log[H^+]$. If $\\text{pH} = 3$, then $3 = -\\log[H^+]$, which means $\\log[H^+] = -3$, so $[H^+] = 10^{-3}\\text{ M}$." },
+          { text: "$1 \\times 10^3\\text{ M}$", isCorrect: false, exp: "Incorrect. This would correspond to a very high concentration of $H^+$ ions (negative pH)." },
+          { text: "$3\\text{ M}$", isCorrect: false, exp: "Incorrect. The pH scale is logarithmic, not linear." }
         ]
       },
       q4: {
-        question: "If a solution has a [H+] of 1.0e-9 M, is it acidic or basic?",
+        question: "Phenolphthalein is a common pH indicator. What color does it exhibit in a basic solution?",
         options: [
-          { text: "Acidic", isCorrect: false, exp: "Incorrect." },
-          { text: "Neutral", isCorrect: false, exp: "Incorrect. Neutral is 1.0e-7 M." },
-          { text: "Basic", isCorrect: true, exp: "Correct! pH = -log(1.0e-9) = 9.0. Any pH greater than 7.0 is considered basic (alkaline)." },
-          { text: "It is impossible to tell.", isCorrect: false, exp: "Incorrect." }
+          { text: "Yellow", isCorrect: false, exp: "Incorrect. This is typically observed with indicators like methyl orange in basic conditions." },
+          { text: "Blue", isCorrect: false, exp: "Incorrect. Litmus paper turns blue in a base, but phenolphthalein behaves differently." },
+          { text: "Pink/Magenta", isCorrect: true, exp: "Correct! Phenolphthalein is colorless in acidic or neutral solutions (pH < 8.2) and turns a distinct pink or magenta color in basic solutions (pH > 8.2)." },
+          { text: "Green", isCorrect: false, exp: "Incorrect. Universal indicators can turn green in neutral solutions, but not phenolphthalein." }
         ]
       }
+    };
+
+    const colorsMap = {
+        q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+        q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
     };
 
     function renderQuestions() {
@@ -293,8 +311,8 @@
         
         data.options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
-          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          btn.className = `text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-semibold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-1`;
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)'}</span> <span>${opt.text}</span>`;
           
           btn.addEventListener('click', () => {
             if (appState.answers[qKey] !== null) return; 
@@ -306,7 +324,7 @@
             const buttons = optionsContainer.querySelectorAll('button');
             buttons.forEach((b, i) => {
               b.disabled = true;
-              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer');
               b.classList.add('cursor-not-allowed');
               if (appState.answers[qKey] === i) {
                 if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
@@ -317,12 +335,14 @@
                 b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
               }
             });
-            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.innerHTML = opt.exp;
             feedbackContainer.classList.remove('hidden');
+            if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
           });
           optionsContainer.appendChild(btn);
         });
       });
+      if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
     }
 
     // --- CHEMISTRY ENGINE ---
@@ -612,6 +632,23 @@
       ctx.fillText(currentPH.toFixed(2), pX, pTopY - 27);
 
       requestAnimationFrame(renderCanvas);
+    }
+
+    // Category Filter Handler
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+        const cat = selectCategory.value;
+        const questions = document.querySelectorAll('[data-category]');
+        questions.forEach(q => {
+          const qCat = q.getAttribute('data-category');
+          if (cat === 'all' || qCat === cat) {
+            q.classList.remove('hidden');
+          } else {
+            q.classList.add('hidden');
+          }
+        });
+      });
     }
 
     // --- Boot Sequence ---

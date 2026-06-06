@@ -361,11 +361,11 @@
 <option value="cbse">School Board PYQ</option>
 <option value="neet">NEET Prep</option>
 </select>
-</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What was the "Ultraviolet Catastrophe" in classical physics, and how did Max Planck resolve it?
+                        According to Planck’s law, the energy of a quantum of radiation is proportional to its:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
@@ -374,16 +374,16 @@
 <div class="space-y-2">
 <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Explain Wien's Displacement Law and how color shifts as temperature is increased.
+                        What is the phenomenon where classical physics fails to predict the intensity of short-wavelength radiation?
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
 </div>
-</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+</div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        Derive the Stefan-Boltzmann Law by integrating Planck's spectral radiance.
+                        Planck's constant (h) has the same units as:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
@@ -391,8 +391,8 @@
 </div><div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
 <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
-                        What is the cosmological significance of the Cosmic Microwave Background (CMB) thermal spectrum?
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+                        The energy of a photon of wavelength λ is given by:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
@@ -889,37 +889,41 @@
 
     const vivaData = {
         q1: {
+            question: "According to Planck’s law, the energy of a quantum of radiation is proportional to its:",
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Classical physics predicted energy density: $$u(\lambda, T) = \frac{8\pi k_B T}{\lambda^4}$$ diverging...", isCorrect: true, exp: "Correct! Classical physics predicted energy density: $$u(\lambda, T) = \frac{8\pi k_B T}{\lambda^4}$$ diverging to infinity at low $\lambda$. Planck resolved this by quantizing energy: $$E = nhf = n\frac{hc}{\lambda}$$ which correctly dampens short-wavelength emission as shown in this simulator." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "Wavelength", isCorrect: false, exp: "Incorrect. Energy is inversely proportional to wavelength." },
+                { text: "Frequency", isCorrect: true, exp: "Correct! $E = h\\nu$, where $\\nu$ is the frequency." },
+                { text: "Amplitude", isCorrect: false, exp: "Incorrect. Amplitude relates to intensity, not energy of a quantum." },
+                { text: "Velocity", isCorrect: false, exp: "Incorrect. The velocity of electromagnetic radiation is constant in a vacuum." }
             ]
         },
         q2: {
+            question: "What is the phenomenon where classical physics fails to predict the intensity of short-wavelength radiation?",
             options: [
-                { text: "Peak wavelength $\lambda_{\text{max}}$ is directly proportional to $T$: $$\lambda_{\text{max}} = \frac{b}{T}$$...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Peak wavelength $\lambda_{\text{max}}$ is inversely proportional to $T$: $$\lambda_{\text{max}} = \frac{b}{T}$$...", isCorrect: true, exp: "Correct! Peak wavelength $\lambda_{\text{max}}$ is inversely proportional to $T$: $$\lambda_{\text{max}} = \frac{b}{T}$$ with $b \approx 2.898 \times 10^{-3}\text{ m K}$. Heating shift colors: Red $\to$ Orange $\to$ White $\to$ Blue." },
-                { text: "Peak wavelength $\lambda_{\text{max}}$ is not inversely proportional to $T$: $$\lambda_{\text{max}} = \frac{b}{T}$$...", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "Photoelectric Effect", isCorrect: false, exp: "Incorrect. This relates to light hitting a metal surface." },
+                { text: "Ultraviolet Catastrophe", isCorrect: true, exp: "Correct! The classical Rayleigh-Jeans law predicted infinite intensity at short wavelengths, termed the Ultraviolet Catastrophe." },
+                { text: "Compton Effect", isCorrect: false, exp: "Incorrect. This refers to the scattering of X-rays." },
+                { text: "Black Body Absorption", isCorrect: false, exp: "Incorrect. This is the definition of the object, not the mathematical failure." }
             ]
         },
         q3: {
+            question: "Planck's constant ($h$) has the same units as:",
             options: [
-                { text: "Total power density is not the integral over the full spectrum: $$P/A = \int_{0}^{\infty} I(\lambda, T) d\lambda...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Total power density is the integral over the full spectrum: $$P/A = \int_{0}^{\infty} I(\lambda, T) d\lambda...", isCorrect: true, exp: "Correct! Total power density is the integral over the full spectrum: $$P/A = \int_{0}^{\infty} I(\lambda, T) d\lambda = \sigma T^4$$ where the constant is: $$\sigma = \frac{2\pi^5 k_B^4}{15c^2h^3} \approx 5.670 \times 10^{-8} \text{ W/m}^2\text{K}^4$$" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "Energy", isCorrect: false, exp: "Incorrect. Planck's constant is Joule-seconds ($\\text{J}\\cdot\\text{s}$), not Joules ($\\text{J}$)." },
+                { text: "Momentum", isCorrect: false, exp: "Incorrect. Momentum is $\\text{kg}\\cdot\\text{m/s}$." },
+                { text: "Angular Momentum", isCorrect: true, exp: "Correct! Both have units of Joule-seconds ($\\text{J}\\cdot\\text{s}$ or $\\text{kg}\\cdot\\text{m}^2/\\text{s}$)." },
+                { text: "Power", isCorrect: false, exp: "Incorrect. Power is Watts ($\\text{J/s}$)." }
             ]
         },
         q4: {
+            question: "The energy of a photon of wavelength $\\lambda$ is given by:",
             options: [
-                { text: "The CMB is not a near-perfect black body spectrum at $T \approx 2.725\text{ K}$, peaking at $\lambda \approx...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The CMB is a near-perfect black body spectrum at $T \approx 2.725\text{ K}$, peaking at $\lambda \approx...", isCorrect: true, exp: "Correct! The CMB is a near-perfect black body spectrum at $T \approx 2.725\text{ K}$, peaking at $\lambda \approx 1.06\text{ mm}$ (microwave). It represents the cooled thermal remnant of the early hot Big Bang universe." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$hc / \\lambda$", isCorrect: true, exp: "Correct! Since $E = h\\nu$ and $\\nu = c/\\lambda$, then $E = hc/\\lambda$." },
+                { text: "$h\\lambda / c$", isCorrect: false, exp: "Incorrect. This is inversely proportional to the speed of light." },
+                { text: "$\\lambda / hc$", isCorrect: false, exp: "Incorrect. This has incorrect dimensionality." },
+                { text: "$h / c\\lambda$", isCorrect: false, exp: "Incorrect. Check the derivation of $\\nu = c/\\lambda$." }
             ]
-        },
+        }
     };
 
     const colorsMap = {
@@ -982,6 +986,10 @@
 
         Object.keys(vivaData).forEach(qKey => {
             const data = vivaData[qKey];
+            const textContainer = document.getElementById(`${qKey}-text`);
+            if (textContainer) {
+                textContainer.innerHTML = data.question;
+            }
             const optionsContainer = document.getElementById(`${qKey}-options`);
             const feedbackContainer = document.getElementById(`${qKey}-feedback`);
 
@@ -1023,13 +1031,19 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    if (window.MathJax) {
+                        MathJax.typesetPromise([feedbackContainer]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

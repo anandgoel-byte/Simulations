@@ -191,41 +191,49 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
 </div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q1-text">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[AIPMT 2002]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
         Question 1
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="jee">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q2-text">
+<span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main (AIEEE)]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
         Question 2
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q3-text">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
         Question 3
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q4-text">
+<span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2018]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
         Question 4
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
@@ -304,6 +312,13 @@ const vivaData = {
     ]
   }
 };
+const colorsMap = {
+  q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+  q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+  q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+  q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+};
+
 function renderQuestions() {
   const scoreLabel = document.getElementById('viva-score');
   
@@ -325,25 +340,28 @@ function renderQuestions() {
     data.options.forEach((opt, idx) => {
       // Build Button
       const btn = document.createElement('button');
-      btn.className = "text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white hover:bg-slate-50 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+      btn.className = `text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
       
       // Add A, B, C, D labels
       let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
-      btn.innerHTML = `<span class="font-extrabold text-indigo-500 w-4">${letter}</span> <span>${opt.text}</span>`;
+      btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
       
       // Click Logic
       btn.addEventListener('click', () => {
         if (appState.answers[qKey] !== null) return; // Prevent double answering
         
         appState.answers[qKey] = idx;
-        if (opt.isCorrect) appState.vivaScore++;
+        if (opt.isCorrect) {
+          appState.vivaScore++;
+          try { triggerConfetti(); } catch(e) {}
+        }
         if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
         
         // Style all buttons post-click
         const buttons = optionsContainer.querySelectorAll('button');
         buttons.forEach((b, i) => {
           b.disabled = true;
-          b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+          b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
           b.classList.add('cursor-not-allowed', 'shadow-none');
           
           if (appState.answers[qKey] === i) {
@@ -362,6 +380,7 @@ function renderQuestions() {
         // Show Feedback
         feedbackContainer.textContent = opt.exp;
         feedbackContainer.classList.remove('hidden');
+        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
       });
       optionsContainer.appendChild(btn);
     });
@@ -643,11 +662,18 @@ function renderQuestions() {
           ctx.moveTo(cx - 40, midY); ctx.lineTo(leftX, midY);
           // Left junction to battery
           ctx.moveTo(leftX, midY); ctx.lineTo(leftX, botY); ctx.lineTo(cx - 20, botY);
+          ctx.stroke();
           
           // Draw Junction Dots
           ctx.fillStyle = '#475569';
-          ctx.arc(rightX, midY, 6, 0, Math.PI*2); ctx.fill();
-          ctx.beginPath(); ctx.arc(leftX, midY, 6, 0, Math.PI*2); ctx.fill();
+          ctx.beginPath();
+          ctx.arc(rightX, midY, 6, 0, Math.PI*2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(leftX, midY, 6, 0, Math.PI*2);
+          ctx.fill();
           ctx.stroke();
 
           // Resistors
@@ -722,6 +748,70 @@ function renderQuestions() {
       }
 
       requestAnimationFrame(renderCircuit);
+    }
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    // --- Category Filter Handler ---
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
     }
 
     // --- Boot Sequence ---

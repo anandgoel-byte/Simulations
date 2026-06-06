@@ -124,29 +124,60 @@
 </div>
 </section>
 <!-- RIGHT PANEL: Spectrometer Telemetry & Viva Workspace (3 Columns) -->
-<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-<div class="flex justify-between items-center mt-0.5">
-<h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 0</span>
-</div>
-</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
-<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
-<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
-<option value="all">All Categories</option>
-<option value="jee">JEE Main / Advanced</option>
-<option value="cbse">School Board PYQ</option>
-<option value="neet">NEET Prep</option>
-</select>
-</div><div class="bg-indigo-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
-<div>
-<span class="text-[9px] font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
-<h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Challenges</h2>
-</div>
-<div class="bg-indigo-850 px-2.5 py-1 rounded text-xs font-bold font-mono text-pink-400" id="viva-score-tag">
-            SCORE: 0 / 5
-          </div>
-</div></section>
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[720px] overflow-y-auto viva-scrollbar">
+  <!-- Mass Spectrometer Telemetry -->
+  <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700 space-y-3">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+      <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">Spectrometer Telemetry</span>
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+    </div>
+    <div class="space-y-2.5 text-xs">
+      <div class="flex justify-between">
+        <span class="text-slate-400">Element:</span>
+        <span class="font-bold text-slate-100" id="tel-element-name">--</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-slate-400">Standard Mass:</span>
+        <span class="font-mono font-semibold text-slate-100" id="tel-standard-mass">--</span>
+      </div>
+      <div class="flex justify-between border-t border-slate-700 pt-2">
+        <span class="text-slate-400">Calculated Mass:</span>
+        <span class="font-mono font-bold text-cyan-400" id="tel-calculated-mass">--</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-slate-400">Abundance:</span>
+        <span class="font-bold text-emerald-400" id="tel-abundance">--</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Viva Score Header -->
+  <div class="bg-indigo-900 text-white rounded-xl p-4 shadow-sm flex items-center justify-between">
+    <div>
+      <span class="text-[9px] font-extrabold uppercase tracking-widest text-pink-400">Viva Voce Lab Desk</span>
+      <h2 class="text-xs font-bold tracking-tight mt-0.5">Conceptual Challenges</h2>
+    </div>
+    <div class="bg-indigo-850 px-2.5 py-1 rounded text-xs font-bold font-mono text-pink-400" id="viva-score-tag">
+      SCORE: 0 / 5
+    </div>
+  </div>
+
+  <!-- Question Filter -->
+  <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+    <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+    <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+      <option value="all">All Categories</option>
+      <option value="jee">JEE Main / Advanced</option>
+      <option value="cbse">School Board PYQ</option>
+      <option value="neet">NEET Prep</option>
+    </select>
+  </div>
+
+  <!-- Viva Cards Container -->
+  <div id="viva-cards-container" class="space-y-4">
+    <!-- Dynamic cards injected by JS -->
+  </div>
+</section>
 </main>
 <!-- Footer -->
 <footer class="border-t border-slate-200 bg-slate-50 px-6 py-4 mt-auto text-xs text-slate-500">

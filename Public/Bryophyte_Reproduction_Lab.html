@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bryophyte Reproduction 3D Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #cbd5e1;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #10b981;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+      transition: 0.2s;
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* 3D Canvas Background */
+    .lab-stage { 
+      background-color: #000000 !important; 
+      background-image: 
+        radial-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px, 25px 25px, 25px 25px;
+      box-shadow: inset 0 0 120px rgba(0,0,0,1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Bryophyte Reproduction</h1>
+          <p class="text-[11px] text-emerald-400 font-medium tracking-wider uppercase">Alternation of Generations Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center" id="btn-open-guide">
+          <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+          <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Bio-Simulation Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-2">
+        <button class="px-5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-reset">
+          <span>🔄</span> Reset Timeline
+        </button>
+        <button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-play">
+          <span id="play-icon">▶</span> <span id="play-text">Play Timeline</span>
+        </button>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+        
+        <!-- Left Controls / Telemetry panel -->
+        <div class="lg:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-5">
+            
+            <!-- Controls Card -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+              <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Life Cycle Timeline</span>
+              
+              <div>
+                <div class="flex justify-between text-[14px] font-bold text-slate-700 mb-1 mt-2">
+                  <span class="text-emerald-600 flex items-center gap-1">■ Development Stage</span>
+                  <span id="val-stage" class="font-mono bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded text-xs">1 / 5</span>
+                </div>
+                <input type="range" class="slider-emerald" id="slider-stage" min="1" max="5" step="1" value="1">
+              </div>
+              
+              <div class="text-xs text-slate-500 font-bold leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100 mt-2 min-h-[80px]" id="ui-desc">
+                Mature Gametophyte: The dominant green leafy phase. Antheridia and Archegonia produce haploid gametes via mitosis.
+              </div>
+            </div>
+
+            <!-- Dynamic Telemetry Card (Placed above Theory card) -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <span class="text-sm font-extrabold uppercase tracking-widest text-emerald-500 block border-b border-slate-100 pb-2">Live Cellular Telemetry</span>
+              
+              <div class="flex flex-col gap-2">
+                
+                <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800 transition-all duration-300" id="box-process">
+                  <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block" id="dot-process"></span> Primary Process
+                  </div>
+                  <div class="text-xs font-bold font-mono tracking-widest text-cyan-400 uppercase" id="tel-process">
+                    Mitosis
+                  </div>
+                </div>
+
+                <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span> Environment
+                  </div>
+                  <div class="text-xs font-bold font-mono tracking-wide text-pink-400 uppercase" id="tel-env">
+                    Dry / Standard
+                  </div>
+                </div>
+                
+                <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] block"></span> Dependence
+                  </div>
+                  <div class="text-xs font-bold font-mono tracking-wide text-amber-400 uppercase" id="tel-dep">
+                    Independent
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Active Ploidy Level (Theory / Formula block) -->
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2 border border-slate-800">
+              <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-2">Active Ploidy Level</span>
+              <div class="text-lg font-mono text-center py-2" id="ui-ploidy-box">
+                <span id="ui-ploidy-text" class="text-emerald-400 font-bold tracking-widest">Haploid (n)</span>
+              </div>
+              <p class="text-[11px] text-slate-400 font-sans mt-2 text-left leading-relaxed">
+                Bryophytes exhibit alternation of generations. Spores and gametophytes are haploid ($n$), while the sporophyte is diploid ($2n$).
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 3D Viewport Column -->
+        <div class="lg:col-span-8 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          
+          <div class="absolute inset-0 w-full h-full block" id="canvas-container"></div>
+          
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+            <span class="text-[10px] font-bold text-slate-300 tracking-wider">Interactive 3D Space (Click &amp; Drag)</span>
+          </div>
+
+          <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+            <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors">+</button>
+            <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors">-</button>
+            <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold rounded transition-colors text-[9px]">RST</button>
+          </div>
+
+          <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" id="hud-status-dot"></span>
+              <span id="hud-status" class="uppercase">Gametophyte Dominant</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Panel (Viva Voce Section) -->
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <!-- Filter dropdown -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+          <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+            <option value="all">All Categories</option>
+            <option value="core">Core Botany / Structures</option>
+            <option value="neet">NEET PYQ</option>
+            <option value="cbse">School Board Prep</option>
+          </select>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-base font-bold">Conceptual Assessments</h2>
+            <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          
+          <!-- Question 1 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="core">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Core Concept]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q1-text">
+                The dominant, photosynthetic phase in the life cycle of a bryophyte is the:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+            <div class="space-y-2">
+              <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q2-text">
+                Why are bryophytes commonly referred to as the "amphibians of the plant kingdom"?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+            <div class="space-y-2">
+              <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board Prep]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q3-text">
+                In bryophytes, meiosis specifically takes place inside the:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="core">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Structural Biology]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
+                Which of the following best describes the sporophyte of a moss?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Alternation of generations: Haploid gametophyte ($n$) produces gametes. Diploid sporophyte ($2n$) produces spores via meiosis.</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Dialog modal -->
+  <div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> BOTANY PROTOCOLS
+        </h3>
+        <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Bryophyte Alternation of Generations Simulator</strong>! Explore how mosses and liverworts reproduce.</p>
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🌿 Evolutionary Timeline</h4>
+          <ul class="list-disc pl-5 space-y-2">
+            <li><strong>Stage 1 (Gametophyte):</strong> This is the green plant you see. It is Haploid (n).</li>
+            <li><strong>Stage 2 (Fertilization):</strong> Watch the rain! Bryophytes completely depend on external water for the sperm to swim to the egg.</li>
+            <li><strong>Stage 3 (Sporophyte Growth):</strong> A parasitic, brownish stalk (seta) and capsule grows out of the top of the leafy plant. This is Diploid (2n).</li>
+            <li><strong>Stage 4 (Meiosis):</strong> The capsule opens, releasing thousands of haploid spores.</li>
+            <li><strong>Stage 5 (Protonema):</strong> Spores land and grow into green creeping filaments (protonema), restarting the cycle.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = { vivaScore: 0, answers: { q1: null, q2: null, q3: null, q4: null } };
+
+    const vivaData = {
+      q1: {
+        options: [
+          { text: "Sporophyte", isCorrect: false, exp: "Incorrect. The sporophyte is dependent." },
+          { text: "Gametophyte", isCorrect: true, exp: "Correct! In bryophytes, the dominant, free-living, photosynthetic phase is the haploid gametophyte." },
+          { text: "Protonema only", isCorrect: false, exp: "Incorrect." },
+          { text: "Capsule", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        options: [
+          { text: "They look like frogs.", isCorrect: false, exp: "Incorrect." },
+          { text: "They can live in soil but require water for sexual reproduction.", isCorrect: true, exp: "Correct! While they are terrestrial plants, their biflagellate sperm require a thin film of water to swim to the archegonium to fertilize the egg." },
+          { text: "They have a tadpole stage.", isCorrect: false, exp: "Incorrect." },
+          { text: "They live exclusively in ponds.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        options: [
+          { text: "Antheridia", isCorrect: false, exp: "Incorrect. Gametes here form via mitosis." },
+          { text: "Archegonia", isCorrect: false, exp: "Incorrect." },
+          { text: "Spore mother cells within the capsule", isCorrect: true, exp: "Correct! The diploid sporophyte contains a sporangium (capsule). Inside, spore mother cells undergo meiosis to produce haploid spores." },
+          { text: "Protonema", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        options: [
+          { text: "Independent and photosynthetic", isCorrect: false, exp: "Incorrect. This describes the gametophyte." },
+          { text: "Parasitic and entirely dependent on the gametophyte", isCorrect: true, exp: "Correct! The sporophyte (foot, seta, capsule) remains attached to the photosynthetic gametophyte, deriving water and nourishment from it." },
+          { text: "A creeping, branching filament", isCorrect: false, exp: "Incorrect. This describes the protonema." },
+          { text: "Haploid in nature", isCorrect: false, exp: "Incorrect. It is diploid (2n)." }
+        ]
+      }
+    };
+
+    const colorsMap = {
+      q1: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+      q2: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+      q3: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+      q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+    };
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        if (!optionsContainer || !feedbackContainer) return; 
+        optionsContainer.innerHTML = ''; 
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) {
+              appState.vivaScore++;
+              triggerConfetti();
+            }
+            if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+              } else {
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.innerHTML = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+            if(window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+      if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+    }
+
+    // --- STATE MANAGEMENT ---
+    const slStage = document.getElementById('slider-stage');
+    
+    const valStage = document.getElementById('val-stage');
+    const uiDesc = document.getElementById('ui-desc');
+    const uiPloidyBox = document.getElementById('ui-ploidy-box');
+    const uiPloidyText = document.getElementById('ui-ploidy-text');
+    
+    const telProcess = document.getElementById('tel-process');
+    const telEnv = document.getElementById('tel-env');
+    const telDep = document.getElementById('tel-dep');
+    const hudStatus = document.getElementById('hud-status');
+    const boxProcess = document.getElementById('box-process');
+    const dotProcess = document.getElementById('dot-process');
+
+    const stageData = [
+      {
+        desc: "Mature Gametophyte: The dominant green leafy phase. Antheridia and Archegonia produce haploid gametes via mitosis.",
+        ploidy: "Haploid (n)", pColor: "text-emerald-400", pBox: "border-emerald-900/50 bg-emerald-900/10",
+        process: "Mitosis (Gametes)", env: "Dry / Standard", dep: "Independent", hud: "Gametophyte Dominant", procCol: "cyan"
+      },
+      {
+        desc: "Fertilization (Syngamy): Rainwater provides the medium for biflagellate sperm to swim to the egg inside the archegonium.",
+        ploidy: "n + n → 2n", pColor: "text-cyan-400", pBox: "border-cyan-900/50 bg-cyan-900/10",
+        process: "Syngamy", env: "Wet (Rain Required)", dep: "Interaction", hud: "Fertilization Occurring", procCol: "cyan"
+      },
+      {
+        desc: "Sporophyte Growth: The diploid zygote develops into a sporophyte (seta and capsule) which remains physically attached and parasitic to the gametophyte.",
+        ploidy: "Diploid (2n)", pColor: "text-amber-400", pBox: "border-amber-900/50 bg-amber-900/10",
+        process: "Mitosis (Growth)", env: "Dry / Standard", dep: "Parasitic on Gametophyte", hud: "Sporophyte Attached", procCol: "cyan"
+      },
+      {
+        desc: "Meiosis & Spore Dispersal: Inside the capsule, spore mother cells undergo meiosis. The capsule opens, releasing thousands of haploid spores.",
+        ploidy: "2n → n", pColor: "text-pink-400", pBox: "border-pink-900/50 bg-pink-900/10",
+        process: "Meiosis", env: "Dry (Wind Dispersal)", dep: "Independent Release", hud: "Spores Releasing", procCol: "pink"
+      },
+      {
+        desc: "Protonema Germination: Spores land and germinate into creeping green filaments called protonema, which will bud into new leafy gametophytes.",
+        ploidy: "Haploid (n)", pColor: "text-emerald-400", pBox: "border-emerald-900/50 bg-emerald-900/10",
+        process: "Mitosis (Growth)", env: "Moist Soil", dep: "Independent", hud: "Juvenile Phase", procCol: "cyan"
+      }
+    ];
+
+    let pState = { stage: 1 };
+    
+    // Animation flags
+    let isRaining = false;
+    let isSpores = false;
+    let sporeExploded = false;
+
+    function updateState() {
+      pState.stage = parseInt(slStage.value);
+      valStage.innerText = `${pState.stage} / 5`;
+
+      let d = stageData[pState.stage - 1];
+      
+      uiDesc.innerText = d.desc;
+      uiPloidyText.innerText = d.ploidy;
+      uiPloidyText.className = `${d.pColor} font-bold tracking-widest`;
+      uiPloidyBox.className = `text-[18px] font-mono text-center py-4 rounded-lg border mt-2 transition-colors duration-300 ${d.pBox}`;
+
+      telProcess.innerText = d.process;
+      telEnv.innerText = d.env;
+      telDep.innerText = d.dep;
+      hudStatus.innerText = d.hud;
+
+      if (d.procCol === 'pink') {
+          telProcess.className = "text-xs font-bold font-mono tracking-widest text-pink-400 uppercase";
+          dotProcess.className = "w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block animate-pulse";
+          boxProcess.style.borderColor = "#831843";
+      } else {
+          telProcess.className = "text-xs font-bold font-mono tracking-widest text-cyan-300 uppercase";
+          dotProcess.className = "w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block";
+          boxProcess.style.borderColor = "#1e293b";
+      }
+
+      // 3D Logic Flags
+      isRaining = (pState.stage === 2);
+      
+      if (pState.stage === 4) {
+          isSpores = true;
+          if(!sporeExploded) resetSpores(); 
+      } else {
+          isSpores = false;
+          sporeExploded = false;
+      }
+    }
+
+    slStage.addEventListener('input', () => {
+      pausePlay();
+      updateState();
+    });
+
+    let isPlaying = false;
+    let playInterval = null;
+    const btnPlay = document.getElementById('btn-play');
+    const playIcon = document.getElementById('play-icon');
+    const playText = document.getElementById('play-text');
+
+    function startPlay() {
+      isPlaying = true;
+      playIcon.innerText = "⏸";
+      playText.innerText = "Pause Timeline";
+      btnPlay.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+      btnPlay.classList.add('bg-slate-600', 'hover:bg-slate-700');
+
+      playInterval = setInterval(() => {
+        let currentVal = parseInt(slStage.value);
+        let newVal = currentVal + 1;
+        if (newVal > 5) {
+          newVal = 1;
+        }
+        slStage.value = newVal;
+        updateState();
+      }, 4000); // Progress every 4 seconds
+    }
+
+    function pausePlay() {
+      isPlaying = false;
+      playIcon.innerText = "▶";
+      playText.innerText = "Play Timeline";
+      btnPlay.classList.remove('bg-slate-600', 'hover:bg-slate-700');
+      btnPlay.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+
+      if (playInterval) {
+        clearInterval(playInterval);
+        playInterval = null;
+      }
+    }
+
+    btnPlay.addEventListener('click', () => {
+      if (isPlaying) {
+        pausePlay();
+      } else {
+        startPlay();
+      }
+    });
+
+    function resetSim() {
+      pausePlay();
+      slStage.value = 1;
+      controls.reset(); camera.position.set(0, 10, 25);
+      updateState();
+    }
+
+    document.getElementById('btn-reset').addEventListener('click', resetSim);
+
+    // --- THREE.JS 3D ENGINE ---
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x020617, 0.02);
+    
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 10, 25); 
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.05;
+    controls.maxPolarAngle = Math.PI / 2 + 0.1;
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const sunLight = new THREE.DirectionalLight(0xfdf4ff, 1);
+    sunLight.position.set(10, 20, 10);
+    scene.add(sunLight);
+    const fillLight = new THREE.PointLight(0x06b6d4, 0.5);
+    fillLight.position.set(-10, 5, -10);
+    scene.add(fillLight);
+
+    // Groups
+    let groundGroup = new THREE.Group(); scene.add(groundGroup);
+    let gametoGroup = new THREE.Group(); scene.add(gametoGroup);
+    let sporoGroup = new THREE.Group(); scene.add(sporoGroup);
+    let protonemaGroup = new THREE.Group(); scene.add(protonemaGroup);
+
+    // Materials
+    const matGround = new THREE.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.9 });
+    const matStem = new THREE.MeshStandardMaterial({ color: 0x065f46, roughness: 0.8 }); // Dark green
+    const matLeaf = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.7 }); // Bright green
+    const matSeta = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.9 }); // Brown stalk
+    const matCapsule = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.8 }); // Amber capsule
+    
+    let rainParticles, sporeParticles;
+    let rainGeo, sporeGeo;
+
+    function init3D() {
+      // Ground
+      const ground = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 2, 32), matGround);
+      ground.position.y = -1;
+      groundGroup.add(ground);
+
+      // Create a few Gametophytes
+      for(let i=0; i<5; i++) {
+          let g = createGametophyte();
+          let x = (Math.random() - 0.5) * 10;
+          let z = (Math.random() - 0.5) * 10;
+          g.position.set(x, 0, z);
+          gametoGroup.add(g);
+          
+          // Add a sporophyte to the central one
+          if (i === 0) {
+              g.position.set(0,0,0);
+              let sporo = createSporophyte();
+              sporo.position.set(0, 4, 0); // At top of gametophyte
+              sporoGroup.add(sporo);
+          }
+      }
+
+      // Create Protonema (hidden initially)
+      for(let i=0; i<20; i++) {
+          let line = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 2+Math.random()*2), matLeaf);
+          line.rotation.x = Math.PI/2;
+          line.rotation.z = Math.random() * Math.PI;
+          line.position.set((Math.random()-0.5)*15, 0.1, (Math.random()-0.5)*15);
+          protonemaGroup.add(line);
+      }
+
+      // Rain Particles
+      rainGeo = new THREE.BufferGeometry();
+      const rPos = [];
+      for(let i=0; i<200; i++) {
+          rPos.push((Math.random()-0.5)*20, Math.random()*20, (Math.random()-0.5)*20);
+      }
+      rainGeo.setAttribute('position', new THREE.Float32BufferAttribute(rPos, 3));
+      let rainMat = new THREE.PointsMaterial({color: 0x38bdf8, size: 0.2, transparent: true, opacity: 0.6});
+      rainParticles = new THREE.Points(rainGeo, rainMat);
+      scene.add(rainParticles);
+
+      // Spore Particles
+      sporeGeo = new THREE.BufferGeometry();
+      const sPos = new Float32Array(300 * 3);
+      const sVel = [];
+      for(let i=0; i<300; i++) {
+          sPos[i*3] = 0; sPos[i*3+1] = 10; sPos[i*3+2] = 0; // Starts at capsule
+          // Explosive velocity
+          let vx = (Math.random()-0.5)*0.2;
+          let vy = Math.random()*0.2 + 0.1;
+          let vz = (Math.random()-0.5)*0.2;
+          sVel.push({x: vx, y: vy, z: vz});
+      }
+      sporeGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
+      let sporeMat = new THREE.PointsMaterial({color: 0xfcd34d, size: 0.3});
+      sporeParticles = new THREE.Points(sporeGeo, sporeMat);
+      sporeParticles.userData.vel = sVel;
+      scene.add(sporeParticles);
+    }
+
+    function createGametophyte() {
+      let g = new THREE.Group();
+      let stem = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 4), matStem);
+      stem.position.y = 2;
+      g.add(stem);
+
+      // Add "leaves" (cones)
+      for(let i=0; i<15; i++) {
+          let leaf = new THREE.Mesh(new THREE.ConeGeometry(0.3, 1.5, 4), matLeaf);
+          let yPos = 0.5 + Math.random() * 3.5;
+          leaf.position.set(0, yPos, 0);
+          leaf.rotation.x = Math.PI / 2 + (Math.random() - 0.5);
+          leaf.rotation.z = Math.random() * Math.PI * 2;
+          // Offset slightly
+          leaf.position.x = Math.sin(leaf.rotation.z) * 0.2;
+          leaf.position.z = Math.cos(leaf.rotation.z) * 0.2;
+          g.add(leaf);
+      }
+      return g;
+    }
+
+    function createSporophyte() {
+      let g = new THREE.Group();
+      let seta = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 6), matSeta);
+      seta.position.y = 3;
+      
+      let capsule = new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 16), matCapsule);
+      capsule.scale.y = 1.5;
+      capsule.position.y = 6.5;
+
+      g.add(seta, capsule);
+      // To scale from bottom
+      let pivot = new THREE.Group();
+      pivot.add(g);
+      return pivot;
+    }
+
+    function resetSpores() {
+      const pos = sporeGeo.attributes.position.array;
+      const vel = sporeParticles.userData.vel;
+      for(let i=0; i<300; i++) {
+          pos[i*3] = sporoGroup.position.x; 
+          pos[i*3+1] = sporoGroup.position.y + 6.5 * sporoGroup.scale.y; // Top of capsule
+          pos[i*3+2] = sporoGroup.position.z;
+
+          // Reset velocity
+          vel[i].x = (Math.random()-0.5)*0.2;
+          vel[i].y = Math.random()*0.2 + 0.1;
+          vel[i].z = (Math.random()-0.5)*0.2;
+      }
+      sporeGeo.attributes.position.needsUpdate = true;
+      sporeExploded = true;
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      // State-based 3D Logic
+      
+      // Rain
+      if (isRaining) {
+          rainParticles.visible = true;
+          let pos = rainGeo.attributes.position.array;
+          for(let i=1; i<200*3; i+=3) {
+              pos[i] -= 0.3; // Fall
+              if(pos[i] < 0) pos[i] = 20;
+          }
+          rainGeo.attributes.position.needsUpdate = true;
+      } else {
+          rainParticles.visible = false;
+      }
+
+      // Sporophyte Scaling (Grows in stage 3, 4)
+      let targetSScale = (pState.stage === 3 || pState.stage === 4) ? 1.0 : 0.0;
+      sporoGroup.scale.y += (targetSScale - sporoGroup.scale.y) * 0.1;
+      sporoGroup.scale.x = sporoGroup.scale.z = (sporoGroup.scale.y > 0.1) ? 1 : sporoGroup.scale.y;
+
+      // Spores
+      if (isSpores && sporeExploded) {
+          sporeParticles.visible = true;
+          let pos = sporeGeo.attributes.position.array;
+          let vel = sporeParticles.userData.vel;
+          for(let i=0; i<300; i++) {
+              pos[i*3] += vel[i].x;
+              pos[i*3+1] += vel[i].y;
+              pos[i*3+2] += vel[i].z;
+              vel[i].y -= 0.005; // Gravity
+              
+              // Stop at ground
+              if (pos[i*3+1] < 0.2) {
+                  pos[i*3+1] = 0.2;
+                  vel[i].x = vel[i].y = vel[i].z = 0;
+              }
+          }
+          sporeGeo.attributes.position.needsUpdate = true;
+      } else {
+          sporeParticles.visible = false;
+      }
+
+      // Protonema (Stage 5)
+      let targetPScale = (pState.stage === 5) ? 1.0 : 0.0;
+      protonemaGroup.scale.setScalar(protonemaGroup.scale.x + (targetPScale - protonemaGroup.scale.x) * 0.1);
+      
+      // Gentle wind on gametophytes
+      gametoGroup.children.forEach((g, i) => {
+          g.rotation.z = Math.sin(Date.now() * 0.001 + i) * 0.05;
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    function resizeCanvas() {
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      if (cw > 0 && ch > 0) {
+          camera.aspect = cw / ch;
+          camera.updateProjectionMatrix();
+          renderer.setSize(cw, ch);
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // --- Category Filter Handler ---
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Boot
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      init3D();
+      updateState();
+      resizeCanvas();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(animate);
+    });
+  </script>
+</body>
+</html>

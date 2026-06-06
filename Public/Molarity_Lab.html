@@ -175,6 +175,29 @@
                 $$M = \frac{n}{V}$$
                 <div class="text-[9px] text-slate-400 font-sans mt-2">Where M is Molarity (mol/L), n is moles of solute, and V is Liters of solution.</div>
 </div>
+</div></div></div>
+<div class="md:col-span-9 relative bg-white overflow-hidden flex flex-col justify-center min-h-[500px] border-8 border-slate-50">
+<canvas class="absolute inset-0 w-full h-full block" id="simCanvas"></canvas>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-400" id="status-dot"></span>
+<span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider" id="simStatusText">Standing By</span>
+</div>
+</div>
+</section>
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
 </div><div class="space-y-3">
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
@@ -216,29 +239,6 @@
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
 </div>
 </div>
-</div></div></div>
-<div class="md:col-span-9 relative bg-white overflow-hidden flex flex-col justify-center min-h-[500px] border-8 border-slate-50">
-<canvas class="absolute inset-0 w-full h-full block" id="simCanvas"></canvas>
-<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 pointer-events-none select-none z-10">
-<span class="w-2.5 h-2.5 rounded-full bg-slate-400" id="status-dot"></span>
-<span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider" id="simStatusText">Standing By</span>
-</div>
-</div>
-</section>
-<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-<div class="flex justify-between items-center mt-0.5">
-<h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
-</div>
-</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
-<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
-<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
-<option value="all">All Categories</option>
-<option value="jee">JEE Main / Advanced</option>
-<option value="cbse">School Board PYQ</option>
-<option value="neet">NEET Prep</option>
-</select>
 </div></section>
 </main>
 <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
@@ -636,6 +636,7 @@
 
     const vivaData = {
         q1: {
+            question: "If you double the volume of the solution by adding water, what happens to the Molarity?",
             options: [
                 { text: "Molarity is directly proportional to volume ($M = n/V$).", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
                 { text: "Molarity is inversely proportional to volume ($M = n/V$).", isCorrect: true, exp: "Correct! Molarity is inversely proportional to volume ($M = n/V$). If volume is doubled ($2V$) while moles ($n$) remain constant, the new concentration becomes exactly half of the original. This is the principle of dilution." },
@@ -644,6 +645,7 @@
             ]
         },
         q2: {
+            question: "What physically happens in the beaker when the solution reaches \"Saturation\"?",
             options: [
                 { text: "Saturation is the minimum concentration limit for a specific solute in a solvent at a given temperature.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
                 { text: "Saturation is the maximum concentration limit for a specific solute in a solvent at a given temperature.", isCorrect: true, exp: "Correct! Saturation is the maximum concentration limit for a specific solute in a solvent at a given temperature. Once reached, adding more solute will not increase the molarity; the excess solute will simply precipitate and pile up as a solid at the bottom of the beaker." },
@@ -652,6 +654,7 @@
             ]
         },
         q3: {
+            question: "During evaporation, why does the color of the solution become darker?",
             options: [
                 { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
                 { text: "Evaporation removes the solvent (water, decreasing $V$) but leaves the solute particles ($n$) behind.", isCorrect: true, exp: "Correct! Evaporation removes the solvent (water, decreasing $V$) but leaves the solute particles ($n$) behind. As $V$ decreases, the ratio $n/V$ increases, resulting in a higher molarity. Higher concentration absorbs more light, making the solution visually darker or more opaque." },
@@ -660,9 +663,10 @@
             ]
         },
         q4: {
+            question: "Write the Dilution Equation and explain its components.",
             options: [
-                { text: "$$M_1 V_1 = M_2 V_2$$ Because moles of solute remain variable during dilution ($n = M \cdot V$), the...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "$$M_1 V_1 = M_2 V_2$$ Because moles of solute remain constant during dilution ($n = M \cdot V$), the...", isCorrect: true, exp: "Correct! $$M_1 V_1 = M_2 V_2$$ Because moles of solute remain constant during dilution ($n = M \cdot V$), the initial molarity times initial volume must equal the final molarity times final volume." },
+                { text: "$$M_1 V_1 = M_2 V_2$$ Because moles of solute remain variable during dilution ($n = M \\cdot V$), the...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
+                { text: "$$M_1 V_1 = M_2 V_2$$ Because moles of solute remain constant during dilution ($n = M \\cdot V$), the...", isCorrect: true, exp: "Correct! $$M_1 V_1 = M_2 V_2$$ Because moles of solute remain constant during dilution ($n = M \\cdot V$), the initial molarity times initial volume must equal the final molarity times final volume." },
                 { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
                 { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
             ]
@@ -729,6 +733,10 @@
 
         Object.keys(vivaData).forEach(qKey => {
             const data = vivaData[qKey];
+            const textContainer = document.getElementById(`${qKey}-text`);
+            if (textContainer) {
+                textContainer.innerHTML = data.question;
+            }
             const optionsContainer = document.getElementById(`${qKey}-options`);
             const feedbackContainer = document.getElementById(`${qKey}-feedback`);
 
@@ -770,13 +778,19 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    if (window.MathJax) {
+                        MathJax.typesetPromise([feedbackContainer]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

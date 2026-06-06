@@ -647,11 +647,11 @@
       ctx.beginPath();
       // Draw a subtle quadratic curve scaled by zoomLevel
       if (mirrorType === 'concave') {
-        ctx.moveTo(Px + 20 * zoomLevel, Py - 150 * zoomLevel);
-        ctx.quadraticCurveTo(Px - 20 * zoomLevel, Py, Px + 20 * zoomLevel, Py + 150 * zoomLevel);
-      } else {
         ctx.moveTo(Px - 20 * zoomLevel, Py - 150 * zoomLevel);
         ctx.quadraticCurveTo(Px + 20 * zoomLevel, Py, Px - 20 * zoomLevel, Py + 150 * zoomLevel);
+      } else {
+        ctx.moveTo(Px + 20 * zoomLevel, Py - 150 * zoomLevel);
+        ctx.quadraticCurveTo(Px - 20 * zoomLevel, Py, Px + 20 * zoomLevel, Py + 150 * zoomLevel);
       }
       ctx.stroke();
 
@@ -661,8 +661,8 @@
       for (let y = -140; y <= 140; y += 10) {
         // approximate x on curve
         let t = (y + 150) / 300;
-        let ctrlX = (mirrorType === 'concave' ? -20 : 20) * zoomLevel;
-        let startX = (mirrorType === 'concave' ? 20 : -20) * zoomLevel;
+        let ctrlX = (mirrorType === 'concave' ? 20 : -20) * zoomLevel;
+        let startX = (mirrorType === 'concave' ? -20 : 20) * zoomLevel;
         let cx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * ctrlX + t * t * startX + Px;
 
         ctx.beginPath();

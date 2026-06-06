@@ -151,46 +151,57 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
 </div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why does Zinc displace Copper from Copper(II) Sulfate, but Copper cannot displace Zinc?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT Exemplar]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            Which metal will displace copper from copper sulphate solution?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            If metal A displaces metal B from its salt solution, then:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                In the reaction $Mg_{(s)} + CuSO_{4(aq)} \rightarrow MgSO_{4(aq)} + Cu_{(s)}$, which species is being Oxidized?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            Which reaction will NOT occur spontaneously?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What visual change indicates that a reaction is occurring between Iron metal and Copper Sulfate solution?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Of the metals tested in this lab, which is the LEAST reactive?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
-</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            In the series Mg > Zn > Fe > Cu, which metal reduces Fe²⁺ ions most effectively?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -229,49 +240,61 @@
 
     const vivaData = {
       q1: {
-        question: "Why does Zinc displace Copper from Copper(II) Sulfate, but Copper cannot displace Zinc?",
+        question: "Which metal will displace copper from copper sulphate solution?",
         options: [
-          { text: "Because Zinc is heavier than Copper.", isCorrect: false, exp: "Incorrect. Reactivity is not determined by atomic weight." },
-          { text: "Because Zinc is more reactive, meaning it has a higher tendency to lose electrons and form positive ions than Copper.", isCorrect: true, exp: "Correct! Zinc sits higher on the reactivity series. It acts as a stronger reducing agent, easily forcing its electrons onto the Copper ions. Copper holds its electrons too tightly to do the reverse." },
-          { text: "Because Copper Sulfate is blue.", isCorrect: false, exp: "Incorrect. Color is a result of the ions, not the cause of reactivity." },
-          { text: "Because Zinc is a transition metal.", isCorrect: false, exp: "Incorrect. Both are transition metals." }
+          { text: "Silver", isCorrect: false, exp: "Incorrect. Silver is less reactive than copper." },
+          { text: "Gold", isCorrect: false, exp: "Incorrect. Gold is at the bottom of the reactivity series and cannot displace copper." },
+          { text: "Zinc", isCorrect: true, exp: "Correct! Zinc is higher in the reactivity series than copper and will displace it to form zinc sulphate: <br>$$\\text{Zn} + \\text{CuSO}_4 \\rightarrow \\text{ZnSO}_4 + \\text{Cu}$$" },
+          { text: "Mercury", isCorrect: false, exp: "Incorrect. Mercury is less reactive than copper." }
         ]
       },
       q2: {
-        question: "In the reaction Mg(s) + CuSO4(aq) -> MgSO4(aq) + Cu(s), which species is being Oxidized?",
+        question: "If metal A displaces metal B from its salt solution, then:",
         options: [
-          { text: "Copper Ion (Cu2+)", isCorrect: false, exp: "Incorrect. Cu2+ gains electrons to become Cu(s), so it is reduced." },
-          { text: "Sulfate Ion (SO4 2-)", isCorrect: false, exp: "Incorrect. Sulfate is a spectator ion and does not participate in the electron transfer." },
-          { text: "Magnesium Solid (Mg)", isCorrect: true, exp: "Correct! Oxidation is the Loss of Electrons (OIL RIG). Solid Magnesium starts with an oxidation state of 0 and becomes Mg2+ by losing 2 electrons to the copper." },
-          { text: "Water", isCorrect: false, exp: "Incorrect." }
+          { text: "A is less reactive than B", isCorrect: false, exp: "Incorrect. Only a more reactive metal can displace a less reactive one." },
+          { text: "A is more reactive than B", isCorrect: true, exp: "Correct! Displacement occurs only if the metal added is more reactive than the metal currently in the solution." },
+          { text: "They have equal reactivity", isCorrect: false, exp: "Incorrect. If reactivities are equal, no net displacement occurs." },
+          { text: "Metal B is a stronger reducing agent", isCorrect: false, exp: "Incorrect. The metal that undergoes oxidation (the one that displaces) is the stronger reducing agent." }
         ]
       },
       q3: {
-        question: "What visual change indicates that a reaction is occurring between Iron metal and Copper Sulfate solution?",
+        question: "Which reaction will NOT occur spontaneously?",
         options: [
-          { text: "The solution turns bright red.", isCorrect: false, exp: "Incorrect." },
-          { text: "The blue solution fades to a pale green, and a reddish-brown coating forms on the iron.", isCorrect: true, exp: "Correct! The blue color of the solution is due to Cu2+ ions. As they are reduced to solid Copper, the blue fades. Simultaneously, Iron oxidizes into Fe2+ ions, which give the solution a pale green tint. The solid copper deposits onto the iron strip." },
-          { text: "A massive explosion occurs.", isCorrect: false, exp: "Incorrect. It is a quiet displacement reaction." },
-          { text: "The iron strip turns invisible.", isCorrect: false, exp: "Incorrect." }
+          { text: "$\\text{Zn} + \\text{CuSO}_4 \\rightarrow \\text{ZnSO}_4 + \\text{Cu}$", isCorrect: false, exp: "Incorrect. This occurs because Zinc is more reactive than Copper ($$\\text{Zn} > \\text{Cu}$$)." },
+          { text: "$\\text{Fe} + \\text{ZnSO}_4 \\rightarrow \\text{FeSO}_4 + \\text{Zn}$", isCorrect: true, exp: "Correct! Iron is less reactive than Zinc ($$\\text{Fe} < \\text{Zn}$$), so it cannot displace Zinc from its salt solution spontaneously." },
+          { text: "$\\text{Mg} + \\text{FeSO}_4 \\rightarrow \\text{MgSO}_4 + \\text{Fe}$", isCorrect: false, exp: "Incorrect. Magnesium is more reactive than Iron ($$\\text{Mg} > \\text{Fe}$$) and will displace it." },
+          { text: "$\\text{Cu} + 2\\text{AgNO}_3 \\rightarrow \\text{Cu(NO}_3)_2 + 2\\text{Ag}$", isCorrect: false, exp: "Incorrect. Copper is more reactive than Silver ($$\\text{Cu} > \\text{Ag}$$) and will displace it." }
         ]
       },
       q4: {
-        question: "Of the metals tested in this lab, which is the LEAST reactive?",
+        question: "In the series $\\text{Mg} > \\text{Zn} > \\text{Fe} > \\text{Cu}$, which metal reduces $\\text{Fe}^{2+}$ ions most effectively?",
         options: [
-          { text: "Magnesium (Mg)", isCorrect: false, exp: "Incorrect. Mg is the most reactive of this group." },
-          { text: "Iron (Fe)", isCorrect: false, exp: "Incorrect." },
-          { text: "Zinc (Zn)", isCorrect: false, exp: "Incorrect." },
-          { text: "Silver (Ag)", isCorrect: true, exp: "Correct! Silver sits at the very bottom of this specific group. It holds onto its electrons very tightly, making it a precious, noble metal that rarely corrodes or displaces other metals." }
+          { text: "Copper", isCorrect: false, exp: "Incorrect. Copper is less reactive than Iron." },
+          { text: "Iron", isCorrect: false, exp: "Incorrect. Iron is the metal we are trying to reduce; it cannot reduce itself." },
+          { text: "Magnesium", isCorrect: true, exp: "Correct! Magnesium is the most reactive metal in this list, making it the strongest reducing agent capable of reducing $\\text{Fe}^{2+}$ to $\\text{Fe}$:<br>$$\\text{Mg} + \\text{Fe}^{2+} \\rightarrow \\text{Mg}^{2+} + \\text{Fe}$$" },
+          { text: "Zinc", isCorrect: false, exp: "Incorrect. While Zinc can reduce $\\text{Fe}^{2+}$, Magnesium is a stronger reducing agent and performs the reaction more effectively." }
         ]
       }
+    };
+
+    const colorsMap = {
+      q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+      q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+      q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+      q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
     };
 
     function renderQuestions() {
       const scoreLabel = document.getElementById('viva-score');
       Object.keys(vivaData).forEach(qKey => {
         const data = vivaData[qKey];
+        const textContainer = document.getElementById(`${qKey}-text`);
         const optionsContainer = document.getElementById(`${qKey}-options`);
         const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        
+        if (textContainer) {
+          textContainer.innerHTML = data.question;
+        }
         
         if (!optionsContainer || !feedbackContainer) return; 
         
@@ -279,8 +302,9 @@
         
         data.options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
-          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
           
           btn.addEventListener('click', () => {
             if (appState.answers[qKey] !== null) return; 
@@ -292,23 +316,29 @@
             const buttons = optionsContainer.querySelectorAll('button');
             buttons.forEach((b, i) => {
               b.disabled = true;
-              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
-              b.classList.add('cursor-not-allowed');
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
               if (appState.answers[qKey] === i) {
-                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
-                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
               } else if (data.options[i].isCorrect) {
-                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
               } else {
-                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
               }
             });
-            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.innerHTML = opt.exp;
             feedbackContainer.classList.remove('hidden');
+            if (window.MathJax) {
+              MathJax.typesetPromise([feedbackContainer]).catch(err => console.log(err));
+            }
           });
           optionsContainer.appendChild(btn);
         });
       });
+      if (window.MathJax) {
+        setTimeout(() => { MathJax.typesetPromise().catch(err => console.log(err)); }, 50);
+      }
     }
 
     // --- CHEMISTRY ENGINE ---
@@ -626,6 +656,23 @@
       ctx.beginPath(); ctx.ellipse(cx, cy - bH/2, bW/2, 10, 0, 0, Math.PI*2); ctx.stroke();
 
       requestAnimationFrame(renderCanvas);
+    }
+
+    // Category Filter Handler
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+        const cat = selectCategory.value;
+        const questions = document.querySelectorAll('[data-category]');
+        questions.forEach(q => {
+          const qCat = q.getAttribute('data-category');
+          if (cat === 'all' || qCat === cat) {
+            q.classList.remove('hidden');
+          } else {
+            q.classList.add('hidden');
+          }
+        });
+      });
     }
 
     // --- Boot Sequence ---
