@@ -157,38 +157,49 @@
 <option value="cbse">School Board PYQ</option>
 <option value="neet">NEET Prep</option>
 </select>
-</div><div class="space-y-3">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What does each number in Pascal's Triangle represent mathematically?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            What are the coefficients for the expansion of $(a + b)^4$?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            In the expansion of $(a + b)^n$, what is the sum of all coefficients?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Why do the values in row $n$ always sum exactly to $2^n$?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            Which row of Pascal's triangle provides coefficients for $(a + b)^5$?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        How is this related to the Binomial Theorem?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
-</div></section>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            In $(a + b)^n$, the number of terms in the expansion is:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div></div></section>
 </main>
 <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
 <span>* Hover over the nodes in the active row to trace the arithmetic addition rule up the pyramid.</span>
@@ -475,33 +486,44 @@
         answers: { q1: null, q2: null, q3: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Each number represents the number of ways to choose $k$ items from a set of $n$ items, mathematically...", isCorrect: true, exp: "Correct! Each number represents the number of ways to choose $k$ items from a set of $n$ items, mathematically written as $nCk$ or $\binom{n}{k}$. It is the absolute core of combinatorics!" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "The sum of the $n$-th row is not $\sum \binom{n}{k}$", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The sum of the $n$-th row is $\sum \binom{n}{k}$", isCorrect: true, exp: "Correct! The sum of the $n$-th row is $\sum \binom{n}{k}$. This is equivalent to counting the total number of possible subsets of a set with $n$ elements. Each element can either be \"in\" or \"out\" (2 choices), so $n$ elements give $2 \times 2 \times \dots = 2^n$ total subsets." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The Binomial Theorem expands $(x+y)^n$", isCorrect: true, exp: "Correct! The Binomial Theorem expands $(x+y)^n$. When multiplied out, the coefficient of each $x^{n-k}y^k$ term is exactly the number of ways to pick $y$ from $k$ of the binomial factors, which is $\binom{n}{k}$ — matching the $n$-th row of Pascal's Triangle perfectly!" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "What are the coefficients for the expansion of (a + b)⁴?",
+    options: [
+      { text: "1, 3, 3, 1", isCorrect: false, exp: "Incorrect. That is for (a + b)³." },
+      { text: "1, 4, 6, 4, 1", isCorrect: true, exp: "Correct! The 4th row of Pascal's triangle corresponds to n=4." },
+      { text: "1, 4, 4, 1", isCorrect: false, exp: "Incorrect. You missed the middle term." },
+      { text: "1, 2, 4, 2, 1", isCorrect: false, exp: "Incorrect. These are not the binomial coefficients." }
+    ]
+  },
+  q2: {
+    question: "In the expansion of (a + b)ⁿ, what is the sum of all coefficients?",
+    options: [
+      { text: "n", isCorrect: false, exp: "Incorrect." },
+      { text: "2ⁿ", isCorrect: true, exp: "Correct! By setting a=1 and b=1, (1+1)ⁿ = 2ⁿ, which equals the sum of all coefficients." },
+      { text: "n²", isCorrect: false, exp: "Incorrect." },
+      { text: "2n", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "Which row of Pascal's triangle provides coefficients for (a + b)⁵?",
+    options: [
+      { text: "Row 4", isCorrect: false, exp: "Incorrect. Row 4 is for n=4." },
+      { text: "Row 5", isCorrect: true, exp: "Correct! The row index matches the exponent n." },
+      { text: "Row 6", isCorrect: false, exp: "Incorrect." },
+      { text: "None of these", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "In (a + b)ⁿ, the number of terms in the expansion is:",
+    options: [
+      { text: "n", isCorrect: false, exp: "Incorrect." },
+      { text: "n + 1", isCorrect: true, exp: "Correct! The terms range from k=0 to k=n, totaling n+1 terms." },
+      { text: "n - 1", isCorrect: false, exp: "Incorrect." },
+      { text: "2n", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },

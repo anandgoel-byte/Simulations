@@ -149,16 +149,23 @@
 <span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Specimen: Dicot Stem</span>
 </div>
 </section>
-<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block" for="filter-category">Question Category</label>
+<select class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer" id="filter-category">
+<option value="all">All Categories</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
 </div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
+<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
 <h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What is the defining feature of a Monocot stem cross-section?
               </h4>
@@ -166,9 +173,9 @@
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
 <h4 class="text-xs font-bold text-slate-800 leading-snug">
                 How does the arrangement of xylem and phloem differ in Roots versus Stems?
               </h4>
@@ -176,9 +183,9 @@
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
 <h4 class="text-xs font-bold text-slate-800 leading-snug">
                 What is the primary function of the Endodermis in roots?
               </h4>
@@ -186,9 +193,9 @@
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
+<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
+<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
 <h4 class="text-xs font-bold text-slate-800 leading-snug">
                 Which tissue is responsible for secondary growth (thickening) in Dicot stems?
               </h4>
@@ -662,6 +669,24 @@
     // --- Boot Sequence ---
     window.addEventListener('load', () => {
       try { renderQuestions(); } catch(e) { console.error(e); }
+      
+      // Question Filter
+      const filterSelect = document.getElementById('filter-category');
+      if (filterSelect) {
+        filterSelect.addEventListener('change', () => {
+          const selectedCategory = filterSelect.value;
+          const questions = document.querySelectorAll('[data-category]');
+          questions.forEach(q => {
+            const cat = q.getAttribute('data-category');
+            if (selectedCategory === 'all' || cat === selectedCategory) {
+              q.classList.remove('hidden');
+            } else {
+              q.classList.add('hidden');
+            }
+          });
+        });
+      }
+
       updateUI();
       requestAnimationFrame(renderLoop);
     });

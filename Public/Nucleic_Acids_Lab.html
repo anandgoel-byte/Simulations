@@ -63,7 +63,7 @@
 <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
 <div class="flex items-center space-x-4 mb-3 sm:mb-0">
 <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-<img alt="Sparkl Alpha Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
 </div>
 <div>
 <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">DNA vs RNA Structure Comparator</h1>
@@ -154,7 +154,7 @@
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 3</span>
 </div>
 </div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
 <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
@@ -168,7 +168,7 @@
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
 <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+<h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
                         Why is DNA much more stable than RNA in aqueous environments?
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
@@ -177,8 +177,8 @@
 </div>
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
 <div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
                         Why does DNA use Thymine (T) while RNA uses Uracil (U)?
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
@@ -187,8 +187,8 @@
 </div>
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
                         How does the macrostructure (Double vs Single strand) reflect their biological functions?
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
@@ -275,17 +275,25 @@
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Lighting — multi-light dramatic setup
+    const ambientLight = new THREE.AmbientLight(0x1e293b, 1.2);
     scene.add(ambientLight);
-    
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    dirLight.position.set(10, 20, 10);
-    scene.add(dirLight);
 
-    const backLight = new THREE.PointLight(0x38bdf8, 0.5, 50);
-    backLight.position.set(-10, -10, -10);
-    scene.add(backLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    keyLight.position.set(12, 20, 15);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0x7dd3fc, 0.6);
+    fillLight.position.set(-15, 5, -10);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xfde68a, 0.5);
+    rimLight.position.set(0, -20, -10);
+    scene.add(rimLight);
+
+    const glowLight = new THREE.PointLight(0x38bdf8, 1.2, 60);
+    glowLight.position.set(0, 0, 8);
+    scene.add(glowLight);
 
     // Groups
     const macroGroup = new THREE.Group();
@@ -293,28 +301,36 @@
     scene.add(macroGroup);
     scene.add(microGroup);
 
-    // Materials
-    const matBackboneDNA = new THREE.MeshPhysicalMaterial({ color: 0x3b82f6, roughness: 0.3, metalness: 0.1, clearcoat: 0.5 });
-    const matBackboneRNA = new THREE.MeshPhysicalMaterial({ color: 0xf43f5e, roughness: 0.3, metalness: 0.1, clearcoat: 0.5 });
-    
-    // Base colors: A=Green, T=Yellow, U=Orange, C=Red, G=Blue
+    // Helper: create shiny physical material
+    function mkMat(color, roughness=0.25, metalness=0.05, clearcoat=0.9) {
+      return new THREE.MeshPhysicalMaterial({ color, roughness, metalness, clearcoat, clearcoatRoughness: 0.1, reflectivity: 0.5 });
+    }
+
+    const matBackboneDNA = mkMat(0x6366f1, 0.2, 0.1, 1.0); // Indigo
+    const matBackboneRNA = mkMat(0xf43f5e, 0.2, 0.1, 1.0); // Rose
+    const matBondDNA     = mkMat(0x818cf8, 0.3, 0.05, 0.8);
+    const matBondRNA     = mkMat(0xfb7185, 0.3, 0.05, 0.8);
+
+    // Base colors: A=Emerald, T=Amber, U=Orange, C=Rose, G=Sky
     const baseMats = {
-      'A': new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.4 }),
-      'T': new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.4 }),
-      'U': new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.4 }),
-      'C': new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.4 }),
-      'G': new THREE.MeshStandardMaterial({ color: 0x0ea5e9, roughness: 0.4 })
+      'A': mkMat(0x059669, 0.3),
+      'T': mkMat(0xd97706, 0.3),
+      'U': mkMat(0xea580c, 0.3),
+      'C': mkMat(0xe11d48, 0.3),
+      'G': mkMat(0x0284c7, 0.3)
     };
 
-    // Atom Materials
+    // CPK-style atom materials (physical, shiny)
     const atomMats = {
-      'C': new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 }), // Dark Grey
-      'O': new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 }), // Red
-      'N': new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.3 }), // Blue
-      'H': new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 }), // White
-      'CH3': new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.4 }) // Lighter Grey
+      'C':  mkMat(0x374151, 0.35, 0.0, 0.7),  // Dark charcoal
+      'O':  mkMat(0xdc2626, 0.2, 0.0, 1.0),   // Red
+      'N':  mkMat(0x2563eb, 0.2, 0.0, 1.0),   // Blue
+      'H':  mkMat(0xf1f5f9, 0.15, 0.0, 0.9),  // Near-white
+      'P':  mkMat(0xca8a04, 0.2, 0.05, 0.9),  // Gold-yellow
+      'O4': mkMat(0xff6b35, 0.2, 0.0, 1.0),   // Ring oxygen — orange-red
+      'CH3': mkMat(0x64748b, 0.3, 0.0, 0.7)   // Lighter grey for methyl
     };
-    const bondMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.5 });
+    const bondMat = mkMat(0x94a3b8, 0.5, 0.0, 0.4);
 
     // HTML Labels Tracking
     let htmlLabels = [];
@@ -334,83 +350,87 @@
 
     // --- Procedural Generation Functions ---
 
+    // Util: add a cylinder between two Vector3 points
+    function addTube(grp, v1, v2, mat, rad=0.22) {
+      const dist = v1.distanceTo(v2);
+      if (dist < 0.001) return;
+      const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rad, rad, dist, 10, 1), mat);
+      mesh.position.copy(v1).lerp(v2, 0.5);
+      mesh.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0,1,0),
+        new THREE.Vector3().subVectors(v2, v1).normalize()
+      );
+      grp.add(mesh);
+    }
+
     function buildMacro(type) {
       macroGroup.clear();
-      
-      const numBasePairs = 24;
-      const radius = 3.5;
-      const height = 24;
-      const turns = 2.5;
 
-      const sphereGeo = new THREE.SphereGeometry(0.6, 16, 16);
-      const cylGeo = new THREE.CylinderGeometry(0.25, 0.25, radius*2, 8); // Base pair rung
-      const halfCylGeo = new THREE.CylinderGeometry(0.25, 0.25, radius, 8); // Half rung for RNA
+      // B-DNA geometry constants
+      const numBP  = 26;          // base pairs
+      const R      = 3.8;         // helix radius (Å-ish)
+      const RISE   = 1.0;         // rise per base pair (scaled)
+      const TWIST  = (2 * Math.PI) / 10.5; // 10.5 bp per turn
+      const TOTAL_H = numBP * RISE;
+      const yOffset = -TOTAL_H / 2;
 
-      const bbMat = type === 'dna' ? matBackboneDNA : matBackboneRNA;
-      
-      // Pairs mapping
-      const pairs = [
-        ['A', 'T'], ['G', 'C'], ['C', 'G'], ['T', 'A'],
-        ['A', 'U'], ['G', 'C'], ['C', 'G'], ['U', 'A'] // RNA variants
-      ];
+      const bbMat  = type === 'dna' ? matBackboneDNA : matBackboneRNA;
+      const bndMat = type === 'dna' ? matBondDNA     : matBondRNA;
 
-      for(let i=0; i<numBasePairs; i++) {
-        const t = i / (numBasePairs - 1);
-        const angle = t * Math.PI * 2 * turns;
-        const y = (t - 0.5) * height;
+      const pairsSeq = type === 'dna'
+        ? [['A','T'],['T','A'],['G','C'],['C','G'],['A','T'],['G','C'],['T','A'],['C','G']]
+        : [['A','U'],['U','A'],['G','C'],['C','G'],['A','U'],['G','C'],['U','A'],['C','G']];
 
-        // Determine base pair based on type
-        let b1, b2;
-        if (type === 'dna') {
-           let p = pairs[i % 4]; b1 = p[0]; b2 = p[1];
-        } else {
-           let p = pairs[4 + (i % 4)]; b1 = p[0]; b2 = p[1];
-        }
+      const strand1Pts = [];
+      const strand2Pts = [];
 
-        // Strand 1
-        const x1 = Math.cos(angle) * radius;
-        const z1 = Math.sin(angle) * radius;
-        
-        const bb1 = new THREE.Mesh(sphereGeo, bbMat);
-        bb1.position.set(x1, y, z1);
-        macroGroup.add(bb1);
+      for (let i = 0; i < numBP; i++) {
+        const angle = i * TWIST;
+        const y = yOffset + i * RISE;
+        const [b1, b2] = pairsSeq[i % pairsSeq.length];
+
+        const p1 = new THREE.Vector3(Math.cos(angle) * R, y, Math.sin(angle) * R);
+        const p2 = new THREE.Vector3(Math.cos(angle + Math.PI) * R, y, Math.sin(angle + Math.PI) * R);
+
+        strand1Pts.push(p1);
+
+        // Backbone node spheres
+        const sph1 = new THREE.Mesh(new THREE.SphereGeometry(0.52, 18, 18), bbMat);
+        sph1.position.copy(p1);
+        macroGroup.add(sph1);
 
         if (type === 'dna') {
-          // Strand 2
-          const x2 = Math.cos(angle + Math.PI) * radius;
-          const z2 = Math.sin(angle + Math.PI) * radius;
-          
-          const bb2 = new THREE.Mesh(sphereGeo, bbMat);
-          bb2.position.set(x2, y, z2);
-          macroGroup.add(bb2);
+          strand2Pts.push(p2);
+          const sph2 = new THREE.Mesh(new THREE.SphereGeometry(0.52, 18, 18), bbMat);
+          sph2.position.copy(p2);
+          macroGroup.add(sph2);
 
-          // Rung (Split into two colors)
-          const rung1 = new THREE.Mesh(halfCylGeo, baseMats[b1]);
-          rung1.position.set(x1/2, y, z1/2);
-          rung1.lookAt(x2, y, z2);
-          rung1.rotateX(Math.PI/2);
-          macroGroup.add(rung1);
-
-          const rung2 = new THREE.Mesh(halfCylGeo, baseMats[b2]);
-          rung2.position.set(x2/2, y, z2/2);
-          rung2.lookAt(x1, y, z1);
-          rung2.rotateX(Math.PI/2);
-          macroGroup.add(rung2);
-
+          // Base pair rung — two halves with base colors
+          const mid = p1.clone().lerp(p2, 0.5);
+          addTube(macroGroup, p1, mid, baseMats[b1], 0.28);
+          addTube(macroGroup, mid, p2, baseMats[b2], 0.28);
         } else {
-          // RNA: Just one half-rung pointing inwards
-          const rung1 = new THREE.Mesh(halfCylGeo, baseMats[b1]);
-          rung1.position.set(x1/2, y, z1/2);
-          rung1.lookAt(0, y, 0); // Point to center
-          rung1.rotateX(Math.PI/2);
-          macroGroup.add(rung1);
+          // RNA single-strand stub inward
+          const inward = new THREE.Vector3(0, y, 0);
+          const inwardMid = p1.clone().lerp(inward, 0.55);
+          addTube(macroGroup, p1, inwardMid, baseMats[b1], 0.22);
         }
       }
 
-      // Add a subtle glowing core for aesthetics
-      const coreGeo = new THREE.CylinderGeometry(1, 1, height, 16);
-      const coreMat = new THREE.MeshBasicMaterial({ color: type === 'dna' ? 0x38bdf8 : 0xf43f5e, transparent: true, opacity: 0.1 });
-      const core = new THREE.Mesh(coreGeo, coreMat);
+      // Backbone tubes connecting consecutive nodes
+      for (let i = 1; i < strand1Pts.length; i++) {
+        addTube(macroGroup, strand1Pts[i-1], strand1Pts[i], bndMat, 0.18);
+      }
+      if (type === 'dna') {
+        for (let i = 1; i < strand2Pts.length; i++) {
+          addTube(macroGroup, strand2Pts[i-1], strand2Pts[i], bndMat, 0.18);
+        }
+      }
+
+      // Glowing axial core
+      const coreColor = type === 'dna' ? 0x6366f1 : 0xf43f5e;
+      const coreMat = new THREE.MeshBasicMaterial({ color: coreColor, transparent: true, opacity: 0.07 });
+      const core = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, TOTAL_H, 20), coreMat);
       macroGroup.add(core);
     }
 
@@ -432,102 +452,203 @@
        return mesh;
     }
 
+    function createDoubleBond(v1, v2) {
+       const dist = v1.distanceTo(v2);
+       const dir = new THREE.Vector3().subVectors(v2, v1).normalize();
+       const perp = new THREE.Vector3(-dir.y, dir.x, 0).normalize().multiplyScalar(0.12);
+       
+       const v1a = v1.clone().add(perp);
+       const v2a = v2.clone().add(perp);
+       const v1b = v1.clone().sub(perp);
+       const v2b = v2.clone().sub(perp);
+       
+       createMicroBond(v1a, v2a);
+       createMicroBond(v1b, v2b);
+    }
+
     function buildMicroSugar(type) {
       microGroup.clear();
       clearLabels();
-      
-      // Draw Pentose Ring (approximate points)
-      const r = 3;
-      const pts = [];
-      for(let i=0; i<5; i++) {
-        const ang = Math.PI/2 + (i * Math.PI*2/5); // Start top
-        pts.push(new THREE.Vector3(Math.cos(ang)*r, Math.sin(ang)*r, 0));
+
+      // --- Furanose ring: O4' at top, then C1'(right), C2'(bottom-right), C3'(bottom-left), C4'(left) ---
+      // Arranged as a regular pentagon with O4' at 90°, going clockwise
+      const R = 3.2;
+      const angles = [
+        Math.PI/2,                    // O4'  – top
+        Math.PI/2 - (2*Math.PI/5),    // C1'  – upper-right
+        Math.PI/2 - (4*Math.PI/5),    // C2'  – lower-right
+        Math.PI/2 + (4*Math.PI/5),    // C3'  – lower-left
+        Math.PI/2 + (2*Math.PI/5),    // C4'  – upper-left
+      ];
+      const pts = angles.map(a => new THREE.Vector3(Math.cos(a)*R, Math.sin(a)*R, 0));
+      // pts[0]=O4', pts[1]=C1', pts[2]=C2', pts[3]=C3', pts[4]=C4'
+
+      // Ring atoms
+      createAtom(pts[0].x, pts[0].y, pts[0].z, atomMats['O4'], 0.55); // O4' – ring oxygen
+      for (let i = 1; i < 5; i++) {
+        createAtom(pts[i].x, pts[i].y, pts[i].z, atomMats['C'], 0.60); // Ring carbons
       }
 
-      // Ring Atoms (0 is Top Oxygen, others are Carbon)
-      createAtom(pts[0].x, pts[0].y, pts[0].z, atomMats['O']); // 1' O
-      for(let i=1; i<5; i++) {
-        createAtom(pts[i].x, pts[i].y, pts[i].z, atomMats['C']);
+      // Ring bonds (all 5 edges)
+      for (let i = 0; i < 5; i++) {
         createMicroBond(pts[i], pts[(i+1)%5]);
       }
-      createMicroBond(pts[0], pts[1]); // Close ring
 
-      // Add 2' Carbon detail (pts[2] is roughly bottom right)
-      const c2Pos = pts[2];
-      addLabel(c2Pos.clone().add(new THREE.Vector3(1,1,0)), "2' Carbon");
+      // O4' label
+      addLabel(pts[0].clone().add(new THREE.Vector3(0, 0.9, 0)), "O4' (Ring O)", "bg-orange-900/90 border-orange-500 text-orange-100");
 
-      // The distinct group at 2'
+      // --- C1': Glycosidic bond upward-right to nitrogenous base ---
+      const baseDir = new THREE.Vector3(1.3, 0.8, 0).normalize().multiplyScalar(1.8);
+      const baseConn = pts[1].clone().add(baseDir);
+      createMicroBond(pts[1], baseConn);
+      addLabel(baseConn.clone().add(new THREE.Vector3(0.4, 0.1, 0)), "N-Glycosidic Bond\n→ Nitrogenous Base", "bg-violet-900/90 border-violet-500 text-violet-100");
+
+      // H on C1' (pointing left)
+      const h1 = pts[1].clone().add(new THREE.Vector3(-0.5, -1.1, 0));
+      createAtom(h1.x, h1.y, h1.z, atomMats['H'], 0.30);
+      createMicroBond(pts[1], h1);
+
+      // --- C2': KEY DIFFERENCE (DNA vs RNA) ---
+      const c2Outward = pts[2].clone().normalize().multiplyScalar(1.7);
+      const c2AttachPt = pts[2].clone().add(c2Outward);
+
       if (type === 'dna') {
-         // DNA: Just H
-         const hPos = c2Pos.clone().add(new THREE.Vector3(1.5, -1.5, 0));
-         createAtom(hPos.x, hPos.y, hPos.z, atomMats['H'], 0.4);
-         createMicroBond(c2Pos, hPos);
-         addLabel(hPos.clone().add(new THREE.Vector3(0,-1,0)), "Hydrogen (-H)\nStable", "bg-emerald-900/90 border-emerald-500");
+        // Deoxyribose — only H at 2'
+        const hPos = c2AttachPt;
+        createAtom(hPos.x, hPos.y, hPos.z, atomMats['H'], 0.32);
+        createMicroBond(pts[2], hPos);
+        addLabel(hPos.clone().add(new THREE.Vector3(0.7, -0.7, 0)), "2'-H only\n(Deoxyribose)\n→ No hydrolysis", "bg-emerald-900/90 border-emerald-400 text-emerald-100");
+        addLabel(pts[2].clone().add(new THREE.Vector3(0.3, 0.2, 0)), "C2'");
       } else {
-         // RNA: OH group
-         const oPos = c2Pos.clone().add(new THREE.Vector3(1.5, -1.5, 0));
-         const hPos = oPos.clone().add(new THREE.Vector3(1, -1, 0));
-         createAtom(oPos.x, oPos.y, oPos.z, atomMats['O'], 0.5);
-         createAtom(hPos.x, hPos.y, hPos.z, atomMats['H'], 0.3);
-         createMicroBond(c2Pos, oPos);
-         createMicroBond(oPos, hPos);
-         addLabel(oPos.clone().add(new THREE.Vector3(0,-1.5,0)), "Hydroxyl (-OH)\nReactive Nucleophile", "bg-rose-900/90 border-rose-500 text-rose-100");
+        // Ribose — OH at 2'
+        const oPos = c2AttachPt;
+        const hPos = oPos.clone().add(new THREE.Vector3(0.7, -0.9, 0));
+        createAtom(oPos.x, oPos.y, oPos.z, atomMats['O'], 0.48);
+        createAtom(hPos.x, hPos.y, hPos.z, atomMats['H'], 0.30);
+        createMicroBond(pts[2], oPos);
+        createMicroBond(oPos, hPos);
+        addLabel(oPos.clone().add(new THREE.Vector3(0.8, -0.8, 0)), "2'-OH\n(Ribose)\n→ Reactive nucleophile", "bg-rose-900/90 border-rose-400 text-rose-100");
+        addLabel(pts[2].clone().add(new THREE.Vector3(0.3, 0.2, 0)), "C2'");
       }
 
-      // Add 5' Carbon stub to show orientation
-      const c5Pos = pts[4].clone().add(new THREE.Vector3(-2, 2, 0));
-      createAtom(c5Pos.x, c5Pos.y, c5Pos.z, atomMats['C']);
+      // --- C3': 3'-OH (Phosphodiester linkage site) ---
+      const c3Outward = pts[3].clone().normalize().multiplyScalar(1.7);
+      const o3Pos = pts[3].clone().add(c3Outward);
+      const h3Pos = o3Pos.clone().add(new THREE.Vector3(-0.8, -0.6, 0));
+      createAtom(o3Pos.x, o3Pos.y, o3Pos.z, atomMats['O'], 0.48);
+      createAtom(h3Pos.x, h3Pos.y, h3Pos.z, atomMats['H'], 0.30);
+      createMicroBond(pts[3], o3Pos);
+      createMicroBond(o3Pos, h3Pos);
+      addLabel(o3Pos.clone().add(new THREE.Vector3(-1.3, -0.6, 0)), "3'-OH\n→ Phosphodiester Bond Site", "bg-slate-800/90 border-slate-600");
+      addLabel(pts[3].clone().add(new THREE.Vector3(-0.5, 0.4, 0)), "C3'");
+
+      // --- C4': Connects to C5' exocyclic ---
+      // C5' methylene
+      const c4Outward = pts[4].clone().normalize().multiplyScalar(1.5);
+      const c5Pos = pts[4].clone().add(c4Outward);
+      createAtom(c5Pos.x, c5Pos.y, c5Pos.z, atomMats['C'], 0.52);
       createMicroBond(pts[4], c5Pos);
-      addLabel(c5Pos.clone().add(new THREE.Vector3(-1,1,0)), "5' End");
+
+      // O5' leading to phosphate
+      const o5Dir = new THREE.Vector3(-0.5, 1.2, 0).normalize().multiplyScalar(1.5);
+      const o5Pos = c5Pos.clone().add(o5Dir);
+      // Phosphate atom (P)
+      const pDir = new THREE.Vector3(-0.6, 0.7, 0).normalize().multiplyScalar(1.4);
+      const pPos = o5Pos.clone().add(pDir);
+      createAtom(o5Pos.x, o5Pos.y, o5Pos.z, atomMats['O'], 0.44);
+      createAtom(pPos.x,  pPos.y,  pPos.z,  atomMats['P'], 0.62);
+      createMicroBond(c5Pos, o5Pos);
+      createMicroBond(o5Pos, pPos);
+      addLabel(pPos.clone().add(new THREE.Vector3(-0.8, 0.4, 0)), "Phosphate\n(5'-PO₄)", "bg-yellow-900/90 border-yellow-600 text-yellow-100");
+      addLabel(c5Pos.clone().add(new THREE.Vector3(-0.6, -0.8, 0)), "C5'");
     }
 
     function buildMicroBase(type) {
       microGroup.clear();
       clearLabels();
-      
-      // Both T and U are Pyrimidines (6-membered ring)
-      const r = 3;
+
+      // Pyrimidine ring — N1 at BOTTOM (6 o'clock), going counter-clockwise
+      // Atom order: N1(bottom), C2(lower-right), N3(upper-right), C4(top), C5(upper-left), C6(lower-left)
+      const R = 3.0;
+      const startAng = -Math.PI/2; // N1 at bottom
+      const ringAtomTypes = ['N','C','N','C','C','C']; // N1,C2,N3,C4,C5,C6
       const pts = [];
-      for(let i=0; i<6; i++) {
-        const ang = i * Math.PI*2/6;
-        pts.push(new THREE.Vector3(Math.cos(ang)*r, Math.sin(ang)*r, 0));
+      for (let i = 0; i < 6; i++) {
+        const ang = startAng + i*(2*Math.PI/6);
+        pts.push(new THREE.Vector3(Math.cos(ang)*R, Math.sin(ang)*R, 0));
+      }
+      // pts[0]=N1, pts[1]=C2, pts[2]=N3, pts[3]=C4, pts[4]=C5, pts[5]=C6
+
+      // Ring atoms with proper CPK
+      for (let i = 0; i < 6; i++) {
+        createAtom(pts[i].x, pts[i].y, pts[i].z, atomMats[ringAtomTypes[i]], 0.58);
       }
 
-      // Simplified ring (mix of N and C)
-      createAtom(pts[0].x, pts[0].y, pts[0].z, atomMats['N']);
-      createAtom(pts[1].x, pts[1].y, pts[1].z, atomMats['C']);
-      createAtom(pts[2].x, pts[2].y, pts[2].z, atomMats['N']);
-      createAtom(pts[3].x, pts[3].y, pts[3].z, atomMats['C']);
-      createAtom(pts[4].x, pts[4].y, pts[4].z, atomMats['C']); // C5 position!
-      createAtom(pts[5].x, pts[5].y, pts[5].z, atomMats['C']);
+      // Ring bonds — alternate single/double: N1-C2(single), C2=N3(double), N3-C4(single), C4=C5(double), C5-C6(single), C6=N1(double)
+      createMicroBond(pts[0], pts[1]);          // N1–C2 single
+      createDoubleBond(pts[1], pts[2]);          // C2=N3 double (keto tautomer — but drawn as C2=O not C2=N3; so single here, double bond is exocyclic to O)
+      createMicroBond(pts[1], pts[2]);           // Keep single ring bond; carbonyl is exocyclic
+      createMicroBond(pts[2], pts[3]);           // N3–C4 single
+      createDoubleBond(pts[3], pts[4]);          // C4=C5 (delocalized; drawn as double)
+      createMicroBond(pts[4], pts[5]);           // C5–C6 single
+      createDoubleBond(pts[5], pts[0]);          // C6=N1 double
 
-      for(let i=0; i<6; i++) {
-        createMicroBond(pts[i], pts[(i+1)%6]);
-      }
+      // --- N1: Glycosidic bond going DOWN to sugar ---
+      const sugarDir = new THREE.Vector3(0, -1, 0).multiplyScalar(2.0);
+      const sugarConn = pts[0].clone().add(sugarDir);
+      createMicroBond(pts[0], sugarConn);
+      addLabel(sugarConn.clone().add(new THREE.Vector3(0, -0.5, 0)), "N1 → Sugar\n(N-Glycosidic Bond)", "bg-violet-900/90 border-violet-500 text-violet-100");
 
-      // Connection to backbone
-      const bbPos = pts[0].clone().add(new THREE.Vector3(2,0,0));
-      createMicroBond(pts[0], bbPos);
-      addLabel(bbPos, "To Sugar Backbone");
+      // --- C2: Exocyclic Carbonyl (C2=O) — upper-right exocyclic ---
+      const o2Dir = pts[1].clone().normalize().multiplyScalar(1.6);
+      const o2Pos = pts[1].clone().add(o2Dir);
+      createAtom(o2Pos.x, o2Pos.y, o2Pos.z, atomMats['O'], 0.50);
+      createDoubleBond(pts[1], o2Pos);
+      addLabel(o2Pos.clone().add(new THREE.Vector3(0.9, 0.2, 0)), "C2=O\n(Carbonyl)", "bg-red-900/90 border-red-500 text-red-100");
 
-      // The critical C5 position
-      const c5Pos = pts[4];
+      // --- N3: Lone-pair nitrogen (Watson-Crick H-bond acceptor) — just label ---
+      addLabel(pts[2].clone().add(new THREE.Vector3(1.1, 0.3, 0)), "N3\n(H-bond acceptor)", "bg-blue-900/90 border-blue-600 text-blue-100");
 
+      // --- C4: Carbonyl (C4=O) — top-right exocyclic ---
+      const o4Dir = pts[3].clone().normalize().multiplyScalar(1.6);
+      const o4Pos = pts[3].clone().add(o4Dir);
+      createAtom(o4Pos.x, o4Pos.y, o4Pos.z, atomMats['O'], 0.50);
+      createDoubleBond(pts[3], o4Pos);
+      addLabel(o4Pos.clone().add(new THREE.Vector3(-0.2, 0.9, 0)), "C4=O\n(Carbonyl)", "bg-red-900/90 border-red-500 text-red-100");
+
+      // --- C5: KEY DIFFERENCE (Thymine methyl vs Uracil H) ---
       if (type === 'dna') {
-         // Thymine has Methyl at C5
-         const ch3Pos = c5Pos.clone().add(new THREE.Vector3(-2, 2, 0));
-         createAtom(ch3Pos.x, ch3Pos.y, ch3Pos.z, atomMats['CH3'], 0.8);
-         createMicroBond(c5Pos, ch3Pos);
-         addLabel(ch3Pos.clone().add(new THREE.Vector3(-1, 1, 0)), "Methyl Group (-CH₃)\nUnique to Thymine", "bg-indigo-900/90 border-indigo-500");
-         addLabel(new THREE.Vector3(0, -4, 0), "Thymine (T)");
+        // Thymine: Methyl (-CH₃) at C5
+        const mDir = pts[4].clone().normalize().multiplyScalar(1.65);
+        const mC = pts[4].clone().add(mDir);
+        createAtom(mC.x, mC.y, mC.z, atomMats['CH3'], 0.60);
+        createMicroBond(pts[4], mC);
+        // Three H atoms in tetrahedral arrangement
+        const h1 = mC.clone().add(new THREE.Vector3(-0.9, -0.5, 0.0));
+        const h2 = mC.clone().add(new THREE.Vector3(0.3, -0.5, 0.95));
+        const h3 = mC.clone().add(new THREE.Vector3(0.3, -0.5, -0.95));
+        [h1, h2, h3].forEach(h => {
+          createAtom(h.x, h.y, h.z, atomMats['H'], 0.28);
+          createMicroBond(mC, h);
+        });
+        addLabel(mC.clone().add(new THREE.Vector3(-1.4, 0.8, 0)), "-CH₃ Methyl Group\n(Unique to Thymine!)", "bg-indigo-900/90 border-indigo-400 text-indigo-100");
+        addLabel(new THREE.Vector3(0, -5.5, 0), "Thymine (T) — DNA only", "bg-indigo-800/80 border-indigo-500");
       } else {
-         // Uracil just has H at C5
-         const hPos = c5Pos.clone().add(new THREE.Vector3(-1.5, 1.5, 0));
-         createAtom(hPos.x, hPos.y, hPos.z, atomMats['H'], 0.4);
-         createMicroBond(c5Pos, hPos);
-         addLabel(hPos.clone().add(new THREE.Vector3(-1, 1, 0)), "No Methyl Group\n(Hydrogen only)", "bg-amber-900/90 border-amber-500 text-amber-100");
-         addLabel(new THREE.Vector3(0, -4, 0), "Uracil (U)");
+        // Uracil: H at C5
+        const h5Dir = pts[4].clone().normalize().multiplyScalar(1.5);
+        const h5Pos = pts[4].clone().add(h5Dir);
+        createAtom(h5Pos.x, h5Pos.y, h5Pos.z, atomMats['H'], 0.32);
+        createMicroBond(pts[4], h5Pos);
+        addLabel(h5Pos.clone().add(new THREE.Vector3(-1.2, 0.8, 0)), "-H only (no Methyl)\nUracil cheaper to make", "bg-amber-900/90 border-amber-400 text-amber-100");
+        addLabel(new THREE.Vector3(0, -5.5, 0), "Uracil (U) — RNA only", "bg-amber-800/80 border-amber-500");
       }
+
+      // --- C6: H substituent ---
+      const h6Dir = pts[5].clone().normalize().multiplyScalar(1.5);
+      const h6Pos = pts[5].clone().add(h6Dir);
+      createAtom(h6Pos.x, h6Pos.y, h6Pos.z, atomMats['H'], 0.30);
+      createMicroBond(pts[5], h6Pos);
+      addLabel(pts[5].clone().add(new THREE.Vector3(-0.8, -0.5, 0)), "C6–H");
     }
 
 
@@ -704,26 +825,26 @@
     const vivaData = {
         q1: {
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "DNA lacks a hydroxyl (-OH) group at the 2' carbon position of its sugar ring, possessing only a Hydrogen (-H).", isCorrect: true, exp: "Correct! DNA lacks a hydroxyl (-OH) group at the 2' carbon position of its sugar ring, possessing only a Hydrogen (-H). In RNA, this 2' -OH group acts as a nucleophile, making RNA highly susceptible to base-catalyzed hydrolysis (auto-cleavage of its own backbone)." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "DNA is double-stranded, making it physically harder to degrade than single-stranded RNA.", isCorrect: false, exp: "Incorrect. While double-strandedness helps, the primary chemical reason is structural. Physical protection alone does not prevent hydrolysis." },
+                { text: "DNA lacks a 2'-hydroxyl (-OH) group on its deoxyribose sugar, replacing it with just Hydrogen (-H). This eliminates the internal nucleophile needed for backbone hydrolysis.", isCorrect: true, exp: "✅ Correct! In RNA, the 2'-OH acts as an intramolecular nucleophile in base-catalyzed conditions, attacking the adjacent phosphate and cleaving the backbone. DNA's 2'-H cannot do this, making DNA chemically inert to hydrolysis and far more stable as a long-term genetic archive." },
+                { text: "DNA contains Thymine instead of Uracil, and the extra methyl group stabilizes the helix.", isCorrect: false, exp: "Incorrect. Thymine's methyl group is important for DNA repair fidelity, but it does not directly prevent hydrolysis of the backbone. That's a function of the 2' position of the sugar." },
+                { text: "The phosphodiester bonds in DNA are stronger than those in RNA due to different phosphate chemistry.", isCorrect: false, exp: "Incorrect. The phosphodiester bonds in DNA and RNA are chemically identical. The difference in stability comes from the sugar, not the phosphate linkage." },
             ]
         },
         q2: {
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Cytosine (C) can spontaneously deaminate to form Uracil (U).", isCorrect: true, exp: "Correct! Cytosine (C) can spontaneously deaminate to form Uracil (U). If DNA used Uracil naturally, repair enzymes wouldn't know if a 'U' was supposed to be there or if it was a mutated 'C'. Thymine is just Uracil with an added Methyl (-CH₃) tag, allowing DNA repair mechanisms to instantly recognize and remove un-methylated Uracils as errors." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "Uracil is too large to fit inside the DNA double helix without distorting its structure.", isCorrect: false, exp: "Incorrect. Uracil is actually slightly smaller than Thymine (it lacks the methyl group), so it would fit fine geometrically." },
+                { text: "Uracil would pair with Adenine just like Thymine, but Cytosine (C) naturally deaminates to form Uracil. If DNA used Uracil, repair enzymes couldn't distinguish mutation from the normal base, corrupting the genome.", isCorrect: true, exp: "✅ Correct! This is a profound evolutionary solution. Cytosine deamination is a common mutational event. Thymine (= 5-methyluracil) serves as the 'authenticated' form — its methyl tag tells repair enzymes it belongs. Uracils found in DNA are immediately recognized as corrupted Cytosines and excised by Uracil-DNA glycosylase." },
+                { text: "Thymine forms 3 hydrogen bonds with Adenine, while Uracil only forms 2, making the helix less stable.", isCorrect: false, exp: "Incorrect. Both Thymine and Uracil form exactly 2 hydrogen bonds with Adenine (A=T/U). Guanine-Cytosine pairs form 3 H-bonds. The stability argument is backward." },
+                { text: "Uracil cannot be methylated and therefore cannot be part of chromatin or nucleosome structure.", isCorrect: false, exp: "Incorrect. Methylation of bases is an epigenetic modification; the reason DNA uses Thymine over Uracil is not about methylation marks but about error-correcting ability during replication." },
             ]
         },
         q3: {
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "DNA's double helix protects its delicate nitrogenous bases inside the hydrophobic core, ideal for long-term...", isCorrect: true, exp: "Correct! DNA's double helix protects its delicate nitrogenous bases inside the hydrophobic core, ideal for long-term genetic archiving. RNA's single-stranded nature allows it to fold into complex 3D shapes (like tRNA or rRNA) to perform active catalytic and transport functions, or be easily read as a transient messenger (mRNA)." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "DNA's double helix stores information in both strands redundantly, while RNA is single-stranded to be disposable after its message is delivered.", isCorrect: false, exp: "Partially correct but oversimplified. Both halves true in isolation, but the deeper structural-functional link goes further than redundancy and disposability." },
+                { text: "DNA's double-helix buries bases in its hydrophobic core for archival protection, while RNA's single-strand folds into catalytic 3D shapes (ribozymes, tRNA, rRNA) and serves as short-lived messengers — a direct form-follows-function relationship.", isCorrect: true, exp: "✅ Excellent! DNA's architecture is optimized for fidelity and longevity. RNA's flexibility allows it to adopt stem-loop hairpins, pseudoknots, and globular folds. Ribosomes (rRNA + protein) catalyze peptide bond formation. tRNA adopts an L-shaped tertiary structure. mRNA is translated then degraded. Form perfectly matches function in both cases." },
+                { text: "Double-stranded DNA replicates semi-conservatively, while single-stranded RNA replicates fully conservatively using RNA-dependent RNA polymerase.", isCorrect: false, exp: "Incorrect. Most cellular RNAs are not self-replicating — only some viral RNAs use RNA-dependent RNA polymerase. The question asks about the relationship between structure and biological function, not replication mode." },
+                { text: "DNA is found in the nucleus and RNA in the cytoplasm — this compartmentalization reflects their structural differences.", isCorrect: false, exp: "Incorrect. Localization is a consequence of function, not the primary reason for structural differences. Also, mRNA moves from nucleus to cytoplasm, and mitochondria contain their own DNA." },
             ]
         },
     };
@@ -829,13 +950,21 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    
+                    const qTextEl = document.getElementById(`${qKey}-text`);
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([qTextEl.parentElement]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

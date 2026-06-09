@@ -182,43 +182,64 @@
 <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-emerald-400 block shadow-[0_0_4px_#34d399]"></span> Sugar Out (Glucose)</div>
 </div>
 </section>
-<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+<div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
-</div>
-</div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        Where exactly do the Light-Dependent Reactions occur?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 3</span>
 </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Why does the Calvin Cycle eventually stop if you turn the Light down to 0%?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Category</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="neet">NEET PYQ</option>
+<option value="cbse">School Board PYQ</option>
+</select>
 </div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            Which phytohormone is responsible for fruit ripening?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        What is the biological purpose of splitting Water ($H_2O$)?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            Which hormone is known as the "stress hormone" for its role in closing stomata during drought?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            Apical dominance (the growth of the main shoot) is primarily caused by which hormone?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            Which hormone promotes cell division in plants?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div></section>
 </main>
 </div>
@@ -629,33 +650,44 @@
         answers: { q1: null, q2: null, q3: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "They occur across the Thylakoid Membranes (the coin-like discs stacked into Grana).", isCorrect: true, exp: "Correct! They occur across the Thylakoid Membranes (the coin-like discs stacked into Grana). These membranes contain Chlorophyll, the pigment responsible for capturing photons of light to excite electrons." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "Even though the Calvin Cycle (Dark Reactions) does not not require light directly, it relies entirely on...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Even though the Calvin Cycle (Dark Reactions) does not require light directly, it relies entirely on...", isCorrect: true, exp: "Correct! Even though the Calvin Cycle (Dark Reactions) does not require light directly, it relies entirely on the ATP and NADPH produced by the Light Reactions. When the lights go out, the reserve pool of these energy carriers is quickly depleted, halting sugar production." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "When light excites electrons in Photosystem II, they are not ejected down an electron transport chain.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "When light excites electrons in Photosystem II, they are ejected down an electron transport chain.", isCorrect: true, exp: "Correct! When light excites electrons in Photosystem II, they are ejected down an electron transport chain. To replace these lost electrons, the plant splits water molecules (Photolysis). This yields electrons, hydrogen ions (protons for the gradient), and releases Oxygen Gas ($O_2$) as a byproduct." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "Which phytohormone is responsible for fruit ripening?",
+    options: [
+      { text: "Auxin", isCorrect: false, exp: "Incorrect. Auxins are mainly for cell elongation." },
+      { text: "Ethylene", isCorrect: true, exp: "Correct! Ethylene is the gaseous hormone that triggers fruit ripening." },
+      { text: "Gibberellin", isCorrect: false, exp: "Incorrect. Gibberellins promote fruit growth but not ripening." },
+      { text: "Cytokinin", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "Which hormone is known as the 'stress hormone' for its role in closing stomata during drought?",
+    options: [
+      { text: "Abscisic Acid (ABA)", isCorrect: true, exp: "Correct! ABA accumulates during water stress and signals guard cells to close." },
+      { text: "Auxin", isCorrect: false, exp: "Incorrect." },
+      { text: "Ethylene", isCorrect: false, exp: "Incorrect." },
+      { text: "Gibberellin", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "Apical dominance is primarily caused by which hormone?",
+    options: [
+      { text: "Auxin", isCorrect: true, exp: "Correct! High concentrations of auxin in the apical bud inhibit lateral bud growth." },
+      { text: "Cytokinin", isCorrect: false, exp: "Incorrect. Cytokinins actually promote lateral bud growth." },
+      { text: "Ethylene", isCorrect: false, exp: "Incorrect." },
+      { text: "Gibberellin", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "Which hormone promotes cell division in plants?",
+    options: [
+      { text: "Abscisic Acid", isCorrect: false, exp: "Incorrect. It promotes dormancy." },
+      { text: "Cytokinin", isCorrect: true, exp: "Correct! Cytokinins are named after cytokinesis, the process of cell division." },
+      { text: "Auxin", isCorrect: false, exp: "Incorrect. Auxins promote elongation." },
+      { text: "Ethylene", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },

@@ -219,37 +219,58 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
-</div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        When will a line and a plane fail to intersect?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="school">School Board PYQ</option>
+<option value="jee">JEE Prep</option>
+</select>
 </div>
+<div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            If a line is parallel to a plane, what is the dot product of its direction vector and the plane's normal vector?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        What happens if BOTH the numerator and denominator are zero?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            What geometric condition must be satisfied for a line to lie entirely within a plane?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            When does a line intersect a plane at exactly one unique point?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        What does the normal vector $\langle a,b,c \rangle$ dictate?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Problem Solving]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            If a plane is $x+y+z=5$ and a line has direction $\vec{v}=(1,1,1)$, is the line parallel?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div></section>
 </main>
 <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
@@ -552,36 +573,47 @@
     // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
         vivaScore: 0,
-        answers: { q1: null, q2: null, q3: null }
+        answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "They fail to intersect when the line is not perfectly parallel to the plane.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "They fail to intersect when the line is perfectly parallel to the plane.", isCorrect: true, exp: "Correct! They fail to intersect when the line is perfectly parallel to the plane. Algebraically, this causes the denominator of our $t$ equation ($av_x+bv_y+cv_z$) to become zero, meaning the line's direction vector $\vec{v}$ is perpendicular to the plane's normal vector $\vec{n}$." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "This yields an indeterminate solution ($0/0$).", isCorrect: true, exp: "Correct! This yields an indeterminate solution ($0/0$). Geometrically, this means the line is parallel to the plane AND its starting point $P_0$ sits directly on the plane surface. Consequently, the line lies completely inside the plane, resulting in infinite intersections." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The coefficients $\langle a,b,c \rangle$ represent the vector that stands perfectly perpendicular (normal)...", isCorrect: true, exp: "Correct! The coefficients $\langle a,b,c \rangle$ represent the vector that stands perfectly perpendicular (normal) to the plane's surface. Altering these values adjusts the directional orientation and tilt of the plane in 3D space." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "If a line is parallel to a plane, what is the dot product of its direction vector and the plane's normal vector?",
+    options: [
+      { text: "1", isCorrect: false, exp: "Incorrect." },
+      { text: "0", isCorrect: true, exp: "Correct! If the direction is perpendicular to the normal, the dot product is 0." },
+      { text: "-1", isCorrect: false, exp: "Incorrect." },
+      { text: "Undefined", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "What geometric condition must be satisfied for a line to lie entirely within a plane?",
+    options: [
+      { text: "Line is parallel AND at least one point is on the plane", isCorrect: true, exp: "Correct! Parallelism ensures the direction is right; a shared point ensures it's not shifted away." },
+      { text: "They are perpendicular", isCorrect: false, exp: "Incorrect." },
+      { text: "They never meet", isCorrect: false, exp: "Incorrect." },
+      { text: "Only direction vector matters", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "When does a line intersect a plane at exactly one unique point?",
+    options: [
+      { text: "When the line is parallel", isCorrect: false, exp: "Incorrect." },
+      { text: "When the dot product v·n is non-zero", isCorrect: true, exp: "Correct! A non-zero product means the line is not parallel to the plane." },
+      { text: "When they are identical", isCorrect: false, exp: "Incorrect." },
+      { text: "Never", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "If a plane is x+y+z=5 and a line has direction v=(1,1,1), is the line parallel?",
+    options: [
+      { text: "Yes, because the dot product is 0", isCorrect: false, exp: "Incorrect." },
+      { text: "No, because the dot product is 3", isCorrect: true, exp: "Correct! v·n = (1*1)+(1*1)+(1*1) = 3. Since it is not 0, it is not parallel." },
+      { text: "Yes, because the dot product is 3", isCorrect: false, exp: "Incorrect." },
+      { text: "No, because the dot product is 0", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },

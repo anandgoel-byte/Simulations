@@ -217,36 +217,58 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
-</div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What is the Corner Point Theorem?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="school">School Board PYQ</option>
+<option value="jee">JEE Prep</option>
+</select>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        What does the dashed Objective Line represent visually?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+<div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            What geometric shape does the feasible region typically form in a 2D linear programming problem?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            According to the Corner Point Theorem, where does the optimal solution of an LPP always occur?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        What is a "Binding" or "Active" constraint?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Prep]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            If the feasible region is unbounded, what is true about the objective function?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-600 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Prep]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            If two corner points yield the same optimal value for Z, what does this imply for the solution?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -620,36 +642,47 @@
     // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
         vivaScore: 0,
-        answers: { q1: null, q2: null, q3: null }
+        answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The Fundamental Theorem of Linear Programming states that if an objective function has an optimal value...", isCorrect: true, exp: "Correct! The Fundamental Theorem of Linear Programming states that if an objective function has an optimal value (maximum or minimum) within a bounded feasible region, that optimal value will always occur at one of the vertices (corner points) of the region." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Often called an \"Isoprofit\" or \"Isocost\" line, it represents all combinations of $(x,y)$ that yield a...", isCorrect: true, exp: "Correct! Often called an \"Isoprofit\" or \"Isocost\" line, it represents all combinations of $(x,y)$ that yield a specific target $Z$ value. As you drag the $Z$ slider, the line moves parallel to itself. The optimal solution is the very last point the line touches before leaving the feasible region entirely." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "A constraint is not binding if it physically dictates the optimal solution point (i.e., the optimal point...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "A constraint is binding if it physically dictates the optimal solution point (i.e., the optimal point...", isCorrect: true, exp: "Correct! A constraint is binding if it physically dictates the optimal solution point (i.e., the optimal point lies exactly on the line $ax+by=c$). If a constraint line bounds the region but the optimal point occurs elsewhere, it is non-binding (meaning there is \"slack\" or leftover capacity)." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "What geometric shape does the feasible region typically form in a 2D linear programming problem?",
+    options: [
+      { text: "A circle", isCorrect: false, exp: "Incorrect. Constraints are linear, forming straight boundaries." },
+      { text: "A convex polygon", isCorrect: true, exp: "Correct! The intersection of linear half-planes creates a convex polygon." },
+      { text: "An ellipse", isCorrect: false, exp: "Incorrect." },
+      { text: "A straight line", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "According to the Corner Point Theorem, where does the optimal solution always occur?",
+    options: [
+      { text: "At the origin", isCorrect: false, exp: "Incorrect." },
+      { text: "At a corner point (vertex)", isCorrect: true, exp: "Correct! The optimal value occurs at one of the vertices of the feasible region." },
+      { text: "At the center", isCorrect: false, exp: "Incorrect." },
+      { text: "Anywhere in the region", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "If the feasible region is unbounded, what is true about the objective function?",
+    options: [
+      { text: "It cannot have a maximum/minimum", isCorrect: false, exp: "Incorrect." },
+      { text: "It may not have an optimal solution", isCorrect: true, exp: "Correct! The function might increase/decrease without bound in an unbounded region." },
+      { text: "It is always zero", isCorrect: false, exp: "Incorrect." },
+      { text: "It is always at the origin", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "If two corner points yield the same optimal value for Z, what does this imply for the solution?",
+    options: [
+      { text: "Only one point is optimal", isCorrect: false, exp: "Incorrect." },
+      { text: "Any point on the edge connecting them is optimal", isCorrect: true, exp: "Correct! All points on that boundary segment yield the same optimal value for Z." },
+      { text: "The problem has no solution", isCorrect: false, exp: "Incorrect." },
+      { text: "The solution is undefined", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
@@ -731,7 +764,7 @@
                         appState.vivaScore++;
                         triggerConfetti();
                     }
-                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 3`;
+                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
 
                     const buttons = optionsContainer.querySelectorAll('button');
                     buttons.forEach((b, i) => {
@@ -751,13 +784,21 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    
+                    const qTextEl = document.getElementById(`${qKey}-text`);
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([qTextEl.parentElement]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

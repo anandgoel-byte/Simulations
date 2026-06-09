@@ -161,37 +161,6 @@
 <div class="text-[12px] font-mono text-center py-1">
               $$f(x) = Ax^3 + Bx^2 + Cx + D$$
             </div>
-</div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What makes a point a "Critical Point"?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
-</div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        How does the Second Derivative Test work?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
-</div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        What happens if $A = 0$ in the cubic equation?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
 </div></div></section>
 <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
 <canvas class="absolute inset-0 w-full h-full block" id="simCanvas"></canvas>
@@ -205,12 +174,64 @@
 <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> Local Minimum</div>
 </div>
 </section>
-<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+<div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 3</span>
 </div>
+</div>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="school">School Board PYQ</option>
+<option value="jee">JEE Prep</option>
+</select>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            For a continuous function f(x), what is the condition at a local maximum or minimum?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Derivative Test]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            Using the second derivative test, if f'(c) = 0 and f''(c) < 0, what is the point at x=c?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            What does a positive second derivative (f''(x) > 0) imply?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Problem Solving]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            Given f(x) = x² - 4x + 5, where is the local minimum?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div></section>
 </main>
 </div>
@@ -494,36 +515,47 @@
     // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
         vivaScore: 0,
-        answers: { q1: null, q2: null, q3: null }
+        answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "A critical point occurs wherever the first derivative $f'(x) = 0$ (or is not undefined).", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "A critical point occurs wherever the first derivative $f'(x) = 0$ (or is undefined).", isCorrect: true, exp: "Correct! A critical point occurs wherever the first derivative $f'(x) = 0$ (or is undefined). Geometrically, this means the tangent line to the curve is perfectly horizontal. These points are the only candidates for being local maxima or minima." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Evaluate $f''(x)$ at a critical point.", isCorrect: true, exp: "Correct! Evaluate $f''(x)$ at a critical point. If $f''(x) &gt; 0$, the curve is Concave Up ($\cup$), making the point a local minimum. If $f''(x) &lt; 0$, it is Concave Down ($\cap$), making it a local maximum. If $f''(x) = 0$, the test is inconclusive." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The function downgrades from a cubic to a quadratic (a parabola): $f(x) = Bx^2 + Cx + D$", isCorrect: true, exp: "Correct! The function downgrades from a cubic to a quadratic (a parabola): $f(x) = Bx^2 + Cx + D$. A parabola only has one critical point (its vertex), meaning it will only ever have one global maximum OR one global minimum, but never both." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "For a continuous function f(x), what is the condition at a local maximum or minimum?",
+    options: [
+      { text: "f'(x) > 0", isCorrect: false, exp: "Incorrect. The function is increasing." },
+      { text: "f'(x) = 0", isCorrect: true, exp: "Correct! The slope (derivative) must be zero at an extremum." },
+      { text: "f'(x) < 0", isCorrect: false, exp: "Incorrect. The function is decreasing." },
+      { text: "f'(x) = 1", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "Using the second derivative test, if f'(c) = 0 and f''(c) < 0, what is the point at x=c?",
+    options: [
+      { text: "Local minimum", isCorrect: false, exp: "Incorrect. That requires f''(c) > 0." },
+      { text: "Local maximum", isCorrect: true, exp: "Correct! Negative concavity indicates a peak." },
+      { text: "Inflection point", isCorrect: false, exp: "Incorrect." },
+      { text: "Inconclusive", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "What does a positive second derivative (f''(x) > 0) imply?",
+    options: [
+      { text: "Concave down", isCorrect: false, exp: "Incorrect. That is f''(x) < 0." },
+      { text: "Concave up", isCorrect: true, exp: "Correct! Positive curvature means the curve bends upward." },
+      { text: "Straight line", isCorrect: false, exp: "Incorrect." },
+      { text: "No slope", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "Given f(x) = x² - 4x + 5, where is the local minimum?",
+    options: [
+      { text: "x = 0", isCorrect: false, exp: "Incorrect." },
+      { text: "x = 2", isCorrect: true, exp: "Correct! f'(x) = 2x - 4. Setting to 0 gives x = 2." },
+      { text: "x = 4", isCorrect: false, exp: "Incorrect." },
+      { text: "x = -2", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
@@ -625,13 +657,19 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([feedbackContainer]).catch((err) => console.log(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch((err) => console.log(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

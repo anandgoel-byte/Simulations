@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Double Fertilisation Animation Virtual Laboratory</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<script>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Double Fertilisation Animation Virtual Laboratory</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <script>
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -21,16 +24,19 @@
       }
     };
   </script>
-<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript">
-</script>
-<style>
+  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    type="text/javascript">
+    </script>
+  <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #f1f5f9;
     }
+
     .mono {
       font-family: 'JetBrains Mono', monospace;
     }
+
     /* Range Slider Styling */
     input[type="range"] {
       -webkit-appearance: none;
@@ -38,11 +44,13 @@
       background: transparent;
       cursor: pointer;
     }
+
     input[type="range"]::-webkit-slider-runnable-track {
       background: #e2e8f0;
       border-radius: 9999px;
       height: 6px;
     }
+
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -55,197 +63,309 @@
       border: 2px solid #ffffff;
       box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
     }
+
     input[type="range"].slider-rose::-webkit-slider-thumb {
       background-color: #f43f5e;
       box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
     }
+
     input[type="range"]::-webkit-slider-thumb:hover {
       transform: scale(1.15);
     }
+
     /* Custom Scrollbar */
-    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
-    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
-    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
     /* Laboratory Canvas Stage Background */
     .lab-stage {
       background-color: #020617 !important;
       background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
       background-size: 24px 24px !important;
-      box-shadow: inset 0 0 16px rgba(0,0,0,0.8);
+      box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.8);
     }
   </style>
 </head>
+
 <body class="min-h-screen flex items-center justify-center p-4">
-<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
-<header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
-<div class="flex items-center space-x-4 mb-3 sm:mb-0">
-<div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
-</div>
-<div>
-<h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Double Fertilisation Animation</h1>
-<p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Angiosperm Sexual Reproduction Virtual Laboratory</p>
-</div>
-</div>
-<div class="flex items-center space-x-3">
-<button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
-<span>📘</span> User Guide
+  <div
+    class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col text-sm">
+    <header
+      class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'"
+            src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" />
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Double Fertilisation Animation</h1>
+          <p class="text-[13px] text-cyan-400 font-medium tracking-wider uppercase">Angiosperm Sexual Reproduction
+            Virtual Laboratory</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button
+          class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-lg border border-slate-700 transition-all flex items-center gap-1.5"
+          id="btn-open-guide">
+          <span>📘</span> User Guide
         </button>
-<div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
-<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
-<span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Bio-Kinetic Engine Active</span>
-</div>
-</div>
-</header>
-<div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-<div class="flex items-center space-x-2">
-<button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5" id="btn-play">
+        <div
+          class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3.5 py-2 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+          <span class="text-sm text-slate-300 font-bold font-mono uppercase tracking-widest">Bio-Kinetic Engine
+            Active</span>
+        </div>
+      </div>
+    </header>
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <button
+          class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded transition-all shadow-sm flex items-center gap-1.5"
+          id="btn-play">
           ▶ Auto-Play Animation
         </button>
-<button class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all shadow-sm" id="btn-reset">
-<span>🔄</span> Reset Ovary
+        <button
+          class="px-4 py-2 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all shadow-sm"
+          id="btn-reset">
+          <span>🔄</span> Reset Ovary
         </button>
-</div>
-<div class="flex items-center space-x-4">
-<label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
-<input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-labels" type="checkbox"/>
-<span>Show Biological Labels</span>
-</label>
-</div>
-</div>
-<main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar"><div class="space-y-5"><div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
-<span class="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1">Cellular Map</span>
-<p class="text-xs font-medium text-slate-700 leading-relaxed">
-               The mature embryo sac (female gametophyte) is a 7-celled, 8-nucleate structure:
-               <br/><br/>
-               • <b>3 Antipodals</b> (top, chalazal end)<br/>
-               • <b>1 Central Cell</b> with 2 polar nuclei<br/>
-               • <b>2 Synergids</b> (bottom, guiding cells)<br/>
-               • <b>1 Egg Cell</b> (bottom, female gamete)
-             </p>
-</div><div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
-<div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
-<span class="flex items-center gap-1.5"><span class="uppercase text-rose-700">Fertilisation Timeline</span></span>
-<span class="font-mono text-rose-600 text-sm" id="lbl-time">0%</span>
-</div>
-<input class="w-full mt-2 slider-rose" id="sl-time" max="100" min="0" step="0.5" type="range" value="0"/>
-<div class="grid grid-cols-1 gap-2 mt-4">
-<button class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-slate-400" onclick="jumpTo(25)">
+      </div>
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-base font-semibold text-slate-700 cursor-pointer select-none">
+          <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-5 w-5"
+            id="chk-labels" type="checkbox" />
+          <span>Show Biological Labels</span>
+        </label>
+      </div>
+    </div>
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      <section
+        class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        <div class="space-y-5">
+          <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
+            <span
+              class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1.5">Cellular
+              Map</span>
+            <p class="text-sm font-medium text-slate-700 leading-relaxed">
+              The mature embryo sac (female gametophyte) is a 7-celled, 8-nucleate structure:
+              <br /><br />
+              • <b>3 Antipodals</b> (top, chalazal end)<br />
+              • <b>1 Central Cell</b> with 2 polar nuclei<br />
+              • <b>2 Synergids</b> (bottom, guiding cells)<br />
+              • <b>1 Egg Cell</b> (bottom, female gamete)
+            </p>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm transition-colors duration-300">
+            <div class="flex justify-between items-center text-sm font-bold text-slate-600 mb-1">
+              <span class="flex items-center gap-1.5"><span class="uppercase text-rose-700">Fertilisation
+                  Timeline</span></span>
+              <span class="font-mono text-rose-600 text-lg font-bold" id="lbl-time">0%</span>
+            </div>
+            <input class="w-full mt-2 slider-rose" id="sl-time" max="100" min="0" step="0.5" type="range" value="0" />
+            <div class="grid grid-cols-1 gap-2 mt-4">
+              <button
+                class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-slate-400"
+                onclick="jumpTo(25)">
                 Pollen Tube Growth
               </button>
-<button class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-indigo-400" onclick="jumpTo(55)">
+              <button
+                class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-indigo-400"
+                onclick="jumpTo(55)">
                 Syngamy (Egg Fertilisation)
               </button>
-<button class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-amber-400" onclick="jumpTo(85)">
+              <button
+                class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded transition-colors text-left pl-3 border-l-2 border-transparent hover:border-amber-400"
+                onclick="jumpTo(85)">
                 Triple Fusion (Endosperm)
               </button>
-</div>
-</div><div class="space-y-3">
-<span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Biological Ploidy Telemetry</span>
-<div class="grid grid-cols-1 gap-2">
-<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
-<div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Zygote State</div>
-<div class="text-sm font-bold font-mono tracking-widest text-slate-400" id="tel-zygote">Unfertilized (n)</div>
-</div>
-<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
-<div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Endosperm State</div>
-<div class="text-sm font-bold font-mono tracking-widest text-slate-400" id="tel-endosperm">Central Cell (n+n)</div>
-</div>
-<div class="bg-slate-900 text-slate-100 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-1">
-<div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Active Event Marker</div>
-<div class="text-sm font-bold font-mono tracking-widest text-rose-500 uppercase" id="tel-event">Pollen Tube Growing</div>
-</div>
-</div>
-</div></div></section>
-<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
-<canvas class="absolute inset-0 w-full h-full block z-10" id="simCanvas"></canvas>
-<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
-<span class="text-[10px] font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Phase: Pollination</span>
-</div>
-<div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
-<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-sky-400 rounded-full shadow-sm"></span> Male Gametes (Sperm)</div>
-<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-fuchsia-400 rounded-full shadow-sm"></span> Egg Cell</div>
-<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-amber-400 rounded-full shadow-sm"></span> Polar Nuclei (Central)</div>
-</div>
-</section>
-<section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-<div class="flex justify-between items-center mt-0.5">
-<h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
-</div>
-</div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
+            </div>
+          </div>
+          <div class="space-y-3">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-500 block">Biological Ploidy
+              Telemetry</span>
+            <div class="grid grid-cols-1 gap-2">
+              <div
+                class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
+                <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Zygote State</div>
+                <div class="text-base font-bold font-mono tracking-widest text-slate-400" id="tel-zygote">Unfertilized
+                  (n)</div>
+              </div>
+              <div
+                class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center px-4">
+                <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">Endosperm State</div>
+                <div class="text-base font-bold font-mono tracking-widest text-slate-400" id="tel-endosperm">Central
+                  Cell (n+n)</div>
+              </div>
+              <div
+                class="bg-slate-900 text-slate-100 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center mt-1">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Active Event Marker</div>
+                <div class="text-base font-bold font-mono tracking-widest text-rose-500 uppercase" id="tel-event">Pollen
+                  Tube Growing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas class="absolute inset-0 w-full h-full block z-10" id="simCanvas"></canvas>
+        <div
+          class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+          <span class="text-sm font-bold text-emerald-400 tracking-wider uppercase" id="canvas-hud">Phase:
+            Pollination</span>
+        </div>
+        <div
+          class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-300"><span
+              class="w-3 h-3 bg-sky-400 rounded-full shadow-sm"></span> Male Gametes (Sperm)</div>
+          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-300"><span
+              class="w-3 h-3 bg-fuchsia-400 rounded-full shadow-sm"></span> Egg Cell</div>
+          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-300"><span
+              class="w-3 h-3 bg-amber-400 rounded-full shadow-sm"></span> Polar Nuclei (Central)</div>
+        </div>
+      </section>
+      <section
+        class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        <div
+          class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-sm font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-base font-bold">Conceptual Assessments</h2>
+            <span
+              class="text-base font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full"
+              id="viva-score">Score: 0 / 4</span>
+          </div>
+        </div>
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+          <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+            <option value="all">All Categories</option>
+            <option value="school">School Board PYQ</option>
+            <option value="neet">NEET Prep</option>
+          </select>
+        </div>
+        <div class="space-y-3 pb-4">
+          <div
+            class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+            data-category="school">
+            <div class="space-y-2">
+              <span
+                class="inline-block bg-cyan-50 text-cyan-700 text-sm font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+              <h4
+                class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700"
+                id="q1-text">
                 What are the two distinct fusion events that make up "Double Fertilisation"?
               </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p
+                class="hidden text-sm mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"
+                id="q1-feedback"></p>
+            </div>
+          </div>
+          <div
+            class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+            data-category="neet">
+            <div class="space-y-2">
+              <span
+                class="inline-block bg-pink-50 text-pink-700 text-sm font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+              <h4
+                class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700"
+                id="q2-text">
                 What is the final ploidy level of the Primary Endosperm Nucleus (PEN)?
               </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p
+                class="hidden text-sm mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"
+                id="q2-feedback"></p>
+            </div>
+          </div>
+          <div
+            class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+            data-category="school">
+            <div class="space-y-2">
+              <span
+                class="inline-block bg-emerald-50 text-emerald-700 text-sm font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+              <h4
+                class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700"
+                id="q3-text">
                 Which structures guide the pollen tube directly into the embryo sac?
               </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p
+                class="hidden text-sm mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"
+                id="q3-feedback"></p>
+            </div>
+          </div>
+          <div
+            class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer"
+            data-category="neet">
+            <div class="space-y-2">
+              <span
+                class="inline-block bg-amber-50 text-amber-700 text-sm font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+              <h4
+                class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600"
+                id="q4-text">
                 Why do angiosperms invest energy in creating triploid Endosperm?
               </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
-</div>
-</div>
-</div></section>
-</main>
-</div>
-<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
-<div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
-<div class="flex items-center justify-between border-b border-slate-100 pb-3">
-<h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
-<span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> FERTILISATION LAB PROTOCOLS
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p
+                class="hidden text-sm mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"
+                id="q4-feedback"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    id="user-guide-modal">
+    <div
+      class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200 text-base">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> FERTILISATION LAB PROTOCOLS
         </h3>
-<button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
-</div>
-<div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-<p>Welcome to the <strong>Angiosperm Reproduction Laboratory</strong>! Observe the simultaneous genetic fusion events required to create a seed.</p>
-<div class="space-y-2">
-<h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-cyan-600">🎯 Core Controls</h4>
-<ul class="list-disc pl-5 space-y-1">
-<li><strong>Auto-Play Animation</strong>: Click play to watch the complete process uninterrupted. The pollen tube will burrow through the style to deliver the two sperm nuclei.</li>
-<li><strong>Manual Timeline Slider</strong>: Pause and manually drag the red slider. Notice exactly when Syngamy occurs (forming the 2n Zygote) and when Triple Fusion occurs (forming the 3n Endosperm).</li>
-<li><strong>Telemetry Dashboard</strong>: Watch the right-hand panel. As the sperm fuse, the ploidy trackers will dynamically shift from unfertilized (n) to their final state (2n and 3n).</li>
-</ul>
-</div>
-</div>
-<div class="pt-3 border-t border-slate-100 flex justify-end">
-<button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
-</div>
-</div>
-</div>
-<script>
+        <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none"
+          id="btn-close-guide">×</button>
+      </div>
+      <div class="space-y-4 text-base text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Angiosperm Reproduction Laboratory</strong>! Observe the simultaneous genetic fusion
+          events required to create a seed.</p>
+        <div class="space-y-2">
+          <h4 class="font-extrabold text-slate-800 text-sm uppercase tracking-widest text-cyan-600">🎯 Core Controls
+          </h4>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Auto-Play Animation</strong>: Click play to watch the complete process uninterrupted. The pollen
+              tube will burrow through the style to deliver the two sperm nuclei.</li>
+            <li><strong>Manual Timeline Slider</strong>: Pause and manually drag the red slider. Notice exactly when
+              Syngamy occurs (forming the 2n Zygote) and when Triple Fusion occurs (forming the 3n Endosperm).</li>
+            <li><strong>Telemetry Dashboard</strong>: Watch the right-hand panel. As the sperm fuse, the ploidy trackers
+              will dynamically shift from unfertilized (n) to their final state (2n and 3n).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button
+          class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-base rounded-xl shadow-md transition-all"
+          id="btn-close-guide-confirm">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+  <script>
     // --- VIVA MCQS DECK ---
     const appState = {
       vivaScore: 0,
@@ -291,6 +411,13 @@
       }
     };
 
+    const colorsMap = {
+        q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+        q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+    };
+
     function renderQuestions() {
       const scoreLabel = document.getElementById('viva-score');
       Object.keys(vivaData).forEach(qKey => {
@@ -304,8 +431,9 @@
         
         data.options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
-          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          btn.className = `relative text-left p-3 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
           
           btn.addEventListener('click', () => {
             if (appState.answers[qKey] !== null) return; 
@@ -317,22 +445,28 @@
             const buttons = optionsContainer.querySelectorAll('button');
             buttons.forEach((b, i) => {
               b.disabled = true;
-              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
-              b.classList.add('cursor-not-allowed');
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
               if (appState.answers[qKey] === i) {
                 if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
                 else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
               } else if (data.options[i].isCorrect) {
-                b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'opacity-60');
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
               } else {
-                b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
               }
             });
             feedbackContainer.textContent = opt.exp;
             feedbackContainer.classList.remove('hidden');
+            if (window.MathJax) {
+                MathJax.typesetPromise([feedbackContainer]).catch((err) => console.log(err));
+            }
           });
           optionsContainer.appendChild(btn);
         });
+        if (window.MathJax) {
+            MathJax.typesetPromise([optionsContainer]).catch((err) => console.log(err));
+        }
       });
     }
 
@@ -346,7 +480,7 @@
     const slTime = document.getElementById('sl-time');
     const lblTime = document.getElementById('lbl-time');
     const chkLabels = document.getElementById('chk-labels');
-    
+
     const hud = document.getElementById('canvas-hud');
     const telZygote = document.getElementById('tel-zygote');
     const telEndosperm = document.getElementById('tel-endosperm');
@@ -357,69 +491,69 @@
     let progress = 0; // 0 to 100
 
     function jumpTo(val) {
-        progress = parseFloat(val);
-        slTime.value = progress;
-        updateTelemetry();
+      progress = parseFloat(val);
+      slTime.value = progress;
+      updateTelemetry();
     }
 
     function togglePlay() {
-        isPlaying = !isPlaying;
-        if (isPlaying) {
-            btnPlay.innerHTML = "⏸ Pause Animation";
-            btnPlay.className = "px-5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
-        } else {
-            btnPlay.innerHTML = "▶ Auto-Play Animation";
-            btnPlay.className = "px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm flex items-center gap-1.5";
-        }
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        btnPlay.innerHTML = "⏸ Pause Animation";
+        btnPlay.className = "px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm rounded transition-all shadow-sm flex items-center gap-1.5";
+      } else {
+        btnPlay.innerHTML = "▶ Auto-Play Animation";
+        btnPlay.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded transition-all shadow-sm flex items-center gap-1.5";
+      }
     }
 
     btnPlay.addEventListener('click', togglePlay);
-    
+
     btnReset.addEventListener('click', () => {
-        if(isPlaying) togglePlay();
-        jumpTo(0);
+      if (isPlaying) togglePlay();
+      jumpTo(0);
     });
 
     slTime.addEventListener('input', e => {
-        progress = parseFloat(e.target.value);
-        if (isPlaying) togglePlay();
-        updateTelemetry();
+      progress = parseFloat(e.target.value);
+      if (isPlaying) togglePlay();
+      updateTelemetry();
     });
 
     function updateTelemetry() {
-        lblTime.innerText = `${Math.floor(progress)}%`;
+      lblTime.innerText = `${Math.floor(progress)}%`;
 
-        let phase = "";
-        let ev = "";
-        
-        if (progress < 40) {
-            phase = "Pollination & Growth";
-            ev = "Pollen Tube Growing";
-            telZygote.innerText = "Unfertilized (n)";
-            telZygote.className = "text-sm font-bold font-mono tracking-widest text-slate-400";
-            telEndosperm.innerText = "Central Cell (n+n)";
-            telEndosperm.className = "text-sm font-bold font-mono tracking-widest text-slate-400";
-        } else if (progress < 60) {
-            phase = "Syngamy";
-            ev = "First Sperm Fuses with Egg";
-            telZygote.innerText = "Diploid Zygote (2n)";
-            telZygote.className = "text-sm font-bold font-mono tracking-widest text-indigo-400";
-            telEndosperm.innerText = "Central Cell (n+n)";
-            telEndosperm.className = "text-sm font-bold font-mono tracking-widest text-slate-400";
-        } else if (progress < 95) {
-            phase = "Triple Fusion";
-            ev = "Second Sperm Fuses with Polar Nuclei";
-            telZygote.innerText = "Diploid Zygote (2n)";
-            telZygote.className = "text-sm font-bold font-mono tracking-widest text-indigo-400";
-            telEndosperm.innerText = "Triploid PEN (3n)";
-            telEndosperm.className = "text-sm font-bold font-mono tracking-widest text-amber-500";
-        } else {
-            phase = "Fertilisation Complete";
-            ev = "Seed Development Begins";
-        }
+      let phase = "";
+      let ev = "";
 
-        hud.innerText = `Phase: ${phase}`;
-        telEvent.innerText = ev;
+      if (progress < 40) {
+        phase = "Pollination & Growth";
+        ev = "Pollen Tube Growing";
+        telZygote.innerText = "Unfertilized (n)";
+        telZygote.className = "text-base font-bold font-mono tracking-widest text-slate-400";
+        telEndosperm.innerText = "Central Cell (n+n)";
+        telEndosperm.className = "text-base font-bold font-mono tracking-widest text-slate-400";
+      } else if (progress < 60) {
+        phase = "Syngamy";
+        ev = "First Sperm Fuses with Egg";
+        telZygote.innerText = "Diploid Zygote (2n)";
+        telZygote.className = "text-base font-bold font-mono tracking-widest text-indigo-400";
+        telEndosperm.innerText = "Central Cell (n+n)";
+        telEndosperm.className = "text-base font-bold font-mono tracking-widest text-slate-400";
+      } else if (progress < 95) {
+        phase = "Triple Fusion";
+        ev = "Second Sperm Fuses with Polar Nuclei";
+        telZygote.innerText = "Diploid Zygote (2n)";
+        telZygote.className = "text-base font-bold font-mono tracking-widest text-indigo-400";
+        telEndosperm.innerText = "Triploid PEN (3n)";
+        telEndosperm.className = "text-base font-bold font-mono tracking-widest text-amber-500";
+      } else {
+        phase = "Fertilisation Complete";
+        ev = "Seed Development Begins";
+      }
+
+      hud.innerText = `Phase: ${phase}`;
+      telEvent.innerText = ev;
     }
 
     // --- CANVAS RENDERING ---
@@ -428,22 +562,22 @@
       const dpr = window.devicePixelRatio || 1;
       let cw = Math.max(container.clientWidth, 10);
       let ch = Math.max(container.clientHeight, 10);
-      
+
       if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
-          ctx.resetTransform();
-          canvas.width = cw * dpr;
-          canvas.height = ch * dpr;
-          ctx.scale(dpr, dpr);
+        ctx.resetTransform();
+        canvas.width = cw * dpr;
+        canvas.height = ch * dpr;
+        ctx.scale(dpr, dpr);
       }
 
       ctx.clearRect(0, 0, cw, ch);
 
       if (isPlaying) {
-          progress += 0.3;
-          if (progress > 100) progress = 100;
-          slTime.value = progress;
-          updateTelemetry();
-          if(progress >= 100) togglePlay();
+        progress += 0.3;
+        if (progress > 100) progress = 100;
+        slTime.value = progress;
+        updateTelemetry();
+        if (progress >= 100) togglePlay();
       }
 
       const cx = cw / 2;
@@ -472,137 +606,155 @@
       ctx.bezierCurveTo(cx + 10, 30, cx - 10, 30, cx - 30, 40);
       ctx.stroke();
 
-      if(chkLabels.checked) {
-          ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'right';
-          ctx.fillText("Stigma", cx - 40, 50);
-          ctx.fillText("Style", cx - 30, 150);
-          ctx.fillText("Ovary", cx - ovaryR - 10, cy);
+      if (chkLabels.checked) {
+        ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText("Stigma", cx - 40, 50);
+        ctx.fillText("Style", cx - 30, 150);
+        ctx.fillText("Ovary", cx - ovaryR - 10, cy);
       }
 
       // 2. Draw Embryo Sac (Inside Ovary)
       ctx.fillStyle = 'rgba(30, 41, 59, 0.6)'; // dark bg
       ctx.strokeStyle = '#334155';
       ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.ellipse(cx, cy, sacR*0.8, sacR, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(cx, cy, sacR * 0.8, sacR, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
 
       // Cells inside Sac
       // Antipodals (Top)
       ctx.fillStyle = 'rgba(148, 163, 184, 0.5)';
-      ctx.beginPath(); ctx.arc(cx - 15, cy - sacR + 15, 10, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx + 15, cy - sacR + 15, 10, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx, cy - sacR + 22, 10, 0, Math.PI*2); ctx.fill();
-      
+      ctx.beginPath(); ctx.arc(cx - 15, cy - sacR + 15, 10, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + 15, cy - sacR + 15, 10, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy - sacR + 22, 10, 0, Math.PI * 2); ctx.fill();
+
       // Synergids (Bottom)
       // They degenerate slightly if tube enters (progress > 45)
       let synAlpha = progress > 45 ? 0.2 : 0.5;
       ctx.fillStyle = `rgba(148, 163, 184, ${synAlpha})`;
-      ctx.beginPath(); ctx.arc(cx - 20, cy + sacR - 20, 15, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx + 20, cy + sacR - 20, 15, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - 20, cy + sacR - 20, 15, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + 20, cy + sacR - 20, 15, 0, Math.PI * 2); ctx.fill();
 
       // Egg Cell (Bottom Center)
       ctx.fillStyle = '#f43f5e'; // Rose base
       ctx.shadowColor = '#f43f5e'; ctx.shadowBlur = 10;
       let eggScale = 1.0;
       if (progress > 55) { ctx.fillStyle = '#818cf8'; ctx.shadowColor = '#818cf8'; eggScale = 1.2; } // Turns purple (Zygote)
-      ctx.beginPath(); ctx.arc(cx, cy + sacR - 30, 15 * eggScale, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy + sacR - 30, 15 * eggScale, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0;
 
       // Polar Nuclei (Center)
       ctx.fillStyle = '#fbbf24'; // Amber
-      ctx.beginPath(); ctx.arc(cx - 8, cy, 8, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx + 8, cy, 8, 0, Math.PI*2); ctx.fill();
-      
+      ctx.beginPath(); ctx.arc(cx - 8, cy, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + 8, cy, 8, 0, Math.PI * 2); ctx.fill();
+
       if (progress > 85) {
-          // Fused into one large PEN
-          ctx.fillStyle = '#f59e0b'; ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 15;
-          ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI*2); ctx.fill();
-          ctx.shadowBlur = 0;
+        // Fused into one large PEN
+        ctx.fillStyle = '#f59e0b'; ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 15;
+        ctx.beginPath(); ctx.arc(cx, cy, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
       }
 
-      if(chkLabels.checked) {
-          ctx.fillStyle = '#cbd5e1'; ctx.textAlign = 'left';
-          ctx.fillText("Antipodals", cx + sacR, cy - sacR + 20);
-          ctx.fillText("Polar Nuclei (Central Cell)", cx + sacR, cy + 5);
-          if (progress > 55) ctx.fillText("Zygote (2n)", cx + sacR, cy + sacR - 30);
-          else ctx.fillText("Egg Cell (n)", cx + sacR, cy + sacR - 30);
-          ctx.fillText("Synergids", cx + sacR, cy + sacR - 10);
+      if (chkLabels.checked) {
+        ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'left';
+        ctx.fillText("Antipodals", cx + sacR, cy - sacR + 20);
+        ctx.fillText("Polar Nuclei (Central Cell)", cx + sacR, cy + 5);
+        if (progress > 55) ctx.fillText("Zygote (2n)", cx + sacR, cy + sacR - 30);
+        else ctx.fillText("Egg Cell (n)", cx + sacR, cy + sacR - 30);
+        ctx.fillText("Synergids", cx + sacR, cy + sacR - 10);
       }
 
       // 3. Pollen Tube & Sperm Growth
       // Path: Down style, around sac, into micropyle at bottom
       const path = [];
-      for(let y=40; y<cy + sacR + 10; y+=5) path.push({x: cx, y: y});
+      for (let y = 40; y < cy + sacR + 10; y += 5) path.push({ x: cx, y: y });
       // Curve into micropyle (bottom)
-      path.push({x: cx-10, y: cy + sacR + 5});
-      path.push({x: cx-15, y: cy + sacR});
-      path.push({x: cx-15, y: cy + sacR - 15});
+      path.push({ x: cx - 10, y: cy + sacR + 5 });
+      path.push({ x: cx - 15, y: cy + sacR });
+      path.push({ x: cx - 15, y: cy + sacR - 15 });
 
       // Calculate how much of tube to draw based on progress (0 to 40)
       let tubeProg = Math.min(1.0, progress / 40);
       let tubeNodes = Math.floor(tubeProg * path.length);
 
       if (tubeNodes > 0) {
-          ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)'; // Amber tube
-          ctx.lineWidth = 8;
-          ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-          ctx.beginPath();
-          ctx.moveTo(path[0].x, path[0].y);
-          for(let i=1; i<tubeNodes; i++) ctx.lineTo(path[i].x, path[i].y);
-          ctx.stroke();
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.8)'; // Amber tube
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(path[0].x, path[0].y);
+        for (let i = 1; i < tubeNodes; i++) ctx.lineTo(path[i].x, path[i].y);
+        ctx.stroke();
 
-          // Draw 2 Sperm Nuclei inside or travelling
-          ctx.fillStyle = '#38bdf8'; // Sky blue sperm
-          ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 8;
-          
-          let s1Pos, s2Pos;
+        // Draw 2 Sperm Nuclei inside or travelling
+        ctx.fillStyle = '#38bdf8'; // Sky blue sperm
+        ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 8;
 
-          if (progress <= 40) {
-              // Travelling down tube
-              s1Pos = path[Math.max(0, tubeNodes - 2)];
-              s2Pos = path[Math.max(0, tubeNodes - 6)];
-          } else {
-              // Tube has burst. Sperm move to targets.
-              let t1 = Math.min(1.0, (progress - 40) / 15); // Sperm 1 to Egg (40-55)
-              let start = path[path.length-1];
-              let eggTarget = {x: cx, y: cy + sacR - 30};
-              s1Pos = { x: start.x + (eggTarget.x - start.x)*t1, y: start.y + (eggTarget.y - start.y)*t1 };
+        let s1Pos, s2Pos;
 
-              let t2 = Math.min(1.0, (progress - 40) / 45); // Sperm 2 to Polar (40-85)
-              let polarTarget = {x: cx, y: cy};
-              s2Pos = { x: start.x + (polarTarget.x - start.x)*t2, y: start.y + (polarTarget.y - start.y)*t2 };
-          }
+        if (progress <= 40) {
+          // Travelling down tube
+          s1Pos = path[Math.max(0, tubeNodes - 2)];
+          s2Pos = path[Math.max(0, tubeNodes - 6)];
+        } else {
+          // Tube has burst. Sperm move to targets.
+          let t1 = Math.min(1.0, (progress - 40) / 15); // Sperm 1 to Egg (40-55)
+          let start = path[path.length - 1];
+          let eggTarget = { x: cx, y: cy + sacR - 30 };
+          s1Pos = { x: start.x + (eggTarget.x - start.x) * t1, y: start.y + (eggTarget.y - start.y) * t1 };
 
-          // Draw Sperm 1 (unless syngamy done)
-          if (progress < 55) {
-              ctx.beginPath(); ctx.arc(s1Pos.x, s1Pos.y, 4, 0, Math.PI*2); ctx.fill();
-          }
-          // Draw Sperm 2 (unless triple fusion done)
-          if (progress < 85) {
-              ctx.beginPath(); ctx.arc(s2Pos.x, s2Pos.y, 4, 0, Math.PI*2); ctx.fill();
-          }
-          ctx.shadowBlur = 0;
+          let t2 = Math.min(1.0, (progress - 40) / 45); // Sperm 2 to Polar (40-85)
+          let polarTarget = { x: cx, y: cy };
+          s2Pos = { x: start.x + (polarTarget.x - start.x) * t2, y: start.y + (polarTarget.y - start.y) * t2 };
+        }
+
+        // Draw Sperm 1 (unless syngamy done)
+        if (progress < 55) {
+          ctx.beginPath(); ctx.arc(s1Pos.x, s1Pos.y, 4, 0, Math.PI * 2); ctx.fill();
+        }
+        // Draw Sperm 2 (unless triple fusion done)
+        if (progress < 85) {
+          ctx.beginPath(); ctx.arc(s2Pos.x, s2Pos.y, 4, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.shadowBlur = 0;
       }
 
       // Draw original pollen grain on stigma
       ctx.fillStyle = '#f59e0b';
-      ctx.beginPath(); ctx.arc(cx, 40, 8, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, 40, 8, 0, Math.PI * 2); ctx.fill();
 
       requestAnimationFrame(renderCanvas);
     }
 
     // --- Boot Sequence ---
     window.addEventListener('load', () => {
-      try { renderQuestions(); } catch(e) { console.error(e); }
-      
+      try { renderQuestions(); } catch (e) { console.error(e); }
+
       const userGuideModal = document.getElementById('user-guide-modal');
       document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
       const closeGuide = () => userGuideModal.classList.add('hidden');
       document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
       document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
 
+      // Category Filter Handler
+      const selectCategory = document.getElementById('select-category');
+      if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+          const cat = selectCategory.value;
+          const questions = document.querySelectorAll('[data-category]');
+          questions.forEach(q => {
+            const qCat = q.getAttribute('data-category');
+            if (cat === 'all' || qCat === cat) {
+              q.classList.remove('hidden');
+            } else {
+              q.classList.add('hidden');
+            }
+          });
+        });
+      }
+
       updateTelemetry();
       requestAnimationFrame(renderCanvas);
     });
   </script>
 </body>
+
 </html>

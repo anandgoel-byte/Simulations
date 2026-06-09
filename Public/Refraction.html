@@ -174,37 +174,6 @@
 <div class="text-sm font-bold font-mono text-rose-400 tracking-widest" id="tel-min-dev">37.2°</div>
 </div>
 </div>
-</div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What is the mathematical relationship for the Minimum Angle of Deviation ($D_m$)?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
-</div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Why does violet light bend more than red light?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
-</div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        When does Total Internal Reflection (TIR) occur?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
 </div></div></section>
 <section class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
 <canvas class="absolute inset-0 w-full h-full block" id="opticsCanvas"></canvas>
@@ -223,6 +192,57 @@
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+<div class="flex items-center justify-between gap-2">
+<span class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase">Category</span>
+<select id="select-category" class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all cursor-pointer shadow-sm">
+<option value="all" selected>All Questions</option>
+<option value="school">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+<option value="jee">JEE Main</option>
+</select>
+</div>
+</div><div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+<div class="space-y-2">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+    What is the mathematical relationship for the Minimum Angle of Deviation ($D_m$)?
+</h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="space-y-2">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+    Why does violet light bend more than red light in a prism?
+</h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="space-y-2">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+    When does Total Internal Reflection (TIR) occur?
+</h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+</div>
+</div>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+<div class="space-y-2">
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+    Snell's Law states that $n_1 \sin \theta_1 = n_2 \sin \theta_2$. What happens to the angle when light enters a denser medium?
+</h4>
+<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
+</div>
 </div>
 </div></section>
 </main>
@@ -612,34 +632,42 @@
     // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
         vivaScore: 0,
-        answers: { q1: null, q2: null, q3: null }
+        answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
     const vivaData = {
         q1: {
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The Prism Formula holds when the ray passes symmetrically ($i = e$): $$n = \frac{\sin\left(\frac{A +...", isCorrect: true, exp: "Correct! The Prism Formula holds when the ray passes symmetrically ($i = e$): $$n = \frac{\sin\left(\frac{A + D_m}{2}\right)}{\sin\left(\frac{A}{2}\right)}$$ Measuring $A$ and $D_m$ yields the refractive index $n$." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$n = \\sin\\left(\\frac{A}{2}\\right) / \\sin\\left(\\frac{A+D_m}{2}\\right)$", isCorrect: false, exp: "Incorrect. The numerator and denominator are swapped." },
+                { text: "$n = \\sin\\left(\\frac{A+D_m}{2}\\right) / \\sin\\left(\\frac{A}{2}\\right)$", isCorrect: true, exp: "Correct! At minimum deviation the ray passes symmetrically ($i = e$). The Prism Formula is $n = \\sin\\left(\\frac{A+D_m}{2}\\right) / \\sin\\left(\\frac{A}{2}\\right)$." },
+                { text: "$n = A / D_m$", isCorrect: false, exp: "Incorrect. The refractive index is not a simple ratio of the angles." },
+                { text: "$n = D_m / A$", isCorrect: false, exp: "Incorrect." }
             ]
         },
         q2: {
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "According to Cauchy's Dispersion Equation, $n \approx A + B/\lambda^2$", isCorrect: true, exp: "Correct! According to Cauchy's Dispersion Equation, $n \approx A + B/\lambda^2$. Because violet light has a shorter wavelength ($\approx 400\text{ nm}$) compared to red ($\approx 700\text{ nm}$), it experiences a higher refractive index, thus bending more." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "Violet light has a longer wavelength, so it slows down more.", isCorrect: false, exp: "Incorrect. Violet light actually has a shorter wavelength than red." },
+                { text: "Higher frequency light has a higher refractive index, causing more bending.", isCorrect: true, exp: "Correct! By Cauchy's Dispersion Equation ($n \\approx A + B/\\lambda^2$), violet light (shorter $\\lambda$, higher frequency) has a higher refractive index and bends more." },
+                { text: "Red light has more energy, so it refracts at larger angles.", isCorrect: false, exp: "Incorrect. Red light has less frequency and lower refractive index in glass." },
+                { text: "All wavelengths bend by the same amount in glass.", isCorrect: false, exp: "Incorrect. Dispersion means different wavelengths bend by different amounts." }
             ]
         },
         q3: {
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "TIR happens when the internal angle hitting the second face exceeds the critical angle $\theta_c = \arcsin(1/n)$", isCorrect: true, exp: "Correct! TIR happens when the internal angle hitting the second face exceeds the critical angle $\theta_c = \arcsin(1/n)$. Dense materials (like Diamond) or wide apex angles easily trigger TIR." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "When the angle of incidence equals the apex angle.", isCorrect: false, exp: "Incorrect. TIR is governed by the critical angle, not the apex angle." },
+                { text: "When the internal angle of incidence exceeds the critical angle $\\theta_c = \\arcsin(1/n)$.", isCorrect: true, exp: "Correct! TIR occurs when the internal angle of incidence exceeds the critical angle $\\theta_c = \\arcsin(1/n)$. Dense materials like diamond ($n=2.42$) have a very small critical angle (~24°), making TIR very easy to trigger." },
+                { text: "When the light ray hits the base of the prism.", isCorrect: false, exp: "Incorrect. The ray can exit through the base without TIR." },
+                { text: "When the refractive index equals 1.", isCorrect: false, exp: "Incorrect. That means the medium is as dense as air; no TIR would occur." }
             ]
         },
+        q4: {
+            options: [
+                { text: "The angle increases (bends away from normal).", isCorrect: false, exp: "Incorrect. That describes light going from denser to rarer." },
+                { text: "The angle decreases (bends toward normal).", isCorrect: true, exp: "Correct! When light enters a denser medium ($n_2 > n_1$), $\\sin\\theta_2 < \\sin\\theta_1$, so $\\theta_2 < \\theta_1$. The refracted ray bends toward the normal." },
+                { text: "The angle remains the same.", isCorrect: false, exp: "Incorrect. That would mean no refraction." },
+                { text: "The angle doubles.", isCorrect: false, exp: "Incorrect. The relationship is governed by Snell's Law, not a simple doubling." }
+            ]
+        }
     };
 
     const colorsMap = {
@@ -723,7 +751,7 @@
                         appState.vivaScore++;
                         triggerConfetti();
                     }
-                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 3`;
+                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
 
                     const buttons = optionsContainer.querySelectorAll('button');
                     buttons.forEach((b, i) => {

@@ -211,7 +211,35 @@
 <div class="text-[13px] font-mono text-center py-2 overflow-x-auto" id="ui-formula">
                             $$B = \frac{\mu_0 I}{4\pi d} (\sin\theta_1 + \sin\theta_2)$$
                         </div>
-</div><div class="space-y-3 pb-4">
+</div></div></section>
+<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-cyan-900 min-h-[500px]" id="three-container">
+<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></span>
+<span class="text-[10px] font-extrabold text-cyan-400 uppercase tracking-wider">3D Orbit Enabled
+                        (Drag to Rotate)</span>
+</div>
+<div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-in">+</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-out">-</button>
+<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]" id="btn-zoom-reset">RST</button>
+</div>
+</section>
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block" for="filter-category">Question Category</label>
+<select class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer" id="filter-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+<div class="flex justify-between items-center mt-0.5">
+<h2 class="text-base font-bold">Conceptual Assessments</h2>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div>
+<div class="space-y-3 pb-4">
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
 <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
@@ -259,34 +287,8 @@
 </p>
 </div>
 </div>
-</div></div></section>
-<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-cyan-900 min-h-[500px]" id="three-container">
-<div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
-<span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4]"></span>
-<span class="text-[10px] font-extrabold text-cyan-400 uppercase tracking-wider">3D Orbit Enabled
-                        (Drag to Rotate)</span>
-</div>
-<div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-lg shadow-sm flex flex-col gap-1 z-20">
-<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-in">+</button>
-<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors" id="btn-zoom-out">-</button>
-<button class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-cyan-400 font-bold rounded transition-colors text-[9px]" id="btn-zoom-reset">RST</button>
 </div>
 </section>
-<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
-<label class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block" for="filter-category">Question Category</label>
-<select class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer" id="filter-category">
-<option value="all">All Categories</option>
-<option value="jee">JEE Main</option>
-<option value="cbse">School Board PYQ</option>
-<option value="neet">NEET Prep</option>
-</select>
-</div><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-<span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
-<div class="flex justify-between items-center mt-0.5">
-<h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
-</div>
-</div></section>
 </main>
 </div>
 <div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
@@ -795,14 +797,15 @@
                         let circleLine = new THREE.Line(circleGeo, matFieldSolid);
                         circleGroup.add(circleLine);
                         
-                        addArrowheadsToCircleGroup(circleGroup, r_val, true);
+                        addArrowheadsToCircleGroup(circleGroup, r_val, false);
                         
+                        circleGroup.up.set(0, 0, 1);
                         circleGroup.lookAt(target);
                         objectGroup.add(circleGroup);
 
                         movingFieldLines.push({
                             mesh: circleGroup,
-                            type: 'rotate_z_cw'
+                            type: 'rotate_z_ccw'
                         });
                     }
                 }
@@ -875,30 +878,35 @@
                         });
                     }
 
-                    // 2. Side curving dipole loops
-                    const radii = [R * 1.2, R * 1.8];
-                    const numAngles = 4;
-                    radii.forEach(R_d => {
-                        for (let i = 0; i < numAngles; i++) {
-                            let beta = (i * Math.PI / numAngles);
-                            
+                    // 2. Wrapping loops around the wire
+                    let numLoops = 6;
+                    let wrappingRadii = [1.2, 2.0];
+                    for (let i = 0; i < numLoops; i++) {
+                        let alpha = (i / numLoops) * Math.PI * 2;
+                        let tx = R * Math.cos(alpha);
+                        let ty = R * Math.sin(alpha);
+                        let target = new THREE.Vector3(tx - Math.sin(alpha), ty + Math.cos(alpha), 0);
+
+                        wrappingRadii.forEach(r_val => {
                             let circleGroup = new THREE.Group();
+                            circleGroup.position.set(tx, ty, 0);
                             
-                            let circleGeo = createCircleGeometry(R_d);
+                            let circleGeo = createCircleGeometry(r_val);
                             let circleLine = new THREE.Line(circleGeo, matFieldSolid);
                             circleGroup.add(circleLine);
                             
-                            addArrowheadsToCircleGroup(circleGroup, R_d, false);
+                            addArrowheadsToCircleGroup(circleGroup, r_val, false);
                             
-                            circleGroup.lookAt(new THREE.Vector3(-Math.sin(beta), Math.cos(beta), 0));
+                            circleGroup.up.set(0, 0, 1);
+                            circleGroup.lookAt(target);
                             objectGroup.add(circleGroup);
 
                             movingFieldLines.push({
                                 mesh: circleGroup,
                                 type: 'rotate_z_ccw'
                             });
-                        }
-                    });
+                        });
+                    }
                 }
 
                 // Electrons

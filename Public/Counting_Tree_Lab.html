@@ -72,6 +72,7 @@
 <div class="flex items-center space-x-4 mb-3 sm:mb-0">
 <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
 <img alt="Sparkl Alpha Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+</div>
 <div>
 <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Fundamental Counting Principle</h1>
 <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Precision Combinatorics &amp; Sample Space Visualizer</p>
@@ -86,7 +87,7 @@
 <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Tree Engine Active</span>
 </div>
 </div>
-</div></header>
+</header>
 <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
 <div class="flex items-center space-x-2">
 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Scenario:</span>
@@ -178,36 +179,48 @@
 <option value="cbse">School Board PYQ</option>
 <option value="neet">NEET Prep</option>
 </select>
-</div><div class="space-y-3">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What exactly does the Fundamental Counting Principle state?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            A restaurant offers a meal deal with 3 types of burgers, 2 types of sides, and 4 types of drinks. How many unique meal combinations are possible?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            How many 3-digit numbers can be formed using the digits 1, 2, 3, 4, and 5 if repetition is allowed?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Why use a Tree Diagram instead of just multiplying the numbers?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            If a coin is flipped 4 times, how many distinct sequences of heads and tails are possible?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        Does the principle change if the events are "Dependent"?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            A password requires 2 letters followed by 2 digits. How many passwords can be created (letters: 26, digits: 10)?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -556,33 +569,44 @@
         answers: { q1: null, q2: null, q3: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It states that if there are not $m$ ways to do one thing, and $n$ ways to do another, then there are not exactly...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "It states that if there are $m$ ways to do one thing, and $n$ ways to do another, then there are exactly...", isCorrect: true, exp: "Correct! It states that if there are $m$ ways to do one thing, and $n$ ways to do another, then there are exactly $m \times n$ ways of doing both together. This scales up infinitely for any number of sequential events!" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Multiplying gives you the total number of outcomes.", isCorrect: true, exp: "Correct! Multiplying gives you the total number of outcomes. A Tree Diagram actually maps out the entire Sample Space, allowing you to see and explicitly list every single specific combination (e.g., Soup $\to$ Steak $\to$ Cake)." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The multiplication rule still applies, but the number of choices changes! For example, if drawing 3 cards...", isCorrect: true, exp: "Correct! The multiplication rule still applies, but the number of choices changes! For example, if drawing 3 cards from a deck without replacement, the choices are $52 \times 51 \times 50$. The number of branches decreases at each step." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "A restaurant offers a meal deal with 3 types of burgers, 2 types of sides, and 4 types of drinks. How many unique meal combinations are possible?",
+    options: [
+      { text: "9", isCorrect: false, exp: "Incorrect. You added the numbers instead of multiplying them." },
+      { text: "24", isCorrect: true, exp: "Correct! Total combinations = 3 burgers × 2 sides × 4 drinks = 24." },
+      { text: "12", isCorrect: false, exp: "Incorrect." },
+      { text: "36", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "How many 3-digit numbers can be formed using the digits 1, 2, 3, 4, and 5 if repetition is allowed?",
+    options: [
+      { text: "60", isCorrect: false, exp: "Incorrect. That assumes no repetition." },
+      { text: "125", isCorrect: true, exp: "Correct! There are 5 choices for each of the 3 positions: 5 × 5 × 5 = 125." },
+      { text: "15", isCorrect: false, exp: "Incorrect." },
+      { text: "120", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "If a coin is flipped 4 times, how many distinct sequences of heads and tails are possible?",
+    options: [
+      { text: "8", isCorrect: false, exp: "Incorrect." },
+      { text: "16", isCorrect: true, exp: "Correct! Each flip has 2 outcomes. For 4 flips: 2 × 2 × 2 × 2 = 16." },
+      { text: "32", isCorrect: false, exp: "Incorrect." },
+      { text: "4", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "A password requires 2 letters followed by 2 digits. How many passwords can be created (letters: 26, digits: 10)?",
+    options: [
+      { text: "3600", isCorrect: false, exp: "Incorrect." },
+      { text: "67600", isCorrect: true, exp: "Correct! 26 choices for 1st letter × 26 for 2nd × 10 for 1st digit × 10 for 2nd digit = 67,600." },
+      { text: "10000", isCorrect: false, exp: "Incorrect." },
+      { text: "72", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },

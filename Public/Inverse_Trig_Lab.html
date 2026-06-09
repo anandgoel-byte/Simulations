@@ -71,9 +71,7 @@
 <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
 <div class="flex items-center space-x-4 mb-3 sm:mb-0">
 <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-<svg class="h-8 w-8 text-indigo-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-<path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
 </div>
 <div>
 <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Inverse Trig Domain &amp; Range Simulator</h1>
@@ -171,38 +169,48 @@
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 3</span>
 </div>
+</div>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="school">School Board PYQ</option>
+<option value="jee">JEE Prep</option>
+</select>
 </div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        Why do we have to "restrict" the domain of the original functions?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            What is the principal range of $\sin^{-1}(x)$?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Why does Arctangent ($\arctan$) have horizontal asymptotes?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            Which function has a range of $(0, \pi)$?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        Can you calculate $\arcsin(2)$?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            What is the domain of $\cos^{-1}(x)$?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -513,33 +521,35 @@
         answers: { q1: null, q2: null, q3: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "A function must pass the Horizontal Line Test to be invertible (meaning every y-value maps to exactly one x-value).", isCorrect: true, exp: "Correct! A function must pass the Horizontal Line Test to be invertible (meaning every y-value maps to exactly one x-value). Since trigonometric waves repeat infinitely, we must cut off a single, unique \"slice\" of the wave—called the Principal Value Branch—to make the inverse mathematically valid." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The original tangent function has vertical asymptotes at $x = -\pi/2$ and $x = \pi/2$ because the slope goes to infinity.", isCorrect: true, exp: "Correct! The original tangent function has vertical asymptotes at $x = -\pi/2$ and $x = \pi/2$ because the slope goes to infinity. When we mirror the function across $y=x$ to create the inverse, all $x$ and $y$ values swap. Therefore, vertical asymptotes become horizontal asymptotes at $y = -\pi/2$ and $y = \pi/2$." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "No, it is not undefined! The domain of $\arcsin(x)$ is not strictly $[-1, 1]$ because the range of the original...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "No, it is undefined! The domain of $\arcsin(x)$ is strictly $[-1, 1]$ because the range of the original...", isCorrect: true, exp: "Correct! No, it is undefined! The domain of $\arcsin(x)$ is strictly $[-1, 1]$ because the range of the original $\sin(x)$ function never exceeds those bounds. There is no real angle whose sine is $2$." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "What is the principal range of sin⁻¹(x)?",
+    options: [
+      { text: "[0, π]", isCorrect: false, exp: "Incorrect. That is the range of cos⁻¹(x)." },
+      { text: "[-π/2, π/2]", isCorrect: true, exp: "Correct! This restricted interval ensures the function is one-to-one." },
+      { text: "(0, π)", isCorrect: false, exp: "Incorrect." },
+      { text: "All real numbers", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "Which function has a range of (0, π)?",
+    options: [
+      { text: "sin⁻¹(x)", isCorrect: false, exp: "Incorrect." },
+      { text: "cos⁻¹(x)", isCorrect: false, exp: "Incorrect. That range is [0, π]." },
+      { text: "cot⁻¹(x)", isCorrect: true, exp: "Correct! The range of cot⁻¹(x) is (0, π)." },
+      { text: "tan⁻¹(x)", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "What is the domain of cos⁻¹(x)?",
+    options: [
+      { text: "(-∞, ∞)", isCorrect: false, exp: "Incorrect." },
+      { text: "[-1, 1]", isCorrect: true, exp: "Correct! The cosine function outputs values only between -1 and 1." },
+      { text: "[0, π]", isCorrect: false, exp: "Incorrect. That is the range." },
+      { text: "[0, 1]", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
@@ -641,13 +651,21 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    
+                    const qTextEl = document.getElementById(`${qKey}-text`);
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([qTextEl.parentElement]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

@@ -43,9 +43,7 @@
 <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
 <div class="flex items-center space-x-4 mb-3 sm:mb-0">
 <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
-<svg class="h-8 w-8 text-indigo-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-<path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
+<img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
 </div>
 <div>
 <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Nucleophilic Substitution (Sₙ1 vs Sₙ2)</h1>
@@ -166,46 +164,49 @@
 <option value="cbse">School Board PYQ</option>
 <option value="neet">NEET Prep</option>
 </select>
-</div><div class="space-y-3">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        Why do tertiary (3°) substrates exclusively undergo Sₙ1 reactions instead of Sₙ2?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+</div><div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main / Advanced]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            Which factor most strongly favors the Sₙ1 mechanism over the Sₙ2 mechanism?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        What is "Walden Inversion" and in which mechanism does it occur?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main / Advanced]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            What is a characteristic feature of the stereochemistry of an Sₙ2 reaction?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            Which substrate would be expected to react fastest in an Sₙ2 reaction?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        Why do Polar Aprotic solvents strongly favor Sₙ2 reactions?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
-<div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
-                        What is the Rate-Determining Step in an Sₙ1 reaction?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
-</div>
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-600 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            How does the rate of an Sₙ1 reaction depend on the concentration of the nucleophile?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -731,41 +732,44 @@
         answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Steric Hindrance.", isCorrect: true, exp: "Correct! Steric Hindrance. The three bulky alkyl groups physically block the nucleophile from attacking the central carbon from the backside (required for Sₙ2). Furthermore, the resulting 3° carbocation is highly stable, making the two-step Sₙ1 pathway energetically favorable." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Walden Inversion occurs in Sₙ2 reactions.", isCorrect: true, exp: "Correct! Walden Inversion occurs in Sₙ2 reactions. Because the nucleophile must attack from the exact opposite side of the leaving group, the remaining three bonds are pushed \"inside out\" like an umbrella flipping in the wind, completely inverting the stereochemical configuration (R becomes S, or vice versa)." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Polar Aprotic solvents (like Acetone or DMSO) lack O-H or N-H bonds, meaning they cannot hydrogen-bond.", isCorrect: true, exp: "Correct! Polar Aprotic solvents (like Acetone or DMSO) lack O-H or N-H bonds, meaning they cannot hydrogen-bond. Therefore, they do not \"solvate\" (surround and trap) the nucleophile anion. This leaves the nucleophile \"naked\" and highly reactive, perfectly primed for a fast Sₙ2 attack." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q4: {
-            options: [
-                { text: "The Slow (Rate-Determining) Step in Sₙ1 is not the initial departure of the leaving group to form the Carbocation...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The Slow (Rate-Determining) Step in Sₙ1 is the initial departure of the leaving group to form the Carbocation...", isCorrect: true, exp: "Correct! The Slow (Rate-Determining) Step in Sₙ1 is the initial departure of the leaving group to form the Carbocation intermediate. Because this step only involves the substrate, the overall reaction rate is Unimolecular ($Rate = k[R-X]$) and does not depend on the concentration of the nucleophile." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "Which factor most strongly favors the Sₙ1 mechanism over the Sₙ2 mechanism?",
+    options: [
+      { text: "Primary substrate", isCorrect: false, exp: "Incorrect. Primary substrates favor Sₙ2." },
+      { text: "Steric hindrance", isCorrect: true, exp: "Correct! Bulky groups prevent Sₙ2 attack, favoring Sₙ1 carbocation formation." },
+      { text: "Strong nucleophile", isCorrect: false, exp: "Incorrect. That favors Sₙ2." },
+      { text: "Aprotic solvent", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "What is a characteristic feature of the stereochemistry of an Sₙ2 reaction?",
+    options: [
+      { text: "Racemization", isCorrect: false, exp: "Incorrect. That happens in Sₙ1." },
+      { text: "Walden inversion", isCorrect: true, exp: "Correct! The nucleophile attacks from the backside, causing inversion." },
+      { text: "Retention", isCorrect: false, exp: "Incorrect." },
+      { text: "Mixture formation", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "Which substrate would be expected to react fastest in an Sₙ2 reaction?",
+    options: [
+      { text: "Tertiary halide", isCorrect: false, exp: "Incorrect. Too much steric hindrance." },
+      { text: "Secondary halide", isCorrect: false, exp: "Incorrect." },
+      { text: "Methyl halide", isCorrect: true, exp: "Correct! Minimal steric hindrance allows the fastest Sₙ2 reaction." },
+      { text: "Ethyl halide", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q4: {
+    question: "How does the rate of an Sₙ1 reaction depend on the concentration of the nucleophile?",
+    options: [
+      { text: "Directly proportional", isCorrect: false, exp: "Incorrect. That is Sₙ2." },
+      { text: "Independent", isCorrect: true, exp: "Correct! The rate-determining step is carbocation formation, involving only the substrate." },
+      { text: "Inversely proportional", isCorrect: false, exp: "Incorrect." },
+      { text: "Square of concentration", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
@@ -867,13 +871,21 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    
+                    const qTextEl = document.getElementById(`${qKey}-text`);
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([qTextEl.parentElement]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

@@ -165,38 +165,49 @@
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
-<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
-</div>
-</div><div class="space-y-3 pb-4">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        Why do the slope lines form a pattern but never cross each other?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+<span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 3</span>
 </div>
 </div>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="school">School Board PYQ</option>
+<option value="jee">JEE Prep</option>
+</select>
+</div>
+<div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            What does a small line segment at point (x, y) in a slope field represent?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        What role does the Initial Condition $(x_0, y_0)$ play?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Application]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            How do you plot a specific solution curve starting from an initial condition (x₀, y₀)?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-</div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        What does a completely horizontal slope line ($\frac{dy}{dx} = 0$) indicate?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-[15px] font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            What is an equilibrium solution in a slope field?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -492,39 +503,39 @@
         answers: { q1: null, q2: null, q3: null }
     };
 
-    const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Because $f(x,y)$ evaluates to a single, unique value for any specific coordinate $(x,y)$", isCorrect: true, exp: "Correct! Because $f(x,y)$ evaluates to a single, unique value for any specific coordinate $(x,y)$. A point cannot have two different slopes at the exact same time. This is a visual representation of the Uniqueness Theorem for differential equations!" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "The general differential equation represents a whole \"family\" of zero parallel curves.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The general differential equation represents a whole \"family\" of infinite parallel curves.", isCorrect: true, exp: "Correct! The general differential equation represents a whole \"family\" of infinite parallel curves. The initial condition acts as an anchor—it specifies exactly which one of those infinite curves we are looking at by forcing the solution to pass through that specific point." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "A slope of zero means the function is not changing ($y$ is variable).", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "A slope of zero means the function is not changing ($y$ is constant).", isCorrect: true, exp: "Correct! A slope of zero means the function is not changing ($y$ is constant). If there is a continuous horizontal line of zero slopes across the graph, it represents an Equilibrium Solution (e.g., $y=4$ in Logistic Growth where the population maxes out)." },
-                { text: "A slope of zero means the function is not not changing ($y$ is not constant).", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-    };
-
+const vivaData = {
+  q1: {
+    question: "What does a small line segment at point (x, y) in a slope field represent?",
+    options: [
+      { text: "The value of y", isCorrect: false, exp: "Incorrect." },
+      { text: "The derivative dy/dx at that point", isCorrect: true, exp: "Correct! The slope of the segment is equal to the value of the derivative f(x, y)." },
+      { text: "The second derivative", isCorrect: false, exp: "Incorrect." },
+      { text: "The area under the curve", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q2: {
+    question: "How do you plot a specific solution curve starting from an initial condition (x₀, y₀)?",
+    options: [
+      { text: "Draw a straight line", isCorrect: false, exp: "Incorrect." },
+      { text: "Trace a path tangent to the slope segments", isCorrect: true, exp: "Correct! The curve must be tangent to the slope field at every point it passes through." },
+      { text: "Connect all points with the same slope", isCorrect: false, exp: "Incorrect." },
+      { text: "Only plot points where slope is 0", isCorrect: false, exp: "Incorrect." }
+    ]
+  },
+  q3: {
+    question: "What is an equilibrium solution in a slope field?",
+    options: [
+      { text: "A constant solution where dy/dx = 0", isCorrect: true, exp: "Correct! If the derivative is zero, the solution y(x) does not change." },
+      { text: "A solution that goes to infinity", isCorrect: false, exp: "Incorrect." },
+      { text: "A solution with maximum slope", isCorrect: false, exp: "Incorrect." },
+      { text: "A solution that oscillates", isCorrect: false, exp: "Incorrect." }
+    ]
+  }
+};
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
-        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
-        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' },
-        q5: { hoverBg: 'hover:bg-rose-50', hoverBorder: 'hover:border-rose-400', labelText: 'text-rose-600' }
+        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' }
     };
 
     function triggerConfetti() {
@@ -620,13 +631,23 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([feedbackContainer]).catch((err) => console.log(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
+            const qTextEl = document.getElementById(`${qKey}-text`);
+            if (qTextEl && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([qTextEl.parentElement]).catch((err) => console.log(err));
+            }
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch((err) => console.log(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler
