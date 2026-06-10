@@ -87,13 +87,25 @@
         <button onclick="resetSim()" class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5 border border-cyan-500">
           <span>🔄</span> Reset Blocks
         </button>
+      
+      
+      
+      
+      
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+      </button></div>
+    
+      
       </div>
-    </div>
 
-    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    <main id="main-layout"     class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
       
       <!-- LEFT PANEL -->
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+      <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
         <div class="space-y-4">
           
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
@@ -169,7 +181,7 @@
       </section>
 
       <!-- RIGHT PANEL -->
-      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+      <section id="viva-section" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
         
         <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
           <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Assessment Terminal</span>
@@ -639,6 +651,126 @@
         if (e.target === userGuideModal) closeGuide();
       });
     });
+  </script>
+
+  
+
+  
+
+  
+
+  <!-- Layout Collapsible Panels Handler -->
+  <script>
+    (function() {
+      const btnToggleLeft = document.getElementById('btn-toggle-left');
+      const btnToggleViva = document.getElementById('btn-toggle-viva');
+      const leftPanel = document.getElementById('left-panel');
+      const vivaSection = document.getElementById('viva-section');
+      const mainLayout = document.getElementById('main-layout');
+      const workbenchSection = document.getElementById('workbench-section');
+      const canvasContainer = document.getElementById('canvas-container-wrapper') || document.getElementById('canvas-container') || document.getElementById('three-container');
+
+      if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) {
+        console.warn('Collapsible panels elements missing:', {btnToggleLeft, btnToggleViva, leftPanel, vivaSection, mainLayout, canvasContainer});
+        return;
+      }
+
+      let leftPanelVisible = true;
+      let vivaVisible = true;
+
+      const isNested = !!workbenchSection;
+      
+      const leftClasses = Array.from(leftPanel.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || (isNested ? 'lg:col-span-4' : 'lg:col-span-3');
+      const canvasClasses = Array.from(canvasContainer.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || (isNested ? 'lg:col-span-8' : 'lg:col-span-6');
+      const workbenchClasses = isNested ? (Array.from(workbenchSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-9') : '';
+      const vivaClasses = Array.from(vivaSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-3';
+
+      const getColSpanVal = (classStr) => {
+        const match = classStr.match(/(?:lg:|md:)?col-span-(\d+)/);
+        return match ? parseInt(match[1]) : 0;
+      };
+
+      const leftColSpan = getColSpanVal(leftClasses);
+      const canvasColSpan = getColSpanVal(canvasClasses);
+      const workbenchColSpan = isNested ? getColSpanVal(workbenchClasses) : 12 - getColSpanVal(vivaClasses);
+      const vivaColSpan = getColSpanVal(vivaClasses);
+
+      function updateLayout() {
+        if (leftPanelVisible) {
+          leftPanel.classList.remove('hidden');
+          btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+        } else {
+          leftPanel.classList.add('hidden');
+          btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+        }
+
+        if (vivaVisible) {
+          vivaSection.classList.remove('hidden');
+          btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+        } else {
+          vivaSection.classList.add('hidden');
+          btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+        }
+
+        if (isNested) {
+          canvasContainer.classList.remove('lg:col-span-8', 'lg:col-span-12', 'md:col-span-8', 'md:col-span-12');
+          if (leftPanelVisible) {
+            canvasContainer.classList.add(canvasClasses);
+          } else {
+            canvasContainer.classList.add('lg:col-span-12', 'md:col-span-12');
+          }
+
+          workbenchSection.classList.remove('lg:col-span-9', 'lg:col-span-12', 'md:col-span-9', 'md:col-span-12');
+          if (vivaVisible) {
+            workbenchSection.classList.add(workbenchClasses);
+          } else {
+            workbenchSection.classList.add('lg:col-span-12', 'md:col-span-12');
+          }
+        } else {
+          canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+          
+          let newSpan = 12;
+          if (leftPanelVisible && vivaVisible) {
+            newSpan = canvasColSpan;
+          } else if (!leftPanelVisible && !vivaVisible) {
+            newSpan = 12;
+          } else if (leftPanelVisible && !vivaVisible) {
+            newSpan = canvasColSpan + vivaColSpan;
+          } else if (!leftPanelVisible && vivaVisible) {
+            newSpan = canvasColSpan + leftColSpan;
+          }
+          canvasContainer.classList.add('lg:col-span-' + newSpan, 'md:col-span-' + newSpan);
+        }
+
+        if (leftPanelVisible && vivaVisible) {
+          mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+          if (workbenchSection) workbenchSection.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+        } else if (!leftPanelVisible && !vivaVisible) {
+          mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+          if (workbenchSection) workbenchSection.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+        } else {
+          if (!leftPanelVisible) {
+            mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+          }
+        }
+
+        window.dispatchEvent(new Event('resize'));
+      }
+
+      btnToggleLeft.addEventListener('click', () => {
+        leftPanelVisible = !leftPanelVisible;
+        updateLayout();
+      });
+
+      btnToggleViva.addEventListener('click', () => {
+        vivaVisible = !vivaVisible;
+        updateLayout();
+      });
+    })();
   </script>
 </body>
 </html>
