@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Quadrilateral Properties &amp; Transformation Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #0b0f19 !important;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+    }
+    .draggable-point {
+      cursor: grab;
+      transition: fill 0.15s, stroke-width 0.15s;
+    }
+    .draggable-point:active {
+      cursor: grabbing;
+      fill: #a7f3d0;
+    }
+
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #cbd5e1;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #6366f1;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+      transition: 0.2s;
+    }
+    input[type="range"].slider-indigo::-webkit-slider-thumb {
+      background-color: #6366f1;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    }
+    input[type="range"].slider-pink::-webkit-slider-thumb {
+      background-color: #ec4899;
+      box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background-color: #f59e0b;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+    }
+    input[type="range"].slider-cyan::-webkit-slider-thumb {
+      background-color: #06b6d4;
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-4">
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+  
+  <!-- Header -->
+  <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+      <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+        <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Quadrilateral Explorer</h1>
+        <p class="text-[11px] text-cyan-400 font-bold tracking-wider uppercase">Interactive Vector Transformations &amp; Properties</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5" id="btn-open-guide">
+        <span>📘</span> Lab Guide
+      </button>
+      <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+        <span class="text-[10px] text-slate-300 font-bold font-mono uppercase tracking-widest">Geometry Engine Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls Bar -->
+  <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+    <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+      <div class="flex items-center space-x-2 mr-2">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Quick Snap Presets:</span>
+        <select class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-preset">
+          <option value="" disabled selected>Select Preset</option>
+          <option value="square">Square</option>
+          <option value="rectangle">Rectangle</option>
+          <option value="rhombus">Rhombus</option>
+          <option value="parallelogram">Parallelogram</option>
+          <option value="trapezium">Trapezium</option>
+          <option value="kite">Kite</option>
+        </select>
+      </div>
+      
+      <span class="h-6 w-px bg-slate-200 hidden sm:inline mr-2"></span>
+
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+      </button>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-4">
+      <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-side-lengths" type="checkbox"/>
+        <span>Show Side Lengths</span>
+      </label>
+      <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-diagonals" type="checkbox"/>
+        <span>Show Diagonals</span>
+      </label>
+      <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-angles" type="checkbox"/>
+        <span>Show Angles</span>
+      </label>
+      <button id="btn-reset" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+        <span>🔄</span> Reset to Default
+      </button>
+    </div>
+  </div>
+
+  <!-- Layout Grid -->
+  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    
+    <!-- Left Controls Panel -->
+    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[760px] viva-scrollbar">
+      <div class="space-y-5">
+
+
+        <!-- Real-Time Classification Title -->
+        <div class="bg-[#0f172a] border border-slate-800 p-4.5 rounded-xl shadow-md flex flex-col items-center">
+          <span class="text-[9px] font-extrabold text-emerald-400 uppercase tracking-widest block mb-0.5">Identified Shape</span>
+          <h2 class="text-xl font-extrabold text-white tracking-tight uppercase" id="lbl-shape-class">Parallelogram</h2>
+          <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-wider mt-1" id="lbl-shape-subtext">Two pairs of parallel sides</p>
+        </div>
+
+        <!-- Vector Dimensions & Skew Controls -->
+        <div class="bg-white p-4.5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Vector Controls</span>
+          
+          <div>
+            <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+              <span class="text-indigo-600 flex items-center gap-1">■ Base Width</span>
+              <span id="val-width" class="font-mono bg-indigo-50 text-indigo-700 border border-indigo-100 px-1.5 py-0.5 rounded text-xs">340px</span>
+            </div>
+            <input type="range" id="slider-width" class="slider-indigo" min="50" max="600" step="1" value="340">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+              <span class="text-pink-600 flex items-center gap-1">■ Height</span>
+              <span id="val-height" class="font-mono bg-pink-50 text-pink-700 border border-pink-100 px-1.5 py-0.5 rounded text-xs">250px</span>
+            </div>
+            <input type="range" id="slider-height" class="slider-pink" min="50" max="400" step="1" value="250">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+              <span class="text-amber-600 flex items-center gap-1">■ Horizontal Skew</span>
+              <span id="val-skew" class="font-mono bg-amber-50 text-amber-700 border border-amber-100 px-1.5 py-0.5 rounded text-xs">100px</span>
+            </div>
+            <input type="range" id="slider-skew" class="slider-amber" min="-300" max="300" step="1" value="100">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-[13px] font-bold text-slate-700 mb-1">
+              <span class="text-cyan-600 flex items-center gap-1">■ Top Width Ratio</span>
+              <span id="val-ratio" class="font-mono bg-cyan-50 text-cyan-700 border border-cyan-100 px-1.5 py-0.5 rounded text-xs">1.00</span>
+            </div>
+            <input type="range" id="slider-ratio" class="slider-cyan" min="0.1" max="3.0" step="0.05" value="1.0">
+          </div>
+        </div>
+
+        <!-- Properties Checklist Matrix -->
+        <div class="bg-white p-4.5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block border-b border-slate-100 pb-2">Properties Matrix</span>
+          
+          <div class="space-y-2.5 text-xs font-bold text-slate-700" id="properties-matrix">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-slate-500">Opposite Sides Parallel</span>
+              <span class="font-bold font-mono" id="prop-parallel">❌</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-slate-500">All Side Lengths Equal</span>
+              <span class="font-bold font-mono" id="prop-sides-equal">❌</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-slate-500">All Interior Angles = 90°</span>
+              <span class="font-bold font-mono" id="prop-angles-equal">❌</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-slate-500">Diagonals Equal (AC = BD)</span>
+              <span class="font-bold font-mono" id="prop-diag-equal">❌</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+              <span class="text-slate-500">Diagonals Perpendicular (⊥)</span>
+              <span class="font-bold font-mono" id="prop-diag-perp">❌</span>
+            </div>
+            <div class="flex items-center justify-between pb-1">
+              <span class="text-slate-500">Diagonals Bisect Each Other</span>
+              <span class="font-bold font-mono" id="prop-diag-bisect">❌</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Card (Theory & Scientific highlights) -->
+        <div class="bg-emerald-50/50 p-5 rounded-xl border border-emerald-200 shadow-sm space-y-3" id="pnl-details">
+          <span class="text-[9px] font-extrabold text-emerald-700 uppercase tracking-widest block mb-0.5">Classification Rules</span>
+          <h3 class="text-sm font-bold text-emerald-950 leading-tight" id="lbl-info-title">Properties of Parallelograms</h3>
+          <p class="text-[11px] text-slate-600 leading-relaxed font-semibold" id="lbl-info-desc">
+            A quadrilateral is a parallelogram if both pairs of its opposite sides are parallel. It has opposite sides equal, opposite angles equal, and diagonals bisecting each other.
+          </p>
+          <div class="bg-[#0f172a] p-3 rounded-lg border border-slate-800 shadow-inner">
+            <span class="text-[8px] font-extrabold text-emerald-400 uppercase tracking-wider block mb-1">Interactive Transformation Hint</span>
+            <p class="text-[10px] text-slate-300 leading-normal font-bold italic" id="lbl-transform-hint">
+              Drag corners $B$ and $C$ horizontally to change the skew angle. Notice how a Rectangle skews into a general Parallelogram as the angles skew away from $90^\circ$.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Canvas Simulation Stage -->
+    <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[580px]">
+      
+      <!-- 2D SVG Viewport -->
+      <div class="absolute inset-0 w-full h-full block" id="view-sandbox-panel">
+        <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none select-none z-20">
+          <div class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center justify-center self-start">
+            <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+          </div>
+          <div class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 self-start">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+            <span class="text-[10px] font-extrabold text-emerald-400 uppercase tracking-wider">Interactive Quadrilateral Canvas</span>
+          </div>
+        </div>
+        
+        <svg class="w-full h-full select-none" id="geometry-svg" viewBox="0 0 800 500">
+          <!-- Background Grids pattern -->
+          <defs>
+            <pattern height="20" id="grid" width="20">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect fill="url(#grid)" height="100%" width="100%"/>
+          
+          <!-- Diagonals -->
+          <g id="svg-diagonals-group"></g>
+          
+          <!-- Main Poly outline -->
+          <g id="svg-polygon-group"></g>
+
+          <!-- Angle Arcs -->
+          <g id="svg-arcs-group"></g>
+
+          <!-- Parallel markings -->
+          <g id="svg-parallel-symbols"></g>
+
+          <!-- Drag handles -->
+          <g id="svg-handles-group"></g>
+          
+          <!-- Labels -->
+          <g id="svg-labels-group"></g>
+        </svg>
+      </div>
+
+
+      <!-- Zoom/Recenter Controls overlay -->
+      <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md border border-slate-800 p-1.5 rounded-xl shadow-sm flex flex-col gap-1 z-20">
+        <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all">+</button>
+        <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all">-</button>
+        <button id="btn-recenter" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all text-[9px]" title="Recenter Camera">RST</button>
+      </div>
+
+      <!-- Instruction Hint Overlay -->
+      <div class="absolute bottom-4 left-4 bg-slate-950/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 shadow-sm flex items-center gap-2 max-w-sm pointer-events-none select-none z-20">
+        <span class="text-xs font-bold text-indigo-400 leading-tight">Drag any corner point freely. The canvas will detect and classify the quadrilateral in real-time.</span>
+      </div>
+
+    </section>
+
+    <!-- Right MCQ Quiz Panel -->
+    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[760px] overflow-y-auto viva-scrollbar">
+      
+      <!-- Category Filter -->
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+        <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+          <option value="all">All Categories</option>
+          <option value="parallelogram">Parallelograms</option>
+          <option value="special">Special Quad Properties</option>
+          <option value="trapezium">Trapeziums</option>
+          <option value="diagonals">Diagonal Mechanics</option>
+        </select>
+      </div>
+
+      <!-- Score Indicator -->
+      <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+        <div class="flex justify-between items-center mt-0.5">
+          <h2 class="text-base font-bold">Conceptual Assessments</h2>
+          <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+        </div>
+      </div>
+
+      <!-- MCQ Question Cards -->
+      <div class="space-y-3 pb-4">
+        <!-- Q1 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="parallelogram">
+          <div class="space-y-2">
+            <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Parallelogram vs Rhombus]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700">
+              Under what geometric condition does a general parallelogram become a Rhombus?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="special">
+          <div class="space-y-2">
+            <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Rhombus vs Square]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700">
+              A Rhombus transforms into a Square when which of the following properties is satisfied?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="trapezium">
+          <div class="space-y-2">
+            <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Trapezium vs Parallelogram]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700">
+              What is the key defining difference between a Trapezium and a Parallelogram?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="diagonals">
+          <div class="space-y-2">
+            <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Diagonal Properties]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600">
+              Which quadrilaterals possess diagonals that intersect at right angles ($90^\circ$)?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Modal Study Guide -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+        <span class="inline-block text-sm mr-1.5 select-none leading-none">🌎</span> QUADRILATERAL PROPERTIES GUIDE
+      </h3>
+      <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+    </div>
+    <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+      <p>Welcome to the <strong>Quadrilaterals Classification and Transformations Lab</strong>! Use this workspace to learn about polygons, sides, angles, and diagonal crossings.</p>
+      
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-emerald-600 text-xs uppercase tracking-widest">📐 Draggable Corner Vertices</h4>
+        <p>Drag any corner point $A, B, C, D$ to change the quadrilateral shape. The center panel monitors coordinates and classifies the shape in real-time.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-cyan-600 text-xs uppercase tracking-widest">⚡ Snapping Presets</h4>
+        <p>Click quick snap buttons (e.g. <strong>Rhombus</strong>, <strong>Square</strong>) in the controls bar to load exact shapes. You can skew them to observe transition thresholds.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-amber-600 text-xs uppercase tracking-widest">📊 Properties Matrix</h4>
+        <p>The Properties Matrix in the left sidebar tracks geometric equations (side lengths equality, parallel angles, perpendicular diagonals) and updates its diagnostic checkmarks in real-time.</p>
+      </div>
+    </div>
+    <div class="pt-4 border-t border-slate-100 flex justify-end">
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- VIVA ASSESSMENT DATA ---
+  const appState = {
+    vivaScore: 0,
+    answers: { q1: null, q2: null, q3: null, q4: null }
+  };
+
+  const vivaData = {
+    q1: {
+      options: [
+        { text: "When all four interior angles become 90°.", isCorrect: false, exp: "Incorrect. A parallelogram with 90° angles is a rectangle, not necessarily a rhombus." },
+        { text: "When its adjacent sides become equal in length.", isCorrect: true, exp: "Correct! A parallelogram has opposite sides equal by definition. If its adjacent sides also become equal, all four sides become equal, making it a **Rhombus**." },
+        { text: "When its opposite sides become unequal.", isCorrect: false, exp: "Incorrect. If opposite sides are unequal, it is no longer a parallelogram." },
+        { text: "When one pair of opposite sides becomes non-parallel.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q2: {
+      options: [
+        { text: "When all four sides are made unequal.", isCorrect: false, exp: "Incorrect." },
+        { text: "When one of its interior angles becomes a right angle (90°).", isCorrect: true, exp: "Correct! A rhombus already has all sides equal. If any one angle becomes **90°**, all other angles must also become 90° due to parallel side properties, transforming it into a **Square**." },
+        { text: "When its diagonals become unequal.", isCorrect: false, exp: "Incorrect. Rhombus diagonals are already unequal; making them equal and perpendicular is the same as making it a square, but just one 90° corner angle is the standard defining step." },
+        { text: "When its opposite angles are supplementary.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q3: {
+      options: [
+        { text: "A trapezium has only one pair of parallel opposite sides, while a parallelogram has two pairs.", isCorrect: true, exp: "Correct! A **Trapezium** is a quadrilateral with exactly one pair of opposite sides parallel. A **Parallelogram** has both pairs of opposite sides parallel." },
+        { text: "A trapezium has all sides equal, while a parallelogram does not.", isCorrect: false, exp: "Incorrect." },
+        { text: "A parallelogram has diagonals intersecting at 90°, while a trapezium does not.", isCorrect: false, exp: "Incorrect." },
+        { text: "There is no difference; they are different names for the same shape.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q4: {
+      options: [
+        { text: "Rectangle and Square", isCorrect: false, exp: "Incorrect. Rectangle diagonals do not intersect at 90°." },
+        { text: "Rhombus, Square, and Kite", isCorrect: true, exp: "Correct! The diagonals of a **Rhombus**, **Square**, and **Kite** intersect at right angles ($90^\\circ$). For a parallelogram and rectangle, diagonals are not perpendicular." },
+        { text: "Parallelogram and Trapezium", isCorrect: false, exp: "Incorrect." },
+        { text: "Trapezium and Kite", isCorrect: false, exp: "Incorrect." }
+      ]
+    }
+  };
+
+  const colorsMap = {
+    q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+    q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+    q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+    q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+  };
+
+  function triggerConfetti() {
+    const container = document.body;
+    const colors = ['#10b981', '#06b6d4', '#6366f1', '#ec4899', '#a855f7', '#f59e0b'];
+    const numParticles = 120;
+    for (let i = 0; i < numParticles; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      
+      const isRibbon = Math.random() > 0.8;
+      const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+      const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+      
+      confetti.style.width = `${w}px`;
+      confetti.style.height = `${h}px`;
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+      
+      const fromLeft = i < numParticles / 2;
+      confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+      confetti.style.top = 'calc(100vh + 10px)';
+      
+      const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+      const velocity = Math.random() * 500 + 400;
+      
+      const dx = Math.cos(angle) * velocity;
+      const dy = -Math.sin(angle) * velocity;
+      
+      const fallDuration = Math.random() * 1.5 + 2.0;
+      const spinRotation = Math.random() * 1080 - 540;
+      
+      confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+      container.appendChild(confetti);
+      confetti.offsetHeight;
+      confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+      confetti.style.opacity = '0';
+      
+      setTimeout(() => { confetti.remove(); }, fallDuration * 1000);
+    }
+  }
+
+  function renderQuestions() {
+    const scoreLabel = document.getElementById('viva-score');
+    Object.keys(vivaData).forEach(qKey => {
+      const data = vivaData[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      if (!optionsContainer || !feedbackContainer) return;
+      optionsContainer.innerHTML = '';
+      
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `relative text-left p-3 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+        let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+        btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+        
+        btn.addEventListener('click', () => {
+          if (appState.answers[qKey] !== null) return;
+          appState.answers[qKey] = idx;
+          if (opt.isCorrect) {
+            appState.vivaScore++;
+            triggerConfetti();
+          }
+          if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+          
+          const buttons = optionsContainer.querySelectorAll('button');
+          buttons.forEach((b, i) => {
+            b.disabled = true;
+            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+            b.classList.add('cursor-not-allowed', 'shadow-none');
+            if (appState.answers[qKey] === i) {
+              if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+              else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            } else if (data.options[i].isCorrect) {
+              b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+            } else {
+              b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+            }
+          });
+          feedbackContainer.className = "text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100";
+          feedbackContainer.innerHTML = opt.exp;
+          feedbackContainer.classList.remove('hidden');
+          if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+        });
+      });
+    });
+  }
+
+  // --- Category Filter Handler ---
+  const selectCategory = document.getElementById('select-category');
+  if (selectCategory) {
+    selectCategory.addEventListener('change', () => {
+      const cat = selectCategory.value;
+      const questions = document.querySelectorAll('[data-category]');
+      questions.forEach(q => {
+        const qCat = q.getAttribute('data-category');
+        if (cat === 'all' || qCat === cat) {
+          q.classList.remove('hidden');
+        } else {
+          q.classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  // --- SVG GEOMETRY DRAG ENGINE ---
+  const svg = document.getElementById('geometry-svg');
+  
+  // Draggable Vertices Coordinates
+  const pts = {
+    A: { x: 200, y: 375 },
+    B: { x: 200, y: 125 },
+    C: { x: 600, y: 125 },
+    D: { x: 600, y: 375 }
+  };
+
+  const defaultPresets = {
+    square: { A: {x: 275, y: 375}, B: {x: 275, y: 125}, C: {x: 525, y: 125}, D: {x: 525, y: 375} },
+    rectangle: { A: {x: 200, y: 375}, B: {x: 200, y: 125}, C: {x: 600, y: 125}, D: {x: 600, y: 375} },
+    rhombus: { A: {x: 220, y: 370}, B: {x: 320, y: 130}, C: {x: 580, y: 130}, D: {x: 480, y: 370} },
+    parallelogram: { A: {x: 180, y: 375}, B: {x: 280, y: 125}, C: {x: 620, y: 125}, D: {x: 520, y: 375} },
+    trapezium: { A: {x: 150, y: 375}, B: {x: 300, y: 125}, C: {x: 550, y: 125}, D: {x: 650, y: 375} },
+    kite: { A: {x: 240, y: 250}, B: {x: 400, y: 130}, C: {x: 560, y: 250}, D: {x: 400, y: 410} }
+  };
+
+  let dragNode = null;
+  const zoom = 1.0;
+
+  function dist(p1, p2) {
+    return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+  }
+
+  // Cross Product to check parallel sides
+  function crossProduct(v1, v2) {
+    return v1.x * v2.y - v1.y * v2.x;
+  }
+
+  // Angle between three points: B-A-C (angle at A)
+  function calculateAngle(pPrev, pVal, pNext) {
+    const v1 = { x: pPrev.x - pVal.x, y: pPrev.y - pVal.y };
+    const v2 = { x: pNext.x - pVal.x, y: pNext.y - pVal.y };
+    const dot = v1.x * v2.x + v1.y * v2.y;
+    const len1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+    const len2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+    if (len1 === 0 || len2 === 0) return 0;
+    const cosAngle = Math.max(-1, Math.min(1, dot / (len1 * len2)));
+    return Math.acos(cosAngle) * (180 / Math.PI);
+  }
+
+  // Check intersection of diagonals
+  function getIntersection(p1, p2, p3, p4) {
+    const d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+    if (Math.abs(d) < 0.001) return null;
+    const x = ((p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x)) / d;
+    const y = ((p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x)) / d;
+    return { x, y };
+  }
+
+  function drawAngleArc(grp, center, pPrev, pNext, angleVal, color) {
+    const r = 24;
+    const v1 = { x: pPrev.x - center.x, y: pPrev.y - center.y };
+    const v2 = { x: pNext.x - center.x, y: pNext.y - center.y };
+    const a1 = Math.atan2(v1.y, v1.x);
+    let a2 = Math.atan2(v2.y, v2.x);
+    
+    // adjust sweep direction
+    let diff = a2 - a1;
+    if (diff < -Math.PI) diff += Math.PI * 2;
+    if (diff > Math.PI) diff -= Math.PI * 2;
+    const sweep = diff > 0 ? 1 : 0;
+
+    const startX = center.x + r * Math.cos(a1);
+    const startY = center.y + r * Math.sin(a1);
+    const endX = center.x + r * Math.cos(a2);
+    const endY = center.y + r * Math.sin(a2);
+
+    const largeArc = Math.abs(angleVal) > 180 ? 1 : 0;
+
+    grp.innerHTML += `
+      <path d="M ${startX} ${startY} A ${r} ${r} 0 ${largeArc} ${sweep} ${endX} ${endY}" fill="none" stroke="${color}" stroke-width="2.5" opacity="0.85" />
+      <text x="${center.x + (v1.x/len(v1) + v2.x/len(v2))*25}" y="${center.y + (v1.y/len(v1) + v2.y/len(v2))*25 + 4}" fill="${color}" font-size="10" font-weight="800" text-anchor="middle">${Math.round(angleVal)}°</text>
+    `;
+  }
+
+  function len(v) { return Math.sqrt(v.x * v.x + v.y * v.y); }
+
+  function getMousePos(evt) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: ((evt.clientX - rect.left) / rect.width) * 800,
+      y: ((evt.clientY - rect.top) / rect.height) * 500
+    };
+  }
+
+  // Draw the entire geometry scene
+  function redraw() {
+    const diagonalsGroup = document.getElementById('svg-diagonals-group');
+    const polygonGroup = document.getElementById('svg-polygon-group');
+    const arcsGroup = document.getElementById('svg-arcs-group');
+    const parallelSymbols = document.getElementById('svg-parallel-symbols');
+    const handlesGroup = document.getElementById('svg-handles-group');
+    const labelsGroup = document.getElementById('svg-labels-group');
+
+    diagonalsGroup.innerHTML = '';
+    polygonGroup.innerHTML = '';
+    arcsGroup.innerHTML = '';
+    parallelSymbols.innerHTML = '';
+    handlesGroup.innerHTML = '';
+    labelsGroup.innerHTML = '';
+
+    const showSideLengths = document.getElementById('chk-side-lengths').checked;
+    const showDiagonals = document.getElementById('chk-diagonals').checked;
+    const showAngles = document.getElementById('chk-angles').checked;
+
+    // Vectors
+    const AB = { x: pts.B.x - pts.A.x, y: pts.B.y - pts.A.y };
+    const BC = { x: pts.C.x - pts.B.x, y: pts.C.y - pts.B.y };
+    const CD = { x: pts.D.x - pts.C.x, y: pts.D.y - pts.C.y };
+    const DA = { x: pts.A.x - pts.D.x, y: pts.A.y - pts.D.y };
+
+    // Side lengths
+    const dAB = dist(pts.A, pts.B);
+    const dBC = dist(pts.B, pts.C);
+    const dCD = dist(pts.C, pts.D);
+    const dDA = dist(pts.D, pts.A);
+
+    // Diagonals
+    const dAC = dist(pts.A, pts.C);
+    const dBD = dist(pts.B, pts.D);
+
+    // Parallel checks
+    const crossTopBottom = crossProduct(BC, { x: -DA.x, y: -DA.y }); // BC and AD
+    const crossLeftRight = crossProduct(AB, { x: -CD.x, y: -CD.y }); // AB and CD
+    const parallelTopBottom = Math.abs(crossTopBottom) / (dBC * dDA) < 0.012;
+    const parallelLeftRight = Math.abs(crossLeftRight) / (dAB * dCD) < 0.012;
+
+    // Side equality checks (tolerance of 3 pixels)
+    const sidesEqual = Math.abs(dAB - dBC) < 3.2 && Math.abs(dBC - dCD) < 3.2 && Math.abs(dCD - dDA) < 3.2;
+    const oppSidesEqual = Math.abs(dAB - dCD) < 3.2 && Math.abs(dBC - dDA) < 3.2;
+
+    // Angles calculation
+    const angleA = calculateAngle(pts.B, pts.A, pts.D);
+    const angleB = calculateAngle(pts.A, pts.B, pts.C);
+    const angleC = calculateAngle(pts.B, pts.C, pts.D);
+    const angleD = calculateAngle(pts.C, pts.D, pts.A);
+
+    const allAngles90 = Math.abs(angleA - 90) < 1.8 && Math.abs(angleB - 90) < 1.8 && Math.abs(angleC - 90) < 1.8 && Math.abs(angleD - 90) < 1.8;
+
+    // Diagonals properties
+    const diagonalsEqual = Math.abs(dAC - dBD) < 3.2;
+    
+    // Check if diagonals intersect at right angles
+    const O = getIntersection(pts.A, pts.C, pts.B, pts.D) || { x: 400, y: 250 };
+    const diagAngle = O ? calculateAngle(pts.A, O, pts.B) : 0;
+    const diagonalsPerp = Math.abs(diagAngle - 90) < 2.0;
+
+    // Diagonals bisection check
+    const midAC = { x: (pts.A.x + pts.C.x)/2, y: (pts.A.y + pts.C.y)/2 };
+    const midBD = { x: (pts.B.x + pts.D.x)/2, y: (pts.B.y + pts.D.y)/2 };
+    const diagonalsBisect = dist(midAC, midBD) < 3.2;
+
+    // kite check
+    const kiteAdjacentEqual = (Math.abs(dAB - dBC) < 3.2 && Math.abs(dCD - dDA) < 3.2) || (Math.abs(dAB - dDA) < 3.2 && Math.abs(dBC - dCD) < 3.2);
+
+    // Classification Logic
+    let classification = "General Quadrilateral";
+    let classificationSubtext = "Four-sided polygon with general dimensions";
+    let detailTitle = "General Quadrilateral Properties";
+    let detailDesc = "A closed figure bounded by four straight line segments. Interior angles sum to exactly 360°.";
+    let transformHint = "Select presets above to observe perfect squares, rectangles, or trapeziums.";
+
+    if (parallelTopBottom && parallelLeftRight) {
+      if (allAngles90 && sidesEqual) {
+        classification = "Square";
+        classificationSubtext = "Equilateral & Equiangular Parallelogram";
+        detailTitle = "Properties of Squares";
+        detailDesc = "A square is a regular quadrilateral. It has all four sides equal and all four interior angles exactly 90°. Its diagonals are equal, perpendicular, and bisect each other.";
+        transformHint = "Drag corners to skew the square. You will see it transform instantly into a **Rhombus** when angles deviate from 90°.";
+      } else if (allAngles90) {
+        classification = "Rectangle";
+        classificationSubtext = "Equiangular Parallelogram";
+        detailTitle = "Properties of Rectangles";
+        detailDesc = "A rectangle has opposite sides equal and parallel, and all interior angles exactly 90°. Its diagonals are equal and bisect each other, but do not intersect at 90°.";
+        transformHint = "Skew the rectangle horizontally to watch it morph into a **Parallelogram** as the angles change.";
+      } else if (sidesEqual) {
+        classification = "Rhombus";
+        classificationSubtext = "Equilateral Parallelogram";
+        detailTitle = "Properties of Rhombuses";
+        detailDesc = "A rhombus has all four sides equal. Opposite sides are parallel, opposite angles are equal, and its diagonals bisect each other at exactly 90° (perpendicular).";
+        transformHint = "Straighten the rhombus until its corner angles reach 90°. It will immediately snap-transform into a **Square**!";
+      } else {
+        classification = "Parallelogram";
+        classificationSubtext = "Two pairs of parallel sides";
+        detailTitle = "Properties of Parallelograms";
+        detailDesc = "A quadrilateral with opposite sides parallel. Opposite sides are equal in length, opposite angles are equal, and diagonals bisect each other.";
+        transformHint = "Adjust the adjacent side ratio by dragging side handles, or skew the angles to see how rectangles and rhombuses fit as special sub-categories.";
+      }
+    } else if (parallelTopBottom || parallelLeftRight) {
+      const isIsosceles = (parallelTopBottom && Math.abs(dAB - dCD) < 3) || (parallelLeftRight && Math.abs(dBC - dDA) < 3);
+      classification = isIsosceles ? "Isosceles Trapezium" : "Trapezium";
+      classificationSubtext = "Exactly one pair of parallel opposite sides";
+      detailTitle = isIsosceles ? "Isosceles Trapezium" : "Trapezium Properties";
+      detailDesc = "A quadrilateral with exactly one pair of opposite parallel sides (bases). If the non-parallel sides are equal, it is termed isosceles, and its diagonals are equal.";
+      transformHint = "Increase the top base length until it matches the bottom base. It will transition from a Trapezium directly into a **Parallelogram**.";
+    } else if (kiteAdjacentEqual && diagonalsPerp) {
+      classification = "Kite";
+      classificationSubtext = "Adjacent sides equal in pairs";
+      detailTitle = "Properties of Kites";
+      detailDesc = "A quadrilateral with two pairs of equal-length adjacent sides. One diagonal perpendicular-bisects the other, and one pair of opposite angles is equal.";
+      transformHint = "Adjust side proportions to see how kites relate closely to rhombuses.";
+    }
+
+    // Update left classification card
+    document.getElementById('lbl-shape-class').textContent = classification;
+    document.getElementById('lbl-shape-subtext').textContent = classificationSubtext;
+    document.getElementById('lbl-info-title').textContent = detailTitle;
+    document.getElementById('lbl-info-desc').textContent = detailDesc;
+    document.getElementById('lbl-transform-hint').textContent = transformHint;
+
+    // Update Properties Matrix Checkmarks
+    document.getElementById('prop-parallel').textContent = (parallelTopBottom && parallelLeftRight) ? "✅ Yes" : (parallelTopBottom || parallelLeftRight ? "⚠️ 1 Pair Only" : "❌ No");
+    document.getElementById('prop-sides-equal').textContent = sidesEqual ? "✅ Yes" : (oppSidesEqual ? "⚠️ Opposite Sides Only" : "❌ No");
+    document.getElementById('prop-angles-equal').textContent = allAngles90 ? "✅ Yes" : "❌ No";
+    document.getElementById('prop-diag-equal').textContent = diagonalsEqual ? "✅ Yes" : "❌ No";
+    document.getElementById('prop-diag-perp').textContent = diagonalsPerp ? "✅ Yes" : "❌ No";
+    document.getElementById('prop-diag-bisect').textContent = diagonalsBisect ? "✅ Yes" : "❌ No";
+
+    // --- DRAW SVG ELEMENTS ---
+
+    // 1. Draw Diagonals
+    if (showDiagonals) {
+      diagonalsGroup.innerHTML += `
+        <line x1="${pts.A.x}" y1="${pts.A.y}" x2="${pts.C.x}" y2="${pts.C.y}" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,4" />
+        <line x1="${pts.B.x}" y1="${pts.B.y}" x2="${pts.D.x}" y2="${pts.D.y}" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4,4" />
+      `;
+
+      // Right angle indicator at O
+      if (diagonalsPerp) {
+        const vAC = { x: pts.C.x - pts.A.x, y: pts.C.y - pts.A.y };
+        const vBD = { x: pts.D.x - pts.B.x, y: pts.D.y - pts.B.y };
+        const lenAC = dist(pts.A, pts.C);
+        const lenBD = dist(pts.B, pts.D);
+        if (lenAC > 0 && lenBD > 0) {
+          const dx = (vAC.x / lenAC) * 12;
+          const dy = (vAC.y / lenAC) * 12;
+          const kx = (vBD.x / lenBD) * 12;
+          const ky = (vBD.y / lenBD) * 12;
+          diagonalsGroup.innerHTML += `
+            <polygon points="${O.x + dx},${O.y + dy} ${O.x + dx + kx},${O.y + dy + ky} ${O.x + kx},${O.y + ky} ${O.x},${O.y}" fill="rgba(16, 185, 129, 0.2)" stroke="#10b981" stroke-width="1.5" />
+          `;
+        }
+      }
+    }
+
+    // 2. Draw Polygon
+    polygonGroup.innerHTML += `
+      <polygon points="${pts.A.x},${pts.A.y} ${pts.B.x},${pts.B.y} ${pts.C.x},${pts.C.y} ${pts.D.x},${pts.D.y}" fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" stroke-width="3.5" />
+    `;
+
+    // 3. Parallel Indicators
+    if (parallelTopBottom) {
+      const midTop = { x: (pts.B.x + pts.C.x)/2, y: (pts.B.y + pts.C.y)/2 };
+      const midBottom = { x: (pts.A.x + pts.D.x)/2, y: (pts.A.y + pts.D.y)/2 };
+      parallelSymbols.innerHTML += `
+        <!-- Single Arrow top -->
+        <polygon points="${midTop.x - 5},${midTop.y + 4} ${midTop.x + 5},${midTop.y} ${midTop.x - 5},${midTop.y - 4}" fill="#10b981" />
+        <!-- Single Arrow bottom -->
+        <polygon points="${midBottom.x - 5},${midBottom.y + 4} ${midBottom.x + 5},${midBottom.y} ${midBottom.x - 5},${midBottom.y - 4}" fill="#10b981" />
+      `;
+    }
+    if (parallelLeftRight) {
+      const midLeft = { x: (pts.A.x + pts.B.x)/2, y: (pts.A.y + pts.B.y)/2 };
+      const midRight = { x: (pts.C.x + pts.D.x)/2, y: (pts.C.y + pts.D.y)/2 };
+      
+      const angleL = Math.atan2(pts.B.y - pts.A.y, pts.B.x - pts.A.x);
+      const angleR = Math.atan2(pts.D.y - pts.C.y, pts.D.x - pts.C.x);
+
+      parallelSymbols.innerHTML += `
+        <!-- Double Arrow left -->
+        <g transform="translate(${midLeft.x}, ${midLeft.y}) rotate(${angleL * 180 / Math.PI})">
+          <polygon points="-4,-6 4,-2 -4,2" fill="#10b981" />
+          <polygon points="2,-6 10,-2 2,2" fill="#10b981" />
+        </g>
+        <!-- Double Arrow right -->
+        <g transform="translate(${midRight.x}, ${midRight.y}) rotate(${angleR * 180 / Math.PI})">
+          <polygon points="-4,-6 4,-2 -4,2" fill="#10b981" />
+          <polygon points="2,-6 10,-2 2,2" fill="#10b981" />
+        </g>
+      `;
+    }
+
+    // 4. Draw Angle Arcs
+    if (showAngles) {
+      drawAngleArc(arcsGroup, pts.A, pts.B, pts.D, angleA, '#60a5fa');
+      drawAngleArc(arcsGroup, pts.B, pts.C, pts.A, angleB, '#f43f5e');
+      drawAngleArc(arcsGroup, pts.C, pts.D, pts.B, angleC, '#a855f7');
+      drawAngleArc(arcsGroup, pts.D, pts.A, pts.C, angleD, '#fb7185');
+    }
+
+    // 5. Side Length and Diagonal Labels
+    if (showSideLengths) {
+      labelsGroup.innerHTML += `
+        <!-- Side lengths -->
+        <text x="${(pts.A.x + pts.B.x)/2 - 18}" y="${(pts.A.y + pts.B.y)/2 + 4}" fill="#cbd5e1" font-size="11" font-weight="700">${(dAB/10).toFixed(1)} u</text>
+        <text x="${(pts.B.x + pts.C.x)/2}" y="${(pts.B.y + pts.C.y)/2 - 12}" fill="#cbd5e1" font-size="11" font-weight="700" text-anchor="middle">${(dBC/10).toFixed(1)} u</text>
+        <text x="${(pts.C.x + pts.D.x)/2 + 18}" y="${(pts.C.y + pts.D.y)/2 + 4}" fill="#cbd5e1" font-size="11" font-weight="700" text-anchor="start">${(dCD/10).toFixed(1)} u</text>
+        <text x="${(pts.A.x + pts.D.x)/2}" y="${(pts.A.y + pts.D.y)/2 + 18}" fill="#cbd5e1" font-size="11" font-weight="700" text-anchor="middle">${(dDA/10).toFixed(1)} u</text>
+      `;
+    }
+
+    if (showDiagonals) {
+      labelsGroup.innerHTML += `
+        <text x="${(pts.A.x + O.x)/2}" y="${(pts.A.y + O.y)/2 - 8}" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">AC: ${(dAC/10).toFixed(1)} u</text>
+        <text x="${(pts.B.x + O.x)/2}" y="${(pts.B.y + O.y)/2 + 14}" fill="#34d399" font-size="10" font-weight="700" text-anchor="middle">BD: ${(dBD/10).toFixed(1)} u</text>
+      `;
+    }
+
+    // 6. Draw point markers
+    handlesGroup.innerHTML += `
+      <circle cx="${pts.A.x}" cy="${pts.A.y}" r="8" fill="#6366f1" stroke="#ffffff" stroke-width="2.5" class="draggable-point" id="pt-A" />
+      <circle cx="${pts.B.x}" cy="${pts.B.y}" r="8" fill="#6366f1" stroke="#ffffff" stroke-width="2.5" class="draggable-point" id="pt-B" />
+      <circle cx="${pts.C.x}" cy="${pts.C.y}" r="8" fill="#6366f1" stroke="#ffffff" stroke-width="2.5" class="draggable-point" id="pt-C" />
+      <circle cx="${pts.D.x}" cy="${pts.D.y}" r="8" fill="#6366f1" stroke="#ffffff" stroke-width="2.5" class="draggable-point" id="pt-D" />
+    `;
+
+    labelsGroup.innerHTML += `
+      <text x="${pts.A.x - 12}" y="${pts.A.y + 16}" fill="#f8fafc" font-size="14" font-weight="800">A</text>
+      <text x="${pts.B.x - 12}" y="${pts.B.y - 12}" fill="#f8fafc" font-size="14" font-weight="800">B</text>
+      <text x="${pts.C.x + 12}" y="${pts.C.y - 12}" fill="#f8fafc" font-size="14" font-weight="800">C</text>
+      <text x="${pts.D.x + 12}" y="${pts.D.y + 16}" fill="#f8fafc" font-size="14" font-weight="800">D</text>
+    `;
+  }
+
+  // --- SLIDER CONTROLS ENGINE ---
+  const slWidth = document.getElementById('slider-width');
+  const slHeight = document.getElementById('slider-height');
+  const slSkew = document.getElementById('slider-skew');
+  const slRatio = document.getElementById('slider-ratio');
+
+  const valWidth = document.getElementById('val-width');
+  const valHeight = document.getElementById('val-height');
+  const valSkew = document.getElementById('val-skew');
+  const valRatio = document.getElementById('val-ratio');
+
+  function updateFromSliders() {
+    if (!slWidth || !slHeight || !slSkew || !slRatio) return;
+    const w = parseFloat(slWidth.value);
+    const h = parseFloat(slHeight.value);
+    const s = parseFloat(slSkew.value);
+    const r = parseFloat(slRatio.value);
+
+    if (valWidth) valWidth.innerText = `${Math.round(w)}px`;
+    if (valHeight) valHeight.innerText = `${Math.round(h)}px`;
+    if (valSkew) valSkew.innerText = `${Math.round(s)}px`;
+    if (valRatio) valRatio.innerText = r.toFixed(2);
+
+    // Calculate Coordinates based on center (400, 250)
+    pts.A.x = 400 - w / 2;
+    pts.A.y = 250 + h / 2;
+    pts.D.x = 400 + w / 2;
+    pts.D.y = 250 + h / 2;
+    pts.B.x = 400 + s - (w * r) / 2;
+    pts.B.y = 250 - h / 2;
+    pts.C.x = 400 + s + (w * r) / 2;
+    pts.C.y = 250 - h / 2;
+
+    const selectPreset = document.getElementById('select-preset');
+    if (selectPreset) selectPreset.value = "";
+
+    redraw();
+  }
+
+  function syncSlidersFromCoords() {
+    if (!slWidth || !slHeight || !slSkew || !slRatio) return;
+    
+    // Width is bottom base length AD
+    const w = Math.round(dist(pts.A, pts.D));
+    // Height is average vertical distance
+    const h = Math.round(((pts.A.y + pts.D.y) / 2) - ((pts.B.y + pts.C.y) / 2));
+    // Skew is top center X - bottom center X
+    const s = Math.round(((pts.B.x + pts.C.x) / 2) - ((pts.A.x + pts.D.x) / 2));
+    // Ratio is top width / bottom width
+    const wTop = dist(pts.B, pts.C);
+    const r = w !== 0 ? (wTop / w) : 1.0;
+
+    slWidth.value = Math.max(50, Math.min(600, w));
+    slHeight.value = Math.max(50, Math.min(400, h));
+    slSkew.value = Math.max(-300, Math.min(300, s));
+    slRatio.value = Math.max(0.1, Math.min(3.0, r));
+
+    if (valWidth) valWidth.innerText = `${Math.round(slWidth.value)}px`;
+    if (valHeight) valHeight.innerText = `${Math.round(slHeight.value)}px`;
+    if (valSkew) valSkew.innerText = `${Math.round(slSkew.value)}px`;
+    if (valRatio) valRatio.innerText = parseFloat(slRatio.value).toFixed(2);
+  }
+
+  if (slWidth) slWidth.addEventListener('input', updateFromSliders);
+  if (slHeight) slHeight.addEventListener('input', updateFromSliders);
+  if (slSkew) slSkew.addEventListener('input', updateFromSliders);
+  if (slRatio) slRatio.addEventListener('input', updateFromSliders);
+
+  // --- POINT DRAGGING ACTION ---
+  svg.addEventListener('mousedown', (evt) => {
+    const target = evt.target;
+    if (target.classList.contains('draggable-point')) {
+      dragNode = target.id.replace('pt-', '');
+      evt.preventDefault();
+    }
+  });
+
+  window.addEventListener('mousemove', (evt) => {
+    if (!dragNode) return;
+    const pos = getMousePos(evt);
+
+    // boundaries clamp
+    pos.x = Math.max(30, Math.min(770, pos.x));
+    pos.y = Math.max(30, Math.min(470, pos.y));
+
+    pts[dragNode].x = pos.x;
+    pts[dragNode].y = pos.y;
+    
+    const selectPreset = document.getElementById('select-preset');
+    if (selectPreset) selectPreset.value = "";
+    syncSlidersFromCoords();
+    redraw();
+  });
+
+  window.addEventListener('mouseup', () => {
+    dragNode = null;
+  });
+
+  // Touch Support
+  svg.addEventListener('touchstart', (evt) => {
+    if (evt.touches.length === 1) {
+      const touch = evt.touches[0];
+      const target = touch.target;
+      if (target.classList.contains('draggable-point')) {
+        dragNode = target.id.replace('pt-', '');
+        evt.preventDefault();
+      }
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (evt) => {
+    if (!dragNode || evt.touches.length !== 1) return;
+    const touch = evt.touches[0];
+    const pos = getMousePos(touch);
+
+    pos.x = Math.max(30, Math.min(770, pos.x));
+    pos.y = Math.max(30, Math.min(470, pos.y));
+
+    pts[dragNode].x = pos.x;
+    pts[dragNode].y = pos.y;
+
+    const selectPreset = document.getElementById('select-preset');
+    if (selectPreset) selectPreset.value = "";
+    syncSlidersFromCoords();
+    redraw();
+  }, { passive: false });
+
+  window.addEventListener('touchend', () => {
+    dragNode = null;
+  });
+
+  // Presets snapping select change
+  const selectPreset = document.getElementById('select-preset');
+  if (selectPreset) {
+    selectPreset.addEventListener('change', (e) => {
+      const presetName = e.target.value;
+      if (!presetName) return;
+
+      const coords = defaultPresets[presetName];
+      if (coords) {
+        Object.keys(coords).forEach(node => {
+          pts[node].x = coords[node].x;
+          pts[node].y = coords[node].y;
+        });
+        syncSlidersFromCoords();
+        redraw();
+      }
+    });
+  }
+
+  // Visual toggles
+  document.getElementById('chk-side-lengths').addEventListener('change', redraw);
+  document.getElementById('chk-diagonals').addEventListener('change', redraw);
+  document.getElementById('chk-angles').addEventListener('change', redraw);
+
+  // Reset to default
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    const def = defaultPresets.parallelogram;
+    Object.keys(def).forEach(node => {
+      pts[node].x = def[node].x;
+      pts[node].y = def[node].y;
+    });
+    document.getElementById('chk-side-lengths').checked = true;
+    document.getElementById('chk-diagonals').checked = true;
+    document.getElementById('chk-angles').checked = true;
+    if (selectPreset) selectPreset.value = "parallelogram";
+    syncSlidersFromCoords();
+    redraw();
+  });
+
+  // Modal Study Guide
+  const guideModal = document.getElementById('user-guide-modal');
+  document.getElementById('btn-open-guide').addEventListener('click', () => {
+    guideModal.classList.remove('hidden');
+  });
+  document.getElementById('btn-close-guide').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+  document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+
+  // Zoom/Recenter
+  let zoomLevel = 1.0;
+  document.getElementById('btn-zoom-in').addEventListener('click', () => {
+    zoomLevel *= 1.1;
+    svg.style.transform = `scale(${zoomLevel})`;
+  });
+  document.getElementById('btn-zoom-out').addEventListener('click', () => {
+    zoomLevel /= 1.1;
+    svg.style.transform = `scale(${zoomLevel})`;
+  });
+  document.getElementById('btn-recenter').addEventListener('click', () => {
+    zoomLevel = 1.0;
+    svg.style.transform = `none`;
+  });
+
+
+  // Setup layout panel collapse
+  (function() {
+    const btnToggleLeft = document.getElementById('btn-toggle-left');
+    const btnToggleViva = document.getElementById('btn-toggle-viva');
+    const leftPanel = document.getElementById('left-panel');
+    const vivaSection = document.getElementById('viva-section');
+    const mainLayout = document.getElementById('main-layout');
+    const canvasContainer = document.getElementById('canvas-container-wrapper');
+
+    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) return;
+
+    let leftVisible = true;
+    let vivaVisible = true;
+
+    function updateLayout() {
+      if (leftVisible) {
+        leftPanel.classList.remove('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+      } else {
+        leftPanel.classList.add('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-800 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+      }
+
+      if (vivaVisible) {
+        vivaSection.classList.remove('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+      } else {
+        vivaSection.classList.add('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-350 text-slate-800 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+      }
+
+      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-9', 'lg:col-span-12');
+      let span = 12;
+      if (leftVisible && vivaVisible) span = 6;
+      else if (!leftVisible && !vivaVisible) span = 12;
+      else span = 9;
+
+      canvasContainer.classList.add('lg:col-span-' + span);
+    }
+
+    btnToggleLeft.addEventListener('click', () => {
+      leftVisible = !leftVisible;
+      updateLayout();
+    });
+    btnToggleViva.addEventListener('click', () => {
+      vivaVisible = !vivaVisible;
+      updateLayout();
+    });
+  })();
+
+  // Boot setup
+  window.addEventListener('DOMContentLoaded', () => {
+    renderQuestions();
+    syncSlidersFromCoords();
+    redraw();
+    
+    // trigger guide modal
+    document.getElementById('user-guide-modal').classList.remove('hidden');
+  });
+</script>
+</body>
+</html>

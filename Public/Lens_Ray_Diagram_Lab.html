@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Lens Refraction Ray Diagram Builder Virtual Laboratory</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #6366f1;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #4f46e5;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+  
+  <!-- Header -->
+  <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+      <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+        <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Lens Refraction Explorer</h1>
+        <p class="text-[11px] text-indigo-400 font-medium tracking-wider uppercase">Ray Diagram Builder Virtual Laboratory</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
+        <span>📘</span> User Guide
+      </button>
+      <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+        <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_#6366f1]"></span>
+        <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Ray Engine Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls Bar -->
+  <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center space-x-2">
+      <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Lens Category:</span>
+      <select class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm" id="select-lens">
+        <option value="convex">Convex Lens (Converging)</option>
+        <option value="concave">Concave Lens (Diverging)</option>
+      </select>
+      <button class="px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm" id="btn-reset">
+        <span>🔄</span> Reset Setup
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+      </button>
+    </div>
+    <div class="flex items-center space-x-4">
+      <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-grid" type="checkbox"/>
+        <span>Show Coordinate Grid</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Layout Grid -->
+  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    
+    <!-- Left Panel -->
+    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+      <div class="space-y-5">
+        
+        <!-- Objective -->
+        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
+          <span class="text-[10px] font-extrabold text-indigo-600 uppercase tracking-wider block mb-1">Concept Summary</span>
+          <p class="text-xs text-slate-600 leading-relaxed font-semibold">
+            In lenses, light undergoes refraction at both curved boundaries. Convex lenses converge parallel rays to the focal point, while concave lenses diverge rays outward. Use the sliders or drag the handles to view ray-tracing outcomes!
+          </p>
+        </div>
+
+        <!-- Object Distance Slider -->
+        <div class="bg-white p-3.5 rounded-xl border border-indigo-200 shadow-sm">
+          <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 block"></span> <span class="uppercase">Object Distance ($u$)</span></span>
+            <span class="font-mono text-indigo-600 text-sm font-bold" id="lbl-u">30.0 cm</span>
+          </div>
+          <input class="w-full mt-2" id="sl-u" max="60" min="5" step="0.5" type="range" value="30"/>
+          <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider mb-2">
+            <span>5 cm</span>
+            <span>30 cm</span>
+            <span>60 cm</span>
+          </div>
+          <label class="flex items-center space-x-2 text-xs font-bold text-slate-700 mt-2 pt-2 border-t border-slate-100 cursor-pointer select-none">
+            <input class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5 shadow-sm" id="chk-infinity" type="checkbox"/>
+            <span>Object at Infinity (∞)</span>
+          </label>
+        </div>
+
+        <!-- Object Height Slider -->
+        <div class="bg-white p-3.5 rounded-xl border border-emerald-200 shadow-sm">
+          <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 block"></span> <span class="uppercase">Object Height ($h_o$)</span></span>
+            <span class="font-mono text-emerald-600 text-sm font-bold" id="lbl-ho">10.0 cm</span>
+          </div>
+          <input class="w-full mt-2" id="sl-ho" max="25" min="5" step="0.5" type="range" value="10"/>
+        </div>
+
+        <!-- Focal Length Slider -->
+        <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-sm">
+          <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500 block"></span> <span class="uppercase">Focal Length ($f$)</span></span>
+            <span class="font-mono text-rose-600 text-sm font-bold" id="lbl-f">15.0 cm</span>
+          </div>
+          <input class="w-full mt-2" id="sl-f" max="25" min="5" step="0.5" type="range" value="15"/>
+        </div>
+
+        <!-- Telemetry Indicators -->
+        <div class="space-y-3">
+          <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Optics Telemetry</span>
+          <div class="grid grid-cols-2 gap-2 text-center">
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Image Distance ($v$)</div>
+              <div class="text-sm font-bold font-mono text-indigo-600" id="tel-v">30.0 cm</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Magnification ($m$)</div>
+              <div class="text-sm font-bold font-mono text-indigo-600" id="tel-m">-1.00x</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Image Height ($h_i$)</div>
+              <div class="text-sm font-bold font-mono text-indigo-600" id="tel-hi">-10.0 cm</div>
+            </div>
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
+              <div class="text-[8px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Image Size</div>
+              <div class="text-xs font-bold font-mono text-slate-700 leading-tight mt-0.5" id="tel-size">Same Size</div>
+            </div>
+            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm col-span-2 flex justify-between items-center px-4 mt-1">
+              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Image Nature</div>
+              <div class="text-xs font-bold font-mono text-emerald-400 tracking-wider uppercase" id="tel-nature">Real & Inverted</div>
+            </div>
+            <div class="col-span-2 mt-1" id="desc-zone-container">
+              <div class="text-[9px] font-bold text-indigo-700 mt-2 leading-tight bg-indigo-100 p-2.5 rounded border border-indigo-300 text-center uppercase tracking-widest" id="desc-zone">At 2F₁</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Canvas Simulation Stage -->
+    <section id="canvas-container-wrapper" class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+      <canvas class="absolute inset-0 w-full h-full block" id="simCanvas"></canvas>
+      
+      <!-- Logo and HUD overlay -->
+      <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none select-none z-20">
+        <div class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center justify-center self-start">
+          <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        </div>
+        <div class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 self-start">
+          <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" id="status-indicator"></span>
+          <span class="text-[10px] font-bold text-indigo-400 tracking-widest uppercase" id="status-text">Ray Diagram Builder</span>
+        </div>
+      </div>
+
+      <!-- Zoom controller overlay -->
+      <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-xl shadow-sm flex flex-col gap-1 z-20">
+        <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all">+</button>
+        <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all">-</button>
+        <button id="btn-zoom-reset" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all text-[9px]">RST</button>
+      </div>
+
+      <!-- Bottom Canvas Legend -->
+      <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2.5 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-10">
+        <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3.5 h-0.5 bg-blue-400 block"></span> Incident Rays</div>
+        <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3.5 h-0.5 bg-rose-400 block"></span> Refracted Rays</div>
+        <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3.5 h-0.5 bg-rose-400 block border-t border-dashed border-rose-400 bg-transparent"></span> Virtual Extensions</div>
+        <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-2.5 h-2.5 rounded-full bg-slate-100 block border border-slate-500"></span> Draggable Handles</div>
+      </div>
+    </section>
+
+    <!-- Right Viva Voce Quiz Panel -->
+    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+      
+      <!-- Score Indicator -->
+      <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+        <div class="flex justify-between items-center mt-0.5">
+          <h2 class="text-base font-bold">Conceptual Assessments</h2>
+          <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+        </div>
+      </div>
+
+      <!-- Category Selector -->
+      <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase">Category</span>
+          <select id="select-category" class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all cursor-pointer shadow-sm">
+            <option value="all" selected="">All Questions</option>
+            <option value="school">School Board Theory</option>
+            <option value="neet">NEET Prep</option>
+            <option value="jee">JEE Main</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MCQ Deck -->
+      <div class="space-y-3 pb-4">
+        <!-- Q1 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="school">
+          <div class="space-y-2">
+            <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board Theory]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q1-text">
+              A convex lens of focal length $f$ is cut into two halves along its principal axis. What is the focal length of each half?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q1-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+          <div class="space-y-2">
+            <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q2-text">
+              An object is placed at a distance of $1.5f$ from a converging convex lens. What is the position and nature of the image formed?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q2-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+          <div class="space-y-2">
+            <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q3-text">
+              A thin concave lens of focal length $f$ forms a virtual image which is $1/n$ times the size of the object. What is the object distance from the lens?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q3-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+          <div class="space-y-2">
+            <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Prep]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q4-text">
+              A glass convex lens ($n = 1.5$) is immersed in a liquid of refractive index $n_l = 1.65$. How will the lens behave?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q4-feedback"></p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Modal Study Guide -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+        <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> LENS REFRACTION PROTOCOLS
+      </h3>
+      <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+    </div>
+    <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+      <p>Welcome to the <strong>Refraction through Lenses Virtual Laboratory</strong>! Interact with converging and diverging systems to learn how ray diagrams are constructed.</p>
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🎯 Drag and Drop Mechanics</h4>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>The Object (Blue Arrow)</strong>: Drag the white circle at the tip of the blue arrow to dynamically adjust both the Object Distance ($u$) and the Object Height ($h_o$).</li>
+          <li><strong>The Focal Points (F₁ / F₂)</strong>: Click and drag either focal point handle along the principal axis to increase or decrease the lens' focal length ($f$).</li>
+        </ul>
+      </div>
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-rose-600">🔬 Key Sign Conventions</h4>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Lens Formula</strong>: $\frac{1}{v} - \frac{1}{u} = \frac{1}{f}$.</li>
+          <li>The object is always placed on the left side of the lens, so $u$ is mathematically negative.</li>
+          <li>Convex lens has a positive focal length ($f > 0$), whereas concave lens has a negative focal length ($f < 0$).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-3 border-t border-slate-100 flex justify-end">
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- VIVA MCQS DECK STATE & DATA ---
+  const appState = {
+    vivaScore: 0,
+    answers: { q1: null, q2: null, q3: null, q4: null }
+  };
+
+  const vivaData = {
+    q1: {
+      options: [
+        { text: "$f$", isCorrect: true, exp: "Correct! Cutting the lens along the principal axis does not alter the curvature of the spherical surfaces ($R_1$ and $R_2$ stay the same). Hence, by the Lens Maker's Formula, the focal length is unchanged at $f$." },
+        { text: "$2f$", isCorrect: false, exp: "Incorrect. The curvature of the refracting surfaces is not altered by a horizontal cut." },
+        { text: "$f/2$", isCorrect: false, exp: "Incorrect. Cutting vertical halves changes the focal length to $2f$, but a horizontal cut keeps it at $f$." },
+        { text: "$\\infty$", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q2: {
+      options: [
+        { text: "At $2f$, real and inverted.", isCorrect: false, exp: "Incorrect. The object must be exactly at $2f$ to form a same-size image at $2f$." },
+        { text: "Beyond $2f$, real and inverted.", isCorrect: true, exp: "Correct! For an object between $F$ and $2F$ ($f < |u| < 2f$), a convex lens projects a real, inverted, and magnified image beyond $2F$. Using the lens formula: $v = \\frac{u f}{u+f} = \\frac{-1.5f \\cdot f}{-1.5f + f} = +3f$, which is beyond $2f$." },
+        { text: "Between $F$ and $2F$, virtual and erect.", isCorrect: false, exp: "Incorrect. Virtual images are formed only when the object is closer than $F$ ($|u| < f$)." },
+        { text: "At infinity, real and inverted.", isCorrect: false, exp: "Incorrect. This occurs when the object is at focus ($u = -f$)." }
+      ]
+    },
+    q3: {
+      options: [
+        { text: "$(n-1)f$", isCorrect: true, exp: "Correct! For a concave lens, the image is virtual and erect, so magnification is $m = +1/n$. Using the formula $m = v/u$, we get $v = u/n$. Substituting into the lens formula: $\\frac{1}{v} - \\frac{1}{u} = \\frac{1}{f} \\implies \\frac{n}{u} - \\frac{1}{u} = -\\frac{1}{f} \\implies \\frac{n-1}{u} = -\\frac{1}{f} \\implies u = -(n-1)f$. The physical distance is $(n-1)f$." },
+        { text: "$(n+1)f$", isCorrect: false, exp: "Incorrect. Work out the algebra carefully with the sign of focal length for a concave lens ($f < 0$)." },
+        { text: "$\\frac{n-1}{n}f$", isCorrect: false, exp: "Incorrect." },
+        { text: "$\\frac{n+1}{n}f$", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q4: {
+      options: [
+        { text: "It becomes more converging.", isCorrect: false, exp: "Incorrect. Since the liquid is denser than the glass, the refraction behaves opposite to normal." },
+        { text: "It behaves as a diverging lens of longer focal length.", isCorrect: true, exp: "Correct! By the Lens Maker's Formula: $\\frac{1}{f} = \\left(\\frac{n_g}{n_m} - 1\\right)\\left(\\frac{1}{R_1} - \\frac{1}{R_2}\right)$. Because the medium is denser than glass ($n_m = 1.65 > n_g = 1.5$), the factor $\\left(\\frac{n_g}{n_m}-1\\right)$ changes sign (becomes negative). Hence, the convex lens starts diverging, and because the index ratio is close to 1, the focal length becomes very large." },
+        { text: "It behaves as a diverging lens of same focal length.", isCorrect: false, exp: "Incorrect. The magnitude of focal length also changes due to the liquid index." },
+        { text: "It behaves as a plain glass slab.", isCorrect: false, exp: "Incorrect. This would only happen if the liquid index exactly matched the glass index ($n_l = 1.5$)." }
+      ]
+    }
+  };
+
+  const colorsMap = {
+    q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+    q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+    q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+    q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+  };
+
+  function triggerConfetti() {
+    const container = document.body;
+    const colors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#06b6d4', '#f43f5e', '#a855f7', '#14b8a6'];
+    const numParticles = 100;
+    
+    for (let i = 0; i < numParticles; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      
+      const isRibbon = Math.random() > 0.85;
+      const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+      const h = isRibbon ? Math.random() * 20 + 10 : Math.random() * 8 + 6;
+      
+      confetti.style.width = `${w}px`;
+      confetti.style.height = `${h}px`;
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+      
+      const fromLeft = i < numParticles / 2;
+      confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+      confetti.style.top = 'calc(100vh + 10px)';
+      
+      const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+      const velocity = Math.random() * 500 + 400;
+      
+      const dx = Math.cos(angle) * velocity;
+      const dy = -Math.sin(angle) * velocity;
+      
+      const fallDuration = Math.random() * 1.5 + 2.0;
+      const spinRotation = Math.random() * 1080 - 540;
+      
+      confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+      container.appendChild(confetti);
+      
+      confetti.offsetHeight; // force reflow
+      
+      confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+      confetti.style.opacity = '0';
+      
+      setTimeout(() => {
+        confetti.remove();
+      }, fallDuration * 1000);
+    }
+  }
+
+  function renderQuestions() {
+    const scoreLabel = document.getElementById('viva-score');
+    Object.keys(vivaData).forEach(qKey => {
+      const data = vivaData[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      if (!optionsContainer || !feedbackContainer) return;
+      optionsContainer.innerHTML = '';
+      
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `relative text-left p-3 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+        
+        let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+        btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+        
+        btn.addEventListener('click', () => {
+          if (appState.answers[qKey] !== null) return;
+          
+          appState.answers[qKey] = idx;
+          if (opt.isCorrect) {
+            appState.vivaScore++;
+            triggerConfetti();
+          }
+          if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+          
+          const buttons = optionsContainer.querySelectorAll('button');
+          buttons.forEach((b, i) => {
+            b.disabled = true;
+            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+            b.classList.add('cursor-not-allowed', 'shadow-none');
+            
+            if (appState.answers[qKey] === i) {
+              if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+              else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            } else if (data.options[i].isCorrect) {
+              b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+            } else {
+              b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+            }
+          });
+          
+          feedbackContainer.innerHTML = opt.exp;
+          feedbackContainer.classList.remove('hidden');
+          if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+        });
+        optionsContainer.appendChild(btn);
+      });
+    });
+    if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+  }
+
+  // --- PHYSICS ENGINE ---
+  const canvas = document.getElementById('simCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // UI elements
+  const slU = document.getElementById('sl-u'); const lblU = document.getElementById('lbl-u');
+  const slHo = document.getElementById('sl-ho'); const lblHo = document.getElementById('lbl-ho');
+  const slF = document.getElementById('sl-f'); const lblF = document.getElementById('lbl-f');
+  const selectLens = document.getElementById('select-lens');
+  const btnReset = document.getElementById('btn-reset');
+  const chkGrid = document.getElementById('chk-grid');
+  const descZone = document.getElementById('desc-zone');
+  const chkInfinity = document.getElementById('chk-infinity');
+
+  const telV = document.getElementById('tel-v');
+  const telM = document.getElementById('tel-m');
+  const telHi = document.getElementById('tel-hi');
+  const telNature = document.getElementById('tel-nature');
+  const telSize = document.getElementById('tel-size');
+
+  // Parameters
+  let lensType = 'convex'; // convex (converging) or concave (diverging)
+  let f_cm = 15; // focal length (absolute value)
+  let u_cm = -30; // object distance (always negative)
+  let ho_cm = 10; // object height
+
+  // Output parameters
+  let v_cm = 0;
+  let m = 0;
+  let hi_cm = 0;
+
+  // Zooming & Panning
+  const SCALE = 8; // 1 cm = 8 pixels
+  let zoomLevel = 1.0;
+  let panX = 0;
+
+  function calculateOptics() {
+    let signedF = (lensType === 'convex') ? f_cm : -f_cm;
+    
+    slU.disabled = chkInfinity.checked;
+    
+    if (chkInfinity.checked) {
+      u_cm = -Infinity;
+      v_cm = signedF;
+      m = 0;
+      hi_cm = 0;
+    } else {
+      u_cm = -parseFloat(slU.value);
+      if (Math.abs(u_cm + signedF) < 0.05) {
+        v_cm = Infinity;
+        m = Infinity;
+        hi_cm = Infinity;
+      } else {
+        v_cm = (u_cm * signedF) / (u_cm + signedF);
+        m = v_cm / u_cm;
+        hi_cm = m * ho_cm;
+      }
+    }
+
+    // Update labels
+    lblHo.textContent = `${ho_cm.toFixed(1)} cm`;
+    lblF.textContent = `${f_cm.toFixed(1)} cm`;
+
+    if (chkInfinity.checked) {
+      lblU.textContent = "Infinity (∞)";
+      telV.textContent = `${(v_cm > 0 ? '+' : '')}${v_cm.toFixed(1)} cm`;
+      telM.textContent = "0.00x (Point Image)";
+      telHi.textContent = "0.0 cm";
+      telSize.textContent = "Highly Diminished (Point)";
+      if (lensType === 'convex') {
+        telNature.textContent = "Real & Inverted";
+        telNature.className = "text-xs font-bold font-mono text-emerald-600 tracking-wider uppercase";
+        descZone.textContent = "Object at Infinity (Image at Focus F₂)";
+        descZone.className = "text-[9px] font-bold text-indigo-700 mt-2 leading-tight bg-indigo-50 p-2.5 rounded border border-indigo-200 text-center uppercase tracking-widest";
+      } else {
+        telNature.textContent = "Virtual & Erect";
+        telNature.className = "text-xs font-bold font-mono text-amber-600 tracking-wider uppercase";
+        descZone.textContent = "Object at Infinity (Virtual Image at Focus F₁)";
+        descZone.className = "text-[9px] font-bold text-slate-500 mt-2 leading-tight bg-slate-100 p-2.5 rounded border border-slate-300 text-center uppercase tracking-widest";
+      }
+      return;
+    }
+
+    lblU.textContent = `${Math.abs(u_cm).toFixed(1)} cm`;
+
+    if (v_cm === Infinity) {
+      telV.textContent = "Infinity";
+      telM.textContent = "Infinity";
+      telHi.textContent = "Infinity";
+      telNature.textContent = "No Image (At Infinity)";
+      telNature.className = "text-[11px] font-bold font-mono text-slate-500 tracking-wider uppercase";
+      telSize.textContent = "Infinite";
+      descZone.textContent = "Object exactly at focal point F₁";
+      descZone.className = "text-[9px] font-bold text-rose-700 mt-2 leading-tight bg-rose-100 p-2.5 rounded border border-rose-300 text-center uppercase tracking-widest";
+      return;
+    }
+
+    telV.textContent = `${(v_cm > 0 ? '+' : '')}${v_cm.toFixed(1)} cm`;
+    telM.textContent = `${(m > 0 ? '+' : '')}${m.toFixed(2)}x`;
+    telHi.textContent = `${(hi_cm > 0 ? '+' : '')}${hi_cm.toFixed(1)} cm`;
+
+    // Nature & Size
+    if (v_cm > 0) {
+      telNature.textContent = "Real & Inverted";
+      telNature.className = "text-xs font-bold font-mono text-emerald-600 tracking-wider uppercase";
+    } else {
+      telNature.textContent = "Virtual & Erect";
+      telNature.className = "text-xs font-bold font-mono text-amber-600 tracking-wider uppercase";
+    }
+
+    let absM = Math.abs(m);
+    if (absM > 1.05) telSize.textContent = "Magnified";
+    else if (absM < 0.95) telSize.textContent = "Diminished";
+    else telSize.textContent = "Same Size";
+
+    // Zone description
+    if (lensType === 'convex') {
+      const distU = Math.abs(u_cm);
+      if (distU > 2 * f_cm) {
+        descZone.textContent = "Object Beyond 2F₁ (Image between F₂ and 2F₂)";
+        descZone.className = "text-[9px] font-bold text-indigo-700 mt-2 leading-tight bg-indigo-50 p-2.5 rounded border border-indigo-200 text-center uppercase tracking-widest";
+      } else if (Math.abs(distU - 2 * f_cm) < 0.5) {
+        descZone.textContent = "Object At 2F₁ (Image at 2F₂)";
+        descZone.className = "text-[9px] font-bold text-indigo-700 mt-2 leading-tight bg-indigo-100 p-2.5 rounded border border-indigo-300 text-center uppercase tracking-widest";
+      } else if (distU < 2 * f_cm && distU > f_cm) {
+        descZone.textContent = "Object Between F₁ and 2F₁ (Image beyond 2F₂)";
+        descZone.className = "text-[9px] font-bold text-indigo-700 mt-2 leading-tight bg-indigo-50 p-2.5 rounded border border-indigo-200 text-center uppercase tracking-widest";
+      } else if (distU < f_cm) {
+        descZone.textContent = "Object Inside Focus F₁ (Virtual, Magnified Image)";
+        descZone.className = "text-[9px] font-bold text-amber-700 mt-2 leading-tight bg-amber-100 p-2.5 rounded border border-amber-300 text-center uppercase tracking-widest";
+      }
+    } else {
+      descZone.textContent = "Always forms Virtual, Diminished Image inside Focus F₁";
+      descZone.className = "text-[9px] font-bold text-slate-500 mt-2 leading-tight bg-slate-100 p-2.5 rounded border border-slate-300 text-center uppercase tracking-widest";
+    }
+  }
+
+  slU.addEventListener('input', (e) => {
+    u_cm = -parseFloat(e.target.value);
+    calculateOptics();
+  });
+
+  chkInfinity.addEventListener('change', () => {
+    calculateOptics();
+  });
+
+  slHo.addEventListener('input', (e) => {
+    ho_cm = parseFloat(e.target.value);
+    calculateOptics();
+  });
+
+  slF.addEventListener('input', (e) => {
+    f_cm = parseFloat(e.target.value);
+    calculateOptics();
+  });
+
+  selectLens.addEventListener('change', (e) => {
+    lensType = e.target.value;
+    calculateOptics();
+  });
+
+  btnReset.addEventListener('click', () => {
+    selectLens.value = 'convex';
+    lensType = 'convex';
+    slU.value = 30; u_cm = -30;
+    slHo.value = 10; ho_cm = 10;
+    slF.value = 15; f_cm = 15;
+    chkInfinity.checked = false;
+    slU.disabled = false;
+    zoomLevel = 1.0;
+    panX = 0;
+    calculateOptics();
+  });
+
+  // --- CANVAS RENDERING ---
+  function drawArrow(ctx, x, baseY, tipY, color, label) {
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+    ctx.moveTo(x, baseY);
+    ctx.lineTo(x, tipY);
+    ctx.stroke();
+
+    // Arrowhead
+    let isUp = tipY < baseY;
+    ctx.beginPath();
+    ctx.moveTo(x, tipY);
+    ctx.lineTo(x - 5, tipY + (isUp ? 8 : -8));
+    ctx.lineTo(x + 5, tipY + (isUp ? 8 : -8));
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, tipY + (isUp ? -10 : 20));
+  }
+
+  function drawNode(ctx, x, y, color) {
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  function renderCanvas() {
+    const container = canvas.parentElement;
+    const dpr = window.devicePixelRatio || 1;
+    let cw = Math.max(container.clientWidth, 10);
+    let ch = Math.max(container.clientHeight, 10);
+
+    if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
+      ctx.resetTransform();
+      canvas.width = cw * dpr;
+      canvas.height = ch * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    ctx.clearRect(0, 0, cw, ch);
+    if (cw <= 10 || ch <= 10) { requestAnimationFrame(renderCanvas); return; }
+
+    const Px = cw * 0.5 + panX; // Lens optical center X
+    const Py = ch / 2;          // Principal axis Y
+
+    // 1. Draw Grid
+    if (chkGrid.checked) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      const gridSpacing = SCALE * 2 * zoomLevel;
+      const startX = (panX % gridSpacing) - gridSpacing;
+      for (let x = startX; x < cw + gridSpacing; x += gridSpacing) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, ch); ctx.stroke();
+      }
+      for (let y = 0; y < ch; y += gridSpacing) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cw, y); ctx.stroke();
+      }
+    }
+
+    // 2. Draw Principal Axis
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, Py); ctx.lineTo(cw, Py); ctx.stroke();
+
+    // 3. Draw Lens Profiles
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    if (lensType === 'convex') {
+      // Bi-convex Profile
+      ctx.beginPath();
+      ctx.moveTo(Px, Py - 130 * zoomLevel);
+      ctx.quadraticCurveTo(Px + 22 * zoomLevel, Py, Px, Py + 130 * zoomLevel);
+      ctx.quadraticCurveTo(Px - 22 * zoomLevel, Py, Px, Py - 130 * zoomLevel);
+      ctx.fill(); ctx.stroke();
+    } else {
+      // Bi-concave Profile
+      ctx.beginPath();
+      ctx.moveTo(Px - 16 * zoomLevel, Py - 130 * zoomLevel);
+      ctx.lineTo(Px + 16 * zoomLevel, Py - 130 * zoomLevel);
+      ctx.quadraticCurveTo(Px + 3 * zoomLevel, Py, Px + 16 * zoomLevel, Py + 130 * zoomLevel);
+      ctx.lineTo(Px - 16 * zoomLevel, Py + 130 * zoomLevel);
+      ctx.quadraticCurveTo(Px - 3 * zoomLevel, Py, Px - 16 * zoomLevel, Py - 130 * zoomLevel);
+      ctx.fill(); ctx.stroke();
+    }
+
+    // Draw Lens Aperture center axis
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath(); ctx.moveTo(Px, Py - 140 * zoomLevel); ctx.lineTo(Px, Py + 140 * zoomLevel); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label Optical Center O
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = 'bold 11px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText("O", Px, Py + 15);
+
+    // 4. Draw Focal Marks F1, 2F1 (left) and F2, 2F2 (right)
+    const focalOffset = f_cm * SCALE * zoomLevel;
+    const F1x = Px - focalOffset;
+    const F2x = Px + focalOffset;
+    const _2F1x = Px - 2 * focalOffset;
+    const _2F2x = Px + 2 * focalOffset;
+
+    const drawMark = (x, label, isDraggable = false) => {
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath(); ctx.arc(x, Py, 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(label, x, Py + 18);
+      if (isDraggable) {
+        drawNode(ctx, x, Py, '#ef4444');
+      }
+    };
+
+    drawMark(F1x, 'F₁', true);
+    drawMark(F2x, 'F₂', true);
+    drawMark(_2F1x, '2F₁');
+    drawMark(_2F2x, '2F₂');
+
+    // 5. Draw Object
+    let Ox = 0;
+    let Oy_tip = 0;
+    if (u_cm !== -Infinity) {
+      Ox = Px + u_cm * SCALE * zoomLevel;
+      Oy_tip = Py - ho_cm * SCALE * zoomLevel;
+      drawArrow(ctx, Ox, Py, Oy_tip, '#3b82f6', 'Object');
+      drawNode(ctx, Ox, Oy_tip, '#3b82f6'); // Draggable node at object tip
+    }
+
+    // 6. Draw Refracted Rays
+    const drawRay = (x1, y1, x2, y2, color, isDashed = false) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.8;
+      if (isDashed) ctx.setLineDash([5, 4]);
+      else ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.setLineDash([]);
+    };
+
+    if (v_cm !== Infinity) {
+      if (u_cm === -Infinity) {
+        const Ix = Px + v_cm * SCALE * zoomLevel;
+
+        // Draw 3 parallel rays from infinity
+        const heights = [ho_cm, ho_cm * 0.5];
+        heights.forEach(h => {
+          const y_val = Py - h * SCALE * zoomLevel;
+          // Incident ray from x=0 to Px
+          drawRay(0, y_val, Px, y_val, 'rgba(59, 130, 246, 0.75)');
+          // Draw incident arrowheads
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+          ctx.beginPath();
+          ctx.moveTo(Px - 60, y_val - 4); ctx.lineTo(Px - 50, y_val); ctx.lineTo(Px - 60, y_val + 4);
+          ctx.fill();
+
+          // Refracted ray
+          if (lensType === 'convex') {
+            // Converging to F2 (Px + focalOffset, Py)
+            const slope = (Py - y_val) / focalOffset;
+            drawRay(Px, y_val, Px + focalOffset + 300, Py + slope * 300, '#fb7185');
+            // Draw arrowhead
+            ctx.fillStyle = '#fb7185';
+            ctx.beginPath();
+            const ax = Px + focalOffset + 50;
+            const ay = Py + slope * 50;
+            ctx.arc(ax, ay, 2, 0, Math.PI * 2); ctx.fill();
+          } else {
+            // Diverging from F1 (Px - focalOffset, Py)
+            // Direction: from F1 to (Px, y_val)
+            const dx = Px - (Px - focalOffset);
+            const dy = y_val - Py;
+            const dist = Math.hypot(dx, dy);
+            const vx = dx / dist;
+            const vy = dy / dist;
+            drawRay(Px, y_val, Px + vx * 600, y_val + vy * 600, '#fb7185');
+            // Virtual extension to F1
+            drawRay(Px, y_val, Px - focalOffset, Py, '#f43f5e', true);
+          }
+        });
+
+        // Axis ray
+        drawRay(0, Py, cw, Py, 'rgba(59, 130, 246, 0.75)');
+
+        // Draw Point Image
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(Ix, Py, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText("Point Image", Ix, Py - 12);
+      } else {
+        const Ix = Px + v_cm * SCALE * zoomLevel;
+        const Iy_tip = Py - hi_cm * SCALE * zoomLevel;
+
+        // --- Ray 1: Parallel to Principal Axis ---
+        // Incident: from Object Tip to Lens Center
+        drawRay(Ox, Oy_tip, Px, Oy_tip, 'rgba(59, 130, 246, 0.75)');
+        // Incident Arrowhead
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+        ctx.beginPath();
+        ctx.moveTo(Px - 20, Oy_tip - 4); ctx.lineTo(Px - 10, Oy_tip); ctx.lineTo(Px - 20, Oy_tip + 4);
+        ctx.fill();
+
+        // Refracted: from Lens Center (Px, Oy_tip)
+        if (lensType === 'convex') {
+          if (v_cm > 0) {
+            // Real image: Refracted ray passes through Focus F2 (Px + focalOffset) and goes to Image Tip
+            drawRay(Px, Oy_tip, Ix + 300, Iy_tip + ((Iy_tip - Oy_tip) / (Ix - Px)) * 300, '#fb7185');
+          } else {
+            // Virtual image: Diverging refracted ray. Virtual extension backward to virtual image tip (Ix, Iy_tip)
+            drawRay(Px, Oy_tip, Px + 600, Oy_tip + ((Oy_tip - Iy_tip) / (Px - Ix)) * 600, '#fb7185');
+            drawRay(Px, Oy_tip, Ix, Iy_tip, '#f43f5e', true);
+          }
+        } else {
+          // Concave lens: Diverging ray appearing to come from Left Focus F1 (F1x)
+          // Direction vector: from F1x to (Px, Oy_tip)
+          const dx = Px - F1x;
+          const dy = Oy_tip - Py;
+          const dist = Math.hypot(dx, dy);
+          const vx = dx / dist;
+          const vy = dy / dist;
+
+          // Draw real refracted ray extending to right
+          drawRay(Px, Oy_tip, Px + vx * 600, Oy_tip + vy * 600, '#fb7185');
+          // Draw dashed virtual ray back to Left Focus F1
+          drawRay(Px, Oy_tip, F1x, Py, '#f43f5e', true);
+        }
+
+        // --- Ray 2: Optical Center Ray ---
+        if (v_cm > 0) {
+          // Real Image: passes straight through (Px, Py) to image tip
+          drawRay(Ox, Oy_tip, Ix + 300, Py + ((Py - Oy_tip) / (Px - Ox)) * (Ix + 300 - Px), '#fb7185');
+        } else {
+          // Virtual Image: goes straight to right, virtual extension dashed to left
+          drawRay(Ox, Oy_tip, Px + 600, Py + ((Py - Oy_tip) / (Px - Ox)) * 600, '#fb7185');
+          drawRay(Ox, Oy_tip, Ix, Iy_tip, '#f43f5e', true);
+        }
+
+        // --- Ray 3: Focus Ray ---
+        if (lensType === 'convex') {
+          // Focus Ray for convex: passes through Left Focus F1 (F1x, Py) to hit Lens
+          // Line equation: slope = (Py - Oy_tip) / (F1x - Ox)
+          const slope = (Py - Oy_tip) / (F1x - Ox);
+          const y_hit = Oy_tip + slope * (Px - Ox);
+
+          if (Math.abs(y_hit - Py) < 140 * zoomLevel) {
+            // Incident ray
+            drawRay(Ox, Oy_tip, Px, y_hit, 'rgba(59, 130, 246, 0.75)');
+            // Refracted ray: parallel to principal axis
+            if (v_cm > 0) {
+              drawRay(Px, y_hit, Ix + 300, y_hit, '#fb7185');
+            } else {
+              drawRay(Px, y_hit, Px + 600, y_hit, '#fb7185');
+              // Virtual extension backwards
+              drawRay(Px, y_hit, Ix, y_hit, '#f43f5e', true);
+            }
+          }
+        } else {
+          // Focus Ray for concave: points towards Right Focus F2 (F2x, Py)
+          // Line equation: slope = (Py - Oy_tip) / (F2x - Ox)
+          const slope = (Py - Oy_tip) / (F2x - Ox);
+          const y_hit = Oy_tip + slope * (Px - Ox);
+
+          if (Math.abs(y_hit - Py) < 140 * zoomLevel) {
+            // Incident ray
+            drawRay(Ox, Oy_tip, Px, y_hit, 'rgba(59, 130, 246, 0.75)');
+            // Refracted ray: parallel to principal axis
+            drawRay(Px, y_hit, Px + 600, y_hit, '#fb7185');
+            // Virtual extension backwards
+            drawRay(Px, y_hit, Ix, y_hit, '#f43f5e', true);
+          }
+        }
+
+        // 7. Draw Image
+        drawArrow(ctx, Ix, Py, Iy_tip, '#f43f5e', 'Image');
+      }
+    }
+
+    requestAnimationFrame(renderCanvas);
+  }
+
+  // --- MOUSE & TOUCH EVENT HANDLERS ---
+  window.addEventListener('load', () => {
+    try { renderQuestions(); } catch (e) { console.error(e); }
+
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Zoom Controls
+    document.getElementById('btn-zoom-in').addEventListener('click', () => { zoomLevel = Math.min(2.0, zoomLevel + 0.15); });
+    document.getElementById('btn-zoom-out').addEventListener('click', () => { zoomLevel = Math.max(0.5, zoomLevel - 0.15); });
+    document.getElementById('btn-zoom-reset').addEventListener('click', () => { zoomLevel = 1.0; panX = 0; });
+
+    let isDraggingObject = false;
+    let isDraggingFocus = false;
+    let isPanning = false;
+    let startPanX = 0;
+
+    function getMouseCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const { x, y } = getMouseCoords(e);
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      const Px = cw * 0.5 + panX;
+      const Py = ch / 2;
+      const Ox = Px + u_cm * SCALE * zoomLevel;
+      const Oy_tip = Py - ho_cm * SCALE * zoomLevel;
+
+      const focalOffset = f_cm * SCALE * zoomLevel;
+      const F1x = Px - focalOffset;
+      const F2x = Px + focalOffset;
+
+      // Check object tip click
+      if (Math.hypot(x - Ox, y - Oy_tip) < 15) {
+        isDraggingObject = true;
+        canvas.style.cursor = 'grabbing';
+      }
+      // Check Focus F1 / F2 handles click
+      else if (Math.hypot(x - F1x, y - Py) < 15 || Math.hypot(x - F2x, y - Py) < 15) {
+        isDraggingFocus = true;
+        canvas.style.cursor = 'grabbing';
+      }
+      // Pan background
+      else {
+        isPanning = true;
+        startPanX = x;
+        canvas.style.cursor = 'grabbing';
+      }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      const { x, y } = getMouseCoords(e);
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      const Px = cw * 0.5 + panX;
+      const Py = ch / 2;
+
+      const focalOffset = f_cm * SCALE * zoomLevel;
+      const F1x = Px - focalOffset;
+      const F2x = Px + focalOffset;
+      const Ox = Px + u_cm * SCALE * zoomLevel;
+      const Oy_tip = Py - ho_cm * SCALE * zoomLevel;
+
+      if (isDraggingObject) {
+        // Distance u
+        let newU = -(x - Px) / (SCALE * zoomLevel);
+        newU = Math.max(5, Math.min(60, newU));
+        u_cm = -newU;
+        slU.value = newU;
+
+        // Height ho
+        let newHo = (Py - y) / (SCALE * zoomLevel);
+        newHo = Math.max(5, Math.min(25, newHo));
+        ho_cm = newHo;
+        slHo.value = newHo;
+
+        calculateOptics();
+      } else if (isDraggingFocus) {
+        // Dragging focus
+        let newF = Math.abs(x - Px) / (SCALE * zoomLevel);
+        newF = Math.max(5, Math.min(25, newF));
+        f_cm = newF;
+        slF.value = newF;
+
+        calculateOptics();
+      } else if (isPanning) {
+        const dx = x - startPanX;
+        panX += dx;
+        startPanX = x;
+      } else {
+        // Hover pointer checks
+        if (Math.hypot(x - Ox, y - Oy_tip) < 12) {
+          canvas.style.cursor = 'pointer';
+        } else if (Math.hypot(x - F1x, y - Py) < 12 || Math.hypot(x - F2x, y - Py) < 12) {
+          canvas.style.cursor = 'ew-resize';
+        } else {
+          canvas.style.cursor = 'default';
+        }
+      }
+    });
+
+    const stopDragging = () => {
+      isDraggingObject = false;
+      isDraggingFocus = false;
+      isPanning = false;
+      canvas.style.cursor = 'default';
+    };
+
+    canvas.addEventListener('mouseup', stopDragging);
+    canvas.addEventListener('mouseleave', stopDragging);
+
+    // Touch Support
+    canvas.addEventListener('touchstart', (e) => {
+      const { x, y } = getMouseCoords(e);
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      const Px = cw * 0.5 + panX;
+      const Py = ch / 2;
+      const Ox = Px + u_cm * SCALE * zoomLevel;
+      const Oy_tip = Py - ho_cm * SCALE * zoomLevel;
+
+      const focalOffset = f_cm * SCALE * zoomLevel;
+      const F1x = Px - focalOffset;
+      const F2x = Px + focalOffset;
+
+      if (Math.hypot(x - Ox, y - Oy_tip) < 20) {
+        isDraggingObject = true;
+        e.preventDefault();
+      } else if (Math.hypot(x - F1x, y - Py) < 20 || Math.hypot(x - F2x, y - Py) < 20) {
+        isDraggingFocus = true;
+        e.preventDefault();
+      } else {
+        isPanning = true;
+        startPanX = x;
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      const { x, y } = getMouseCoords(e);
+      const cw = canvas.clientWidth;
+      const ch = canvas.clientHeight;
+      const Px = cw * 0.5 + panX;
+      const Py = ch / 2;
+
+      if (isDraggingObject) {
+        let newU = -(x - Px) / (SCALE * zoomLevel);
+        newU = Math.max(5, Math.min(60, newU));
+        u_cm = -newU;
+        slU.value = newU;
+
+        let newHo = (Py - y) / (SCALE * zoomLevel);
+        newHo = Math.max(5, Math.min(25, newHo));
+        ho_cm = newHo;
+        slHo.value = newHo;
+
+        calculateOptics();
+        e.preventDefault();
+      } else if (isDraggingFocus) {
+        let newF = Math.abs(x - Px) / (SCALE * zoomLevel);
+        newF = Math.max(5, Math.min(25, newF));
+        f_cm = newF;
+        slF.value = newF;
+
+        calculateOptics();
+        e.preventDefault();
+      } else if (isPanning) {
+        const dx = x - startPanX;
+        panX += dx;
+        startPanX = x;
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', stopDragging);
+    canvas.addEventListener('touchcancel', stopDragging);
+
+    // MCQs category filtering
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+        const cat = selectCategory.value;
+        const questions = document.querySelectorAll('[data-category]');
+        questions.forEach(q => {
+          const qCat = q.getAttribute('data-category');
+          if (cat === 'all' || qCat === cat) {
+            q.classList.remove('hidden');
+          } else {
+            q.classList.add('hidden');
+          }
+        });
+      });
+    }
+
+    calculateOptics();
+    userGuideModal.classList.remove('hidden');
+    requestAnimationFrame(renderCanvas);
+  });
+</script>
+
+<!-- Layout Collapsible Panels Handler -->
+<script>
+  (function() {
+    const btnToggleLeft = document.getElementById('btn-toggle-left');
+    const btnToggleViva = document.getElementById('btn-toggle-viva');
+    const leftPanel = document.getElementById('left-panel');
+    const vivaSection = document.getElementById('viva-section');
+    const mainLayout = document.getElementById('main-layout');
+    const canvasContainer = document.getElementById('canvas-container-wrapper') || document.getElementById('canvas-container') || document.getElementById('three-container');
+
+    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) {
+      console.warn('Collapsible panels elements missing:', {btnToggleLeft, btnToggleViva, leftPanel, vivaSection, mainLayout, canvasContainer});
+      return;
+    }
+
+    let leftPanelVisible = true;
+    let vivaVisible = true;
+
+    const leftClasses = 'lg:col-span-3';
+    const canvasClasses = 'lg:col-span-6';
+    const vivaClasses = 'lg:col-span-3';
+
+    function updateLayout() {
+      if (leftPanelVisible) {
+        leftPanel.classList.remove('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+      } else {
+        leftPanel.classList.add('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+      }
+
+      if (vivaVisible) {
+        vivaSection.classList.remove('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+      } else {
+        vivaSection.classList.add('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+      }
+
+      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+      
+      let newSpan = 12;
+      if (leftPanelVisible && vivaVisible) {
+        newSpan = 6;
+      } else if (!leftPanelVisible && !vivaVisible) {
+        newSpan = 12;
+      } else if (leftPanelVisible && !vivaVisible) {
+        newSpan = 9;
+      } else if (!leftPanelVisible && vivaVisible) {
+        newSpan = 9;
+      }
+      canvasContainer.classList.add('lg:col-span-' + newSpan, 'md:col-span-' + newSpan);
+
+      if (leftPanelVisible && vivaVisible) {
+        mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      } else if (!leftPanelVisible && !vivaVisible) {
+        mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      } else {
+        if (!leftPanelVisible) {
+          mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+        }
+      }
+
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    btnToggleLeft.addEventListener('click', () => {
+      leftPanelVisible = !leftPanelVisible;
+      updateLayout();
+    });
+
+    btnToggleViva.addEventListener('click', () => {
+      vivaVisible = !vivaVisible;
+      updateLayout();
+    });
+  })();
+</script>
+</body>
+</html>

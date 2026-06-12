@@ -124,11 +124,11 @@
 </label>
 <label class="flex items-center justify-between cursor-pointer">
 <span class="text-xs font-bold text-slate-700">Show Hardware (Magnets/Wire)</span>
-<input checked="" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300" id="tgl-hardware" type="checkbox"/>
+<input class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300" id="tgl-hardware" type="checkbox"/>
 </label>
 <label class="flex items-center justify-between cursor-pointer">
 <span class="text-xs font-bold text-slate-700">Show Magnetic Field Lines</span>
-<input checked="" class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300" id="tgl-lines" type="checkbox"/>
+<input class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-300" id="tgl-lines" type="checkbox"/>
 </label>
 </div><div class="space-y-3">
 <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Vector Telemetry Dashboard</span>
@@ -137,13 +137,13 @@
 <div class="text-[8px] text-blue-700 font-bold uppercase tracking-wider mb-0.5">Magnetic Field ($B$)</div>
 <div class="text-[13px] font-bold font-mono text-blue-600 uppercase" id="tel-b">Left to Right</div>
 </div>
-<div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center transition-colors">
-<div class="text-[8px] text-emerald-700 font-bold uppercase tracking-wider mb-0.5">Elec Current ($I$)</div>
-<div class="text-[13px] font-bold font-mono text-emerald-600 uppercase" id="tel-i">Towards Viewer</div>
+<div class="bg-rose-50 p-3 rounded-xl border border-rose-200 shadow-sm flex flex-col justify-center items-center transition-colors">
+<div class="text-[8px] text-rose-700 font-bold uppercase tracking-wider mb-0.5">Elec Current ($I$)</div>
+<div class="text-[13px] font-bold font-mono text-rose-600 uppercase" id="tel-i">Towards Viewer</div>
 </div>
 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
 <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Resulting Force/Thrust ($F$)</div>
-<div class="text-2xl font-bold font-mono tracking-widest text-rose-500 uppercase" id="tel-f">Upwards</div>
+<div class="text-2xl font-bold font-mono tracking-widest text-emerald-500 uppercase" id="tel-f">Upwards</div>
 </div>
 </div>
 </div><div class="bg-indigo-50 text-indigo-900 rounded-xl p-4 shadow-sm border border-indigo-200 space-y-2">
@@ -166,9 +166,9 @@
 </div>
 </div>
 <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
-<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-rose-500 rounded-sm"></span> Thumb = Force ($F$)</div>
+<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-emerald-500 rounded-sm"></span> Thumb = Force ($F$)</div>
 <div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-blue-500 rounded-sm"></span> Index = Field ($B$)</div>
-<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-emerald-500 rounded-sm"></span> Middle = Current ($I$)</div>
+<div class="flex items-center gap-1.5 text-[10px] font-bold text-slate-300"><span class="w-3 h-3 bg-rose-500 rounded-sm"></span> Middle = Current ($I$)</div>
 </div>
 </section>
 <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
@@ -377,11 +377,33 @@
         controls.target.set(0, 0, 0);
 
         // --- Materials ---
-        const matForce = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.3, metalness: 0.1 }); // Rose
-        const matMag = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.3, metalness: 0.1 }); // Blue
-        const matCur = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.3, metalness: 0.1 }); // Emerald
+        const matForce = new THREE.MeshStandardMaterial({ 
+            color: 0x10b981, 
+            roughness: 0.2, 
+            metalness: 0.6,
+            emissive: 0x10b981,
+            emissiveIntensity: 0.3
+        }); // Green
+        const matMag = new THREE.MeshStandardMaterial({ 
+            color: 0x3b82f6, 
+            roughness: 0.2, 
+            metalness: 0.6,
+            emissive: 0x3b82f6,
+            emissiveIntensity: 0.3
+        }); // Blue
+        const matCur = new THREE.MeshStandardMaterial({ 
+            color: 0xf43f5e, 
+            roughness: 0.2, 
+            metalness: 0.6,
+            emissive: 0xf43f5e,
+            emissiveIntensity: 0.3
+        }); // Rose
         
-        const matSkin = new THREE.MeshStandardMaterial({ color: 0xfcd34d, roughness: 0.5 }); // Golden/Skin tone
+        const matSkin = new THREE.MeshStandardMaterial({ 
+            vertexColors: true,
+            roughness: 0.6,
+            metalness: 0.0
+        }); // Realistic skin material
         const matWire = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.4, metalness: 0.8 }); // Copper
         const matNorth = new THREE.MeshStandardMaterial({ color: 0xef4444 }); // Red Pole
         const matSouth = new THREE.MeshStandardMaterial({ color: 0x0ea5e9 }); // Blue Pole
@@ -398,42 +420,307 @@
         masterGroup.add(handGroup);
         masterGroup.add(fieldLinesGroup);
 
-        // --- Build Robotic/Stylized Hand ---
-        // Base/Palm
-        const palm = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 1), matSkin);
-        palm.position.set(0, -1, 0);
-        handGroup.add(palm);
+        // --- Vertex Coloring Gradients Helpers ---
+        function getTintedGeometry(geom, p1, p2, i, totalPoints, tintColor) {
+            const positionAttribute = geom.getAttribute('position');
+            const colors = [];
+            const skinCol = new THREE.Color(0xffcaa8);
+            const targetCol = new THREE.Color(tintColor || 0xffcaa8);
+            
+            const t_base = i / (totalPoints - 1);
+            const t_tip = (i + 1) / (totalPoints - 1);
+            
+            let minY = Infinity;
+            let maxY = -Infinity;
+            for (let k = 0; k < positionAttribute.count; k++) {
+                const y = positionAttribute.getY(k);
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+            const range = (maxY - minY) || 1.0;
+            
+            for (let k = 0; k < positionAttribute.count; k++) {
+                const y = positionAttribute.getY(k);
+                const localT = (y - minY) / range; // 0 to 1
+                const t = tintColor ? (t_base + (t_tip - t_base) * localT) : 0.0;
+                const c = skinCol.clone().lerp(targetCol, t);
+                colors.push(c.r, c.g, c.b);
+            }
+            geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            return geom;
+        }
 
-        // Function to create a finger/arrow
-        function createFinger(mat, length, rotX, rotY, rotZ, pos) {
+        function getTintedSphereGeometry(geom, i, totalPoints, tintColor) {
+            const positionAttribute = geom.getAttribute('position');
+            const colors = [];
+            const skinCol = new THREE.Color(0xffcaa8);
+            const targetCol = new THREE.Color(tintColor || 0xffcaa8);
+            const t = tintColor ? (i / (totalPoints - 1)) : 0.0;
+            const c = skinCol.clone().lerp(targetCol, t);
+            
+            for (let k = 0; k < positionAttribute.count; k++) {
+                colors.push(c.r, c.g, c.b);
+            }
+            geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            return geom;
+        }
+
+        // --- Helper: Create Cylinder Segment Between Two Points ---
+        function createSegmentBetweenPoints(p1, p2, radius, material, i, totalPoints, tintColor) {
+            const direction = new THREE.Vector3().subVectors(p2, p1);
+            const length = direction.length();
+            
+            let geom = new THREE.CylinderGeometry(radius, radius, length, 24);
+            geom.translate(0, length / 2, 0);
+            geom = getTintedGeometry(geom, p1, p2, i, totalPoints, tintColor);
+            
+            const mesh = new THREE.Mesh(geom, material);
+            mesh.position.copy(p1);
+            
+            const up = new THREE.Vector3(0, 1, 0);
+            mesh.quaternion.setFromUnitVectors(up, direction.clone().normalize());
+            
+            return mesh;
+        }
+
+        // --- Helper: Create Vector Arrow ---
+        function createVectorArrow(length, radius, colorHex) {
             const group = new THREE.Group();
-            const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, length, 16), mat);
-            cyl.position.y = length / 2;
             
-            // Arrowhead
-            const cone = new THREE.Mesh(new THREE.ConeGeometry(0.6, 1, 16), mat);
-            cone.position.y = length + 0.5;
+            const mat = new THREE.MeshStandardMaterial({
+                color: colorHex,
+                roughness: 0.2,
+                metalness: 0.8,
+                emissive: colorHex,
+                emissiveIntensity: 0.5
+            });
+            const matOutline = new THREE.MeshBasicMaterial({
+                color: 0x000000,
+                side: THREE.BackSide
+            });
             
-            group.add(cyl);
+            // Shaft
+            const shaftGeo = new THREE.CylinderGeometry(radius, radius, length, 24);
+            shaftGeo.translate(0, length / 2, 0);
+            const shaft = new THREE.Mesh(shaftGeo, mat);
+            group.add(shaft);
+            
+            // Shaft Outline
+            const outlineRadius = radius * 1.5;
+            const shaftOutlineGeo = new THREE.CylinderGeometry(outlineRadius, outlineRadius, length + 0.05, 24);
+            shaftOutlineGeo.translate(0, length / 2, 0);
+            const shaftOutline = new THREE.Mesh(shaftOutlineGeo, matOutline);
+            group.add(shaftOutline);
+            
+            // Cone
+            const coneLength = 0.5;
+            const coneGeo = new THREE.ConeGeometry(radius * 2.5, coneLength, 24);
+            coneGeo.translate(0, length + coneLength / 2, 0);
+            const cone = new THREE.Mesh(coneGeo, mat);
             group.add(cone);
             
-            group.rotation.set(rotX, rotY, rotZ);
-            group.position.copy(pos);
+            // Cone Outline
+            const coneOutlineGeo = new THREE.ConeGeometry(radius * 3.5, coneLength + 0.1, 24);
+            coneOutlineGeo.translate(0, length + coneLength / 2 - 0.05, 0);
+            const coneOutline = new THREE.Mesh(coneOutlineGeo, matOutline);
+            group.add(coneOutline);
+            
             return group;
         }
 
-        // Left Hand Setup
-        // Thumb (Force) - Points UP (Y+)
-        const thumb = createFinger(matForce, 3, 0, 0, 0, new THREE.Vector3(0, 0, 0));
-        handGroup.add(thumb);
+        // --- Helper: Create Text Sprite ---
+        function createTextSprite(text, color, scale = 1.0) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = 'rgba(0,0,0,0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.font = 'Bold 80px "JetBrains Mono", monospace';
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Neon glow effect on canvas text
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 10;
+            
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const mat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.set(scale, scale, 1);
+            return sprite;
+        }
+
+        // --- Build Detailed Procedural Hand ---
+        // Helper to draw joints and bones for a finger
+        function addFingerJointsAndBones(points, radii, material, tintColor) {
+            for (let i = 0; i < points.length; i++) {
+                const radius = radii[i];
+                const geom = getTintedSphereGeometry(new THREE.SphereGeometry(radius, 24, 24), i, points.length, tintColor);
+                const sphere = new THREE.Mesh(geom, material);
+                sphere.position.copy(points[i]);
+                handGroup.add(sphere);
+            }
+            for (let i = 0; i < points.length - 1; i++) {
+                const radius = (radii[i] + radii[i+1]) / 2 * 0.95;
+                const bone = createSegmentBetweenPoints(points[i], points[i+1], radius, material, i, points.length, tintColor);
+                handGroup.add(bone);
+            }
+        }
+
+        // Wrist
+        const wristBase = new THREE.Vector3(-0.1, -1.8, 0.1);
+        const wristJoint = new THREE.Vector3(-0.1, -1.0, 0.1);
+        const wristGeo = getTintedSphereGeometry(new THREE.SphereGeometry(0.45, 24, 24), 0, 1, null);
+        const wristSphere = new THREE.Mesh(wristGeo, matSkin);
+        wristSphere.position.copy(wristJoint);
+        handGroup.add(wristSphere);
         
-        // Index (B-Field) - Points RIGHT (X+)
-        const index = createFinger(matMag, 3, 0, 0, -Math.PI/2, new THREE.Vector3(1, 0, 0));
-        handGroup.add(index);
+        const wristBone = createSegmentBetweenPoints(wristBase, wristJoint, 0.35, matSkin, 0, 2, null);
+        handGroup.add(wristBone);
         
-        // Middle (Current) - Points FORWARD towards viewer (Z+)
-        const middle = createFinger(matCur, 3, Math.PI/2, 0, 0, new THREE.Vector3(0, 0, 1));
-        handGroup.add(middle);
+        // Palm Center Plate
+        const palmGeo = new THREE.BoxGeometry(1.6, 1.5, 0.7);
+        const palmColors = [];
+        const skinCol = new THREE.Color(0xffcaa8);
+        for (let k = 0; k < palmGeo.getAttribute('position').count; k++) {
+            palmColors.push(skinCol.r, skinCol.g, skinCol.b);
+        }
+        palmGeo.setAttribute('color', new THREE.Float32BufferAttribute(palmColors, 3));
+        const palmMesh = new THREE.Mesh(palmGeo, matSkin);
+        palmMesh.position.set(-0.1, -0.4, 0.15);
+        handGroup.add(palmMesh);
+
+        // Finger Coordinates & Generation
+        const thumbPoints = [
+            new THREE.Vector3(-0.6, -0.4, 0.15),
+            new THREE.Vector3(-0.6, 0.3, 0.15),
+            new THREE.Vector3(-0.6, 1.0, 0.15)
+        ];
+        const thumbRadii = [0.32, 0.28, 0.24];
+        addFingerJointsAndBones(thumbPoints, thumbRadii, matSkin, 0x10b981); // Green
+
+        const indexPoints = [
+            new THREE.Vector3(0.5, 0.2, 0.1),
+            new THREE.Vector3(1.1, 0.2, 0.1),
+            new THREE.Vector3(1.7, 0.2, 0.1),
+            new THREE.Vector3(2.2, 0.2, 0.1)
+        ];
+        const indexRadii = [0.28, 0.24, 0.20, 0.16];
+        addFingerJointsAndBones(indexPoints, indexRadii, matSkin, 0x3b82f6); // Blue
+
+        const middlePoints = [
+            new THREE.Vector3(0.1, 0.2, 0.25),
+            new THREE.Vector3(0.1, 0.2, 0.85),
+            new THREE.Vector3(0.1, 0.2, 1.45),
+            new THREE.Vector3(0.1, 0.2, 1.95)
+        ];
+        const middleRadii = [0.28, 0.24, 0.20, 0.16];
+        addFingerJointsAndBones(middlePoints, middleRadii, matSkin, 0xf43f5e); // Rose
+
+        const ringPoints = [
+            new THREE.Vector3(-0.3, 0.2, 0.2),
+            new THREE.Vector3(-0.3, 0.15, 0.7),
+            new THREE.Vector3(-0.3, -0.2, 0.75),
+            new THREE.Vector3(-0.3, -0.4, 0.4)
+        ];
+        const ringRadii = [0.26, 0.22, 0.18, 0.14];
+        addFingerJointsAndBones(ringPoints, ringRadii, matSkin, null);
+
+        const littlePoints = [
+            new THREE.Vector3(-0.65, 0.1, 0.2),
+            new THREE.Vector3(-0.65, 0.05, 0.6),
+            new THREE.Vector3(-0.65, -0.3, 0.65),
+            new THREE.Vector3(-0.65, -0.45, 0.35)
+        ];
+        const littleRadii = [0.22, 0.18, 0.14, 0.10];
+        addFingerJointsAndBones(littlePoints, littleRadii, matSkin, null);
+
+        // Connect Wrist to Base Knuckles
+        const palmBones = [
+            createSegmentBetweenPoints(wristJoint, thumbPoints[0], 0.28, matSkin, 0, 2, null),
+            createSegmentBetweenPoints(wristJoint, littlePoints[0], 0.22, matSkin, 0, 2, null),
+            createSegmentBetweenPoints(wristJoint, ringPoints[0], 0.24, matSkin, 0, 2, null),
+            createSegmentBetweenPoints(wristJoint, middlePoints[0], 0.26, matSkin, 0, 2, null),
+            createSegmentBetweenPoints(wristJoint, indexPoints[0], 0.26, matSkin, 0, 2, null)
+        ];
+        palmBones.forEach(bone => handGroup.add(bone));
+
+        // --- Fingernails Addition ---
+        const matNail = new THREE.MeshStandardMaterial({ 
+            color: 0xffe4e6, // Soft pinkish white
+            roughness: 0.4, 
+            metalness: 0.1 
+        });
+
+        // Thumb nail (Back faces -X)
+        const thumbNail = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.26, 0.20), matNail);
+        thumbNail.position.set(-0.6 - 0.22, 0.85, 0.15);
+        handGroup.add(thumbNail);
+
+        // Index nail (Back faces +Y)
+        const indexNail = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.04, 0.18), matNail);
+        indexNail.position.set(2.05, 0.2 + 0.15, 0.1);
+        handGroup.add(indexNail);
+
+        // Middle nail (Back faces +Y)
+        const middleNail = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.26), matNail);
+        middleNail.position.set(0.1, 0.2 + 0.15, 1.8);
+        handGroup.add(middleNail);
+
+        // Ring nail (Back faces -Y / +Z)
+        const ringNail = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.20), matNail);
+        ringNail.position.copy(ringPoints[ringPoints.length - 1]).add(new THREE.Vector3(0, -0.13, 0.11));
+        ringNail.rotation.x = -Math.PI / 4;
+        handGroup.add(ringNail);
+
+        // Little nail (Back faces -Y / +Z)
+        const littleNail = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.03, 0.16), matNail);
+        littleNail.position.copy(littlePoints[littlePoints.length - 1]).add(new THREE.Vector3(0, -0.10, 0.10));
+        littleNail.rotation.x = -Math.PI / 4;
+        handGroup.add(littleNail);
+
+        // --- Vector Arrows projecting from Fingertips ---
+        const arrowLength = 2.0;
+        const arrowRadius = 0.08;
+        
+        // Force vector arrow (points +Y) - Green
+        const arrowForce = createVectorArrow(arrowLength, arrowRadius, 0x10b981);
+        arrowForce.position.copy(thumbPoints[thumbPoints.length - 1]);
+        handGroup.add(arrowForce);
+        
+        // Field vector arrow (points +X) - Blue
+        const arrowField = createVectorArrow(arrowLength, arrowRadius, 0x3b82f6);
+        arrowField.position.copy(indexPoints[indexPoints.length - 1]);
+        arrowField.rotation.z = -Math.PI / 2;
+        handGroup.add(arrowField);
+        
+        // Current vector arrow (points +Z) - Rose
+        const arrowCurrent = createVectorArrow(arrowLength, arrowRadius, 0xf43f5e);
+        arrowCurrent.position.copy(middlePoints[middlePoints.length - 1]);
+        arrowCurrent.rotation.x = Math.PI / 2;
+        handGroup.add(arrowCurrent);
+
+        // --- Canvas Text Sprites hovering at arrowheads ---
+        const labelForce = createTextSprite('F', '#10b981', 0.8);
+        labelForce.position.copy(thumbPoints[thumbPoints.length - 1]).add(new THREE.Vector3(0, arrowLength + 0.6, 0));
+        handGroup.add(labelForce);
+
+        const labelField = createTextSprite('B', '#3b82f6', 0.8);
+        labelField.position.copy(indexPoints[indexPoints.length - 1]).add(new THREE.Vector3(arrowLength + 0.6, 0, 0));
+        handGroup.add(labelField);
+
+        const labelCurrent = createTextSprite('I', '#f43f5e', 0.8);
+        labelCurrent.position.copy(middlePoints[middlePoints.length - 1]).add(new THREE.Vector3(0, 0, arrowLength + 0.6));
+        handGroup.add(labelCurrent);
+
+        // Scale the hand group by 1.6x to make it prominent
+        handGroup.scale.set(1.6, 1.6, 1.6);
 
         // --- Build Hardware ---
         // Copper Wire (along Z axis)
@@ -515,7 +802,7 @@
                 telF.className = "text-2xl font-bold font-mono tracking-widest text-emerald-500 uppercase";
             } else {
                 telF.innerText = "DOWNWARDS";
-                telF.className = "text-2xl font-bold font-mono tracking-widest text-rose-500 uppercase";
+                telF.className = "text-2xl font-bold font-mono tracking-widest text-emerald-500 uppercase";
             }
         }
 

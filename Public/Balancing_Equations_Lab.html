@@ -139,49 +139,13 @@
 <div class="text-[11px] font-semibold text-slate-700 leading-tight pt-1">
               "Matter can be changed from one form into another, mixtures can be separated or made, and pure substances can be decomposed, but the total amount of mass remains constant."
             </div>
-</div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why must all chemical equations be balanced?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q1-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                Why is it scientifically incorrect to change the subscripts (e.g., changing $H_2O$ to $H_2O_2$) to balance an equation?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q2-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                In the balanced equation $CH_4 + 2O_2 \rightarrow CO_2 + 2H_2O$, what is the total number of Oxygen atoms on the product side?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 transition-all shadow-sm">
-<div class="space-y-2">
-<span class="inline-block bg-orange-50 text-orange-700 text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug">
-                What does a stoichiometric coefficient (the large number in front) represent?
-              </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-<p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-medium leading-normal bg-slate-50 p-1.5 rounded border border-slate-100" id="q4-feedback"></p>
-</div>
-</div>
 </div></div></section>
+<<<<<<< HEAD
 <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center min-h-[500px]">
+=======
+
+<section class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center min-h-[500px]">
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
 <div class="absolute top-[20%] left-0 w-full h-[80px] flex items-center justify-center pointer-events-none z-20" id="controls-overlay">
 </div>
 <canvas class="absolute inset-0 w-full h-full block z-10" id="simCanvas"></canvas>
@@ -199,6 +163,58 @@
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+</div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
+</div><div class="space-y-3 pb-4">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT Exemplar]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            Balance the following: Fe + H₂O → Fe₃O₄ + H₂. What is the coefficient of H₂O?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            In the balanced equation aKMnO₄ + bH₂SO₄ + cH₂C₂O₄ → dK₂SO₄ + eMnSO₄ + fH₂O + gCO₂, the value of 'b' is:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            Which of the following is correctly balanced: Pb(NO₃)₂ → PbO + NO₂ + O₂?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
+</div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            Balance: C₆H₁₂O₆ + O₂ → CO₂ + H₂O. What is the sum of all coefficients?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div></section>
 </main>
@@ -237,45 +253,59 @@
 
     const vivaData = {
       q1: {
-        question: "Why must all chemical equations be balanced?",
+        question: "Balance the following: $\\text{Fe} + \\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + \\text{H}_2$. What is the coefficient of $\\text{H}_2\\text{O}$?",
         options: [
-          { text: "To make the math easier for chemists.", isCorrect: false, exp: "Incorrect." },
-          { text: "Because molecules always exist in pairs.", isCorrect: false, exp: "Incorrect." },
-          { text: "To satisfy the Law of Conservation of Mass; matter cannot be created or destroyed in a chemical reaction.", isCorrect: true, exp: "Correct! Every single atom that goes into a reaction as a reactant must come out as a product. They are just rearranged into new molecules." },
-          { text: "To ensure the reaction produces heat.", isCorrect: false, exp: "Incorrect." }
+          { text: "3", isCorrect: false, exp: "Incorrect. That is the coefficient for $\\text{Fe}$ or $\\text{H}_2$." },
+          { text: "4", isCorrect: true, exp: "Correct! The balanced equation is $3\\text{Fe} + 4\\text{H}_2\\text{O} \\rightarrow \\text{Fe}_3\\text{O}_4 + 4\\text{H}_2$. The coefficient of water is 4." },
+          { text: "1", isCorrect: false, exp: "Incorrect. You must have equal atoms on both sides." },
+          { text: "2", isCorrect: false, exp: "Incorrect. Check your Oxygen atom count." }
         ]
       },
       q2: {
-        question: "Why is it scientifically incorrect to change the subscripts (e.g., changing H2O to H2O2) to balance an equation?",
+        question: "In the balanced equation $a\\text{KMnO}_4 + b\\text{H}_2\\text{SO}_4 + c\\text{H}_2\\text{C}_2\\text{O}_4 \\rightarrow d\\text{K}_2\\text{SO}_4 + e\\text{MnSO}_4 + f\\text{H}_2\\text{O} + g\\text{CO}_2$, the value of '$b$' is:",
         options: [
-          { text: "Because subscripts are difficult to read.", isCorrect: false, exp: "Incorrect." },
-          { text: "Changing a subscript changes the actual chemical identity of the substance.", isCorrect: true, exp: "Correct! H2O is water, which is essential for life. H2O2 is hydrogen peroxide, which is toxic and used as bleach. You cannot simply invent a new chemical to balance an equation; you can only change HOW MANY molecules (the coefficient) of the given chemical you have." },
-          { text: "Because it violates the Law of Gravity.", isCorrect: false, exp: "Incorrect." },
-          { text: "It is allowed, but chemists prefer coefficients.", isCorrect: false, exp: "Incorrect. It is strictly forbidden." }
+          { text: "2", isCorrect: false, exp: "Incorrect. This is a redox reaction; try the half-reaction method." },
+          { text: "3", isCorrect: true, exp: "Correct! The balanced coefficients are 2, 3, 5, 1, 2, 8, 10. Thus, $b = 3$." },
+          { text: "5", isCorrect: false, exp: "Incorrect. That is the coefficient for oxalic acid ($c$)." },
+          { text: "8", isCorrect: false, exp: "Incorrect. That is the coefficient for water ($f$)." }
         ]
       },
       q3: {
-        question: "In the balanced equation CH4 + 2O2 -> CO2 + 2H2O, what is the total number of Oxygen atoms on the product side?",
+        question: "Which of the following is correctly balanced: $\\text{Pb(NO}_3)_2 \\rightarrow \\text{PbO} + \\text{NO}_2 + \\text{O}_2$?",
         options: [
-          { text: "2", isCorrect: false, exp: "Incorrect. That only counts the CO2." },
-          { text: "3", isCorrect: false, exp: "Incorrect." },
-          { text: "4", isCorrect: true, exp: "Correct! The products are CO2 (which contains 2 oxygen atoms) and 2 molecules of H2O (which each contain 1 oxygen atom, so 2x1 = 2). 2 + 2 = 4 total Oxygen atoms." },
-          { text: "6", isCorrect: false, exp: "Incorrect." }
+          { text: "$\\text{Pb(NO}_3)_2 \\rightarrow \\text{PbO} + 2\\text{NO}_2 + \\text{O}_2$", isCorrect: false, exp: "Incorrect. Count the oxygens on the right ($1+4+2=7$) vs left ($6$)." },
+          { text: "$2\\text{Pb(NO}_3)_2 \\rightarrow 2\\text{PbO} + 4\\text{NO}_2 + \\text{O}_2$", isCorrect: true, exp: "Correct! Both sides now have $2\\text{ Pb}$, $4\\text{ N}$, and $12\\text{ O}$ atoms." },
+          { text: "$\\text{Pb(NO}_3)_2 \\rightarrow \\text{PbO} + \\text{NO}_2 + 0.5\\text{O}_2$", isCorrect: false, exp: "Incorrect. Coefficients should be whole numbers." },
+          { text: "$3\\text{Pb(NO}_3)_2 \\rightarrow 3\\text{PbO} + 6\\text{NO}_2 + 2\\text{O}_2$", isCorrect: false, exp: "Incorrect. This is not the simplest whole number ratio." }
         ]
       },
       q4: {
-        question: "What does a stoichiometric coefficient (the large number in front) represent?",
+        question: "Balance: $\\text{C}_6\\text{H}_{12}\\text{O}_6 + \\text{O}_2 \\rightarrow \\text{CO}_2 + \\text{H}_2\\text{O}$. What is the sum of all coefficients?",
         options: [
-          { text: "The number of relative moles (or discrete molecules) of that substance involved in the reaction.", isCorrect: true, exp: "Correct! Writing '2H2' means you have two distinct molecules of hydrogen gas (or two moles of it). It acts as a multiplier for all the atoms inside that molecule." },
-          { text: "The atomic weight of the molecule.", isCorrect: false, exp: "Incorrect." },
-          { text: "The temperature required for the reaction.", isCorrect: false, exp: "Incorrect." },
-          { text: "The charge of the ion.", isCorrect: false, exp: "Incorrect." }
+          { text: "10", isCorrect: false, exp: "Incorrect. Count carefully again." },
+          { text: "19", isCorrect: true, exp: "Correct! The balanced equation is $1\\text{C}_6\\text{H}_{12}\\text{O}_6 + 6\\text{O}_2 \\rightarrow 6\\text{CO}_2 + 6\\text{H}_2\\text{O}$. Sum $= 1 + 6 + 6 + 6 = 19$." },
+          { text: "12", isCorrect: false, exp: "Incorrect. Don't forget the coefficient '1' for the glucose molecule." },
+          { text: "20", isCorrect: false, exp: "Incorrect. Re-verify the oxygen balance." }
         ]
       }
     };
 
+    const colorsMap = {
+        q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+        q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+        q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+    };
+
     function renderQuestions() {
       const scoreLabel = document.getElementById('viva-score');
+      
+      // Inject Question Text dynamically on render
+      document.getElementById('q1-text').innerHTML = vivaData.q1.question;
+      document.getElementById('q2-text').innerHTML = vivaData.q2.question;
+      document.getElementById('q3-text').innerHTML = vivaData.q3.question;
+      document.getElementById('q4-text').innerHTML = vivaData.q4.question;
+
       Object.keys(vivaData).forEach(qKey => {
         const data = vivaData[qKey];
         const optionsContainer = document.getElementById(`${qKey}-options`);
@@ -287,8 +317,8 @@
         
         data.options.forEach((opt, idx) => {
           const btn = document.createElement('button');
-          btn.className = "text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-medium bg-white hover:bg-slate-100 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm";
-          btn.innerHTML = `<span class="font-bold text-indigo-500 mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : idx === 3 ? 'D)' : ''}</span> ${opt.text}`;
+          btn.className = `text-left p-2.5 rounded-lg text-[11px] transition border leading-snug font-semibold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-1`;
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} mr-1">${idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)'}</span> <span>${opt.text}</span>`;
           
           btn.addEventListener('click', () => {
             if (appState.answers[qKey] !== null) return; 
@@ -300,7 +330,7 @@
             const buttons = optionsContainer.querySelectorAll('button');
             buttons.forEach((b, i) => {
               b.disabled = true;
-              b.classList.remove('bg-white', 'hover:bg-slate-100', 'border-slate-200', 'text-slate-700', 'cursor-pointer');
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer');
               b.classList.add('cursor-not-allowed');
               if (appState.answers[qKey] === i) {
                 if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
@@ -311,12 +341,14 @@
                 b.classList.add('bg-white', 'border-slate-200', 'text-slate-400', 'opacity-40');
               }
             });
-            feedbackContainer.textContent = opt.exp;
+            feedbackContainer.innerHTML = opt.exp;
             feedbackContainer.classList.remove('hidden');
+            if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
           });
           optionsContainer.appendChild(btn);
         });
       });
+      if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
     }
 
     // --- CHEMISTRY ENGINE ---
@@ -770,6 +802,23 @@
       });
 
       requestAnimationFrame(renderCanvas);
+    }
+
+    // Category Filter Handler
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+        const cat = selectCategory.value;
+        const questions = document.querySelectorAll('[data-category]');
+        questions.forEach(q => {
+          const qCat = q.getAttribute('data-category');
+          if (cat === 'all' || qCat === cat) {
+            q.classList.remove('hidden');
+          } else {
+            q.classList.add('hidden');
+          }
+        });
+      });
     }
 
     // --- Boot Sequence ---

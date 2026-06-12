@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isolated Trigonometric Geometry</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+      color: #334155;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Scrollbars */
+    .viva-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -6px;
+      background-color: #4f46e5;
+      border-radius: 9999px;
+      height: 18px;
+      width: 18px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+      transition: all 0.15s ease-in-out;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #3730a3;
+      transform: scale(1.15);
+    }
+
+    /* 2D Canvas Background */
+    .lab-stage { 
+      background-color: #000000 !important; 
+      background-image: 
+        radial-gradient(rgba(59, 130, 246, 0.15) 1px, transparent 1px),
+        linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px, 25px 25px, 25px 25px;
+      box-shadow: inset 0 0 120px rgba(0,0,0,1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+          <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Isolated Trigonometry</h1>
+          <p class="text-[11px] text-cyan-400 font-bold tracking-wider uppercase">Unit Circle & Wave Dynamics</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5">
+          <span>📘</span> Geometry Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+          <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Calculus Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 relative z-10">
+      <div class="flex items-center space-x-2">
+        <select id="select-focus" class="bg-white border border-slate-300 text-indigo-700 text-sm font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm">
+            <option value="all">All Six Functions</option>
+            <option value="sin" selected>Sine ($\sin$)</option>
+            <option value="cos">Cosine ($\cos$)</option>
+            <option value="tan">Tangent ($\tan$)</option>
+            <option value="sec">Secant ($\sec$)</option>
+            <option value="cot">Cotangent ($\cot$)</option>
+            <option value="csc">Cosecant ($\csc$)</option>
+        </select>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="btn-play" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-1.5 text-sm rounded shadow-sm transition-all flex items-center gap-2">
+          ▶ Auto-Sweep Angle
+        </button>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Radian/Degree Sweep</span>
+          
+          <div>
+            <div class="flex justify-between text-[10px] font-bold text-slate-600 mb-1 mt-2">
+              <span class="text-indigo-600 flex items-center gap-1">■ Angle ($\theta$)</span>
+              <span id="val-theta" class="font-mono bg-indigo-50 text-indigo-600 border border-indigo-200 px-1.5 py-0.5 rounded text-xs">45°</span>
+            </div>
+            <input type="range" id="slider-theta" min="0" max="360" step="1" value="45">
+          </div>
+        </div>
+
+        <div class="bg-[#0f172a] text-slate-300 rounded-xl p-4 border border-slate-800 shadow-md space-y-3">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-800 pb-2">Live Geometric Values</span>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <div id="box-sin" class="bg-slate-900/80 p-2 rounded-lg border border-red-900/50 flex flex-col items-center transition-all duration-300">
+              <span class="text-[9px] font-bold uppercase text-red-400">Sine (y)</span>
+              <span class="text-sm font-mono font-bold text-white" id="val-sin">0.707</span>
+            </div>
+            <div id="box-cos" class="bg-slate-900/80 p-2 rounded-lg border border-blue-900/50 flex flex-col items-center transition-all duration-300 opacity-30 grayscale">
+              <span class="text-[9px] font-bold uppercase text-blue-400">Cosine (x)</span>
+              <span class="text-sm font-mono font-bold text-white" id="val-cos">0.707</span>
+            </div>
+            <div id="box-tan" class="bg-slate-900/80 p-2 rounded-lg border border-amber-900/50 flex flex-col items-center transition-all duration-300 opacity-30 grayscale">
+              <span class="text-[9px] font-bold uppercase text-amber-500">Tangent</span>
+              <span class="text-sm font-mono font-bold text-white" id="val-tan">1.000</span>
+            </div>
+            <div id="box-sec" class="bg-slate-900/80 p-2 rounded-lg border border-purple-900/50 flex flex-col items-center transition-all duration-300 opacity-30 grayscale">
+              <span class="text-[9px] font-bold uppercase text-purple-400">Secant</span>
+              <span class="text-sm font-mono font-bold text-white" id="val-sec">1.414</span>
+            </div>
+            <div id="box-cot" class="bg-slate-900/80 p-2 rounded-lg border border-teal-900/50 flex flex-col items-center transition-all duration-300 opacity-30 grayscale">
+              <span class="text-[9px] font-bold uppercase text-teal-400">Cotangent</span>
+              <span class="text-sm font-mono font-bold text-white" id="val-cot">1.000</span>
+            </div>
+            <div id="box-csc" class="bg-slate-900/80 p-2 rounded-lg border border-pink-900/50 flex flex-col items-center transition-all duration-300 opacity-30 grayscale">
+              <span class="text-[9px] font-bold uppercase text-pink-400">Cosecant</span>
+              <span class="text-sm font-mono font-bold text-white" id="val-csc">1.414</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2 border border-slate-800">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-2">Pythagorean Identity</span>
+          <div class="text-[16px] font-mono text-center py-2">
+            $$\sin^2\theta + \cos^2\theta = 1$$
+          </div>
+          <p class="text-[10px] text-slate-400 font-sans mt-2 text-left leading-relaxed">
+            For any angle $\theta$, the coordinates $(x, y) = (\cos\theta, \sin\theta)$ lie on the unit circle $x^2 + y^2 = 1$.
+          </p>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-6 relative flex flex-col border-x border-slate-200 min-h-[500px]">
+        
+        <div class="flex-1 relative lab-stage border-b border-slate-200">
+            <canvas id="circleCanvas" class="w-full h-full block absolute inset-0"></canvas>
+            <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+                <span class="text-[10px] font-extrabold text-blue-400 uppercase tracking-wider">Unit Circle Geometry</span>
+                <span class="text-[9px] text-slate-400 font-mono">Radius = 1 Unit</span>
+            </div>
+            <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 pointer-events-none select-none z-20">
+                <span class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-wider">Angle (θ)</span>
+                <span class="text-xs font-mono font-bold text-white text-right" id="sim-val-theta">45° / 0.79 rad</span>
+            </div>
+            <div class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-md p-2.5 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1.5 pointer-events-none select-none z-20" id="legend-box">
+            </div>
+        </div>
+
+        <div class="h-1/3 min-h-[200px] relative bg-black">
+            <canvas id="graphCanvas" class="w-full h-full block absolute inset-0"></canvas>
+            <div class="absolute top-2 left-4 bg-black/60 px-2 py-1 rounded border border-slate-800 shadow-sm pointer-events-none select-none z-20">
+                <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider" id="graph-title">Synchronized Wave Plot</span>
+            </div>
+        </div>
+
+      </section>
+
+      <section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight text-slate-200">Conceptual Assessments</h2>
+            <span id="viva-score" class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+          <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+            <option value="all">All Categories</option>
+            <option value="jee">JEE Main / Advanced</option>
+            <option value="cbse">School Board PYQ</option>
+            <option value="neet">NEET Prep</option>
+          </select>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="jee">
+            <div class="space-y-2">
+              <span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Geometry]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+                Geometrically, the Tangent function is defined as the length of the vertical line segment starting from which point on the unit circle?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="neet">
+            <div class="space-y-2">
+              <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Asymptotes]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+                As the angle approaches $90^\circ$ ($\pi/2$), which two trigonometric functions stretch to infinity (become undefined)?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="cbse">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Bounds]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+                Unlike Sine and Cosine which are bounded between -1 and 1, the Secant and Cosecant values:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="cbse">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Cotangent]</span>
+              <h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+                Geometrically, the Cotangent segment is drawn along the horizontal tangent line at $y=1$. When is Cotangent exactly zero?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> GEOMETRY PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Isolated Trigonometry Simulator</strong>. By isolating each function, you can clearly see how the angle dictates its exact physical length on the unit circle.</p>
+        <div class="space-y-3 mt-4">
+          <h4 class="font-extrabold text-indigo-600 text-xs uppercase tracking-widest pl-2 border-l-2 border-indigo-600">Reading the Map</h4>
+          <ul class="list-disc pl-5 space-y-2 text-slate-500 text-xs">
+            <li><strong>Sine & Cosine:</strong> The basic $x$ and $y$ distances inside the circle. Bounded between -1 and 1.</li>
+            <li><strong>Tangent:</strong> Imagine a solid wall at the right edge ($x=1$). The tangent is the height where the extended radius hits this wall.</li>
+            <li><strong>Secant:</strong> The total length of the "laser beam" from the origin to that same wall ($x=1$).</li>
+            <li><strong>Cotangent:</strong> Put a ceiling at the top edge ($y=1$). The horizontal distance along the ceiling to where the radius hits is the Cotangent.</li>
+            <li><strong>Cosecant:</strong> The total length of the beam from the origin hitting the ceiling ($y=1$).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+          Initialize Graphics
+        </button>
+      </div>     
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = { vivaScore: 0, answers: { q1: null, q2: null, q3: null, q4: null } };
+
+    const vivaData = {
+      q1: {
+        options: [
+          { text: "The origin (0,0)", isCorrect: false, exp: "Incorrect." },
+          { text: "The point (1,0) on the x-axis", isCorrect: true, exp: "Correct! The Tangent segment is drawn on the vertical tangent line $x=1$. It measures the distance from the x-axis up to the extended radius line." },
+          { text: "The point (0,1) on the y-axis", isCorrect: false, exp: "Incorrect. That is for Cotangent." },
+          { text: "The current point on the circle", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        options: [
+          { text: "Sine and Cosine", isCorrect: false, exp: "Incorrect." },
+          { text: "Tangent and Secant", isCorrect: true, exp: "Correct! At $90^\\circ$, the radius line points straight up. It will never intersect the vertical tangent wall at $x=1$. Therefore, both the height (Tan) and the beam length (Sec) stretch to infinity." },
+          { text: "Cotangent and Cosecant", isCorrect: false, exp: "Incorrect. These are undefined at $0^\\circ$ and $180^\\circ$." },
+          { text: "Secant and Cosecant", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        options: [
+          { text: "Are also bounded between -1 and 1", isCorrect: false, exp: "Incorrect." },
+          { text: "Can only be positive numbers", isCorrect: false, exp: "Incorrect." },
+          { text: "Can never be between -1 and 1", isCorrect: true, exp: "Correct! Since Secant and Cosecant represent the extended hypotenuse reaching outside the unit circle, their lengths are always $\\ge 1$ or $\\le -1$. They never fall inside the -1 to 1 range." },
+          { text: "Are always equal to 0", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        options: [
+          { text: "At 0°", isCorrect: false, exp: "Incorrect. It is infinite here." },
+          { text: "At 45°", isCorrect: false, exp: "Incorrect. It is 1 here." },
+          { text: "At 90° and 270°", isCorrect: true, exp: "Correct! At $90^\\circ$ (pointing straight up), the extended radius hits the ceiling exactly at the y-axis. The horizontal distance along the ceiling is zero." },
+          { text: "At 180°", isCorrect: false, exp: "Incorrect. It is infinite here." }
+        ]
+      }
+    };
+
+    const colorsMap = {
+      q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+      q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+      q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+      q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+    };
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        if (!optionsContainer || !feedbackContainer) return; 
+        optionsContainer.innerHTML = ''; 
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = `text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) {
+              appState.vivaScore++;
+              try { triggerConfetti(); } catch(e) {}
+            }
+            if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+              } else {
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.innerHTML = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+            if(window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+      if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+    }
+
+    // --- STATE MANAGEMENT ---
+    const slTheta = document.getElementById('slider-theta');
+    const valTheta = document.getElementById('val-theta');
+    const selFocus = document.getElementById('select-focus');
+    const btnPlay = document.getElementById('btn-play');
+    
+    // Telemetry labels
+    const tlSin = document.getElementById('val-sin');
+    const tlCos = document.getElementById('val-cos');
+    const tlTan = document.getElementById('val-tan');
+    const tlSec = document.getElementById('val-sec');
+    const tlCot = document.getElementById('val-cot');
+    const tlCsc = document.getElementById('val-csc');
+
+    // Boxes for fading
+    const boxSin = document.getElementById('box-sin');
+    const boxCos = document.getElementById('box-cos');
+    const boxTan = document.getElementById('box-tan');
+    const boxSec = document.getElementById('box-sec');
+    const boxCot = document.getElementById('box-cot');
+    const boxCsc = document.getElementById('box-csc');
+
+    let pState = { angle: 45, focus: 'sin', playing: false };
+
+    function fmt(val) {
+        if (Math.abs(val) > 1000) return "∞";
+        return val.toFixed(3);
+    }
+
+    function updateState() {
+      pState.angle = parseFloat(slTheta.value);
+      pState.focus = selFocus.value;
+      valTheta.innerText = `${Math.round(pState.angle)}°`;
+
+      let rad = pState.angle * Math.PI / 180;
+      const simValTheta = document.getElementById('sim-val-theta');
+      if (simValTheta) {
+        simValTheta.innerText = `${Math.round(pState.angle)}° / ${rad.toFixed(2)} rad`;
+      }
+      let sin = Math.sin(rad), cos = Math.cos(rad);
+      let tan = Math.tan(rad), cot = 1 / Math.tan(rad);
+      let sec = 1 / Math.cos(rad), csc = 1 / Math.sin(rad);
+
+      tlSin.innerText = fmt(sin); tlCos.innerText = fmt(cos);
+      tlTan.innerText = fmt(tan); tlCot.innerText = fmt(cot);
+      tlSec.innerText = fmt(sec); tlCsc.innerText = fmt(csc);
+
+      // Handle Telemetry Highlighting
+      const boxMap = {
+          'sin': boxSin, 'cos': boxCos, 'tan': boxTan, 
+          'sec': boxSec, 'cot': boxCot, 'csc': boxCsc
+      };
+
+      for (let key in boxMap) {
+          if (pState.focus === 'all' || pState.focus === key) {
+              boxMap[key].style.opacity = '1';
+              boxMap[key].style.filter = 'grayscale(0%)';
+          } else {
+              boxMap[key].style.opacity = '0.25';
+              boxMap[key].style.filter = 'grayscale(100%)';
+          }
+      }
+
+      updateLegend();
+    }
+
+    // Palettes
+    const colSin = '#ef4444'; // Red
+    const colCos = '#3b82f6'; // Blue
+    const colTan = '#f59e0b'; // Amber
+    const colSec = '#a855f7'; // Purple
+    const colCot = '#14b8a6'; // Teal
+    const colCsc = '#ec4899'; // Pink
+
+    function updateLegend() {
+        const legendBox = document.getElementById('legend-box');
+        let f = pState.focus;
+        let html = "";
+        
+        const buildLine = (col, name) => `<div class="flex items-center gap-2"><span class="w-3 h-1 rounded" style="background-color:${col}"></span><span class="text-[9px] text-slate-300 font-mono">${name}</span></div>`;
+
+        if (f === 'all' || f === 'sin') html += buildLine(colSin, "Sin (y-axis)");
+        if (f === 'all' || f === 'cos') html += buildLine(colCos, "Cos (x-axis)");
+        if (f === 'all' || f === 'tan') html += buildLine(colTan, "Tan (x=1)");
+        if (f === 'all' || f === 'sec') html += buildLine(colSec, "Sec (hypotenuse)");
+        if (f === 'all' || f === 'cot') html += buildLine(colCot, "Cot (y=1)");
+        if (f === 'all' || f === 'csc') html += buildLine(colCsc, "Csc (hypotenuse)");
+
+        legendBox.innerHTML = html;
+
+        let niceName = selFocus.options[selFocus.selectedIndex].text;
+        document.getElementById('graph-title').innerText = `Wave Plot: ${niceName}`;
+    }
+
+    slTheta.addEventListener('input', () => { pState.playing = false; btnPlay.innerHTML = '▶ Auto-Sweep Angle'; updateState(); });
+    selFocus.addEventListener('change', updateState);
+    
+    btnPlay.addEventListener('click', () => {
+        pState.playing = !pState.playing;
+        btnPlay.innerHTML = pState.playing ? '⏸ Pause' : '▶ Auto-Sweep Angle';
+    });
+
+    // --- CANVAS GRAPHICS ENGINE ---
+    const cCircle = document.getElementById('circleCanvas');
+    const ctxC = cCircle.getContext('2d');
+    const cGraph = document.getElementById('graphCanvas');
+    const ctxG = cGraph.getContext('2d');
+
+    function resizeCanvases() {
+      const dpr = window.devicePixelRatio || 1;
+      
+      let rectC = cCircle.parentElement.getBoundingClientRect();
+      cCircle.width = rectC.width * dpr; cCircle.height = rectC.height * dpr;
+      ctxC.resetTransform(); ctxC.scale(dpr, dpr);
+      
+      let rectG = cGraph.parentElement.getBoundingClientRect();
+      cGraph.width = rectG.width * dpr; cGraph.height = rectG.height * dpr;
+      ctxG.resetTransform(); ctxG.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvases);
+ 
+    // --- CANVAS DRAG INTERACTION ---
+    let isDragging = false;
+
+    function handleDragStart(e) {
+      isDragging = true;
+      cCircle.style.cursor = 'grabbing';
+      updateAngleFromPointer(e);
+      e.preventDefault();
+    }
+
+    function handleDragMove(e) {
+      if (isDragging) {
+        updateAngleFromPointer(e);
+        e.preventDefault();
+      } else {
+        // Change cursor to grab if close to the point on the unit circle
+        const rect = cCircle.getBoundingClientRect();
+        const clientX = e.clientX;
+        const clientY = e.clientY;
+        if (clientX !== undefined && clientY !== undefined) {
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
+          
+          const cw = cCircle.width / (window.devicePixelRatio || 1);
+          const ch = cCircle.height / (window.devicePixelRatio || 1);
+          const cx = cw / 2;
+          const cy = ch / 2;
+          const R = Math.min(cw, ch) * 0.25;
+          
+          const rad = pState.angle * Math.PI / 180;
+          const px = cx + Math.cos(rad) * R;
+          const py = cy - Math.sin(rad) * R;
+          
+          const dist = Math.hypot(x - px, y - py);
+          if (dist < 15) {
+            cCircle.style.cursor = 'grab';
+          } else {
+            cCircle.style.cursor = 'default';
+          }
+        }
+      }
+    }
+
+    function handleDragEnd() {
+      if (isDragging) {
+        isDragging = false;
+        cCircle.style.cursor = 'default';
+      }
+    }
+
+    function updateAngleFromPointer(e) {
+      const rect = cCircle.getBoundingClientRect();
+      let clientX, clientY;
+      
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      
+      const cw = cCircle.width / (window.devicePixelRatio || 1);
+      const ch = cCircle.height / (window.devicePixelRatio || 1);
+      const cx = cw / 2;
+      const cy = ch / 2;
+      
+      const dx = x - cx;
+      const dy = cy - y;
+      
+      let angleRad = Math.atan2(dy, dx);
+      let angleDeg = angleRad * (180 / Math.PI);
+      if (angleDeg < 0) angleDeg += 360;
+      
+      slTheta.value = Math.round(angleDeg);
+      pState.playing = false;
+      btnPlay.innerHTML = '▶ Auto-Sweep Angle';
+      updateState();
+    }
+
+    cCircle.addEventListener('mousedown', handleDragStart);
+    cCircle.addEventListener('mousemove', handleDragMove);
+    window.addEventListener('mouseup', handleDragEnd);
+
+    cCircle.addEventListener('touchstart', handleDragStart, { passive: false });
+    cCircle.addEventListener('touchmove', handleDragMove, { passive: false });
+    window.addEventListener('touchend', handleDragEnd);
+    window.addEventListener('touchcancel', handleDragEnd);
+
+    function drawLine(ctx, x1, y1, x2, y2, color, width, dash=[]) {
+        ctx.beginPath();
+        ctx.setLineDash(dash);
+        ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+        ctx.strokeStyle = color; ctx.lineWidth = width;
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    function renderCircle() {
+        let cw = cCircle.width / (window.devicePixelRatio || 1);
+        let ch = cCircle.height / (window.devicePixelRatio || 1);
+        ctxC.clearRect(0, 0, cw, ch);
+
+        let cx = cw / 2; let cy = ch / 2;
+        let R = Math.min(cw, ch) * 0.25; 
+
+        // Axes
+        drawLine(ctxC, 0, cy, cw, cy, '#334155', 1);
+        drawLine(ctxC, cx, 0, cx, ch, '#334155', 1);
+        
+        // Walls (x=1, y=1)
+        drawLine(ctxC, cx+R, 0, cx+R, ch, '#475569', 1, [5,5]); // x=1
+        drawLine(ctxC, 0, cy-R, cw, cy-R, '#475569', 1, [5,5]); // y=1
+
+        // Unit Circle
+        ctxC.beginPath(); ctxC.arc(cx, cy, R, 0, Math.PI*2);
+        ctxC.strokeStyle = '#94a3b8'; ctxC.lineWidth = 2; ctxC.stroke();
+
+        let rad = pState.angle * Math.PI / 180;
+        let c = Math.cos(rad), s = Math.sin(rad);
+        let t = Math.tan(rad), ct = 1/t;
+
+        function sx(val) { return cx + val * R; }
+        function sy(val) { return cy - val * R; } // Y inverted for screen
+        function cap(val) { return Math.max(Math.min(val, 15), -15); } 
+
+        let f = pState.focus;
+        let px = sx(c), py = sy(s);
+
+        // Always draw the base radius line pointing to angle
+        drawLine(ctxC, cx, cy, px, py, '#cbd5e1', 2);
+
+        // Isolated Rendering Logic
+        if (f === 'all' || f === 'sin') drawLine(ctxC, sx(c), cy, px, py, colSin, 4);
+        if (f === 'all' || f === 'cos') drawLine(ctxC, cx, cy, sx(c), cy, colCos, 4);
+        
+        if (f === 'all' || f === 'tan') {
+            let ty = sy(cap(t));
+            drawLine(ctxC, sx(1), cy, sx(1), ty, colTan, 4);
+        }
+        if (f === 'all' || f === 'sec') {
+            let ty = sy(cap(t));
+            drawLine(ctxC, cx, cy, sx(1), ty, colSec, 3, [4,4]);
+        }
+        
+        if (f === 'all' || f === 'cot') {
+            let ctxX = sx(cap(ct));
+            drawLine(ctxC, cx, sy(1), ctxX, sy(1), colCot, 4);
+        }
+        if (f === 'all' || f === 'csc') {
+            let ctxX = sx(cap(ct));
+            drawLine(ctxC, cx, cy, ctxX, sy(1), colCsc, 3, [4,4]);
+        }
+
+        // Draw Angle Arc
+        ctxC.beginPath();
+        ctxC.arc(cx, cy, R*0.2, 0, -rad, true);
+        ctxC.strokeStyle = '#38bdf8'; ctxC.lineWidth=2; ctxC.stroke();
+
+        // Draw Angle Text on Canvas
+        ctxC.fillStyle = '#38bdf8';
+        ctxC.font = 'bold 12px sans-serif';
+        ctxC.textAlign = 'left';
+        ctxC.textBaseline = 'middle';
+        let midRad = rad / 2;
+        let tx = cx + Math.cos(midRad) * (R * 0.28);
+        let ty = cy - Math.sin(midRad) * (R * 0.28);
+        if (Math.cos(midRad) < 0) {
+            ctxC.textAlign = 'right';
+        }
+        ctxC.fillText(`${Math.round(pState.angle)}°`, tx, ty);
+        
+        // Point dot
+        ctxC.beginPath(); ctxC.arc(px, py, 5, 0, Math.PI*2);
+        ctxC.fillStyle = '#f8fafc'; ctxC.fill();
+    }
+
+    function renderGraph() {
+        let cw = cGraph.width / (window.devicePixelRatio || 1);
+        let ch = cGraph.height / (window.devicePixelRatio || 1);
+        ctxG.clearRect(0, 0, cw, ch);
+
+        let cy = ch / 2;
+        const xMin = -6.5;
+        const xMax = 6.5;
+        const yMin = -3.5;
+        const yMax = 3.5;
+
+        function gx(xRad) {
+            return ((xRad - xMin) / (xMax - xMin)) * cw;
+        }
+        function gy(yVal) {
+            return cy - (yVal / (yMax - yMin)) * ch;
+        }
+
+        // Minor gridlines (0.2 units for Y, 30 degrees for X)
+        ctxG.strokeStyle = 'rgba(148, 163, 184, 0.04)';
+        ctxG.lineWidth = 1;
+        // Vertical minor lines (every 30 degrees)
+        for (let deg = -360; deg <= 360; deg += 30) {
+            if (deg === 0 || deg % 90 === 0) continue; // Skip axis and major lines
+            let xRad = deg * Math.PI / 180;
+            let px = gx(xRad);
+            ctxG.beginPath();
+            ctxG.moveTo(px, 0);
+            ctxG.lineTo(px, ch);
+            ctxG.stroke();
+        }
+        // Horizontal minor lines
+        for (let y = -3.4; y <= 3.4; y += 0.2) {
+            if (Math.abs(y - Math.round(y)) < 0.01) continue;
+            let py = gy(y);
+            ctxG.beginPath();
+            ctxG.moveTo(0, py);
+            ctxG.lineTo(cw, py);
+            ctxG.stroke();
+        }
+
+        // Major gridlines (1.0 units for Y, 90 degrees for X)
+        ctxG.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+        ctxG.lineWidth = 1;
+        // Vertical major lines (every 90 degrees)
+        for (let deg = -360; deg <= 360; deg += 90) {
+            if (deg === 0) continue; // Skip Y-axis
+            let xRad = deg * Math.PI / 180;
+            let px = gx(xRad);
+            ctxG.beginPath();
+            ctxG.moveTo(px, 0);
+            ctxG.lineTo(px, ch);
+            ctxG.stroke();
+        }
+        // Horizontal major lines
+        for (let y = -3; y <= 3; y++) {
+            if (y === 0) continue; // Skip axis
+            let py = gy(y);
+            ctxG.beginPath();
+            ctxG.moveTo(0, py);
+            ctxG.lineTo(cw, py);
+            ctxG.stroke();
+        }
+
+        // Main Axes
+        ctxG.strokeStyle = '#475569';
+        ctxG.lineWidth = 1.5;
+        // X-Axis
+        ctxG.beginPath();
+        ctxG.moveTo(0, gy(0));
+        ctxG.lineTo(cw, gy(0));
+        ctxG.stroke();
+        // Y-Axis
+        ctxG.beginPath();
+        ctxG.moveTo(gx(0), 0);
+        ctxG.lineTo(gx(0), ch);
+        ctxG.stroke();
+
+        // Ticks and numbers
+        ctxG.fillStyle = '#94a3b8';
+        ctxG.font = '10px "JetBrains Mono", monospace';
+        ctxG.textAlign = 'center';
+        ctxG.textBaseline = 'top';
+
+        // X-axis labels and ticks (every 30 degrees for ticks, selected for labels)
+        const labelAngles = [-360, -270, -180, -90, -60, -30, 30, 60, 90, 180, 270, 360];
+        for (let deg = -360; deg <= 360; deg += 30) {
+            if (deg === 0) continue;
+            let xRad = deg * Math.PI / 180;
+            let px = gx(xRad);
+            let py = gy(0);
+            
+            // Draw tick mark
+            ctxG.strokeStyle = '#64748b';
+            ctxG.lineWidth = 1;
+            ctxG.beginPath();
+            ctxG.moveTo(px, py - 3);
+            ctxG.lineTo(px, py + 3);
+            ctxG.stroke();
+
+            // Label text below X-axis
+            if (labelAngles.includes(deg)) {
+                ctxG.fillText(deg.toString() + '°', px, py + 5);
+            }
+        }
+
+        // Y-axis labels and ticks
+        ctxG.textAlign = 'right';
+        ctxG.textBaseline = 'middle';
+        for (let y = -3; y <= 3; y++) {
+            if (y === 0) continue;
+            let px = gx(0);
+            let py = gy(y);
+
+            // Draw tick mark
+            ctxG.strokeStyle = '#64748b';
+            ctxG.lineWidth = 1;
+            ctxG.beginPath();
+            ctxG.moveTo(px - 3, py);
+            ctxG.lineTo(px + 3, py);
+            ctxG.stroke();
+
+            // Label text to the left of Y-axis
+            ctxG.fillText(y.toString(), px - 5, py);
+        }
+
+        // Label origin '0'
+        ctxG.textAlign = 'right';
+        ctxG.textBaseline = 'top';
+        ctxG.fillText('0', gx(0) - 4, gy(0) + 4);
+
+        let f = pState.focus;
+
+        function plot(func, color) {
+            ctxG.beginPath();
+            ctxG.strokeStyle = color;
+            ctxG.lineWidth = 2.5;
+
+            let lastYVal = null;
+            let first = true;
+
+            for (let px = 0; px <= cw; px++) {
+                let xRad = xMin + (px / cw) * (xMax - xMin);
+                let yVal = func(xRad);
+
+                if (!isFinite(yVal) || isNaN(yVal)) {
+                    lastYVal = null;
+                    first = true;
+                    continue;
+                }
+
+                // Check asymptote crossing
+                if (lastYVal !== null) {
+                    const crossedZero = (yVal > 0 && lastYVal < 0) || (yVal < 0 && lastYVal > 0);
+                    const isLargeStep = Math.abs(yVal - lastYVal) > 6;
+                    if (crossedZero && isLargeStep) {
+                        ctxG.stroke();
+                        ctxG.beginPath();
+                        first = true;
+                    }
+                }
+
+                let drawY = yVal;
+                if (drawY > 10) drawY = 10;
+                if (drawY < -10) drawY = -10;
+
+                let py = gy(drawY);
+
+                if (first) {
+                    ctxG.moveTo(px, py);
+                    first = false;
+                } else {
+                    ctxG.lineTo(px, py);
+                }
+                lastYVal = yVal;
+            }
+            ctxG.stroke();
+        }
+
+        if (f === 'all' || f === 'sin') plot(Math.sin, colSin);
+        if (f === 'all' || f === 'cos') plot(Math.cos, colCos);
+        if (f === 'all' || f === 'tan') plot(Math.tan, colTan);
+        if (f === 'all' || f === 'sec') plot(r => 1/Math.cos(r), colSec);
+        if (f === 'all' || f === 'cot') plot(r => 1/Math.tan(r), colCot);
+        if (f === 'all' || f === 'csc') plot(r => 1/Math.sin(r), colCsc);
+
+        // Playhead
+        let playheadRad = pState.angle * Math.PI / 180;
+        let hx = gx(playheadRad);
+        
+        // Draw vertical playhead line
+        drawLine(ctxG, hx, 0, hx, ch, 'rgba(255, 255, 255, 0.4)', 1.5, [4, 4]);
+
+        // Helper to draw a tracking dot on curve
+        function drawTrackingDot(func, color) {
+            let yVal = func(playheadRad);
+            if (isFinite(yVal) && !isNaN(yVal)) {
+                let py = gy(yVal);
+                if (py >= 0 && py <= ch) {
+                    ctxG.beginPath();
+                    ctxG.arc(hx, py, 6, 0, Math.PI * 2);
+                    ctxG.fillStyle = '#ffffff';
+                    ctxG.fill();
+                    ctxG.strokeStyle = color;
+                    ctxG.lineWidth = 2.5;
+                    ctxG.stroke();
+                }
+            }
+        }
+
+        if (f === 'all' || f === 'sin') drawTrackingDot(Math.sin, colSin);
+        if (f === 'all' || f === 'cos') drawTrackingDot(Math.cos, colCos);
+        if (f === 'all' || f === 'tan') drawTrackingDot(Math.tan, colTan);
+        if (f === 'all' || f === 'sec') drawTrackingDot(r => 1/Math.cos(r), colSec);
+        if (f === 'all' || f === 'cot') drawTrackingDot(r => 1/Math.tan(r), colCot);
+        if (f === 'all' || f === 'csc') drawTrackingDot(r => 1/Math.sin(r), colCsc);
+    }
+
+    function renderLoop() {
+        if (pState.playing) {
+            let next = parseFloat(slTheta.value) + 1;
+            if(next > 360) next = 0;
+            slTheta.value = next;
+            updateState();
+        }
+
+        renderCircle();
+        renderGraph();
+        requestAnimationFrame(renderLoop);
+    }
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    // --- Category Filter Handler ---
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    // Boot
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      resizeCanvases();
+      updateState();
+      requestAnimationFrame(renderLoop);
+      
+      const userGuideModal = document.getElementById('user-guide-modal');
+      userGuideModal.classList.remove('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', () => {
+        userGuideModal.classList.add('hidden');
+      });
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+        userGuideModal.classList.add('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

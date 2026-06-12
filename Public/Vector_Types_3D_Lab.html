@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Types of Vectors 3D Virtual Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #030712 !important;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.95);
+    }
+    
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #cbd5e1;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #6366f1;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+      transition: 0.2s;
+    }
+    input[type="range"].slider-cyan::-webkit-slider-thumb {
+      background-color: #06b6d4;
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+    }
+    input[type="range"].slider-pink::-webkit-slider-thumb {
+      background-color: #ec4899;
+      box-shadow: 0 0 8px rgba(236, 72, 153, 0.6);
+    }
+    input[type="range"].slider-amber::-webkit-slider-thumb {
+      background-color: #f59e0b;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+    }
+    input[type="range"].slider-emerald::-webkit-slider-thumb {
+      background-color: #10b981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+    
+    /* Floating labels overlay style */
+    .axis-label {
+      position: absolute;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+      user-select: none;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-4">
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+  
+  <!-- Header -->
+  <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+      <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+        <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Types of Vectors 3D Lab</h1>
+        <p class="text-[11px] text-cyan-400 font-bold tracking-wider uppercase">Interactive Vector Classification &amp; Telemetry</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5" id="btn-open-guide">
+        <span>📘</span> Vector Guide
+      </button>
+      <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+        <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">3D WebGL Engine Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls Bar -->
+  <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+    <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+      <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Select Vector Type:</span>
+      <select class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-vector-mode">
+        <option selected="" value="null">1. Null Vector (Zero Vector)</option>
+        <option value="unit">2. Unit Vector</option>
+        <option value="equal">3. Equal Vectors</option>
+        <option value="negative">4. Negative of a Vector</option>
+        <option value="coinitial">5. Co-initial Vectors</option>
+        <option value="collinear">6. Collinear / Parallel Vectors</option>
+        <option value="coplanar">7. Coplanar Vectors</option>
+        <option value="position">8. Position Vector</option>
+      </select>
+      
+      <span class="h-6 w-px bg-slate-200 hidden sm:inline mx-3"></span>
+      
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+      </button>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-4">
+      <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-5 w-5" id="chk-grid" type="checkbox"/>
+        <span>Show Reference Grid</span>
+      </label>
+      <button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-reset">
+        <span>🔄</span> Reset Parameters
+      </button>
+    </div>
+  </div>
+
+  <!-- Layout Grid -->
+  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    
+    <!-- Left Controls Panel -->
+    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[760px] viva-scrollbar">
+      <div class="space-y-4">
+        
+        <!-- Parameter Sliders Card -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4" id="pnl-parameters">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Active Parameter Adjustments</span>
+          
+          <div class="space-y-3" id="sliders-container">
+            <!-- Injected dynamically based on active mode -->
+          </div>
+        </div>
+
+        <!-- Telemetry Metrics Card (Dark themed dashboard) -->
+        <div class="bg-[#0f172a] text-slate-300 p-5 rounded-xl border border-slate-800 shadow-lg space-y-3">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-800 pb-1.5">Live Vector Telemetry</span>
+          
+          <div class="space-y-2 text-xs font-semibold" id="telemetry-readout">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Detail Card (Theory & CBSE Highlights) -->
+        <div class="bg-emerald-50/50 p-5 rounded-xl border border-emerald-250 shadow-sm space-y-3" id="pnl-details">
+          <span class="text-[9px] font-extrabold text-emerald-700 uppercase tracking-widest block mb-0.5" id="lbl-type-tag">Definition Summary</span>
+          <h3 class="text-sm font-bold text-emerald-950 leading-tight" id="lbl-info-title">Null Vector</h3>
+          <p class="text-[11px] text-slate-600 leading-relaxed font-semibold" id="lbl-info-desc">
+            A vector whose magnitude is zero is called a null vector or zero vector. It is denoted by $\vec{0}$. It has no definite direction, or can be regarded as having any direction.
+          </p>
+          <div class="bg-[#0f172a] p-3 rounded-lg border border-slate-800 shadow-inner">
+            <span class="text-[8px] font-extrabold text-emerald-400 uppercase tracking-wider block mb-1">Key Conceptual Fact</span>
+            <p class="text-[10px] text-slate-300 leading-normal font-bold italic" id="lbl-highlight-fact">
+              The physical significance of a null vector includes describing position vectors of particles at the origin, or the velocity vector of a stationary body.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Canvas Simulation Stage -->
+    <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[580px]">
+      
+      <!-- ThreeJS Viewport -->
+      <div class="absolute inset-0 w-full h-full block" id="3d-viewport"></div>
+      
+      <!-- Text Labels overlaying 3D -->
+      <div id="labels-overlay-container" class="absolute inset-0 pointer-events-none overflow-hidden select-none z-10">
+        <!-- labels injected here at coordinates mapped in JS -->
+      </div>
+
+      <!-- Combined Sparkl Logo & Active badge overlay -->
+      <div class="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-700 shadow-lg z-20 pointer-events-none select-none flex items-center gap-3">
+        <img alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        <div class="h-6 w-[1px] bg-slate-700"></div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] animate-pulse"></span>
+          <span class="text-xs font-bold text-slate-300 tracking-wider uppercase">3D Physics Sandbox</span>
+        </div>
+      </div>
+
+      <!-- Zoom/Rotate Hint Overlay -->
+      <div class="absolute bottom-4 left-4 bg-slate-900/85 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 max-w-sm pointer-events-none select-none z-20">
+        <span class="text-xs font-bold text-indigo-400 leading-tight">Drag to rotate view. Scroll to zoom. Use left sliders to animate vector classifications.</span>
+      </div>
+
+    </section>
+
+    <!-- Right MCQ Quiz Panel -->
+    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[760px] overflow-y-auto viva-scrollbar">
+      
+      <!-- Score Indicator -->
+      <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+        <div class="flex justify-between items-center mt-0.5">
+          <h2 class="text-sm font-bold tracking-tight text-slate-200">Vector Classifications</h2>
+          <span id="viva-score" class="text-[11px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full shadow-[0_0_8px_#6366f1]">Score: 0 / 4</span>
+        </div>
+      </div>
+
+      <!-- MCQ Question Cards -->
+      <div class="space-y-3 pb-4">
+        <!-- Q1 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+          <div class="space-y-2">
+            <span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Zero Vector]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-cyan-700">
+              Which of the following describes a Null Vector ($\vec{0}$)?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q1-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+          <div class="space-y-2">
+            <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Unit Vector]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-pink-700">
+              Given vector $\vec{v} = 3\hat{i} + 4\hat{j}$, what is its corresponding unit vector $\hat{v}$?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q2-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+          <div class="space-y-2">
+            <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Coplanarity]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-emerald-700">
+              Under what scalar triple product condition are three vectors $\vec{a}$, $\vec{b}$, and $\vec{c}$ coplanar?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-650 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q3-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer">
+          <div class="space-y-2">
+            <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Equal vs Collinear]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-amber-600">
+              What condition makes two collinear vectors $\vec{a}$ and $\vec{b} = k\vec{a}$ equal?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-650 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q4-feedback"></p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Modal Study Guide -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-widest">
+        <span>📐</span> VECTOR CLASSIFICATIONS
+      </h3>
+      <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">&times;</button>
+    </div>
+    <div class="space-y-4 text-sm text-slate-650 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+      <p>Welcome to the <strong>Types of Vectors 3D simulator</strong>! This virtual laboratory is built to help you visualize basic vector geometry classifications.</p>
+      
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-indigo-650 text-xs uppercase tracking-widest">🎮 Orbit Controls</h4>
+        <p>Left-click and drag inside the dark 3D canvas viewport to rotate the viewpoint. Scroll to zoom in/out. Right-click and drag to pan the viewport.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-indigo-650 text-xs uppercase tracking-widest">🎛️ Left Parameter Controls</h4>
+        <p>Switch between vector types in the controls bar dropdown. The left panel will populate with sliders corresponding to the selected classification rules.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-indigo-650 text-xs uppercase tracking-widest">📊 Dynamic 3D Telemetry</h4>
+        <p>Verify equal, parallel, coplanar, and unit length properties inside the dark telemetry box in real-time. Notice how the length scales and direction vector cosines change.</p>
+      </div>
+    </div>
+    <div class="pt-4 border-t border-slate-100 flex justify-end">
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Start Sandbox</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- VIVA ASSESSMENT DATA ---
+  const appState = {
+    vivaScore: 0,
+    answers: { q1: null, q2: null, q3: null, q4: null }
+  };
+
+  const vivaData = {
+    q1: {
+      options: [
+        { text: "It has a magnitude of zero and an arbitrary direction.", isCorrect: true, exp: "Correct! A null vector (or zero vector $\\vec{0}$) has magnitude $0$. Because its length is 0, it does not point in any specific direction, so its direction is arbitrary or indeterminate." },
+        { text: "It has a magnitude of one and points along the x-axis.", isCorrect: false, exp: "Incorrect. That describes a unit vector $\\hat{i}$." },
+        { text: "It is perpendicular to all other vectors.", isCorrect: false, exp: "Incorrect." },
+        { text: "It is a vector with changing coordinates.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q2: {
+      options: [
+        { text: "$3\\hat{i} + 4\\hat{j}$", isCorrect: false, exp: "Incorrect. The magnitude of this vector is 5, so it is not a unit vector." },
+        { text: "$0.6\\hat{i} + 0.8\\hat{j}$", isCorrect: true, exp: "Correct! To find the unit vector $\\hat{v}$, divide $\\vec{v}$ by its magnitude $|\\vec{v}| = \\sqrt{3^2 + 4^2} = 5$. Thus, $\\hat{v} = \\frac{3}{5}\\hat{i} + \\frac{4}{5}\\hat{j} = 0.6\\hat{i} + 0.8\\hat{j}$." },
+        { text: "$0.5\\hat{i} + 0.5\\hat{j}$", isCorrect: false, exp: "Incorrect." },
+        { text: "$1\\hat{i} + 1\\hat{j}$", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q3: {
+      options: [
+        { text: "$[\\vec{a} \\; \\vec{b} \\; \\vec{c}] = 0$", isCorrect: true, exp: "Correct! Three vectors are coplanar if and only if their scalar triple product is zero: $\\vec{a} \\cdot (\\vec{b} \\times \\vec{c}) = 0$. This implies that the parallelopiped formed by them has zero volume, meaning they lie in the same flat plane." },
+        { text: "$[\\vec{a} \\; \\vec{b} \\; \\vec{c}] = 1$", isCorrect: false, exp: "Incorrect." },
+        { text: "$\\vec{a} \\cdot \\vec{b} = 0$", isCorrect: false, exp: "Incorrect. This means $\\vec{a}$ and $\\vec{b}$ are perpendicular, not necessarily coplanar with $\\vec{c}$." },
+        { text: "$\\vec{a} \\times \\vec{b} = \\vec{c}$", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q4: {
+      options: [
+        { text: "When $k = 1$", isCorrect: true, exp: "Correct! Collinear vectors lie along the same line or parallel lines, so $\\vec{b} = k\\vec{a}$. For them to be *equal*, they must have both the same magnitude and the same direction, which occurs only when the scalar multiplier $k$ equals exactly $1$." },
+        { text: "When $k = -1$", isCorrect: false, exp: "Incorrect. This makes them opposite vectors (negative of each other)." },
+        { text: "When $k = 0$", isCorrect: false, exp: "Incorrect. This makes $\\vec{b}$ a null vector." },
+        { text: "For any positive value of $k$.", isCorrect: false, exp: "Incorrect. If $k \\neq 1$, their magnitudes differ." }
+      ]
+    }
+  };
+
+  const colorsMap = {
+    q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+    q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+    q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+    q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+  };
+
+  function triggerConfetti() {
+    const container = document.body;
+    const colors = ['#6366f1', '#10b981', '#06b6d4', '#ec4899', '#f59e0b', '#a855f7'];
+    const numParticles = 120;
+    for (let i = 0; i < numParticles; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      
+      const isRibbon = Math.random() > 0.8;
+      const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+      const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+      
+      confetti.style.width = `${w}px`;
+      confetti.style.height = `${h}px`;
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+      
+      const fromLeft = i < numParticles / 2;
+      confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+      confetti.style.top = 'calc(100vh + 10px)';
+      
+      const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+      const velocity = Math.random() * 500 + 400;
+      
+      const dx = Math.cos(angle) * velocity;
+      const dy = -Math.sin(angle) * velocity;
+      
+      const fallDuration = Math.random() * 1.5 + 2.0;
+      const spinRotation = Math.random() * 1080 - 540;
+      
+      confetti.style.transform = 'translate(0px, 0px) rotate(0deg)';
+      confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+      container.appendChild(confetti);
+      confetti.offsetHeight;
+      
+      confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+      confetti.style.opacity = '0';
+      
+      setTimeout(() => { confetti.remove(); }, fallDuration * 1000);
+    }
+  }
+
+  function renderQuestions() {
+    const scoreLabel = document.getElementById('viva-score');
+    Object.keys(vivaData).forEach(qKey => {
+      const data = vivaData[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      if (!optionsContainer || !feedbackContainer) return;
+      optionsContainer.innerHTML = '';
+      
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `relative text-left p-2.5 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+        let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+        btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+        
+        btn.addEventListener('click', () => {
+          if (appState.answers[qKey] !== null) return;
+          appState.answers[qKey] = idx;
+          if (opt.isCorrect) {
+            appState.vivaScore++;
+            triggerConfetti();
+          }
+          if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+          
+          const buttons = optionsContainer.querySelectorAll('button');
+          buttons.forEach((b, i) => {
+            b.disabled = true;
+            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+            b.classList.add('cursor-not-allowed', 'shadow-none');
+            if (appState.answers[qKey] === i) {
+              if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+              else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            } else if (data.options[i].isCorrect) {
+              b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+            } else {
+              b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+            }
+          });
+          feedbackContainer.innerHTML = opt.exp;
+          feedbackContainer.classList.remove('hidden');
+          if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') MathJax.typesetPromise([feedbackContainer]);
+        });
+        optionsContainer.appendChild(btn);
+      });
+    });
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+      setTimeout(() => {
+        MathJax.typesetPromise();
+      }, 50);
+    }
+  }
+
+  // --- Category Filter Handler ---
+  const selectCategory = document.getElementById('select-category');
+  if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+          const cat = selectCategory.value;
+          const questions = document.querySelectorAll('[data-category]');
+          questions.forEach(q => {
+              const qCat = q.getAttribute('data-category');
+              if (cat === 'all' || qCat === cat) {
+                  q.classList.remove('hidden');
+              } else {
+                  q.classList.add('hidden');
+              }
+          });
+      });
+  }
+
+  // --- 3D WEBGL GRAPHICS ENGINE ---
+  let activeMode = 'null';
+  let showGrid = true;
+  
+  // Storage for mode variables
+  const params = {
+    null: { x: 0, y: 0, z: 0 },
+    unit: { theta: 45, phi: 30 }, // Polar angles in degrees
+    equal: { x: 2, y: 3, z: 1.5, dx: 3, dy: -2, dz: -1 }, // Vector components & offset translation
+    negative: { x: 3, y: 2, z: -1.5 },
+    coinitial: { sx: 1, sy: 1.5, sz: -1, ax: 3, ay: 1, az: -2, bx: -2, by: 3, bz: 1, cx: 2, cy: -2, cz: 3 },
+    collinear: { x: 3, y: 1.5, z: -1, k: 1.5 },
+    coplanar: { lift: 0.0, ax: 3, ay: 1, az: 0, bx: -1.5, by: 2.5, bz: 0, cx: 1.5, cy: -1.5 },
+    position: { x: 3, y: 4, z: 2 }
+  };
+
+  const modeDetails = {
+    null: {
+      tag: "Null Vector (Zero Vector)",
+      title: "Characteristics of Null Vectors",
+      desc: "A vector having magnitude equal to zero is called a null vector or zero vector. It is denoted as $\\vec{0}$. Since its length is zero, its origin and terminal points coincide. Hence, its direction is arbitrary or indeterminate.",
+      fact: "Null vectors arise when subtracting a vector from itself: $\\vec{A} - \\vec{A} = \\vec{0}$, or describing a stationary body's velocity vector $\\vec{v} = \\vec{0}$."
+    },
+    unit: {
+      tag: "Unit Vector",
+      title: "Directional Specification",
+      desc: "A vector with a magnitude of exactly $1$ is called a unit vector. It is denoted with a caret (hat) like $\\hat{u}$. It represents direction only. A unit vector in the direction of a vector $\\vec{A}$ is calculated by: $\\hat{u} = \\frac{\\vec{A}}{|\\vec{A}|}$.",
+      fact: "In 3D Cartesian coordinates, unit vectors along the X, Y, and Z axes are represented by $\\hat{i}$, $\\hat{j}$, and $\\hat{k}$ respectively."
+    },
+    equal: {
+      tag: "Equal Vectors",
+      title: "Translational Invariance",
+      desc: "Two vectors are equal if they have the same magnitude and the same direction, regardless of the position of their initial points. Thus, shifting a vector parallel to itself does not change the vector.",
+      fact: "If $\\vec{a} = \\vec{b}$, their components must be identical: $a_x = b_x$, $a_y = b_y$, and $a_z = b_z$. Shifting them in space preserves equality."
+    },
+    negative: {
+      tag: "Negative of a Vector",
+      title: "Opposing Directions",
+      desc: "A vector having the same magnitude as a given vector $\\vec{a}$ but pointing in the exact opposite direction is called the negative of $\\vec{a}$, denoted as $-\\vec{a}$. The angle between them is exactly $180^\\circ$.",
+      fact: "The sum of a vector and its negative yields a null vector: $\\vec{a} + (-\\vec{a}) = \\vec{0}$."
+    },
+    coinitial: {
+      tag: "Co-initial Vectors",
+      title: "Shared Coordinate Origin",
+      desc: "Vectors that have the same initial point (starting point) are called co-initial vectors. They diverge from a single common junction point in space.",
+      fact: "In physics, force vectors acting concurrently on a single point of a body are represented as co-initial vectors."
+    },
+    collinear: {
+      tag: "Collinear / Parallel Vectors",
+      title: "Linear Line of Action",
+      desc: "Vectors that act along the same line or parallel lines are called collinear or parallel vectors. Two vectors $\\vec{a}$ and $\\vec{b}$ are collinear if and only if one is a scalar multiple of another: $\\vec{b} = k\\vec{a}$ for some scalar $k$.",
+      fact: "If $k > 0$, the vectors are 'like parallel' (pointing in the same direction). If $k < 0$, they are 'unlike parallel' (pointing in opposite directions)."
+    },
+    coplanar: {
+      tag: "Coplanar Vectors",
+      title: "Shared 2D Plane",
+      desc: "Vectors that lie in the same plane or are parallel to the same plane are called coplanar vectors. Any two vectors are always coplanar. Three vectors are coplanar if their scalar triple product is zero: $\\vec{a} \\cdot (\\vec{b} \\times \\vec{c}) = 0$.",
+      fact: "If three vectors are coplanar, one can be expressed as a linear combination of the other two: $\\vec{c} = x\\vec{a} + y\\vec{b}$."
+    },
+    position: {
+      tag: "Position Vector",
+      title: "Radial Coordinate Vector",
+      desc: "A vector which represents the position of a point in space relative to a fixed origin $O$ is called a position vector. If a point has coordinates $P(x, y, z)$, its position vector relative to origin $O(0,0,0)$ is $\\vec{r} = x\\hat{i} + y\\hat{j} + z\\hat{k}$.",
+      fact: "The magnitude of the position vector represents the straight-line distance from the origin: $|\\vec{r}| = \\sqrt{x^2 + y^2 + z^2}$."
+    }
+  };
+
+  let scene, camera, renderer, controls;
+  let vectorGroup;
+  let gridHelper;
+  const axesLines = [];
+  const axisLabelsDivs = [];
+
+  function init3D() {
+    const container = document.getElementById('3d-viewport');
+    if (!container) return;
+
+    // Clean container
+    container.innerHTML = '';
+
+    scene = new THREE.Scene();
+    
+    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(10, 8, 12);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    container.appendChild(renderer.domElement);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.maxPolarAngle = Math.PI / 2 + 0.1; // allow slightly below grid plane
+    controls.minDistance = 3;
+    controls.maxDistance = 30;
+
+    // Ambient and directional lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(5, 15, 10);
+    scene.add(dirLight);
+
+    // Grid Helper
+    gridHelper = new THREE.GridHelper(20, 20, 0x475569, 0x1e293b);
+    scene.add(gridHelper);
+
+    // Color-coded axis helper segments (manual construction for premium glowing styling)
+    const axesLen = 10;
+    const addAxis = (endPt, color, name) => {
+      const mat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+      const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), endPt]);
+      const line = new THREE.Line(geo, mat);
+      scene.add(line);
+      axesLines.push({ line, name, endPt });
+    };
+
+    addAxis(new THREE.Vector3(axesLen, 0, 0), 0xf87171, 'X'); // Red X
+    addAxis(new THREE.Vector3(0, axesLen, 0), 0x34d399, 'Y'); // Green Y (Up)
+    addAxis(new THREE.Vector3(0, 0, axesLen), 0x60a5fa, 'Z'); // Blue Z (Blue)
+
+    // Dynamic vector graphics container
+    vectorGroup = new THREE.Group();
+    scene.add(vectorGroup);
+
+    // Trigger initial render
+    buildVectorScene();
+    animate();
+    
+    // Create axis labels on overlay
+    createOverlayLabels();
+  }
+
+  function resize3D() {
+    const container = document.getElementById('3d-viewport');
+    if (!container || !renderer || !camera) return;
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    updateOverlayLabelsPos();
+  }
+  window.addEventListener('resize', resize3D);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (controls) controls.update();
+    if (renderer && scene && camera) renderer.render(scene, camera);
+    updateOverlayLabelsPos();
+  }
+
+  // --- FLOATING TEXT LABELS OVERLAY ENGINE ---
+  function createOverlayLabels() {
+    const container = document.getElementById('labels-overlay-container');
+    if (!container) return;
+    container.innerHTML = '';
+    axisLabelsDivs.length = 0;
+
+    // Create standard axis labels
+    const labels = [
+      { name: 'X', endPt: new THREE.Vector3(10.2, 0, 0), colorClass: 'bg-red-900/80 border-red-500 text-red-300' },
+      { name: 'Y', endPt: new THREE.Vector3(0, 10.2, 0), colorClass: 'bg-emerald-900/80 border-emerald-500 text-emerald-300' },
+      { name: 'Z', endPt: new THREE.Vector3(0, 0, 10.2), colorClass: 'bg-blue-900/80 border-blue-500 text-blue-300' }
+    ];
+
+    labels.forEach(lbl => {
+      const el = document.createElement('div');
+      el.className = `axis-label ${lbl.colorClass}`;
+      el.innerText = lbl.name;
+      container.appendChild(el);
+      axisLabelsDivs.push({ el, endPt: lbl.endPt });
+    });
+  }
+
+  function addDynamicLabel(pos, text, colorClass) {
+    const container = document.getElementById('labels-overlay-container');
+    if (!container) return;
+    const el = document.createElement('div');
+    el.className = `axis-label ${colorClass}`;
+    el.innerHTML = text;
+    container.appendChild(el);
+    axisLabelsDivs.push({ el, endPt: pos });
+  }
+
+  function updateOverlayLabelsPos() {
+    const container = document.getElementById('labels-overlay-container');
+    if (!container || !camera || !renderer) return;
+
+    const w = renderer.domElement.clientWidth;
+    const h = renderer.domElement.clientHeight;
+
+    axisLabelsDivs.forEach(lbl => {
+      const p = lbl.endPt.clone().project(camera);
+      // Check if coordinate is behind the camera viewport
+      if (p.z > 1) {
+        lbl.el.style.display = 'none';
+        return;
+      }
+      lbl.el.style.display = 'block';
+      const x = (p.x * 0.5 + 0.5) * w;
+      const y = (p.y * -0.5 + 0.5) * h;
+      lbl.el.style.left = `${x}px`;
+      lbl.el.style.top = `${y}px`;
+    });
+  }
+
+  // --- 3D SCENE CONSTRUCTOR ---
+  
+  // Custom helper: Draw premium vector arrow
+  function createVectorArrow(vec, origin, hex, label, labelClass) {
+    const group = new THREE.Group();
+    const len = vec.length();
+    if (len < 0.05) {
+      // Null vector case: Draw a point sphere instead
+      const geo = new THREE.SphereGeometry(0.12, 16, 16);
+      const mat = new THREE.MeshBasicMaterial({ color: hex });
+      const sphere = new THREE.Mesh(geo, mat);
+      sphere.position.copy(origin);
+      group.add(sphere);
+      if (label) addDynamicLabel(origin, label, labelClass);
+      return group;
+    }
+
+    const dir = vec.clone().normalize();
+    // Arrow Helper parameter: dir, origin, length, color, headLength, headWidth
+    const headLen = Math.min(0.8, len * 0.35);
+    const headW = Math.min(0.4, len * 0.2);
+    const arrow = new THREE.ArrowHelper(dir, origin, len, hex, headLen, headW);
+    group.add(arrow);
+
+    if (label) {
+      const labelPos = origin.clone().add(vec);
+      addDynamicLabel(labelPos, label, labelClass);
+    }
+    return group;
+  }
+
+  function buildVectorScene() {
+    // Clear dynamic objects and custom dynamic labels
+    if (vectorGroup) {
+      while (vectorGroup.children.length > 0) {
+        vectorGroup.remove(vectorGroup.children[0]);
+      }
+    }
+    createOverlayLabels();
+
+    const readout = document.getElementById('telemetry-readout');
+
+    if (activeMode === 'null') {
+      const p = params.null;
+      const origin = new THREE.Vector3(0,0,0);
+      
+      // Draw glowing sphere point
+      const pArrow = createVectorArrow(new THREE.Vector3(0,0,0), origin, 0xef4444, "O", "bg-red-950/80 border-red-500 text-red-300");
+      vectorGroup.add(pArrow);
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector Formula:</span>
+          <span class="font-bold text-white">$\\vec{0} = 0\\hat{i} + 0\\hat{j} + 0\\hat{k}$</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Magnitude $|\\vec{0}|$:</span>
+          <span class="font-bold text-red-400 text-sm">0.00</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Direction Cosines:</span>
+          <span class="font-bold text-slate-500">Arbitrary / Undefined</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'unit') {
+      const p = params.unit;
+      // Sphere helper wireframe
+      const sphereGeo = new THREE.SphereGeometry(3, 24, 24);
+      const sphereMat = new THREE.MeshBasicMaterial({
+        color: 0x94a3b8,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.12
+      });
+      const wireSphere = new THREE.Mesh(sphereGeo, sphereMat);
+      vectorGroup.add(wireSphere);
+
+      // Spherical coordinates mapping
+      const thetaRad = (p.theta * Math.PI) / 180;
+      const phiRad = (p.phi * Math.PI) / 180;
+      
+      const x = Math.sin(thetaRad) * Math.cos(phiRad);
+      const y = Math.cos(thetaRad);
+      const z = Math.sin(thetaRad) * Math.sin(phiRad);
+
+      const u = new THREE.Vector3(x, y, z).multiplyScalar(3); // Magnified by 3 for 3D visibility
+      const arrow = createVectorArrow(u, new THREE.Vector3(0,0,0), 0x10b981, "û", "bg-emerald-950/80 border-emerald-500 text-emerald-300");
+      vectorGroup.add(arrow);
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Unit Vector $\\hat{u}$:</span>
+          <span class="font-bold text-white">(${x.toFixed(2)}, ${y.toFixed(2)}, ${z.toFixed(2)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Magnitude $|\\hat{u}|$:</span>
+          <span class="font-bold text-emerald-400 text-sm">1.00</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Polar Angle $\\theta$:</span>
+          <span class="font-bold text-slate-200">${p.theta}°</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Azimuthal $\\phi$:</span>
+          <span class="font-bold text-slate-200">${p.phi}°</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'equal') {
+      const p = params.equal;
+      const vA = new THREE.Vector3(p.x, p.y, p.z);
+      
+      // Vector A starting at origin (0,0,0)
+      const arrowA = createVectorArrow(vA, new THREE.Vector3(0,0,0), 0x06b6d4, "a", "bg-cyan-950/80 border-cyan-500 text-cyan-300");
+      vectorGroup.add(arrowA);
+
+      // Vector B starting at (dx, dy, dz)
+      const originB = new THREE.Vector3(p.dx, p.dy, p.dz);
+      const arrowB = createVectorArrow(vA, originB, 0x10b981, "b", "bg-emerald-950/80 border-emerald-500 text-emerald-300");
+      vectorGroup.add(arrowB);
+
+      // Dashed displacement guide connecting origins
+      const dashMat = new THREE.LineDashedMaterial({ color: 0x94a3b8, dashSize: 0.2, gapSize: 0.15 });
+      const dispGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), originB]);
+      const dispLine = new THREE.Line(dispGeo, dashMat);
+      dispLine.computeLineDistances();
+      vectorGroup.add(dispLine);
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{a}$ components:</span>
+          <span class="font-bold text-cyan-400">(${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{b}$ components:</span>
+          <span class="font-bold text-emerald-400">(${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Magnitudes $|\\vec{a}| = |\\vec{b}|$:</span>
+          <span class="font-bold text-indigo-400 text-sm">${vA.length().toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Initial Point of $\\vec{b}$:</span>
+          <span class="font-bold text-slate-300">(${p.dx.toFixed(1)}, ${p.dy.toFixed(1)}, ${p.dz.toFixed(1)})</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'negative') {
+      const p = params.negative;
+      const vA = new THREE.Vector3(p.x, p.y, p.z);
+      const vNegA = vA.clone().negate();
+
+      const arrowA = createVectorArrow(vA, new THREE.Vector3(0,0,0), 0x06b6d4, "a", "bg-cyan-950/80 border-cyan-500 text-cyan-300");
+      vectorGroup.add(arrowA);
+
+      const arrowNegA = createVectorArrow(vNegA, new THREE.Vector3(0,0,0), 0xec4899, "-a", "bg-pink-950/80 border-pink-500 text-pink-300");
+      vectorGroup.add(arrowNegA);
+
+      // Dash axis projection guide line
+      const guideMat = new THREE.LineBasicMaterial({ color: 0x475569, opacity: 0.5, transparent: true });
+      const guideGeo = new THREE.BufferGeometry().setFromPoints([vNegA.clone().multiplyScalar(1.2), vA.clone().multiplyScalar(1.2)]);
+      const guideLine = new THREE.Line(guideGeo, guideMat);
+      vectorGroup.add(guideLine);
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{a}$:</span>
+          <span class="font-bold text-cyan-400">(${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Negative Vector $-\\vec{a}$:</span>
+          <span class="font-bold text-pink-400">(${-p.x.toFixed(1)}, ${-p.y.toFixed(1)}, ${-p.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Magnitude $|\\vec{a}| = |-\\vec{a}|$:</span>
+          <span class="font-bold text-indigo-400 text-sm">${vA.length().toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Sum $\\vec{a} + (-\\vec{a})$:</span>
+          <span class="font-bold text-white">$\\vec{0}$ (Null Vector)</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'coinitial') {
+      const p = params.coinitial;
+      const startPt = new THREE.Vector3(p.sx, p.sy, p.sz);
+
+      const vA = new THREE.Vector3(p.ax, p.ay, p.az);
+      const vB = new THREE.Vector3(p.bx, p.by, p.bz);
+      const vC = new THREE.Vector3(p.cx, p.cy, p.cz);
+
+      const arrowA = createVectorArrow(vA, startPt, 0x06b6d4, "a", "bg-cyan-950/80 border-cyan-500 text-cyan-300");
+      const arrowB = createVectorArrow(vB, startPt, 0xec4899, "b", "bg-pink-950/80 border-pink-500 text-pink-300");
+      const arrowC = createVectorArrow(vC, startPt, 0xf59e0b, "c", "bg-amber-950/80 border-amber-500 text-amber-300");
+
+      vectorGroup.add(arrowA);
+      vectorGroup.add(arrowB);
+      vectorGroup.add(arrowC);
+
+      // Mark the shared origin point
+      const originGeo = new THREE.SphereGeometry(0.13, 16, 16);
+      const originMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const originSphere = new THREE.Mesh(originGeo, originMat);
+      originSphere.position.copy(startPt);
+      vectorGroup.add(originSphere);
+
+      addDynamicLabel(startPt.clone().sub(new THREE.Vector3(0, 0.4, 0)), "Shared Start", "bg-slate-900 border border-slate-650 text-white");
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Shared Initial Point:</span>
+          <span class="font-bold text-white">(${p.sx.toFixed(1)}, ${p.sy.toFixed(1)}, ${p.sz.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{a}$ len:</span>
+          <span class="font-bold text-cyan-400">${vA.length().toFixed(1)} u</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{b}$ len:</span>
+          <span class="font-bold text-pink-400">${vB.length().toFixed(1)} u</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Vector $\\vec{c}$ len:</span>
+          <span class="font-bold text-amber-400">${vC.length().toFixed(1)} u</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'collinear') {
+      const p = params.collinear;
+      const vA = new THREE.Vector3(p.x, p.y, p.z);
+      const vB = vA.clone().multiplyScalar(p.k);
+
+      // Offset starting lines to visualize parallel nature
+      const startPtA = new THREE.Vector3(0, 0, -2);
+      const startPtB = new THREE.Vector3(0, 0, 2);
+
+      const arrowA = createVectorArrow(vA, startPtA, 0x06b6d4, "a", "bg-cyan-950/80 border-cyan-500 text-cyan-300");
+      const arrowB = createVectorArrow(vB, startPtB, 0xec4899, "b = k a", "bg-pink-950/80 border-pink-500 text-pink-300");
+
+      vectorGroup.add(arrowA);
+      vectorGroup.add(arrowB);
+
+      // Draw dashed line representing parallel planes
+      const supportMat = new THREE.LineBasicMaterial({ color: 0x475569, opacity: 0.3, transparent: true });
+      const supportGeoA = new THREE.BufferGeometry().setFromPoints([startPtA.clone().sub(vA.clone().multiplyScalar(0.5)), startPtA.clone().add(vA.clone().multiplyScalar(2))]);
+      const supportGeoB = new THREE.BufferGeometry().setFromPoints([startPtB.clone().sub(vB.clone().multiplyScalar(0.5)), startPtB.clone().add(vB.clone().multiplyScalar(1.5))]);
+      vectorGroup.add(new THREE.Line(supportGeoA, supportMat));
+      vectorGroup.add(new THREE.Line(supportGeoB, supportMat));
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{a}$ components:</span>
+          <span class="font-bold text-cyan-400">(${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Scalar Factor $k$:</span>
+          <span class="font-bold text-white font-mono text-sm">${p.k.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{b} = k\\vec{a}$:</span>
+          <span class="font-bold text-pink-400">(${vB.x.toFixed(1)}, ${vB.y.toFixed(1)}, ${vB.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Alignment Type:</span>
+          <span class="font-bold text-indigo-400">${p.k > 0 ? "Like Parallel (Co-directional)" : (p.k < 0 ? "Unlike Parallel (Opposite)" : "Collinear Zero")}</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'coplanar') {
+      const p = params.coplanar;
+      
+      // Draw grid helper plane on XY plane (z = 0)
+      const planeGeo = new THREE.PlaneGeometry(8, 8, 4, 4);
+      const planeMat = new THREE.MeshBasicMaterial({
+        color: 0x6366f1,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.DoubleSide,
+        wireframe: true
+      });
+      const plane = new THREE.Mesh(planeGeo, planeMat);
+      plane.rotation.x = 0; // vertical/flat on XY plane
+      vectorGroup.add(plane);
+
+      const vA = new THREE.Vector3(p.ax, p.ay, p.az);
+      const vB = new THREE.Vector3(p.bx, p.by, p.bz);
+      const vC = new THREE.Vector3(p.cx, p.cy, p.lift); // lift goes along Z axis perpendicular to XY plane
+
+      const arrowA = createVectorArrow(vA, new THREE.Vector3(0,0,0), 0x06b6d4, "a", "bg-cyan-950/80 border-cyan-500 text-cyan-300");
+      const arrowB = createVectorArrow(vB, new THREE.Vector3(0,0,0), 0x10b981, "b", "bg-emerald-950/80 border-emerald-500 text-emerald-300");
+      const arrowC = createVectorArrow(vC, new THREE.Vector3(0,0,0), 0xf59e0b, "c", "bg-amber-950/80 border-amber-500 text-amber-300");
+
+      vectorGroup.add(arrowA);
+      vectorGroup.add(arrowB);
+      vectorGroup.add(arrowC);
+
+      // Dash guide from C tip to XY plane (lift)
+      if (Math.abs(p.lift) > 0.05) {
+        const dashMat = new THREE.LineDashedMaterial({ color: 0x94a3b8, dashSize: 0.2, gapSize: 0.15 });
+        const guideGeo = new THREE.BufferGeometry().setFromPoints([vC, new THREE.Vector3(p.cx, p.cy, 0)]);
+        const guideLine = new THREE.Line(guideGeo, dashMat);
+        guideLine.computeLineDistances();
+        vectorGroup.add(guideLine);
+      }
+
+      // Check coplanarity via scalar triple product: a . (b x c)
+      // Since a and b are in XY plane (az = bz = 0), a x b is strictly along Z.
+      // Thus, scalar triple product is directly proportional to cz (lift).
+      const isCoplanar = Math.abs(p.lift) < 0.05;
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{a}$ (XY plane):</span>
+          <span class="font-bold text-cyan-400">(${p.ax.toFixed(1)}, ${p.ay.toFixed(1)}, 0.0)</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{b}$ (XY plane):</span>
+          <span class="font-bold text-emerald-400">(${p.bx.toFixed(1)}, ${p.by.toFixed(1)}, 0.0)</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Vector $\\vec{c}$ (Lifted):</span>
+          <span class="font-bold text-amber-400">(${p.cx.toFixed(1)}, ${p.cy.toFixed(1)}, ${p.lift.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Coplanar Status:</span>
+          <span class="font-bold text-sm ${isCoplanar ? 'text-emerald-400' : 'text-rose-400'}">${isCoplanar ? "✅ Coplanar" : "❌ Non-Coplanar (cz ≠ 0)"}</span>
+        </div>
+      `;
+
+    } else if (activeMode === 'position') {
+      const p = params.position;
+      const vR = new THREE.Vector3(p.x, p.y, p.z);
+      const origin = new THREE.Vector3(0,0,0);
+
+      // Target sphere at point P
+      const ptGeo = new THREE.SphereGeometry(0.13, 16, 16);
+      const ptMat = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+      const ptSphere = new THREE.Mesh(ptGeo, ptMat);
+      ptSphere.position.copy(vR);
+      vectorGroup.add(ptSphere);
+
+      const arrow = createVectorArrow(vR, origin, 0xf59e0b, `P(${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)})`, "bg-amber-950/80 border-amber-500 text-amber-300");
+      vectorGroup.add(arrow);
+
+      // Dashed projection guides
+      const dashMat = new THREE.LineDashedMaterial({ color: 0x94a3b8, dashSize: 0.15, gapSize: 0.1 });
+      const addGuide = (ptList) => {
+        const geo = new THREE.BufferGeometry().setFromPoints(ptList);
+        const line = new THREE.Line(geo, dashMat);
+        line.computeLineDistances();
+        vectorGroup.add(line);
+      };
+      
+      // Projections
+      addGuide([vR, new THREE.Vector3(p.x, 0, p.z)]); // to XZ plane
+      addGuide([new THREE.Vector3(p.x, 0, p.z), new THREE.Vector3(p.x, 0, 0)]); // to X axis
+      addGuide([new THREE.Vector3(p.x, 0, p.z), new THREE.Vector3(0, 0, p.z)]); // to Z axis
+      addGuide([vR, new THREE.Vector3(0, p.y, 0)]); // to Y axis
+
+      readout.innerHTML = `
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Point Coordinates:</span>
+          <span class="font-bold text-white">P(${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)})</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1">
+          <span class="text-slate-400">Position Vector $\\vec{r}$:</span>
+          <span class="font-bold text-amber-400">${p.x.toFixed(1)}$\\hat{i}$ + ${p.y.toFixed(1)}$\\hat{j}$ + ${p.z.toFixed(1)}$\\hat{k}$</span>
+        </div>
+        <div class="flex justify-between pb-1">
+          <span class="text-slate-400">Distance $|\\vec{r}|$:</span>
+          <span class="font-bold text-indigo-400 text-sm">${vR.length().toFixed(2)} units</span>
+        </div>
+      `;
+    }
+
+    // Refresh MathJax equation overlays in detail / telemetry
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+      MathJax.typesetPromise([readout]);
+    }
+  }
+
+  // --- INTERACTIVE SLIDERS GENERATION ---
+  function loadSliders() {
+    const container = document.getElementById('sliders-container');
+    container.innerHTML = '';
+
+    const inputStyle = "w-full cursor-pointer";
+    const sliderBoxStyle = "bg-slate-50 p-3 rounded-lg border border-slate-200 shadow-xs";
+    const headerStyle = "flex justify-between items-center text-[10px] font-extrabold text-slate-500 mb-1.5 uppercase tracking-wide";
+
+    const createSlider = (label, id, min, max, step, val, colorClass, displayMapFn) => {
+      const box = document.createElement('div');
+      box.className = sliderBoxStyle;
+      
+      const head = document.createElement('div');
+      head.className = headerStyle;
+      head.innerHTML = `<span>${label}</span> <span id="val-${id}" class="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-1 py-0.5 rounded"></span>`;
+      
+      const input = document.createElement('input');
+      input.type = 'range';
+      input.id = `sl-${id}`;
+      input.min = min;
+      input.max = max;
+      input.step = step;
+      input.value = val;
+      input.className = `${inputStyle} ${colorClass}`;
+      
+      box.appendChild(head);
+      box.appendChild(input);
+      container.appendChild(box);
+
+      const valLabel = head.querySelector(`#val-${id}`);
+      valLabel.innerText = displayMapFn ? displayMapFn(val) : val;
+
+      input.addEventListener('input', (e) => {
+        const currentVal = parseFloat(e.target.value);
+        valLabel.innerText = displayMapFn ? displayMapFn(currentVal) : currentVal;
+        
+        // Update variables in parameters storage
+        const modeParams = params[activeMode];
+        if (modeParams.hasOwnProperty(id)) {
+          modeParams[id] = currentVal;
+          buildVectorScene();
+        }
+      });
+    };
+
+    if (activeMode === 'null') {
+      const p = params.null;
+      const box = document.createElement('div');
+      box.className = "text-xs font-bold text-slate-500 leading-relaxed text-center py-4 italic";
+      box.innerText = "Zero vectors possess 0 magnitude. No component scalars are adjustable.";
+      container.appendChild(box);
+
+    } else if (activeMode === 'unit') {
+      const p = params.unit;
+      createSlider("Polar Angle θ", "theta", 0, 180, 1, p.theta, "slider-indigo", v => `${v}°`);
+      createSlider("Azimuthal Angle φ", "phi", 0, 360, 1, p.phi, "slider-cyan", v => `${v}°`);
+
+    } else if (activeMode === 'equal') {
+      const p = params.equal;
+      createSlider("Vector X component", "x", -5, 5, 0.5, p.x, "slider-cyan");
+      createSlider("Vector Y component", "y", -5, 5, 0.5, p.y, "slider-cyan");
+      createSlider("Vector Z component", "z", -5, 5, 0.5, p.z, "slider-cyan");
+      createSlider("Translation Shift dX", "dx", -5, 5, 0.5, p.dx, "slider-emerald");
+      createSlider("Translation Shift dY", "dy", -5, 5, 0.5, p.dy, "slider-emerald");
+      createSlider("Translation Shift dZ", "dz", -5, 5, 0.5, p.dz, "slider-emerald");
+
+    } else if (activeMode === 'negative') {
+      const p = params.negative;
+      createSlider("Vector X component", "x", -5, 5, 0.5, p.x, "slider-cyan");
+      createSlider("Vector Y component", "y", -5, 5, 0.5, p.y, "slider-cyan");
+      createSlider("Vector Z component", "z", -5, 5, 0.5, p.z, "slider-cyan");
+
+    } else if (activeMode === 'coinitial') {
+      const p = params.coinitial;
+      createSlider("Shared Origin X", "sx", -4, 4, 0.5, p.sx, "slider-indigo");
+      createSlider("Shared Origin Y", "sy", -4, 4, 0.5, p.sy, "slider-indigo");
+      createSlider("Shared Origin Z", "sz", -4, 4, 0.5, p.sz, "slider-indigo");
+
+    } else if (activeMode === 'collinear') {
+      const p = params.collinear;
+      createSlider("Base Vector X", "x", -5, 5, 0.5, p.x, "slider-cyan");
+      createSlider("Base Vector Y", "y", -5, 5, 0.5, p.y, "slider-cyan");
+      createSlider("Base Vector Z", "z", -5, 5, 0.5, p.z, "slider-cyan");
+      createSlider("Scaling Factor k (b = ka)", "k", -2.5, 2.5, 0.1, p.k, "slider-pink");
+
+    } else if (activeMode === 'coplanar') {
+      const p = params.coplanar;
+      createSlider("Vector C Lift cz (Z-Axis)", "lift", -4, 4, 0.1, p.lift, "slider-amber");
+
+    } else if (activeMode === 'position') {
+      const p = params.position;
+      createSlider("Coordinate X", "x", -5, 5, 0.5, p.x, "slider-cyan");
+      createSlider("Coordinate Y", "y", -5, 5, 0.5, p.y, "slider-cyan");
+      createSlider("Coordinate Z", "z", -5, 5, 0.5, p.z, "slider-cyan");
+    }
+  }
+
+  // --- GENERAL SIMULATOR MANAGER EVENT HANDLERS ---
+  const selectMode = document.getElementById('select-vector-mode');
+  selectMode.addEventListener('change', (e) => {
+    activeMode = e.target.value;
+    
+    // Update text details panel
+    const details = modeDetails[activeMode];
+    if (details) {
+      document.getElementById('lbl-type-tag').textContent = "Vector Category: " + details.tag;
+      document.getElementById('lbl-info-title').textContent = details.title;
+      document.getElementById('lbl-info-desc').textContent = details.desc;
+      document.getElementById('lbl-highlight-fact').textContent = details.fact;
+      
+      if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+        MathJax.typesetPromise([
+          document.getElementById('lbl-info-desc'),
+          document.getElementById('lbl-highlight-fact')
+        ]);
+      }
+    }
+
+    // Refresh sliders and redraw
+    loadSliders();
+    buildVectorScene();
+  });
+
+  document.getElementById('chk-grid').addEventListener('change', (e) => {
+    showGrid = e.target.checked;
+    if (gridHelper) gridHelper.visible = showGrid;
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    params.null.x = 0; params.null.y = 0; params.null.z = 0;
+    params.unit.theta = 45; params.unit.phi = 30;
+    params.equal.x = 2; params.equal.y = 3; params.equal.z = 1.5; params.equal.dx = 3; params.equal.dy = -2; params.equal.dz = -1;
+    params.negative.x = 3; params.negative.y = 2; params.negative.z = -1.5;
+    params.coinitial.sx = 1; params.coinitial.sy = 1.5; params.coinitial.sz = -1;
+    params.collinear.x = 3; params.collinear.y = 1.5; params.collinear.z = -1; params.collinear.k = 1.5;
+    params.coplanar.lift = 0.0;
+    params.position.x = 3; params.position.y = 4; params.position.z = 2;
+
+    if (camera && controls) {
+      camera.position.set(10, 8, 12);
+      controls.target.set(0, 0, 0);
+      controls.update();
+    }
+
+    loadSliders();
+    buildVectorScene();
+  });
+
+  // Modal Study Guide
+  const guideModal = document.getElementById('user-guide-modal');
+  document.getElementById('btn-open-guide').addEventListener('click', () => {
+    guideModal.classList.remove('hidden');
+  });
+  document.getElementById('btn-close-guide').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+  document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+
+  // Setup layout panel collapse
+  (function() {
+    const btnToggleLeft = document.getElementById('btn-toggle-left');
+    const btnToggleViva = document.getElementById('btn-toggle-viva');
+    const leftPanel = document.getElementById('left-panel');
+    const vivaSection = document.getElementById('viva-section');
+    const mainLayout = document.getElementById('main-layout');
+    const canvasContainer = document.getElementById('canvas-container-wrapper');
+
+    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) return;
+
+    let leftVisible = true;
+    let vivaVisible = true;
+
+    function updateLayout() {
+      if (leftVisible) {
+        leftPanel.classList.remove('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+      } else {
+        leftPanel.classList.add('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+      }
+
+      if (vivaVisible) {
+        vivaSection.classList.remove('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+      } else {
+        vivaSection.classList.add('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+      }
+
+      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+      
+      let span = 12;
+      if (leftVisible && vivaVisible) span = 6;
+      else if (!leftVisible && !vivaVisible) span = 12;
+      else span = 9;
+
+      canvasContainer.classList.add('lg:col-span-' + span, 'md:col-span-' + span);
+
+      if (leftVisible && vivaVisible) {
+        mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      } else if (!leftVisible && !vivaVisible) {
+        mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      } else {
+        mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      }
+
+      // Re-trigger viewport resize
+      setTimeout(resize3D, 20);
+    }
+
+    btnToggleLeft.addEventListener('click', () => {
+      leftVisible = !leftVisible;
+      updateLayout();
+    });
+    btnToggleViva.addEventListener('click', () => {
+      vivaVisible = !vivaVisible;
+      updateLayout();
+    });
+  })();
+
+  // Boot setup
+  window.addEventListener('DOMContentLoaded', () => {
+    renderQuestions();
+    loadSliders();
+    init3D();
+    
+    // trigger guide modal
+    if (!window.location.search.includes('hideModal')) {
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+    }
+  });
+</script>
+</body>
+</html>

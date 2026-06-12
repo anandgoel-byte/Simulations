@@ -172,10 +172,11 @@
                     class="px-5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
                     <span>🔄</span> Reset Plane
                 </button>
-            
-      
-      
-      
+                <select id="select-scenario" onchange="updateUIForScenario()" class="bg-white border border-slate-300 text-cyan-700 text-sm font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all cursor-pointer shadow-sm">
+                    <option value="flight">Scenario 1: Airplane Flight Path</option>
+                    <option value="shadow">Scenario 2: Tower Shadow (Moving Sun)</option>
+                    <option value="poles">Scenario 3: Two Poles on Road</option>
+                </select>            
       
       <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
         <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
@@ -190,8 +191,6 @@
                     <span>Show Ground Grid</span>
                 </label>
             </div>
-        
-      
       </div>
 
         <!-- Main Layout Split: 3 | 6 | 3 -->
@@ -204,32 +203,36 @@
                 <div class="space-y-4">
 
                     <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
-                        <span
+                        <span id="lbl-section-title"
                             class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-2">Flight
                             Parameters</span>
 
                         <!-- Altitude -->
-                        <div>
+                        <div id="container-h">
                             <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-2">
-                                <span class="text-pink-600 flex items-center gap-1">■ Altitude / Height
-                                    (Opposite)</span>
+                                <span class="text-pink-600 flex items-center gap-1" id="lbl-h-title">■ Altitude / Height (Opposite)</span>
                                 <span id="val-h"
-                                    class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-xs">4000
-                                    m</span>
+                                    class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-xs">4000 m</span>
                             </div>
                             <input type="range" id="slider-h" min="1000" max="8000" step="100" value="4000"
                                 class="slider-pink">
                         </div>
 
                         <!-- Horizontal Distance -->
-                        <div>
+                        <div id="container-d">
                             <div class="flex justify-between text-[10px] font-bold text-slate-700 mb-1 mt-4">
-                                <span class="text-cyan-600 flex items-center gap-1">■ Ground Distance (Adjacent)</span>
+                                <span class="text-cyan-600 flex items-center gap-1" id="lbl-d-title">■ Ground Distance (Adjacent)</span>
                                 <span id="val-d"
-                                    class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">4000
-                                    m</span>
+                                    class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-xs">4000 m</span>
                             </div>
                             <input type="range" id="slider-d" min="1000" max="10000" step="100" value="4000">
+                        </div>
+
+                        <!-- Standard Case Preset -->
+                        <div id="container-standard-case" style="display: none;" class="mt-2">
+                            <button id="btn-standard-case" class="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all">
+                                Set CBSE Standard Case
+                            </button>
                         </div>
 
                     </div>
@@ -247,7 +250,7 @@
                                     class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
                                     <span
                                         class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] block"></span>
-                                    Angle of Elevation ($\theta$)
+                                    <span id="tel-1-label">Angle of Elevation ($\theta$)</span>
                                 </div>
                                 <div class="text-[16px] font-bold font-mono tracking-widest grad-amber uppercase"
                                     id="tel-angle">
@@ -261,11 +264,26 @@
                                     class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
                                     <span
                                         class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] block"></span>
-                                    Line of Sight (Hyp)
+                                    <span id="tel-2-label">Line of Sight (Hyp)</span>
                                 </div>
                                 <div class="text-[14px] font-bold font-mono tracking-widest text-white uppercase"
                                     id="tel-hyp">
                                     5656.8 m
+                                </div>
+                            </div>
+
+                            <!-- Third Telemetry Card (For Scenario 2 and 3) -->
+                            <div id="tel-extra-container" style="display: none;"
+                                class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800 mt-1">
+                                <div
+                                    class="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <span
+                                        class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span>
+                                    <span id="tel-extra-label">Shadow Difference</span>
+                                </div>
+                                <div class="text-[14px] font-bold font-mono tracking-widest text-cyan-400 uppercase"
+                                    id="tel-extra">
+                                    0.0 m
                                 </div>
                             </div>
                         </div>
@@ -274,23 +292,19 @@
                     <!-- Formula Box -->
                     <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2">
                         <span
-                            class="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-2">Trigonometric
-                            Ratios</span>
+                            class="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-2">Trigonometric Relations</span>
                         <div class="text-[12px] font-mono py-2 space-y-3">
                             <div class="bg-[#0f172a] p-2 rounded border border-slate-800">
-                                <div class="text-emerald-400 mb-1 text-[10px]">TANGENT (Direction/Slope)</div>
-                                <div>$\tan(\theta) = \frac{\text{Opp}}{\text{Adj}} = $ <span id="math-tan"
-                                        class="text-white">1.000</span></div>
+                                <div class="text-emerald-400 mb-1 text-[10px]" id="formula-h-title">TANGENT (Direction/Slope)</div>
+                                <div id="formula-h-math">$\tan(\theta) = \frac{\text{Opp}}{\text{Adj}} = 1.000$</div>
                             </div>
                             <div class="bg-[#0f172a] p-2 rounded border border-slate-800">
-                                <div class="text-pink-400 mb-1 text-[10px]">SINE (Altitude Ratio)</div>
-                                <div>$\sin(\theta) = \frac{\text{Opp}}{\text{Hyp}} = $ <span id="math-sin"
-                                        class="text-white">0.707</span></div>
+                                <div class="text-pink-400 mb-1 text-[10px]" id="formula-d-title">SINE (Altitude Ratio)</div>
+                                <div id="formula-d-math">$\sin(\theta) = \frac{\text{Opp}}{\text{Hyp}} = 0.707$</div>
                             </div>
                             <div class="bg-[#0f172a] p-2 rounded border border-slate-800">
-                                <div class="text-cyan-400 mb-1 text-[10px]">COSINE (Distance Ratio)</div>
-                                <div>$\cos(\theta) = \frac{\text{Adj}}{\text{Hyp}} = $ <span id="math-cos"
-                                        class="text-white">0.707</span></div>
+                                <div class="text-cyan-400 mb-1 text-[10px]" id="formula-extra-title">COSINE (Distance Ratio)</div>
+                                <div id="formula-extra-math">$\cos(\theta) = \frac{\text{Adj}}{\text{Hyp}} = 0.707$</div>
                             </div>
                         </div>
                     </div>
@@ -298,7 +312,6 @@
                 </div>
             </section>
 
-            <!-- CENTER: 3D Three.js Canvas -->
             <section
                 class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-x-4 border-slate-900 min-h-[500px]"
                 id="three-container">
@@ -606,6 +619,7 @@
                                 b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
                             }
                         });
+
                         feedbackContainer.innerHTML = opt.exp;
                         feedbackContainer.classList.remove('hidden');
                         if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
@@ -624,37 +638,162 @@
         const valH = document.getElementById('val-h');
         const valD = document.getElementById('val-d');
 
-        const mathTan = document.getElementById('math-tan');
-        const mathSin = document.getElementById('math-sin');
-        const mathCos = document.getElementById('math-cos');
+
 
         const telAngle = document.getElementById('tel-angle');
         const telHyp = document.getElementById('tel-hyp');
 
         let pState = { H: 4000, D: 4000, Hyp: 5656.8, Theta: 45.0 };
 
+        function updateUIForScenario() {
+            const scenario = document.getElementById('select-scenario').value;
+            const containerD = document.getElementById('container-d');
+            const labelH = document.getElementById('lbl-h-title');
+            const labelD = document.getElementById('lbl-d-title');
+            const sectionTitle = document.getElementById('lbl-section-title');
+            const btnReset = document.querySelector('button[onclick="resetSim()"]');
+            const containerStandard = document.getElementById('container-standard-case');
+            const btnStandard = document.getElementById('btn-standard-case');
+            
+            if (scenario === 'flight') {
+                sectionTitle.innerText = "Flight Parameters";
+                labelH.innerHTML = "■ Altitude / Height (Opposite)";
+                labelD.innerHTML = "■ Ground Distance (Adjacent)";
+                containerD.style.display = "block";
+                containerStandard.style.display = "none";
+                
+                slH.min = 1000; slH.max = 8000; slH.step = 100;
+                slD.min = 1000; slD.max = 10000; slD.step = 100;
+                
+                document.getElementById('tel-extra-container').style.display = "none";
+                document.getElementById('tel-1-label').innerHTML = "Angle of Elevation ($\\theta$)";
+                document.getElementById('tel-2-label').innerHTML = "Line of Sight (Hyp)";
+                
+                btnReset.innerHTML = "<span>🔄</span> Reset Plane";
+                
+                slH.value = 4000; slD.value = 4000;
+                controls.target.set(30, 15, 0);
+                camera.position.set(40, 30, 80);
+            } else if (scenario === 'shadow') {
+                sectionTitle.innerText = "Tower Shadow Parameters";
+                labelH.innerHTML = "■ Tower Height (H)";
+                containerD.style.display = "none";
+                containerStandard.style.display = "block";
+                btnStandard.innerText = "Set CBSE Standard (H = 20√3 ≈ 34.6m)";
+                
+                slH.min = 10; slH.max = 80; slH.step = 0.1;
+                
+                document.getElementById('tel-extra-container').style.display = "flex";
+                document.getElementById('tel-1-label').innerHTML = "Shadow at 60° ($s_1$)";
+                document.getElementById('tel-2-label').innerHTML = "Shadow at 30° ($s_2$)";
+                document.getElementById('tel-extra-label').innerHTML = "Shadow Difference ($s_2 - s_1$)";
+                
+                btnReset.innerHTML = "<span>🔄</span> Reset Tower";
+                
+                slH.value = 34.6; // 20√3
+                controls.target.set(15, 10, 0);
+                camera.position.set(20, 20, 50);
+            } else if (scenario === 'poles') {
+                sectionTitle.innerText = "Opposite Poles Parameters";
+                labelH.innerHTML = "■ Poles Height (H)";
+                labelD.innerHTML = "■ Observer Position from Left (x)";
+                containerD.style.display = "block";
+                containerStandard.style.display = "block";
+                btnStandard.innerText = "Set CBSE Standard (H = 20√3, x = 20m)";
+                
+                slH.min = 10; slH.max = 60; slH.step = 0.1;
+                slD.min = 5; slD.max = 75; slD.step = 0.5;
+                
+                document.getElementById('tel-extra-container').style.display = "flex";
+                document.getElementById('tel-1-label').innerHTML = "Angle to Left Pole ($\\theta_1$)";
+                document.getElementById('tel-2-label').innerHTML = "Angle to Right Pole ($\\theta_2$)";
+                document.getElementById('tel-extra-label').innerHTML = "Road Width / Left Position";
+                
+                btnReset.innerHTML = "<span>🔄</span> Reset Poles";
+                
+                slH.value = 34.6; // 20√3
+                slD.value = 20;
+                controls.target.set(20, 10, 0);
+                camera.position.set(20, 15, 55);
+            }
+            controls.update();
+            updateState();
+        }
+
         function updateState() {
-            pState.H = parseFloat(slH.value);
-            pState.D = parseFloat(slD.value);
+            const scenario = document.getElementById('select-scenario').value;
+            
+            if (scenario === 'flight') {
+                pState.H = parseFloat(slH.value);
+                pState.D = parseFloat(slD.value);
+                pState.Hyp = Math.sqrt(pState.H ** 2 + pState.D ** 2);
+                pState.Theta = Math.atan2(pState.H, pState.D) * (180 / Math.PI);
 
-            // Calculations
-            pState.Hyp = Math.sqrt(pState.H ** 2 + pState.D ** 2);
-            pState.Theta = Math.atan2(pState.H, pState.D) * (180 / Math.PI);
+                valH.innerText = `${pState.H} m`;
+                valD.innerText = `${pState.D} m`;
 
-            let tanVal = pState.H / pState.D;
-            let sinVal = pState.H / pState.Hyp;
-            let cosVal = pState.D / pState.Hyp;
 
-            // Update UI Telemetry
-            valH.innerText = `${pState.H} m`;
-            valD.innerText = `${pState.D} m`;
 
-            mathTan.innerText = tanVal.toFixed(3);
-            mathSin.innerText = sinVal.toFixed(3);
-            mathCos.innerText = cosVal.toFixed(3);
+                telAngle.innerText = `${pState.Theta.toFixed(1)}°`;
+                telHyp.innerText = `${pState.Hyp.toFixed(1)} m`;
+                
+                document.getElementById('formula-h-title').innerText = "TANGENT (Direction/Slope)";
+                document.getElementById('formula-h-math').innerHTML = "$\\tan(\\theta) = \\frac{\\text{Opp}}{\\text{Adj}} = $ " + (pState.H / pState.D).toFixed(3);
+                document.getElementById('formula-d-title').innerText = "SINE (Altitude Ratio)";
+                document.getElementById('formula-d-math').innerHTML = "$\\sin(\\theta) = \\frac{\\text{Opp}}{\\text{Hyp}} = $ " + (pState.H / pState.Hyp).toFixed(3);
+                document.getElementById('formula-extra-title').innerText = "COSINE (Distance Ratio)";
+                document.getElementById('formula-extra-math').innerHTML = "$\\cos(\\theta) = \\frac{\\text{Adj}}{\\text{Hyp}} = $ " + (pState.D / pState.Hyp).toFixed(3);
+                
+            } else if (scenario === 'shadow') {
+                pState.H = parseFloat(slH.value);
+                let s1 = pState.H / Math.sqrt(3);
+                let s2 = pState.H * Math.sqrt(3);
+                let diff = s2 - s1;
 
-            telAngle.innerText = `${pState.Theta.toFixed(1)}°`;
-            telHyp.innerText = `${pState.Hyp.toFixed(1)} m`;
+                valH.innerText = `${pState.H.toFixed(1)} m`;
+
+                telAngle.innerText = `${s1.toFixed(1)} m`;
+                telHyp.innerText = `${s2.toFixed(1)} m`;
+                document.getElementById('tel-extra').innerText = `${diff.toFixed(1)} m`;
+
+                document.getElementById('formula-h-title').innerText = "SHADOW AT 60°";
+                document.getElementById('formula-h-math').innerHTML = "$\\tan(60^\\circ) = \\frac{H}{s_1} \\implies s_1 = \\frac{H}{\\sqrt{3}} = $ " + s1.toFixed(1) + " m";
+                document.getElementById('formula-d-title').innerText = "SHADOW AT 30°";
+                document.getElementById('formula-d-math').innerHTML = "$\\tan(30^\\circ) = \\frac{H}{s_2} \\implies s_2 = H\\sqrt{3} = $ " + s2.toFixed(1) + " m";
+                document.getElementById('formula-extra-title').innerText = "SHADOW DIFFERENCE";
+                document.getElementById('formula-extra-math').innerHTML = "$\\Delta s = s_2 - s_1 = \\frac{2H}{\\sqrt{3}} = $ " + diff.toFixed(1) + " m";
+
+            } else if (scenario === 'poles') {
+                pState.H = parseFloat(slH.value);
+                let x = parseFloat(slD.value);
+                let distLeft = x;
+                let distRight = 80 - x;
+
+                let theta1 = Math.atan2(pState.H, distLeft) * (180 / Math.PI);
+                let theta2 = Math.atan2(pState.H, distRight) * (180 / Math.PI);
+
+                valH.innerText = `${pState.H.toFixed(1)} m`;
+                valD.innerText = `${x.toFixed(1)} m`;
+
+                telAngle.innerText = `${theta1.toFixed(1)}°`;
+                telHyp.innerText = `${theta2.toFixed(1)}°`;
+                document.getElementById('tel-extra').innerText = `80m / ${distLeft.toFixed(1)}m`;
+
+                document.getElementById('formula-h-title').innerText = "POLE 1 (LEFT)";
+                document.getElementById('formula-h-math').innerHTML = "$\\tan(\\theta_1) = \\frac{H}{x} \\implies H = x\\tan(\\theta_1)$";
+                document.getElementById('formula-d-title').innerText = "POLE 2 (RIGHT)";
+                document.getElementById('formula-d-math').innerHTML = "$\\tan(\\theta_2) = \\frac{H}{80-x} \\implies H = (80-x)\\tan(\\theta_2)$";
+                document.getElementById('formula-extra-title').innerText = "STANDARD RELATION (θ1=60°, θ2=30°)";
+                document.getElementById('formula-extra-math').innerHTML = "$x = 20\\text{ m} \\implies H = 20\\sqrt{3} \\approx 34.6\\text{ m}$";
+            }
+
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([
+                    document.getElementById('formula-h-math'),
+                    document.getElementById('formula-d-math'),
+                    document.getElementById('formula-extra-math')
+                ]).catch(err => console.log(err));
+            }
 
             update3DScene();
         }
@@ -662,9 +801,34 @@
         slH.addEventListener('input', updateState);
         slD.addEventListener('input', updateState);
 
+        document.getElementById('btn-standard-case').addEventListener('click', () => {
+            const scenario = document.getElementById('select-scenario').value;
+            if (scenario === 'shadow') {
+                slH.value = 34.6;
+            } else if (scenario === 'poles') {
+                slH.value = 34.6;
+                slD.value = 20;
+            }
+            updateState();
+        });
+
         function resetSim() {
-            slH.value = 4000; slD.value = 4000;
+            const scenario = document.getElementById('select-scenario').value;
+            if (scenario === 'flight') {
+                slH.value = 4000; slD.value = 4000;
+                camera.position.set(40, 30, 80);
+                controls.target.set(30, 15, 0);
+            } else if (scenario === 'shadow') {
+                slH.value = 34.6;
+                camera.position.set(20, 20, 50);
+                controls.target.set(15, 10, 0);
+            } else if (scenario === 'poles') {
+                slH.value = 34.6; slD.value = 20;
+                camera.position.set(20, 15, 55);
+                controls.target.set(20, 10, 0);
+            }
             controls.reset();
+            controls.update();
             updateState();
         }
 
@@ -689,11 +853,23 @@
         controls.target.set(30, 15, 0);
 
         // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
         scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(20, 50, 20);
+        
+        // Hemisphere light for natural ambient fills
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x334155, 0.45);
+        hemiLight.position.set(0, 50, 0);
+        scene.add(hemiLight);
+
+        // Strong directional light pointing from front-top-right to illuminate facing surfaces
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+        dirLight.position.set(40, 60, 45);
         scene.add(dirLight);
+
+        // Opposite backing light for secondary illumination
+        const backLight = new THREE.DirectionalLight(0xffffff, 0.45);
+        backLight.position.set(-20, 30, -30);
+        scene.add(backLight);
 
         // Objects
         let gridHelper;
@@ -701,13 +877,15 @@
         let linesGroup = new THREE.Group();
         scene.add(linesGroup);
 
+        let towerMesh, sunMesh, leftPoleMesh, rightPoleMesh, roadMesh, observer;
+
         // Materials
-        const matPlane = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 });
-        const matAcc = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+        const matPlane = new THREE.MeshPhongMaterial({ color: 0xf8fafc, shininess: 40, specular: 0x111111 });
+        const matAcc = new THREE.MeshPhongMaterial({ color: 0x06b6d4, shininess: 40, specular: 0x111111 });
         const matLineHyp = new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 3 }); // Emerald
         const matLineOpp = new THREE.LineDashedMaterial({ color: 0xec4899, dashSize: 1, gapSize: 1 }); // Pink
         const matLineAdj = new THREE.LineBasicMaterial({ color: 0x06b6d4, linewidth: 3 }); // Cyan
-        const matArc = new THREE.LineBasicMaterial({ color: 0xf59e0b, linewidth: 2 }); // Amber
+        const matArc = new THREE.LineBasicMaterial({ color: 0xf59e0b, linewidth: 2 }); // Amber (generic fallback)
 
         function createAeroplane() {
             let group = new THREE.Group();
@@ -733,48 +911,333 @@
             scene.add(gridHelper);
 
             // Observer (Simple sphere at origin)
-            let observer = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), new THREE.MeshStandardMaterial({ color: 0x10b981 }));
+            observer = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 16), new THREE.MeshPhongMaterial({ color: 0x10b981, shininess: 30 }));
             scene.add(observer);
 
             // Plane
             planeMesh = createAeroplane();
             scene.add(planeMesh);
+
+            // Tower Mesh
+            const matTower = new THREE.MeshPhongMaterial({ color: 0xe2e8f0, shininess: 35, specular: 0x222222 });
+            towerMesh = new THREE.Group();
+            let baseMesh = new THREE.Mesh(new THREE.BoxGeometry(4, 1, 4), matTower);
+            baseMesh.position.y = 0.5;
+            towerMesh.add(baseMesh);
+            
+            let shaftMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.5, 7, 8), matTower);
+            shaftMesh.position.y = 4.5;
+            towerMesh.add(shaftMesh);
+            
+            let domeMesh = new THREE.Mesh(new THREE.ConeGeometry(1.2, 2, 8), new THREE.MeshPhongMaterial({ color: 0x06b6d4, shininess: 30 }));
+            domeMesh.position.y = 9;
+            towerMesh.add(domeMesh);
+            scene.add(towerMesh);
+            towerMesh.visible = false;
+
+            // Sun Mesh
+            sunMesh = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 16), new THREE.MeshBasicMaterial({ color: 0xf59e0b }));
+            scene.add(sunMesh);
+            sunMesh.visible = false;
+
+            // Poles
+            const matPole = new THREE.MeshPhongMaterial({ color: 0xe2e8f0, shininess: 35, specular: 0x222222 });
+            
+            leftPoleMesh = new THREE.Group();
+            let leftShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 10, 8), matPole);
+            leftShaft.position.y = 5;
+            leftPoleMesh.add(leftShaft);
+            let leftCross = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 0.2), matPole);
+            leftCross.position.y = 9.5;
+            leftPoleMesh.add(leftCross);
+            scene.add(leftPoleMesh);
+            leftPoleMesh.visible = false;
+
+            rightPoleMesh = new THREE.Group();
+            let rightShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 10, 8), matPole);
+            rightShaft.position.y = 5;
+            rightPoleMesh.add(rightShaft);
+            let rightCross = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 0.2), matPole);
+            rightCross.position.y = 9.5;
+            rightPoleMesh.add(rightCross);
+            scene.add(rightPoleMesh);
+            rightPoleMesh.visible = false;
+
+            // Road Plane
+            roadMesh = new THREE.Mesh(new THREE.PlaneGeometry(100, 10), new THREE.MeshLambertMaterial({ color: 0x1e293b }));
+            roadMesh.rotation.x = -Math.PI / 2;
+            roadMesh.position.set(40, -0.05, 0);
+            scene.add(roadMesh);
+            roadMesh.visible = false;
+        }
+
+        function clearLinesGroup() {
+            while(linesGroup.children.length > 0) {
+                const obj = linesGroup.children[0];
+                linesGroup.remove(obj);
+                if (obj.geometry) obj.geometry.dispose();
+                if (obj.material) {
+                    if (Array.isArray(obj.material)) {
+                        obj.material.forEach(m => {
+                            if (m.map) m.map.dispose();
+                            m.dispose();
+                        });
+                    } else {
+                        if (obj.material.map) obj.material.map.dispose();
+                        obj.material.dispose();
+                    }
+                }
+            }
+        }
+
+        function createTextSprite(text, color) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = 'rgba(0,0,0,0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.font = 'bold 26px "JetBrains Mono", monospace';
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Draw a rounded rect bubble background
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)'; // Dark slate background
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            
+            const r = 8;
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.beginPath();
+            ctx.moveTo(r, 0);
+            ctx.lineTo(w - r, 0);
+            ctx.quadraticCurveTo(w, 0, w, r);
+            ctx.lineTo(w, h - r);
+            ctx.quadraticCurveTo(w, h, w - r, h);
+            ctx.lineTo(r, h);
+            ctx.quadraticCurveTo(0, h, 0, h - r);
+            ctx.lineTo(0, r);
+            ctx.quadraticCurveTo(0, 0, r, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.fillStyle = '#ffffff'; // White text
+            ctx.fillText(text, w / 2, h / 2);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.set(6, 3, 1);
+            return sprite;
         }
 
         function update3DScene() {
+            const scenario = document.getElementById('select-scenario').value;
             gridHelper.visible = chkGrid.checked;
 
-            let x = pState.D * SCALE;
-            let y = pState.H * SCALE;
+            // Hide all by default
+            planeMesh.visible = false;
+            observer.visible = false;
+            if (towerMesh) towerMesh.visible = false;
+            if (sunMesh) sunMesh.visible = false;
+            if (leftPoleMesh) leftPoleMesh.visible = false;
+            if (rightPoleMesh) rightPoleMesh.visible = false;
+            if (roadMesh) roadMesh.visible = false;
 
-            // Move plane
-            planeMesh.position.set(x, y, 0);
+            clearLinesGroup();
 
-            // Rebuild Triangle Lines
-            linesGroup.clear();
+            if (scenario === 'flight') {
+                planeMesh.visible = true;
+                observer.visible = true;
+                observer.position.set(0, 0, 0);
 
-            // Adjacent (Ground) - Cyan
-            let geoAdj = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, 0, 0)]);
-            linesGroup.add(new THREE.Line(geoAdj, matLineAdj));
+                let x = pState.D * SCALE;
+                let y = pState.H * SCALE;
 
-            // Opposite (Altitude) - Pink Dashed
-            let geoOpp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, 0, 0), new THREE.Vector3(x, y, 0)]);
-            let lineOpp = new THREE.Line(geoOpp, matLineOpp);
-            lineOpp.computeLineDistances(); // Required for dashed lines
-            linesGroup.add(lineOpp);
+                // Move plane
+                planeMesh.position.set(x, y, 0);
+                planeMesh.scale.set(1, 1, 1);
 
-            // Hypotenuse (Line of Sight) - Emerald
-            let geoHyp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, 0)]);
-            linesGroup.add(new THREE.Line(geoHyp, matLineHyp));
+                // Rebuild Triangle Lines
+                let geoAdj = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, 0, 0)]);
+                linesGroup.add(new THREE.Line(geoAdj, matLineAdj));
 
-            // Angle Arc (Amber)
-            let arcRadius = Math.min(x, y, 15) * 0.4; // Scale arc to fit nicely
-            let thetaRad = pState.Theta * (Math.PI / 180);
-            let arcCurve = new THREE.EllipseCurve(0, 0, arcRadius, arcRadius, 0, thetaRad, false, 0);
-            let arcPoints = arcCurve.getPoints(30);
-            let geoArc = new THREE.BufferGeometry().setFromPoints(arcPoints);
-            let lineArc = new THREE.Line(geoArc, matArc);
-            linesGroup.add(lineArc);
+                let geoOpp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, 0, 0), new THREE.Vector3(x, y, 0)]);
+                let lineOpp = new THREE.Line(geoOpp, matLineOpp);
+                lineOpp.computeLineDistances();
+                linesGroup.add(lineOpp);
+
+                let geoHyp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, 0)]);
+                linesGroup.add(new THREE.Line(geoHyp, matLineHyp));
+
+                let arcRadius = Math.min(x, y, 15) * 0.4;
+                let thetaRad = pState.Theta * (Math.PI / 180);
+                let arcCurve = new THREE.EllipseCurve(0, 0, arcRadius, arcRadius, 0, thetaRad, false, 0);
+                let arcPoints = arcCurve.getPoints(30);
+                let geoArc = new THREE.BufferGeometry().setFromPoints(arcPoints);
+                let lineArc = new THREE.Line(geoArc, matArc);
+                linesGroup.add(lineArc);
+
+                // Add dynamic angle label
+                let thetaText = pState.Theta.toFixed(1) + "°";
+                let thetaSprite = createTextSprite(thetaText, '#f59e0b');
+                let midTheta = thetaRad / 2;
+                thetaSprite.position.set(arcRadius * 1.5 * Math.cos(midTheta), arcRadius * 1.5 * Math.sin(midTheta), 0);
+                linesGroup.add(thetaSprite);
+
+            } else if (scenario === 'shadow') {
+                if (towerMesh) towerMesh.visible = true;
+                if (sunMesh) sunMesh.visible = true;
+
+                const sScale = 0.5;
+                let h = pState.H * sScale;
+
+                towerMesh.scale.set(1.5, h / 10, 1.5);
+                towerMesh.position.set(0, 0, 0);
+
+                let s1 = (pState.H / Math.sqrt(3)) * sScale;
+                let s2 = (pState.H * Math.sqrt(3)) * sScale;
+
+                sunMesh.position.set(s2, h, 0).multiplyScalar(1.2);
+
+                let geoOpp = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, h, 0)]);
+                let lineOpp = new THREE.Line(geoOpp, matLineOpp);
+                lineOpp.computeLineDistances();
+                linesGroup.add(lineOpp);
+
+                let geoAdj1 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(s1, 0, 0)]);
+                linesGroup.add(new THREE.Line(geoAdj1, matLineAdj));
+
+                let geoAdj2 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(s1, 0, 0), new THREE.Vector3(s2, 0, 0)]);
+                let matAdjDashed = new THREE.LineDashedMaterial({ color: 0x06b6d4, dashSize: 0.5, gapSize: 0.5 });
+                let lineAdj2 = new THREE.Line(geoAdj2, matAdjDashed);
+                lineAdj2.computeLineDistances();
+                linesGroup.add(lineAdj2);
+
+                let geoHyp1 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(s1, 0, 0), new THREE.Vector3(0, h, 0)]);
+                linesGroup.add(new THREE.Line(geoHyp1, matLineHyp));
+
+                let geoHyp2 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(s2, 0, 0), new THREE.Vector3(0, h, 0)]);
+                let lineHyp2 = new THREE.Line(geoHyp2, new THREE.LineDashedMaterial({ color: 0x10b981, dashSize: 1, gapSize: 1 }));
+                lineHyp2.computeLineDistances();
+                linesGroup.add(lineHyp2);
+
+                let arc1Radius = Math.min(s1, h, 8) * 0.4;
+                let arc1Curve = new THREE.EllipseCurve(s1, 0, arc1Radius, arc1Radius, Math.PI, Math.PI - Math.PI/3, true, 0);
+                let arc1Points = arc1Curve.getPoints(30);
+                let geoArc1 = new THREE.BufferGeometry().setFromPoints(arc1Points);
+                linesGroup.add(new THREE.Line(geoArc1, new THREE.LineBasicMaterial({ color: 0xec4899, linewidth: 2 })));
+
+                let arc2Radius = Math.min(s2, h, 8) * 0.4;
+                let arc2Curve = new THREE.EllipseCurve(s2, 0, arc2Radius, arc2Radius, Math.PI, Math.PI - Math.PI/6, true, 0);
+                let arc2Points = arc2Curve.getPoints(30);
+                let geoArc2 = new THREE.BufferGeometry().setFromPoints(arc2Points);
+                linesGroup.add(new THREE.Line(geoArc2, new THREE.LineBasicMaterial({ color: 0xf59e0b, linewidth: 2 })));
+
+                // Add dynamic angle labels
+                let angle1Sprite = createTextSprite("60.0°", '#ec4899');
+                let midArc1 = 150 * (Math.PI / 180); // 180 - 30
+                angle1Sprite.position.set(s1 + arc1Radius * 1.5 * Math.cos(midArc1), arc1Radius * 1.5 * Math.sin(midArc1), 0);
+                linesGroup.add(angle1Sprite);
+
+                let angle2Sprite = createTextSprite("30.0°", '#f59e0b');
+                let midArc2 = 165 * (Math.PI / 180); // 180 - 15
+                angle2Sprite.position.set(s2 + arc2Radius * 1.5 * Math.cos(midArc2), arc2Radius * 1.5 * Math.sin(midArc2), 0);
+                linesGroup.add(angle2Sprite);
+
+                let obs1 = new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 16), new THREE.MeshPhongMaterial({ color: 0xec4899, shininess: 30 }));
+                obs1.position.set(s1, 0, 0);
+                linesGroup.add(obs1);
+
+                let obs2 = new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 16), new THREE.MeshPhongMaterial({ color: 0xf59e0b, shininess: 30 }));
+                obs2.position.set(s2, 0, 0);
+                linesGroup.add(obs2);
+
+            } else if (scenario === 'poles') {
+                if (leftPoleMesh) leftPoleMesh.visible = true;
+                if (rightPoleMesh) rightPoleMesh.visible = true;
+                if (roadMesh) roadMesh.visible = true;
+                observer.visible = true;
+
+                const pScale = 0.5;
+                let h = pState.H * pScale;
+                let x = parseFloat(slD.value);
+                let px = x * pScale;
+                let roadWidth = 80 * pScale;
+
+                leftPoleMesh.scale.set(1.5, h / 10, 1.5);
+                leftPoleMesh.position.set(0, 0, 0);
+
+                rightPoleMesh.scale.set(1.5, h / 10, 1.5);
+                rightPoleMesh.position.set(roadWidth, 0, 0);
+
+                observer.position.set(px, 0, 0);
+
+                let geoAdjLeft = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(px, 0, 0)]);
+                linesGroup.add(new THREE.Line(geoAdjLeft, matLineAdj));
+
+                let geoAdjRight = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(px, 0, 0), new THREE.Vector3(roadWidth, 0, 0)]);
+                linesGroup.add(new THREE.Line(geoAdjRight, matLineAdj));
+
+                let geoHLeft = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, h, 0)]);
+                let lineHLeft = new THREE.Line(geoHLeft, matLineOpp);
+                lineHLeft.computeLineDistances();
+                linesGroup.add(lineHLeft);
+
+                let geoHRight = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(roadWidth, 0, 0), new THREE.Vector3(roadWidth, h, 0)]);
+                let lineHRight = new THREE.Line(geoHRight, matLineOpp);
+                lineHRight.computeLineDistances();
+                linesGroup.add(lineHRight);
+
+                let geoHypLeft = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(px, 0, 0), new THREE.Vector3(0, h, 0)]);
+                linesGroup.add(new THREE.Line(geoHypLeft, matLineHyp));
+
+                let geoHypRight = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(px, 0, 0), new THREE.Vector3(roadWidth, h, 0)]);
+                linesGroup.add(new THREE.Line(geoHypRight, matLineHyp));
+
+                let theta1Rad = Math.atan2(h, px);
+                let arc1Radius = Math.min(px, h, 8) * 0.4;
+                let arc1Curve = new THREE.EllipseCurve(px, 0, arc1Radius, arc1Radius, Math.PI, Math.PI - theta1Rad, true, 0);
+                let arc1Points = arc1Curve.getPoints(30);
+                let geoArc1 = new THREE.BufferGeometry().setFromPoints(arc1Points);
+                linesGroup.add(new THREE.Line(geoArc1, new THREE.LineBasicMaterial({ color: 0x06b6d4, linewidth: 2 })));
+
+                let theta2Rad = Math.atan2(h, roadWidth - px);
+                let arc2Radius = Math.min(roadWidth - px, h, 8) * 0.4;
+                let arc2Curve = new THREE.EllipseCurve(px, 0, arc2Radius, arc2Radius, 0, theta2Rad, false, 0);
+                let arc2Points = arc2Curve.getPoints(30);
+                let geoArc2 = new THREE.BufferGeometry().setFromPoints(arc2Points);
+                linesGroup.add(new THREE.Line(geoArc2, new THREE.LineBasicMaterial({ color: 0xec4899, linewidth: 2 })));
+
+                // Add dynamic angle labels
+                let theta1 = theta1Rad * (180 / Math.PI);
+                let t1Text = theta1.toFixed(1) + "°";
+                let angle1Sprite = createTextSprite(t1Text, '#06b6d4');
+                let midArc1 = Math.PI - theta1Rad / 2;
+                angle1Sprite.position.set(px + arc1Radius * 1.5 * Math.cos(midArc1), arc1Radius * 1.5 * Math.sin(midArc1), 0);
+                linesGroup.add(angle1Sprite);
+
+                let theta2 = theta2Rad * (180 / Math.PI);
+                let t2Text = theta2.toFixed(1) + "°";
+                let angle2Sprite = createTextSprite(t2Text, '#ec4899');
+                let midArc2 = theta2Rad / 2;
+                angle2Sprite.position.set(px + arc2Radius * 1.5 * Math.cos(midArc2), arc2Radius * 1.5 * Math.sin(midArc2), 0);
+                linesGroup.add(angle2Sprite);
+
+                // Add highly visible lane dashes on the road
+                let roadDashesGeo = new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(0, 0.01, 0), new THREE.Vector3(roadWidth, 0.01, 0)
+                ]);
+                let roadDashesMat = new THREE.LineDashedMaterial({ color: 0xffffff, dashSize: 1.5, gapSize: 1.5 });
+                let roadDashes = new THREE.Line(roadDashesGeo, roadDashesMat);
+                roadDashes.computeLineDistances();
+                linesGroup.add(roadDashes);
+            }
         }
 
         chkGrid.addEventListener('change', update3DScene);
@@ -783,10 +1246,13 @@
             requestAnimationFrame(animate);
             controls.update();
 
-            // Slight hover effect on plane
-            if (planeMesh) {
+            const scenario = document.getElementById('select-scenario').value;
+            if (scenario === 'flight' && planeMesh) {
                 planeMesh.rotation.x = Math.sin(Date.now() * 0.002) * 0.05;
                 planeMesh.position.z = Math.sin(Date.now() * 0.001) * 0.5;
+            } else if (planeMesh) {
+                planeMesh.rotation.set(0, 0, 0);
+                planeMesh.position.z = 0;
             }
 
             renderer.render(scene, camera);
@@ -801,7 +1267,158 @@
 
         document.getElementById('btn-zoom-in').addEventListener('click', () => { camera.position.multiplyScalar(0.8); });
         document.getElementById('btn-zoom-out').addEventListener('click', () => { camera.position.multiplyScalar(1.2); });
-        document.getElementById('btn-zoom-reset').addEventListener('click', () => { controls.reset(); camera.position.set(40, 30, 80); controls.target.set(30, 15, 0); });
+        document.getElementById('btn-zoom-reset').addEventListener('click', () => { resetSim(); });
+
+        // --- 3D INTERACTIVE DRAGGING ---
+        let isDraggingPoint = false;
+        let draggedObject = null;
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        const dragPlaneNormal = new THREE.Vector3(0, 0, 1);
+        const dragPlanePoint = new THREE.Vector3(0, 0, 0);
+
+        function onMouseMove(event) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const scenario = document.getElementById('select-scenario').value;
+
+            if (isDraggingPoint) {
+                const denom = raycaster.ray.direction.dot(dragPlaneNormal);
+                if (Math.abs(denom) > 1e-6) {
+                    const s = dragPlaneNormal.dot(dragPlanePoint.clone().sub(raycaster.ray.origin)) / denom;
+                    const intersection = raycaster.ray.origin.clone().add(raycaster.ray.direction.clone().multiplyScalar(s));
+
+                    if (draggedObject === 'plane') {
+                        let dVal = intersection.x / SCALE;
+                        let hVal = intersection.y / SCALE;
+                        
+                        dVal = Math.max(1000, Math.min(10000, dVal));
+                        hVal = Math.max(1000, Math.min(8000, hVal));
+                        
+                        slD.value = Math.round(dVal);
+                        slH.value = Math.round(hVal);
+                        updateState();
+                    } else if (draggedObject === 'tower') {
+                        let hVal = intersection.y / 0.5;
+                        hVal = Math.max(10, Math.min(80, hVal));
+                        slH.value = hVal.toFixed(1);
+                        updateState();
+                    } else if (draggedObject === 'observer') {
+                        let xVal = intersection.x / 0.5;
+                        xVal = Math.max(5, Math.min(75, xVal));
+                        slD.value = xVal.toFixed(1);
+                        updateState();
+                    } else if (draggedObject === 'poles') {
+                        let hVal = intersection.y / 0.5;
+                        hVal = Math.max(10, Math.min(60, hVal));
+                        slH.value = hVal.toFixed(1);
+                        updateState();
+                    }
+                }
+            } else {
+                let hoverFound = false;
+                if (scenario === 'flight' && planeMesh) {
+                    const intersects = raycaster.intersectObject(planeMesh, true);
+                    if (intersects.length > 0) hoverFound = true;
+                } else if (scenario === 'shadow' && towerMesh) {
+                    const intersects = raycaster.intersectObject(towerMesh, true);
+                    if (intersects.length > 0) hoverFound = true;
+                } else if (scenario === 'poles') {
+                    const intersectsObs = raycaster.intersectObject(observer, true);
+                    const intersectsPoles = raycaster.intersectObjects([leftPoleMesh, rightPoleMesh], true);
+                    if (intersectsObs.length > 0 || intersectsPoles.length > 0) hoverFound = true;
+                }
+                
+                if (hoverFound) {
+                    container.style.cursor = 'grab';
+                } else {
+                    container.style.cursor = 'default';
+                }
+            }
+        }
+
+        function onMouseDown(event) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const scenario = document.getElementById('select-scenario').value;
+
+            if (scenario === 'flight') {
+                const intersects = raycaster.intersectObject(planeMesh, true);
+                if (intersects.length > 0) {
+                    isDraggingPoint = true;
+                    draggedObject = 'plane';
+                    controls.enabled = false;
+                    container.style.cursor = 'grabbing';
+                    dragPlanePoint.copy(planeMesh.position);
+                }
+            } else if (scenario === 'shadow') {
+                const intersects = raycaster.intersectObject(towerMesh, true);
+                if (intersects.length > 0) {
+                    isDraggingPoint = true;
+                    draggedObject = 'tower';
+                    controls.enabled = false;
+                    container.style.cursor = 'grabbing';
+                    dragPlanePoint.copy(towerMesh.position);
+                }
+            } else if (scenario === 'poles') {
+                const intersectsObs = raycaster.intersectObject(observer, true);
+                if (intersectsObs.length > 0) {
+                    isDraggingPoint = true;
+                    draggedObject = 'observer';
+                    controls.enabled = false;
+                    container.style.cursor = 'grabbing';
+                    dragPlanePoint.copy(observer.position);
+                    return;
+                }
+                const intersectsPoles = raycaster.intersectObjects([leftPoleMesh, rightPoleMesh], true);
+                if (intersectsPoles.length > 0) {
+                    isDraggingPoint = true;
+                    draggedObject = 'poles';
+                    controls.enabled = false;
+                    container.style.cursor = 'grabbing';
+                    dragPlanePoint.copy(intersectsPoles[0].object.position);
+                }
+            }
+        }
+
+        function onMouseUp() {
+            if (isDraggingPoint) {
+                isDraggingPoint = false;
+                draggedObject = null;
+                controls.enabled = true;
+                container.style.cursor = 'default';
+            }
+        }
+
+        function onTouchMove(event) {
+            if (event.touches.length > 0) {
+                onMouseMove(event.touches[0]);
+            }
+        }
+
+        function onTouchStart(event) {
+            if (event.touches.length > 0) {
+                onMouseDown(event.touches[0]);
+            }
+        }
+
+        function onTouchEnd() {
+            onMouseUp();
+        }
+
+        container.addEventListener('mousemove', onMouseMove);
+        container.addEventListener('mousedown', onMouseDown);
+        window.addEventListener('mouseup', onMouseUp);
+
+        container.addEventListener('touchmove', onTouchMove, { passive: true });
+        container.addEventListener('touchstart', onTouchStart, { passive: true });
+        window.addEventListener('touchend', onTouchEnd);
 
         // --- Category Filter Handler ---
         const selectCategory = document.getElementById('select-category');
@@ -832,19 +1449,12 @@
         window.addEventListener('load', () => {
             try { renderQuestions(); } catch (e) { console.error(e); }
             init3D();
-            updateState();
+            updateUIForScenario();
             animate();
-
+            
             userGuideModal.classList.remove('hidden');
         });
     </script>
-
-  
-
-  
-
-  
-
   <!-- Layout Collapsible Panels Handler -->
   <script>
     (function() {

@@ -208,6 +208,7 @@
                 $$f_k = \mu_k (mg - T\sin(\theta))$$
               </div>
 </div></div></div>
+<<<<<<< HEAD
 <div id="canvas-container-wrapper" class="md:col-span-8 relative bg-white overflow-hidden flex flex-col justify-center border-8 border-slate-100 min-h-[500px]">
 <canvas class="w-full h-full block" id="simCanvas"></canvas>
 <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none select-none z-20">
@@ -215,13 +216,18 @@
     <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
   </div>
   <div class="bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 self-start">
+=======
+<div class="md:col-span-8 relative bg-slate-950 overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+<canvas class="w-full h-full block" id="simCanvas"></canvas>
+<div class="absolute top-4 left-4 bg-slate-900/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-800 shadow-sm flex items-center gap-2 pointer-events-none select-none">
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
 <span class="w-2.5 h-2.5 rounded-full bg-slate-400" id="status-dot"></span>
-<span class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider" id="simStatusText">Simulation Paused</span>
+<span class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider" id="simStatusText">Simulation Paused</span>
 </div>
 </div>
 <div class="absolute bottom-10 left-0 right-0 flex justify-center gap-20 pointer-events-none select-none">
-<div class="text-2xl font-sans text-slate-800 tracking-wide font-medium">a = <span id="overlay-a">11.0</span> m/s²</div>
-<div class="text-2xl font-sans text-slate-800 tracking-wide font-medium">v = <span id="overlay-v">0.0</span> m/s</div>
+<div class="text-2xl font-sans text-slate-200 tracking-wide font-medium">a = <span id="overlay-a">11.0</span> m/s²</div>
+<div class="text-2xl font-sans text-slate-200 tracking-wide font-medium">v = <span id="overlay-v">0.0</span> m/s</div>
 </div>
 </div>
 </section>
@@ -240,11 +246,11 @@
 <option value="neet">NEET Prep</option>
 </select>
 </div><div class="space-y-3">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2017]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        Why does pulling the box at an upward angle ($\theta &gt; 0^\circ$) reduce the frictional force?
+                        A block of mass $10\text{ kg}$ is placed on a rough horizontal surface with coefficient of friction $\mu = 0.5$. If a horizontal force of $100\text{ N}$ is applied, the acceleration of the block will be: (Take $g = 10\text{ m/s}^2$)
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
@@ -254,27 +260,27 @@
 <div class="space-y-2">
 <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        What physically happens to the box if $T \sin\theta &gt; mg$?
+                        A body of mass $2\text{ kg}$ is placed on an inclined plane with angle $30^\circ$. If the coefficient of friction is $0.7$, what is the frictional force acting on the body? (Take $g = 10\text{ m/s}^2$)
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
 </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2013]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        Why is the coefficient of static friction ($\mu_s$) typically greater than kinetic friction ($\mu_k$)?
+                        The coefficient of static friction between a block of mass $m$ and an inclined plane is $\mu = 0.3$. The maximum angle of the plane for which the block does not slide is:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
 </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[AIPMT 2005]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
-                        If the box is currently sliding, but you reduce Tension such that $T_x &lt; f_k$, what occurs?
+                        A car of mass $1000\text{ kg}$ is moving with a velocity of $20\text{ m/s}$. If the brakes are applied and the car stops in $10\text{ m}$, what is the coefficient of friction? (Take $g = 10\text{ m/s}^2$)
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
@@ -592,7 +598,8 @@
       const dt = Math.min((timestamp - lastTime) / 1000, 0.05);
       lastTime = timestamp;
 
-      calculatePhysics(dt);
+      // Slow the simulation speed a little bit (half speed)
+      calculatePhysics(dt * 0.5);
 
       const W = simCanvas.width / window.devicePixelRatio;
       const H = simCanvas.height / window.devicePixelRatio;
@@ -605,7 +612,7 @@
       const cy = groundY - boxSize/2 - boxY * 10; // 10 is arbitrary visual scale for vertical lift
 
       // Draw Ground (Jagged line style from image)
-      ctx.strokeStyle = '#475569';
+      ctx.strokeStyle = '#64748b'; // Slate 500 for visibility on black
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       let startX = - (groundOffset % 40);
@@ -633,33 +640,33 @@
       const W_force = mass * g;
 
       // 1. Gravity (mg) -> Down
-      drawArrow(cx, cy, cx, cy + W_force * vecScale, '#000000', showValues ? `mg=${W_force.toFixed(1)}` : 'mg');
+      drawArrow(cx, cy, cx, cy + W_force * vecScale, '#cbd5e1', showValues ? `mg=${W_force.toFixed(1)}` : 'mg');
 
       // 2. Normal Force (N) -> Up
       if(normalForce > 0) {
-        drawArrow(cx, cy, cx, cy - normalForce * vecScale, '#000000', showValues ? `n=${normalForce.toFixed(1)}` : 'n');
+        drawArrow(cx, cy, cx, cy - normalForce * vecScale, '#34d399', showValues ? `n=${normalForce.toFixed(1)}` : 'n');
       }
 
       // 3. Tension (T) -> Angled
       if (tension > 0) {
         const tx = cx + tension * vecScale * Math.cos(angleRad);
         const ty = cy - tension * vecScale * Math.sin(angleRad);
-        drawArrow(cx, cy, tx, ty, '#374151', showValues ? `T=${tension.toFixed(0)}` : 'T');
+        drawArrow(cx, cy, tx, ty, '#818cf8', showValues ? `T=${tension.toFixed(0)}` : 'T');
 
         if (showComp) {
           // Tx
-          drawArrow(cx, cy, tx, cy, '#64748b', 'T_x', true);
+          drawArrow(cx, cy, tx, cy, '#cbd5e1', 'T_x', true);
           // Ty
-          drawArrow(cx, cy, cx, ty, '#64748b', 'T_y', true);
+          drawArrow(cx, cy, cx, ty, '#cbd5e1', 'T_y', true);
         }
 
         // Draw Angle Arc
         if (angleDeg > 0 && angleDeg < 90) {
-           ctx.strokeStyle = '#16a34a';
+           ctx.strokeStyle = '#4ade80'; // bright green
            ctx.beginPath();
            ctx.arc(cx, cy, 35, 0, -angleRad, true);
            ctx.stroke();
-           ctx.fillStyle = '#16a34a';
+           ctx.fillStyle = '#4ade80';
            ctx.font = 'bold 11px sans-serif';
            ctx.fillText(`${angleDeg}°`, cx + 40 * Math.cos(-angleRad/2), cy + 40 * Math.sin(-angleRad/2));
         }
@@ -668,11 +675,11 @@
       // 4. Friction (f) -> Left
       if (f_friction > 0) {
         // Draw from bottom center of box
-        drawArrow(cx, cy + boxSize/2, cx - f_friction * vecScale, cy + boxSize/2, '#b91c1c', showValues ? `f=${f_friction.toFixed(1)}` : 'f');
+        drawArrow(cx, cy + boxSize/2, cx - f_friction * vecScale, cy + boxSize/2, '#f87171', showValues ? `f=${f_friction.toFixed(1)}` : 'f');
       }
 
       // Center dot
-      ctx.fillStyle = '#475569';
+      ctx.fillStyle = '#94a3b8';
       ctx.beginPath();
       ctx.arc(cx, cy, 4, 0, Math.PI*2);
       ctx.fill();
@@ -698,37 +705,41 @@
 
     const vivaData = {
         q1: {
+            question: "A block of mass $10\\text{ kg}$ is placed on a rough horizontal surface with coefficient of friction $\\mu = 0.5$. If a horizontal force of $100\\text{ N}$ is applied, the acceleration of the block will be: (Take $g = 10\\text{ m/s}^2$)",
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The upward component of tension ($T_y = T \sin\theta$) partially supports the box's weight.", isCorrect: true, exp: "Correct! The upward component of tension ($T_y = T \sin\theta$) partially supports the box's weight. This reduces the Normal force required from the ground: $$N = mg - T \sin\theta$$ Since kinetic friction is directly proportional to Normal force ($f_k = \mu_k N$), friction decreases." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$5\\text{ m/s}^2$", isCorrect: true, exp: "Correct! Limiting friction $f_l = \\mu mg = 0.5 \\times 10 \\times 10 = 50\\text{ N}$. Net force = Applied Force - Frictional Force $= 100\\text{ N} - 50\\text{ N} = 50\\text{ N}$. Acceleration $= F/m = 50/10 = 5\\text{ m/s}^2$." },
+                { text: "$10\\text{ m/s}^2$", isCorrect: false, exp: "Incorrect. You forgot to subtract the frictional force from the applied force." },
+                { text: "$0\\text{ m/s}^2$", isCorrect: false, exp: "Incorrect. The applied force is greater than the limiting friction, so the block must move." },
+                { text: "$2.5\\text{ m/s}^2$", isCorrect: false, exp: "Incorrect. Recheck your $F = ma$ calculation." }
             ]
         },
         q2: {
+            question: "A body of mass $2\\text{ kg}$ is placed on an inclined plane with angle $30^\\circ$. If the coefficient of friction is $0.7$, what is the frictional force acting on the body? (Take $g = 10\\text{ m/s}^2$)",
             options: [
-                { text: "If the upward pull component exceeds the gravitational weight, the Normal force becomes infinite ($N = 0$).", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "If the upward pull component exceeds the gravitational weight, the Normal force becomes zero ($N = 0$).", isCorrect: true, exp: "Correct! If the upward pull component exceeds the gravitational weight, the Normal force becomes zero ($N = 0$). The box completely lifts off the ground, surface friction vanishes entirely ($f = 0$), and the box will accelerate upwards." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$10.5\\text{ N}$", isCorrect: false, exp: "Incorrect. Static friction is limited by $\\mu_s N$, but its actual value must balance gravity down the incline." },
+                { text: "$10\\text{ N}$", isCorrect: true, exp: "Correct! The frictional force on an object at rest on a plane is static friction, which equals $mg \\sin\\theta = 2 \\times 10 \\times \\sin(30^\\circ) = 10\\text{ N}$. The maximum static friction (limiting) is $\\mu mg \\cos\\theta = 0.7 \\times 2 \\times 10 \\times (\\sqrt{3}/2) \\approx 12.1\\text{ N}$. Since the required pulling force down the plane ($10\\text{ N}$) is less than limiting friction, the static friction is exactly $10\\text{ N}$." },
+                { text: "$12.1\\text{ N}$", isCorrect: false, exp: "Incorrect. This is the limiting friction, not the actual static friction acting on the body." },
+                { text: "$0\\text{ N}$", isCorrect: false, exp: "Incorrect. Friction must act to oppose the tendency of the body to slide down." }
             ]
         },
         q3: {
+            question: "The coefficient of static friction between a block of mass $m$ and an inclined plane is $\\mu = 0.3$. The maximum angle of the plane for which the block does not slide is:",
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "At rest, microscopic irregularities between the two surfaces interlock and \"cold weld\" together.", isCorrect: true, exp: "Correct! At rest, microscopic irregularities between the two surfaces interlock and \"cold weld\" together. Breaking these settled bonds requires more initial force ($f_{s,max}$) than maintaining the slide over the irregularities ($f_k$) once motion begins." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$\\theta = \\tan^{-1}(0.3)$", isCorrect: true, exp: "Correct! The angle of repose is defined by the condition $\\tan\\theta = \\mu$. Therefore, $\\theta = \\tan^{-1}(\\mu) = \\tan^{-1}(0.3)$." },
+                { text: "$\\theta = \\sin^{-1}(0.3)$", isCorrect: false, exp: "Incorrect. The relationship between the angle of repose and the coefficient of friction is defined by the tangent, not sine." },
+                { text: "$\\theta = 45^\\circ$", isCorrect: false, exp: "Incorrect. $45^\\circ$ would imply a coefficient of friction of $1$." },
+                { text: "$\\theta = 90^\\circ$", isCorrect: false, exp: "Incorrect. The block would slide immediately for any angle greater than the angle of repose." }
             ]
         },
         q4: {
+            question: "A car of mass $1000\\text{ kg}$ is moving with a velocity of $20\\text{ m/s}$. If the brakes are applied and the car stops in $10\\text{ m}$, what is the coefficient of friction? (Take $g = 10\\text{ m/s}^2$)",
             options: [
-                { text: "The net horizontal force becomes positive: $$F_{net} = T_x - f_k &lt; 0$$ This produces a positive acceleration...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "The net horizontal force becomes negative: $$F_{net} = T_x - f_k &lt; 0$$ This produces a negative acceleration...", isCorrect: true, exp: "Correct! The net horizontal force becomes negative: $$F_{net} = T_x - f_k &lt; 0$$ This produces a negative acceleration (deceleration). The box will slow down until its velocity reaches $v = 0$, at which point static friction takes over and holds it stationary." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "0.5", isCorrect: false, exp: "Incorrect. Check your application of the work-energy theorem or equations of motion." },
+                { text: "1.0", isCorrect: false, exp: "Incorrect. This would imply an acceleration of $10\\text{ m/s}^2$." },
+                { text: "2.0", isCorrect: true, exp: "Correct! Using $v^2 = u^2 + 2as$: $0 = 20^2 + 2 \\times a \\times 10 \\implies 400 = -20a \\implies a = -20\\text{ m/s}^2$. The retarding force is $F = ma = 1000 \\times 20 = 20000\\text{ N}$. Friction $f = \\mu mg$, so $\\mu = f / (mg) = 20000 / (1000 \\times 10) = 2.0$." },
+                { text: "0.2", isCorrect: false, exp: "Incorrect. Your calculation for acceleration might be off." }
             ]
-        },
+        }
     };
 
     const colorsMap = {

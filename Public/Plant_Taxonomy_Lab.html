@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plant Taxonomy & Floral Topology Lab</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Custom Select */
+    select { -webkit-appearance: none; appearance: none; }
+    
+    /* 2D Canvas Background */
+    .lab-stage { 
+      background-color: #000000 !important; 
+      background-image: 
+        radial-gradient(rgba(16, 185, 129, 0.15) 1px, transparent 1px),
+        linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px, 25px 25px, 25px 25px;
+      box-shadow: inset 0 0 120px rgba(0,0,0,1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Angiosperm Taxonomy</h1>
+          <p class="text-[11px] text-emerald-400 font-medium tracking-wider uppercase">Floral Diagram & Formula Explorer</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center" id="btn-open-guide">
+          <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> User Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+          <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Morphology Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-2">
+        <select id="select-family" class="bg-white border border-slate-300 text-emerald-700 text-xs font-bold rounded-lg px-3.5 py-2 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm">
+            <option value="brassicaceae">Brassicaceae (Mustard Family)</option>
+            <option value="fabaceae">Fabaceae (Legume Family)</option>
+            <option value="solanaceae" selected>Solanaceae (Nightshade Family)</option>
+            <option value="liliaceae">Liliaceae (Lily Family)</option>
+            <option value="poaceae">Poaceae (Grass Family)</option>
+            <option value="malvaceae">Malvaceae (Mallow Family)</option>
+            <option value="asteraceae">Asteraceae (Composite Family)</option>
+        </select>
+      </div>
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer">
+          <input type="checkbox" id="chk-animate" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 h-4.5 w-4.5">
+          <span>Pulse Whorls</span>
+        </label>
+      </div>
+    </div>
+
+    <main class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <section class="lg:col-span-9 grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+        
+        <!-- Left panel for family description / telemetry / theory -->
+        <div class="lg:col-span-4 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+          <div class="space-y-5">
+            
+            <!-- Live Taxonomic Telemetry Card (Placed above theory) -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <span class="text-sm font-extrabold uppercase tracking-widest text-emerald-500 block border-b border-slate-100 pb-2">Live Taxonomic Telemetry</span>
+              
+              <div class="flex flex-col gap-2">
+                
+                <!-- Symmetry -->
+                <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span> Floral Symmetry
+                  </div>
+                  <div class="text-xs font-bold font-mono tracking-widest text-cyan-400 uppercase" id="tel-symmetry">
+                    Actinomorphic
+                  </div>
+                </div>
+
+                <!-- Placentation -->
+                <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex justify-between items-center px-4 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-pink-500 shadow-[0_0_8px_#ec4899] block"></span> Placentation
+                  </div>
+                  <div class="text-xs font-bold font-mono tracking-widest text-pink-400 uppercase" id="tel-placentation">
+                    Axile
+                  </div>
+                </div>
+
+                <!-- Examples -->
+                <div class="bg-[#0f172a] p-3 rounded-2xl shadow-md flex flex-col gap-1.5 px-4 py-3 border border-slate-800">
+                  <div class="text-xs text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] block"></span> Common Examples
+                  </div>
+                  <div class="text-xs font-bold text-amber-400 font-sans leading-relaxed" id="tel-examples">
+                    Potato, Tomato, Brinjal, Belladonna, Tobacco, Petunia
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Floral Formula (Theory Card) -->
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2 border border-slate-800">
+              <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-700 pb-2">Floral Formula (Theory)</span>
+              <div class="text-base font-mono text-center py-2 bg-slate-950 text-slate-100 rounded-lg border border-slate-800 mt-2" id="ui-formula">
+                $$\oplus \ \text{⚥} \ K_{(5)} \ C_{(5)} \ A_5 \ G_{\underline{(2)}}$$
+              </div>
+              <div class="grid grid-cols-4 gap-1 text-center mt-3 text-[9px] font-bold uppercase tracking-wider border-t border-slate-800 pt-2 text-slate-400">
+                <div>Calyx (K)</div>
+                <div>Corolla (C)</div>
+                <div>Andro (A)</div>
+                <div>Gyno (G)</div>
+              </div>
+            </div>
+
+            <!-- Diagnostic Morphology Features (Theory Card) -->
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-4 shadow-sm space-y-2 border border-slate-800">
+              <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-700 pb-2">Diagnostic Features</span>
+              <div class="text-xs font-sans text-slate-300 leading-relaxed pl-1 pt-1" id="ui-features">
+                 <ul class="list-disc pl-4 space-y-1">
+                    <li>Actinomorphic ($\oplus$)</li>
+                    <li>Bisexual ($\text{⚥}$)</li>
+                    <li>5 fused sepals, 5 fused petals</li>
+                    <li>Epipetalous stamens</li>
+                    <li>Bicarpellary syncarpous superior ovary</li>
+                 </ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2D Canvas viewport panel -->
+        <div class="lg:col-span-8 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+          
+          <canvas id="simCanvas" class="absolute inset-0 w-full h-full block z-10"></canvas>
+
+          <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></span>
+            <span class="text-[10px] font-extrabold text-emerald-400 uppercase tracking-wider" id="hud-family">Solanaceae</span>
+          </div>
+
+          <div class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-700 shadow-sm flex flex-col gap-1 z-20 pointer-events-none">
+            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500"></span><span class="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">Calyx</span></div>
+            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-pink-500"></span><span class="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">Corolla</span></div>
+            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span class="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">Androecium</span></div>
+            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyan-500"></span><span class="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">Gynoecium</span></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Panel (Viva Voce Section) -->
+      <section class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <!-- Category Filter dropdown -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+          <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+            <option value="all">All Categories</option>
+            <option value="symmetry">Floral Symmetry</option>
+            <option value="androecium">Androecium</option>
+            <option value="perianth">Perianth / Tepals</option>
+            <option value="placentation">Placentation</option>
+          </select>
+        </div>
+
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-base font-bold">Conceptual Assessments</h2>
+            <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <div class="space-y-3 pb-4">
+          
+          <!-- Question 1 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="symmetry">
+            <div class="space-y-2">
+              <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Floral Symmetry]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q1-text">
+                Which of the following families exhibits prominent zygomorphic (bilateral) symmetry in its flowers?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="androecium">
+            <div class="space-y-2">
+              <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Androecium]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+                Tetradynamous stamens (2 short outer, 4 long inner) are a characteristic feature of which family?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="perianth">
+            <div class="space-y-2">
+              <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Perianth]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q3-text">
+                In the Liliaceae family, the calyx and corolla are not distinct. Instead, they form a unified whorl known as:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="placentation">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Placentation]</span>
+              <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
+                Which family features marginal placentation, where ovules are borne on the ridge along the ventral suture of the ovary?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
+      <span>* Floral diagrams: concentric rings from outside to inside are Sepals (Calyx), Petals (Corolla), Stamens (Androecium), and Carpels (Gynoecium).</span>
+    </footer>
+
+  </div>
+
+  <!-- User Guide Modal overlay -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+          <span class="inline-block text-sm mr-1.5 select-none leading-none">📘</span> TAXONOMY PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Floral Topology Explorer</strong>! Botanists use cross-sectional "Floral Diagrams" alongside "Floral Formulas" to classify plants into families.</p>
+        <div class="space-y-2 mt-4">
+          <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🌿 Reading the Visual Map</h4>
+          <ul class="list-disc pl-5 space-y-2 text-slate-500">
+            <li><span class="text-emerald-600 font-bold">Calyx (Green):</span> The outermost whorl of sepals. If the arcs touch, they are <em>fused</em> (Gamosepalous).</li>
+            <li><span class="text-pink-600 font-bold">Corolla (Pink):</span> The petals. Note the <em>aestivation</em> (how they overlap). Fabaceae has a highly unique "butterfly" setup!</li>
+            <li><span class="text-amber-600 font-bold">Androecium (Yellow):</span> The stamens (male organs). Notice how they are clustered. Solanaceae attaches them directly to the petals (Epipetalous).</li>
+            <li><span class="text-cyan-600 font-bold">Gynoecium (Cyan):</span> The ovary in the dead center. The lines inside show <em>placentation</em> (where the seeds attach).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-4 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all">
+          Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = { vivaScore: 0, answers: { q1: null, q2: null, q3: null, q4: null } };
+
+    const vivaData = {
+      q1: {
+        options: [
+          { text: "Solanaceae", isCorrect: false, exp: "Incorrect. Solanaceae is actinomorphic (radial symmetry)." },
+          { text: "Fabaceae", isCorrect: true, exp: "Correct! Fabaceae (legumes) have a distinctly zygomorphic (%) symmetry due to their specialized 'butterfly-like' papilionaceous corolla consisting of a standard, two wings, and a keel." },
+          { text: "Liliaceae", isCorrect: false, exp: "Incorrect." },
+          { text: "Brassicaceae", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        options: [
+          { text: "Solanaceae", isCorrect: false, exp: "Incorrect." },
+          { text: "Asteraceae", isCorrect: false, exp: "Incorrect." },
+          { text: "Brassicaceae", isCorrect: true, exp: "Correct! The mustard family (Brassicaceae) has 6 stamens arranged uniquely: 2 outer short ones and 4 inner long ones, known as tetradynamous ($A_{2+4}$)." },
+          { text: "Malvaceae", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        options: [
+          { text: "Epicalyx", isCorrect: false, exp: "Incorrect. That is found in Malvaceae." },
+          { text: "Perianth (Tepals)", isCorrect: true, exp: "Correct! In monocots like Liliaceae, the sepals and petals are morphologically identical. This undifferentiated whorl is called a Perianth, and its individual units are Tepals ($P_{3+3}$)." },
+          { text: "Lodicules", isCorrect: false, exp: "Incorrect." },
+          { text: "Pappus", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        options: [
+          { text: "Solanaceae", isCorrect: false, exp: "Incorrect. Solanaceae has Axile placentation." },
+          { text: "Brassicaceae", isCorrect: false, exp: "Incorrect. Brassicaceae has Parietal placentation." },
+          { text: "Asteraceae", isCorrect: false, exp: "Incorrect. Asteraceae has Basal placentation." },
+          { text: "Fabaceae", isCorrect: true, exp: "Correct! Legumes (like peas) have Marginal placentation, where the placenta forms a ridge along the ventral suture of the monocarpellary ovary, and ovules are borne on this ridge." }
+        ]
+      }
+    };
+
+    const colorsMap = {
+      q1: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+      q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+      q3: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+      q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+    };
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        if (!optionsContainer || !feedbackContainer) return; 
+        optionsContainer.innerHTML = ''; 
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) {
+              appState.vivaScore++;
+              triggerConfetti();
+            }
+            if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+              } else {
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.innerHTML = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+            if(window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+      if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+    }
+
+    // --- TAXONOMY DATA & STATE MANAGEMENT ---
+    const taxonomyData = {
+      solanaceae: {
+        formula: "$$\\oplus \\ \\text{⚥} \\ K_{(5)} \\ C_{(5)} \\ A_5 \\ G_{\\underline{(2)}}$$",
+        features: ["Actinomorphic ($\\oplus$)", "Bisexual ($\\text{⚥}$)", "5 fused sepals, 5 fused petals", "Epipetalous stamens", "Bicarpellary syncarpous superior ovary"],
+        examples: "Potato, Tomato, Brinjal, Belladonna, Tobacco, Petunia",
+        plac: "Axile", sym: "Actinomorphic", drawType: "solanaceae"
+      },
+      brassicaceae: {
+        formula: "$$\\oplus \\ \\text{⚥} \\ K_{2+2} \\ C_4 \\ A_{2+4} \\ G_{\\underline{(2)}}$$",
+        features: ["Actinomorphic ($\\oplus$)", "Tetramerous (parts in 4s)", "Cruciform corolla", "Tetradynamous stamens (2 short, 4 long)", "False septum (replum) in ovary"],
+        examples: "Mustard, Cabbage, Radish, Turnip",
+        plac: "Parietal", sym: "Actinomorphic", drawType: "brassicaceae"
+      },
+      fabaceae: {
+        formula: "$$\\% \\ \\text{⚥} \\ K_{(5)} \\ C_{1+2+(2)} \\ A_{(9)+1} \\ G_{\\underline{1}}$$",
+        features: ["Zygomorphic (\\%)", "Vexillary aestivation (1 Standard, 2 Wings, 2 fused Keels)", "Diadelphous stamens (9 fused + 1 free)", "Monocarpellary superior ovary"],
+        examples: "Peas, Soybeans, Peanuts, Gram, Lentils",
+        plac: "Marginal", sym: "Zygomorphic", drawType: "fabaceae"
+      },
+      liliaceae: {
+        formula: "$$\\oplus \\ \\text{⚥} \\ P_{(3+3)} \\ A_{3+3} \\ G_{\\underline{(3)}}$$",
+        features: ["Actinomorphic ($\\oplus$)", "Perianth of 6 Tepals ($3+3$)", "Epitepalous stamens", "Tricarpellary syncarpous superior ovary", "Often bulbous herbs"],
+        examples: "Lily, Onion, Garlic, Aloe, Tulip",
+        plac: "Axile", sym: "Actinomorphic", drawType: "liliaceae"
+      },
+      poaceae: {
+        formula: "$$\\% \\ \\text{⚥} \\ P_2 \\ A_3 \\ G_{\\underline{1}}$$",
+        features: ["Zygomorphic (\\%)", "Highly reduced wind-pollinated flowers", "Perianth reduced to 2 Lodicules", "Feathery stigma", "Fruit is a Caryopsis"],
+        examples: "Wheat, Corn, Rice, Bamboo, Sugarcane",
+        plac: "Basal", sym: "Zygomorphic", drawType: "poaceae"
+      },
+      malvaceae: {
+        formula: "$$\\oplus \\ \\text{⚥} \\ \\text{Epi}_{3-7} \\ K_{(5)} \\ C_5 \\ A_{(\\infty)} \\ G_{\\underline{(5-\\infty)}}$$",
+        features: ["Actinomorphic ($\\oplus$)", "Presence of Epicalyx", "Twisted aestivation of corolla", "Monadelphous stamens forming a staminal tube", "Multicarpellary ovary"],
+        examples: "Cotton, Hibiscus (China Rose), Okra (Bhindi)",
+        plac: "Axile", sym: "Actinomorphic", drawType: "malvaceae"
+      },
+      asteraceae: {
+        formula: "$$\\oplus \\ \\text{⚥} \\ K_{pappus} \\ C_{(5)} \\ A_{(5)} \\ G_{\\overline{(2)}}$$",
+        features: ["Capitulum Inflorescence (Head)", "Calyx reduced to hairy Pappus", "Syngenesious stamens (anthers fused, filaments free)", "Bicarpellary inferior ovary"],
+        examples: "Sunflower, Marigold, Daisy, Lettuce, Artichoke",
+        plac: "Basal", sym: "Actinomorphic / Zygomorphic", drawType: "asteraceae"
+      }
+    };
+
+    const selFam = document.getElementById('select-family');
+    const uiFormula = document.getElementById('ui-formula');
+    const uiFeatures = document.getElementById('ui-features');
+    const telEx = document.getElementById('tel-examples');
+    const telPlac = document.getElementById('tel-placentation');
+    const telSym = document.getElementById('tel-symmetry');
+    const hudFam = document.getElementById('hud-family');
+
+    let currentFam = 'solanaceae';
+
+    function updateUI() {
+      currentFam = selFam.value;
+      let d = taxonomyData[currentFam];
+
+      uiFormula.innerHTML = d.formula;
+      if (window.MathJax) MathJax.typesetPromise([uiFormula]);
+
+      let featHTML = `<ul class="list-disc pl-4 space-y-1">`;
+      d.features.forEach(f => featHTML += `<li>${f}</li>`);
+      featHTML += `</ul>`;
+      uiFeatures.innerHTML = featHTML;
+
+      telEx.innerText = d.examples;
+      telPlac.innerText = d.plac;
+      telSym.innerText = d.sym;
+      
+      let niceName = selFam.options[selFam.selectedIndex].text.split(' (')[0];
+      hudFam.innerText = niceName;
+    }
+
+    selFam.addEventListener('change', updateUI);
+
+    // --- HTML5 CANVAS FLORAL DIAGRAM ENGINE ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const chkAnimate = document.getElementById('chk-animate');
+    
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = container.clientWidth * dpr;
+      canvas.height = container.clientHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Palette
+    const cK = '#10b981'; // Green (Calyx)
+    const cC = '#ec4899'; // Pink (Corolla)
+    const cA = '#f59e0b'; // Amber (Androecium)
+    const cG = '#06b6d4'; // Cyan (Gynoecium)
+    const cEpi = '#059669'; // Dark green epicalyx
+
+    function drawWhorl(ctx, num, radius, color, isFused, thickness, offsetAngle, isPerianth=false) {
+      if (num === 0) return;
+      let angleStep = (Math.PI * 2) / num;
+      let gap = isFused ? 0.05 : 0.3; // Angle gap between elements
+      
+      ctx.lineWidth = thickness;
+      ctx.strokeStyle = color;
+      
+      for(let i=0; i<num; i++) {
+          let startAngle = i * angleStep + gap + offsetAngle;
+          let endAngle = (i+1) * angleStep - gap + offsetAngle;
+          
+          ctx.beginPath();
+          ctx.arc(0, 0, radius, startAngle, endAngle);
+          ctx.stroke();
+
+          // Draw fusion links if fused
+          if (isFused) {
+              ctx.beginPath();
+              let nextStart = (i+1) * angleStep + gap + offsetAngle;
+              let midAngle = (endAngle + nextStart) / 2;
+              ctx.moveTo(Math.cos(endAngle)*radius, Math.sin(endAngle)*radius);
+              ctx.quadraticCurveTo(Math.cos(midAngle)*(radius+10), Math.sin(midAngle)*(radius+10), Math.cos(nextStart)*radius, Math.sin(nextStart)*radius);
+              ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.strokeStyle = color;
+              ctx.lineWidth = thickness;
+          }
+
+          // Special marking for Calyx (midrib)
+          if (color === cK && !isPerianth) {
+              let midA = (startAngle + endAngle) / 2;
+              ctx.beginPath();
+              ctx.moveTo(Math.cos(midA)*radius, Math.sin(midA)*radius);
+              ctx.lineTo(Math.cos(midA)*(radius+5), Math.sin(midA)*(radius+5));
+              ctx.stroke();
+          }
+      }
+    }
+
+    function drawStamens(ctx, num, radius, arrangement, offsetAngle) {
+      if(num===0) return;
+      let angleStep = (Math.PI * 2) / num;
+      
+      ctx.fillStyle = cA;
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+
+      for(let i=0; i<num; i++) {
+          let a = i * angleStep + offsetAngle;
+          
+          // Brassicaceae tetradynamous logic (2 out, 4 in)
+          let r = radius;
+          if (arrangement === 'tetradynamous') {
+              if (i===0 || i===3) r = radius + 20;
+              else r = radius;
+          }
+
+          let x = Math.cos(a) * r;
+          let y = Math.sin(a) * r;
+          
+          ctx.beginPath();
+          ctx.ellipse(x, y, 6, 4, a + Math.PI/2, 0, Math.PI*2);
+          ctx.fill(); ctx.stroke();
+      }
+    }
+
+    function drawOvary(ctx, locules, radius, placentation) {
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI*2);
+      ctx.strokeStyle = cG;
+      ctx.lineWidth = 3;
+      ctx.fillStyle = '#083344';
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.5)';
+      ctx.lineWidth = 2;
+      ctx.fillStyle = '#cffafe';
+
+      if (locules > 1) {
+          let step = (Math.PI * 2) / locules;
+          for(let i=0; i<locules; i++) {
+              let a = i * step;
+              ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*radius, Math.sin(a)*radius); ctx.stroke();
+              
+              if (placentation === 'axile') {
+                  let oa = a + step/2;
+                  ctx.beginPath(); ctx.arc(Math.cos(oa)*5, Math.sin(oa)*5, 3, 0, Math.PI*2); ctx.fill();
+              }
+          }
+      } else if (locules === 1) {
+          if (placentation === 'marginal') {
+              ctx.beginPath(); ctx.arc(0, radius - 8, 4, 0, Math.PI*2); ctx.fill();
+          } else if (placentation === 'basal') {
+              ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2); ctx.fill();
+          }
+      } else if (placentation === 'parietal') {
+          let n = 4;
+          for(let i=0; i<n; i++) {
+              let a = i * (Math.PI*2/n);
+              ctx.beginPath(); ctx.arc(Math.cos(a)*(radius-6), Math.sin(a)*(radius-6), 3, 0, Math.PI*2); ctx.fill();
+          }
+          ctx.beginPath(); ctx.moveTo(-radius, 0); ctx.lineTo(radius, 0); ctx.stroke();
+      }
+    }
+
+    function drawFabaceae(ctx, scale) {
+        drawWhorl(ctx, 5, 120*scale, cK, true, 4, -Math.PI/2);
+        
+        ctx.strokeStyle = cC; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.arc(0, 0, 100*scale, -Math.PI*0.8, -Math.PI*0.2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 90*scale, Math.PI*0.1, Math.PI*0.4); ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 90*scale, Math.PI*0.6, Math.PI*0.9); ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 80*scale, Math.PI*0.45, Math.PI*0.55); ctx.stroke();
+        
+        ctx.fillStyle = cA; ctx.strokeStyle = '#fff'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.ellipse(0, -60*scale, 6, 4, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 10*scale, 60*scale, 0, Math.PI); ctx.strokeStyle = cA; ctx.lineWidth=2; ctx.stroke();
+        for(let i=0; i<9; i++) {
+            let a = Math.PI + i * (Math.PI/8);
+            let x = Math.cos(a) * 60*scale; let y = 10*scale - Math.sin(a) * 60*scale;
+            ctx.beginPath(); ctx.ellipse(x, y, 5, 3, a, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        }
+
+        drawOvary(ctx, 1, 20*scale, 'marginal');
+    }
+
+    function drawPoaceae(ctx, scale) {
+        ctx.strokeStyle = cK; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(0, 0, 100*scale, Math.PI*0.7, Math.PI*1.3); ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 90*scale, -Math.PI*0.3, Math.PI*0.3); ctx.stroke();
+
+        ctx.fillStyle = cC;
+        ctx.beginPath(); ctx.arc(-30*scale, 30*scale, 10, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(30*scale, 30*scale, 10, 0, Math.PI*2); ctx.fill();
+
+        drawStamens(ctx, 3, 50*scale, 'normal', -Math.PI/2);
+
+        drawOvary(ctx, 1, 20*scale, 'basal');
+        ctx.strokeStyle = '#cffafe'; ctx.beginPath(); ctx.moveTo(-10, -20); ctx.lineTo(-20, -40); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(10, -20); ctx.lineTo(20, -40); ctx.stroke();
+    }
+
+    let pulseTime = 0;
+    function renderLoop() {
+      const C_W = canvas.width / window.devicePixelRatio;
+      const C_H = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, C_W, C_H);
+
+      let cx = C_W / 2;
+      let cy = C_H / 2;
+      
+      pulseTime += 0.05;
+      let pulse = chkAnimate.checked ? Math.sin(pulseTime) * 3 : 0;
+      let scale = Math.min(C_W, C_H) / 400;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      if(chkAnimate.checked) ctx.rotate(pulseTime * 0.05);
+
+      let type = taxonomyData[currentFam].drawType;
+
+      if (type === 'solanaceae') {
+          drawWhorl(ctx, 5, 120*scale + pulse, cK, true, 4, -Math.PI/2);
+          drawWhorl(ctx, 5, 90*scale + pulse, cC, true, 8, -Math.PI/2 + 0.3);
+          drawStamens(ctx, 5, 60*scale, 'normal', -Math.PI/2 + 0.3);
+          
+          ctx.strokeStyle = cA; ctx.lineWidth = 1;
+          for(let i=0; i<5; i++) {
+              let a = i * (Math.PI*2/5) - Math.PI/2 + 0.3;
+              ctx.beginPath(); ctx.moveTo(Math.cos(a)*60*scale, Math.sin(a)*60*scale); ctx.lineTo(Math.cos(a)*80*scale, Math.sin(a)*80*scale); ctx.stroke();
+          }
+
+          ctx.save(); ctx.rotate(Math.PI/4);
+          drawOvary(ctx, 2, 25*scale, 'axile');
+          ctx.restore();
+      }
+      else if (type === 'brassicaceae') {
+          drawWhorl(ctx, 2, 130*scale + pulse, cK, false, 4, 0);
+          drawWhorl(ctx, 2, 110*scale + pulse, cK, false, 4, Math.PI/2);
+          drawWhorl(ctx, 4, 80*scale + pulse, cC, false, 6, Math.PI/4);
+          drawStamens(ctx, 6, 50*scale, 'tetradynamous', 0);
+          drawOvary(ctx, 2, 20*scale, 'parietal');
+      }
+      else if (type === 'fabaceae') {
+          drawFabaceae(ctx, scale + pulse*0.01);
+      }
+      else if (type === 'liliaceae') {
+          drawWhorl(ctx, 3, 110*scale + pulse, cC, true, 6, -Math.PI/2, true); 
+          drawWhorl(ctx, 3, 90*scale + pulse, cC, true, 6, Math.PI/2, true);
+          drawStamens(ctx, 6, 60*scale, 'normal', Math.PI/2);
+          drawOvary(ctx, 3, 20*scale, 'axile');
+      }
+      else if (type === 'poaceae') {
+          drawPoaceae(ctx, scale + pulse*0.01);
+      }
+      else if (type === 'malvaceae') {
+          drawWhorl(ctx, 6, 140*scale + pulse, cEpi, false, 3, 0);
+          drawWhorl(ctx, 5, 120*scale + pulse, cK, true, 4, -Math.PI/2);
+          
+          let rC = 90*scale + pulse;
+          ctx.strokeStyle = cC; ctx.lineWidth = 6;
+          for(let i=0; i<5; i++) {
+              let a = i * (Math.PI*2/5);
+              ctx.beginPath(); ctx.arc(0,0, rC, a, a + Math.PI*2/5 + 0.2); ctx.stroke();
+          }
+
+          ctx.beginPath(); ctx.arc(0,0, 40*scale, 0, Math.PI*2); ctx.strokeStyle=cA; ctx.lineWidth=2; ctx.stroke();
+          drawStamens(ctx, 15, 50*scale, 'normal', 0);
+
+          drawOvary(ctx, 5, 20*scale, 'axile');
+      }
+      else if (type === 'asteraceae') {
+          ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1;
+          for(let i=0; i<20; i++) {
+              ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(i*Math.PI/10)*110*scale, Math.sin(i*Math.PI/10)*110*scale); ctx.stroke();
+          }
+          drawWhorl(ctx, 5, 80*scale + pulse, cC, true, 6, -Math.PI/2);
+          
+          ctx.beginPath(); ctx.arc(0,0, 40*scale, 0, Math.PI*2); ctx.strokeStyle=cA; ctx.lineWidth=6; ctx.stroke();
+          
+          drawOvary(ctx, 2, 15*scale, 'basal');
+      }
+
+      ctx.restore();
+      requestAnimationFrame(renderLoop);
+    }
+
+    // --- Category Filter Handler ---
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    // --- Modal Guide Handlers ---
+    const userGuideModal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
+    const closeGuide = () => userGuideModal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
+    userGuideModal.addEventListener('click', (e) => { if (e.target === userGuideModal) closeGuide(); });
+
+    // Boot
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      resizeCanvas();
+      updateUI();
+      userGuideModal.classList.remove('hidden');
+      requestAnimationFrame(renderLoop);
+    });
+  </script>
+</body>
+</html>

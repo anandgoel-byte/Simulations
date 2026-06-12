@@ -135,17 +135,22 @@
                     id="btn-reset">
                     <span>🔄</span> Reset Cell
                 </button>
-            
-      
-      
-      
-      
-      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
-        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
-      </button>
-      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
-        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
-      </button></div>
+
+
+
+
+
+                <button
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                    id="btn-toggle-left">
+                    <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+                </button>
+                <button
+                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
+                    id="btn-toggle-viva">
+                    <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+                </button>
+            </div>
             <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
                 <label
                     class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer select-none">
@@ -160,10 +165,10 @@
                     <span>Show Nuclear Membrane</span>
                 </label>
             </div>
-        
-      
-      </div>
-        <main id="main-layout"    
+
+
+        </div>
+        <main id="main-layout"
             class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
             <section id="left-panel"
                 class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
@@ -248,15 +253,17 @@
                 class="lg:col-span-6 relative bg-[#0b0f19] overflow-hidden flex flex-col items-center justify-between border-8 border-slate-900 min-h-[500px]">
                 <canvas class="absolute inset-0 w-full h-full block z-10" id="simCanvas"></canvas>
                 <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none select-none z-20">
-  <div class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center justify-center self-start">
-    <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
-  </div>
-  <div
-                    class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 self-start">
-                    <span class="text-[10px] font-bold text-emerald-400 tracking-widest uppercase"
-                        id="canvas-hud">Phase: Prophase</span>
+                    <div
+                        class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center justify-center self-start">
+                        <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'"
+                            src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png" />
+                    </div>
+                    <div
+                        class="bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 self-start">
+                        <span class="text-[10px] font-bold text-emerald-400 tracking-widest uppercase"
+                            id="canvas-hud">Phase: Prophase</span>
+                    </div>
                 </div>
-</div>
             </section>
             <section id="viva-section"
                 class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
@@ -481,7 +488,7 @@
         btnReset.addEventListener('click', () => setProgress(0));
 
         // --- Canvas Drawing Helpers ---
-        function drawChromosome(cx, cy, color, isX, angle = 0, alpha = 1) {
+        function drawChromosome(cx, cy, color, isX, angle = 0, alpha = 1, id = 0) {
             ctx.save();
             ctx.translate(cx, cy);
             ctx.rotate(angle);
@@ -490,19 +497,75 @@
             const w = 6;
             const h = 24;
 
-            ctx.fillStyle = color;
-            if (isX) {
-                // Draw X shape (Sister Chromatids)
-                ctx.beginPath(); ctx.roundRect(-w, -h, w, h * 2, 4); ctx.fill();
-                ctx.beginPath(); ctx.roundRect(0, -h, w, h * 2, 4); ctx.fill();
-                // Centromere
-                ctx.fillStyle = '#f8fafc';
-                ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+            if (progress < 25 && isX) {
+                // Thread-like chromatin during Prophase
+                let cond = progress / 25; // 0 to 1
+                let waveAmp = (1 - cond) * 8.5;
+                let halfLen = lerp(36, 24, cond);
+                let strokeW = lerp(1.2, 4.0, cond);
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = strokeW;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                let steps = 14;
+
+                if (cond < 0.35) {
+                    // Single thin chromatin thread
+                    ctx.beginPath();
+                    for (let i = 0; i <= steps; i++) {
+                        let t = -halfLen + (2 * halfLen * i / steps);
+                        let wave = Math.sin(t * 0.16 + id * 1.7) * waveAmp;
+                        if (i === 0) ctx.moveTo(wave, t);
+                        else ctx.lineTo(wave, t);
+                    }
+                    ctx.stroke();
+                } else {
+                    // Double chromatin threads (condensing sister chromatids)
+                    let tCond = (cond - 0.35) / 0.65; // 0 to 1
+                    let sep = lerp(0.5, 3.0, tCond);
+
+                    // Left chromatid thread
+                    ctx.beginPath();
+                    for (let i = 0; i <= steps; i++) {
+                        let t = -halfLen + (2 * halfLen * i / steps);
+                        let wave = Math.sin(t * 0.16 + id * 1.7) * waveAmp;
+                        if (i === 0) ctx.moveTo(-sep + wave, t);
+                        else ctx.lineTo(-sep + wave, t);
+                    }
+                    ctx.stroke();
+
+                    // Right chromatid thread
+                    ctx.beginPath();
+                    for (let i = 0; i <= steps; i++) {
+                        let t = -halfLen + (2 * halfLen * i / steps);
+                        let wave = Math.sin(t * 0.16 + id * 1.7 + Math.PI) * waveAmp; // out of phase
+                        if (i === 0) ctx.moveTo(sep + wave, t);
+                        else ctx.lineTo(sep + wave, t);
+                    }
+                    ctx.stroke();
+
+                    // Centromere
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath(); ctx.arc(0, 0, lerp(1.2, 3, tCond), 0, Math.PI * 2); ctx.fill();
+                }
             } else {
-                // Draw Single Chromatid (I shape)
-                ctx.beginPath(); ctx.roundRect(-w / 2, -h, w, h * 2, 4); ctx.fill();
-                ctx.fillStyle = '#f8fafc';
-                ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+                // Fully condensed chromosome (Standard design)
+                ctx.fillStyle = color;
+                if (isX) {
+                    // Draw X shape (Sister Chromatids)
+                    ctx.beginPath(); ctx.roundRect(-w, -h, w, h * 2, 4); ctx.fill();
+                    ctx.beginPath(); ctx.roundRect(0, -h, w, h * 2, 4); ctx.fill();
+                    // Centromere
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+                } else {
+                    // Draw Single Chromatid (I shape)
+                    ctx.beginPath(); ctx.roundRect(-w / 2, -h, w, h * 2, 4); ctx.fill();
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+                }
             }
 
             ctx.restore();
@@ -529,31 +592,80 @@
             const cX = W / 2;
             const cY = H / 2;
 
-            // 1. Draw Cell Membrane (Handles Cleavage Furrow)
+            // 1. Draw Cell Membrane (Handles Cleavage Furrow & Cytokinesis splitting)
             const maxRadius = Math.min(W, H) * 0.35;
             let cellRadius = maxRadius;
-            let pinch = 0;
-
-            if (progress > 75) {
-                // Cytokinesis pinching
-                pinch = smoothstep(75, 100, progress) * (maxRadius * 0.95); // Pinch almost all the way
-            }
 
             ctx.fillStyle = 'rgba(14, 165, 233, 0.05)';
             ctx.strokeStyle = '#0ea5e9'; // Cyan membrane
             ctx.lineWidth = 4;
 
-            if (pinch > 0) {
-                // Draw figure-8 shape
+            if (progress <= 75) {
+                // Perfect circle prior to Telophase / Cytokinesis
                 ctx.beginPath();
-                ctx.arc(cX, cY - (pinch / 2), cellRadius - (pinch / 2), Math.PI / 2 + 0.2, Math.PI / 2 - 0.2, false);
-                ctx.arc(cX, cY + (pinch / 2), cellRadius - (pinch / 2), -Math.PI / 2 + 0.2, -Math.PI / 2 - 0.2, false);
-                ctx.closePath();
-                ctx.fill(); ctx.stroke();
+                ctx.arc(cX, cY, cellRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
             } else {
-                // Perfect circle
-                ctx.beginPath(); ctx.arc(cX, cY, cellRadius, 0, Math.PI * 2);
-                ctx.fill(); ctx.stroke();
+                let t = smoothstep(75, 100, progress); // 0 to 1
+
+                if (t < 0.9) {
+                    // Pinching cell (smooth, organic cleavage furrow using quadratic curves)
+                    let d = t * maxRadius * 0.55; // distance of daughter cell centers
+                    let R = maxRadius * (1 - 0.28 * t); // shrinking radius of each lobe
+
+                    // Angle of intersection: sin(alpha) = d / R
+                    let sinAlpha = Math.min(0.99, d / R);
+                    let alpha = Math.asin(sinAlpha);
+
+                    // Offset angle for the smooth fillet
+                    let phi = 0.28 * (1 - t); // gradually decreases to 0 as it pinches to a point
+
+                    let angleTopStart = -alpha + phi;
+                    let angleTopEnd = Math.PI + alpha - phi;
+                    let angleBottomStart = Math.PI - alpha + phi;
+                    let angleBottomEnd = Math.PI * 2 + alpha - phi;
+
+                    ctx.beginPath();
+                    // Top lobe arc
+                    ctx.arc(cX, cY - d, R, angleTopStart, angleTopEnd, false);
+
+                    // Left constriction cleavage furrow (quadratic curve to bottom lobe start)
+                    let leftBottomX = cX + R * Math.cos(angleBottomStart);
+                    let leftBottomY = cY + d + R * Math.sin(angleBottomStart);
+                    let waistX = cX - maxRadius * (1 - t) * 0.75;
+                    ctx.quadraticCurveTo(waistX - 10, cY, leftBottomX, leftBottomY);
+
+                    // Bottom lobe arc
+                    ctx.arc(cX, cY + d, R, angleBottomStart, angleBottomEnd, false);
+
+                    // Right constriction cleavage furrow (quadratic curve to top lobe start)
+                    let rightTopX = cX + R * Math.cos(angleTopStart);
+                    let rightTopY = cY - d + R * Math.sin(angleTopStart);
+                    let waistXRight = cX + maxRadius * (1 - t) * 0.75;
+                    ctx.quadraticCurveTo(waistXRight + 10, cY, rightTopX, rightTopY);
+
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                } else {
+                    // Fully divided into two separate circular daughter cells!
+                    let t2 = (t - 0.9) / 0.1; // 0 to 1
+                    let d = 0.55 * maxRadius + t2 * 15; // move the new daughter cells slightly apart
+                    let R = maxRadius * 0.65;
+
+                    // Top daughter cell
+                    ctx.beginPath();
+                    ctx.arc(cX, cY - d, R, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+
+                    // Bottom daughter cell
+                    ctx.beginPath();
+                    ctx.arc(cX, cY + d, R, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
             }
 
             // 2. Centrosomes (Poles) Movement
@@ -590,6 +702,8 @@
                         ctx.beginPath(); ctx.arc(cX, cY, maxRadius * 0.5, 0, Math.PI * 2); ctx.stroke();
                     } else {
                         // Two new nuclei
+                        let t = smoothstep(75, 100, progress);
+                        let pinch = t * maxRadius;
                         let nucR = (maxRadius * 0.5) * (1 - (pinch / maxRadius) * 0.4);
                         ctx.beginPath(); ctx.arc(cX, cY - maxRadius * 0.5, nucR, 0, Math.PI * 2); ctx.stroke();
                         ctx.beginPath(); ctx.arc(cX, cY + maxRadius * 0.5, nucR, 0, Math.PI * 2); ctx.stroke();
@@ -717,14 +831,14 @@
                 if (currentProcess === 'mitosis' || currentProcess === 'meiosis2') {
                     if (progress >= 50) {
                         // Draw Up Chromatid
-                        drawChromosome(currentX, currentY, chrom.c, false, currentAngle);
+                        drawChromosome(currentX, currentY, chrom.c, false, currentAngle, 1, chrom.id);
                         // Calculate and Draw Down Chromatid (Sister)
                         let t = smoothstep(50, 75, Math.min(75, progress));
                         let downY = lerp(targetY, poleBot.y - 20, t);
                         if (progress >= 75) downY = lerp(poleBot.y - 20, cY + maxRadius * 0.5, smoothstep(75, 100, progress));
                         let downAngle = -currentAngle;
 
-                        drawChromosome(currentX, downY, chrom.c, false, downAngle);
+                        drawChromosome(currentX, downY, chrom.c, false, downAngle, 1, chrom.id);
 
                         if (chkSpindles && progress >= 50 && progress < 85) {
                             ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
@@ -732,11 +846,11 @@
                         }
                     } else {
                         // Draw full X
-                        drawChromosome(currentX, currentY, chrom.c, true, currentAngle);
+                        drawChromosome(currentX, currentY, chrom.c, true, currentAngle, 1, chrom.id);
                     }
                 } else {
                     // Meiosis 1: Always full X
-                    drawChromosome(currentX, currentY, chrom.c, true, currentAngle);
+                    drawChromosome(currentX, currentY, chrom.c, true, currentAngle, 1, chrom.id);
                 }
             });
 
@@ -933,125 +1047,125 @@
         }
     </script>
 
-  
 
-  
 
-  
 
-  <!-- Layout Collapsible Panels Handler -->
-  <script>
-    (function() {
-      const btnToggleLeft = document.getElementById('btn-toggle-left');
-      const btnToggleViva = document.getElementById('btn-toggle-viva');
-      const leftPanel = document.getElementById('left-panel');
-      const vivaSection = document.getElementById('viva-section');
-      const mainLayout = document.getElementById('main-layout');
-      const workbenchSection = document.getElementById('workbench-section');
-      const canvasContainer = document.getElementById('canvas-container-wrapper') || document.getElementById('canvas-container') || document.getElementById('three-container');
 
-      if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) {
-        console.warn('Collapsible panels elements missing:', {btnToggleLeft, btnToggleViva, leftPanel, vivaSection, mainLayout, canvasContainer});
-        return;
-      }
 
-      let leftPanelVisible = true;
-      let vivaVisible = true;
 
-      const isNested = !!workbenchSection;
-      
-      const leftClasses = Array.from(leftPanel.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || (isNested ? 'lg:col-span-4' : 'lg:col-span-3');
-      const canvasClasses = Array.from(canvasContainer.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || (isNested ? 'lg:col-span-8' : 'lg:col-span-6');
-      const workbenchClasses = isNested ? (Array.from(workbenchSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-9') : '';
-      const vivaClasses = Array.from(vivaSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-3';
+    <!-- Layout Collapsible Panels Handler -->
+    <script>
+        (function () {
+            const btnToggleLeft = document.getElementById('btn-toggle-left');
+            const btnToggleViva = document.getElementById('btn-toggle-viva');
+            const leftPanel = document.getElementById('left-panel');
+            const vivaSection = document.getElementById('viva-section');
+            const mainLayout = document.getElementById('main-layout');
+            const workbenchSection = document.getElementById('workbench-section');
+            const canvasContainer = document.getElementById('canvas-container-wrapper') || document.getElementById('canvas-container') || document.getElementById('three-container');
 
-      const getColSpanVal = (classStr) => {
-        const match = classStr.match(/(?:lg:|md:)?col-span-(\d+)/);
-        return match ? parseInt(match[1]) : 0;
-      };
+            if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) {
+                console.warn('Collapsible panels elements missing:', { btnToggleLeft, btnToggleViva, leftPanel, vivaSection, mainLayout, canvasContainer });
+                return;
+            }
 
-      const leftColSpan = getColSpanVal(leftClasses);
-      const canvasColSpan = getColSpanVal(canvasClasses);
-      const workbenchColSpan = isNested ? getColSpanVal(workbenchClasses) : 12 - getColSpanVal(vivaClasses);
-      const vivaColSpan = getColSpanVal(vivaClasses);
+            let leftPanelVisible = true;
+            let vivaVisible = true;
 
-      function updateLayout() {
-        if (leftPanelVisible) {
-          leftPanel.classList.remove('hidden');
-          btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
-          document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
-        } else {
-          leftPanel.classList.add('hidden');
-          btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
-          document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
-        }
+            const isNested = !!workbenchSection;
 
-        if (vivaVisible) {
-          vivaSection.classList.remove('hidden');
-          btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
-          document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
-        } else {
-          vivaSection.classList.add('hidden');
-          btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
-          document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
-        }
+            const leftClasses = Array.from(leftPanel.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || (isNested ? 'lg:col-span-4' : 'lg:col-span-3');
+            const canvasClasses = Array.from(canvasContainer.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || (isNested ? 'lg:col-span-8' : 'lg:col-span-6');
+            const workbenchClasses = isNested ? (Array.from(workbenchSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-9') : '';
+            const vivaClasses = Array.from(vivaSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-3';
 
-        if (isNested) {
-          canvasContainer.classList.remove('lg:col-span-8', 'lg:col-span-12', 'md:col-span-8', 'md:col-span-12');
-          if (leftPanelVisible) {
-            canvasContainer.classList.add(canvasClasses);
-          } else {
-            canvasContainer.classList.add('lg:col-span-12', 'md:col-span-12');
-          }
+            const getColSpanVal = (classStr) => {
+                const match = classStr.match(/(?:lg:|md:)?col-span-(\d+)/);
+                return match ? parseInt(match[1]) : 0;
+            };
 
-          workbenchSection.classList.remove('lg:col-span-9', 'lg:col-span-12', 'md:col-span-9', 'md:col-span-12');
-          if (vivaVisible) {
-            workbenchSection.classList.add(workbenchClasses);
-          } else {
-            workbenchSection.classList.add('lg:col-span-12', 'md:col-span-12');
-          }
-        } else {
-          canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
-          
-          let newSpan = 12;
-          if (leftPanelVisible && vivaVisible) {
-            newSpan = canvasColSpan;
-          } else if (!leftPanelVisible && !vivaVisible) {
-            newSpan = 12;
-          } else if (leftPanelVisible && !vivaVisible) {
-            newSpan = canvasColSpan + vivaColSpan;
-          } else if (!leftPanelVisible && vivaVisible) {
-            newSpan = canvasColSpan + leftColSpan;
-          }
-          canvasContainer.classList.add('lg:col-span-' + newSpan, 'md:col-span-' + newSpan);
-        }
+            const leftColSpan = getColSpanVal(leftClasses);
+            const canvasColSpan = getColSpanVal(canvasClasses);
+            const workbenchColSpan = isNested ? getColSpanVal(workbenchClasses) : 12 - getColSpanVal(vivaClasses);
+            const vivaColSpan = getColSpanVal(vivaClasses);
 
-        if (leftPanelVisible && vivaVisible) {
-          mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-          if (workbenchSection) workbenchSection.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-        } else if (!leftPanelVisible && !vivaVisible) {
-          mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-          if (workbenchSection) workbenchSection.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-        } else {
-          if (!leftPanelVisible) {
-            mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-          }
-        }
+            function updateLayout() {
+                if (leftPanelVisible) {
+                    leftPanel.classList.remove('hidden');
+                    btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+                    document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+                } else {
+                    leftPanel.classList.add('hidden');
+                    btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+                    document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+                }
 
-        window.dispatchEvent(new Event('resize'));
-      }
+                if (vivaVisible) {
+                    vivaSection.classList.remove('hidden');
+                    btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+                    document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+                } else {
+                    vivaSection.classList.add('hidden');
+                    btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+                    document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+                }
 
-      btnToggleLeft.addEventListener('click', () => {
-        leftPanelVisible = !leftPanelVisible;
-        updateLayout();
-      });
+                if (isNested) {
+                    canvasContainer.classList.remove('lg:col-span-8', 'lg:col-span-12', 'md:col-span-8', 'md:col-span-12');
+                    if (leftPanelVisible) {
+                        canvasContainer.classList.add(canvasClasses);
+                    } else {
+                        canvasContainer.classList.add('lg:col-span-12', 'md:col-span-12');
+                    }
 
-      btnToggleViva.addEventListener('click', () => {
-        vivaVisible = !vivaVisible;
-        updateLayout();
-      });
-    })();
-  </script>
+                    workbenchSection.classList.remove('lg:col-span-9', 'lg:col-span-12', 'md:col-span-9', 'md:col-span-12');
+                    if (vivaVisible) {
+                        workbenchSection.classList.add(workbenchClasses);
+                    } else {
+                        workbenchSection.classList.add('lg:col-span-12', 'md:col-span-12');
+                    }
+                } else {
+                    canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+
+                    let newSpan = 12;
+                    if (leftPanelVisible && vivaVisible) {
+                        newSpan = canvasColSpan;
+                    } else if (!leftPanelVisible && !vivaVisible) {
+                        newSpan = 12;
+                    } else if (leftPanelVisible && !vivaVisible) {
+                        newSpan = canvasColSpan + vivaColSpan;
+                    } else if (!leftPanelVisible && vivaVisible) {
+                        newSpan = canvasColSpan + leftColSpan;
+                    }
+                    canvasContainer.classList.add('lg:col-span-' + newSpan, 'md:col-span-' + newSpan);
+                }
+
+                if (leftPanelVisible && vivaVisible) {
+                    mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+                    if (workbenchSection) workbenchSection.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+                } else if (!leftPanelVisible && !vivaVisible) {
+                    mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+                    if (workbenchSection) workbenchSection.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+                } else {
+                    if (!leftPanelVisible) {
+                        mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+                    }
+                }
+
+                window.dispatchEvent(new Event('resize'));
+            }
+
+            btnToggleLeft.addEventListener('click', () => {
+                leftPanelVisible = !leftPanelVisible;
+                updateLayout();
+            });
+
+            btnToggleViva.addEventListener('click', () => {
+                vivaVisible = !vivaVisible;
+                updateLayout();
+            });
+        })();
+    </script>
 </body>
 
 </html>

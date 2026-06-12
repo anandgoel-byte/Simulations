@@ -680,13 +680,31 @@
       }
 
       // 3. Pollen Tube & Sperm Growth
-      // Path: Down style, around sac, into micropyle at bottom
+      // Path: Down style (straight), around ovary side, and enter micropyle at the bottom
       const path = [];
-      for (let y = 40; y < cy + sacR + 10; y += 5) path.push({ x: cx, y: y });
-      // Curve into micropyle (bottom)
-      path.push({ x: cx - 10, y: cy + sacR + 5 });
-      path.push({ x: cx - 15, y: cy + sacR });
-      path.push({ x: cx - 15, y: cy + sacR - 15 });
+      const styleBottomY = cy - ovaryR + 15; // Style ends near the top of the ovary
+      
+      // Growth in Style (Straight)
+      for (let y = 40; y <= styleBottomY; y += 5) {
+        path.push({ x: cx, y: y });
+      }
+      
+      // Growth around the embryo sac / ovule (slightly from the side)
+      const curveStartY = styleBottomY;
+      const curveEndY = cy + sacR + 10;
+      
+      for (let y = curveStartY + 5; y <= curveEndY; y += 5) {
+        const t = (y - curveStartY) / (curveEndY - curveStartY); // 0 to 1
+        // Smoothly curve to the left side of the embryo sac
+        const xOffset = - 80 * Math.sin(t * Math.PI);
+        path.push({ x: cx + xOffset, y: y });
+      }
+      
+      // Entry into the micropyle from the bottom-left
+      path.push({ x: cx - 12, y: cy + sacR + 5 });
+      path.push({ x: cx - 8, y: cy + sacR });
+      path.push({ x: cx - 4, y: cy + sacR - 12 });
+      path.push({ x: cx, y: cy + sacR - 20 }); // final stop near synergids / egg cell
 
       // Calculate how much of tube to draw based on progress (0 to 40)
       let tubeProg = Math.min(1.0, progress / 40);
@@ -772,12 +790,6 @@
       requestAnimationFrame(renderCanvas);
     });
   </script>
-
-  
-
-  
-
-  
 
   <!-- Layout Collapsible Panels Handler -->
   <script>

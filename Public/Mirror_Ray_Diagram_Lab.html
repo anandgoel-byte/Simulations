@@ -166,7 +166,11 @@
 <span class="text-blue-600 flex items-center gap-1">■ Object Distance (u)</span>
 <span class="font-mono bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded" id="lbl-u">-30.0 cm</span>
 </div>
-<input class="slider-blue" id="sl-u" max="60" min="5" step="1" style="direction: rtl;" type="range" value="30"/>
+<input class="slider-blue" id="sl-u" max="60" min="5" step="1" type="range" value="30"/>
+<label class="flex items-center space-x-2 text-xs font-bold text-slate-700 mt-2 pt-2 border-t border-slate-200 cursor-pointer select-none">
+  <input class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5 shadow-sm" id="chk-infinity" type="checkbox"/>
+  <span>Object at Infinity (∞)</span>
+</label>
 <div class="text-[9px] font-bold text-slate-500 mt-2.5 leading-tight bg-blue-50 p-2 rounded border border-blue-100 text-center uppercase tracking-widest shadow-sm" id="desc-zone">
                   Beyond Center of Curvature (C)
                 </div>
@@ -474,6 +478,7 @@
     const btnReset = document.getElementById('btn-reset');
     const chkGrid = document.getElementById('chk-grid');
     const descZone = document.getElementById('desc-zone');
+    const chkInfinity = document.getElementById('chk-infinity');
 
     const telV = document.getElementById('tel-v');
     const telM = document.getElementById('tel-m');
@@ -500,19 +505,51 @@
     function calculateOptics() {
       // Cartesian Formula: 1/v + 1/u = 1/f => 1/v = 1/f - 1/u
       // Handling infinity case when object is exactly at focus
-      if (Math.abs(u_cm - f_cm) < 0.1) {
-        v_cm = Infinity;
-        m = Infinity;
-        hi_cm = Infinity;
+      slU.disabled = chkInfinity.checked;
+
+      if (chkInfinity.checked) {
+        u_cm = -Infinity;
+        v_cm = f_cm;
+        m = 0;
+        hi_cm = 0;
       } else {
-        v_cm = (u_cm * f_cm) / (u_cm - f_cm);
-        m = -v_cm / u_cm;
-        hi_cm = m * ho_cm;
+        let slVal = parseFloat(slU.value);
+        u_cm = -slVal;
+        if (Math.abs(slVal - Math.abs(f_cm)) < 0.1) {
+          v_cm = Infinity;
+          m = Infinity;
+          hi_cm = Infinity;
+        } else {
+          v_cm = (u_cm * f_cm) / (u_cm - f_cm);
+          m = -v_cm / u_cm;
+          hi_cm = m * ho_cm;
+        }
       }
 
       // Update UI Text
-      lblU.innerText = `${u_cm.toFixed(1)} cm`;
       lblHo.innerText = `${ho_cm.toFixed(1)} cm`;
+
+      if (chkInfinity.checked) {
+        lblU.innerText = "Infinity (∞)";
+        telV.innerText = `${(v_cm > 0 ? '+' : '')}${v_cm.toFixed(1)} cm`;
+        telM.innerText = "0.00x (Point Image)";
+        telHi.innerText = "0.0 cm";
+        telSize.innerText = "Highly Diminished (Point)";
+        if (mirrorType === 'concave') {
+          telNature.innerText = "Real & Inverted";
+          telNature.className = "text-[11px] font-bold font-mono text-emerald-600 tracking-widest uppercase";
+          descZone.innerText = "Object at Infinity (Image at Focus F)";
+          descZone.className = "text-[9px] font-bold text-indigo-700 mt-3 leading-tight bg-indigo-50 p-2.5 rounded border border-indigo-200 text-center uppercase tracking-widest";
+        } else {
+          telNature.innerText = "Virtual & Erect";
+          telNature.className = "text-[11px] font-bold font-mono text-amber-600 tracking-widest uppercase";
+          descZone.innerText = "Object at Infinity (Virtual Image at Focus F)";
+          descZone.className = "text-[9px] font-bold text-slate-500 mt-3 leading-tight bg-slate-100 p-2.5 rounded border border-slate-350 text-center uppercase tracking-widest";
+        }
+        return;
+      }
+
+      lblU.innerText = `${u_cm.toFixed(1)} cm`;
 
       if (v_cm === Infinity) {
         telV.innerText = "-Infinity";
@@ -571,6 +608,10 @@
       calculateOptics();
     });
 
+    chkInfinity.addEventListener('change', () => {
+      calculateOptics();
+    });
+
     slHo.addEventListener('input', e => {
       ho_cm = parseFloat(e.target.value);
       calculateOptics();
@@ -590,6 +631,8 @@
       selMirror.value = 'concave'; mirrorType = 'concave'; f_cm = -10;
       slU.value = 30; u_cm = -30;
       slHo.value = 10; ho_cm = 10;
+      chkInfinity.checked = false;
+      slU.disabled = false;
       zoomLevel = 1.0;
       panX = 0;
       calculateOptics();
@@ -664,11 +707,11 @@
       ctx.beginPath();
       // Draw a subtle quadratic curve scaled by zoomLevel
       if (mirrorType === 'concave') {
-        ctx.moveTo(Px + 20 * zoomLevel, Py - 150 * zoomLevel);
-        ctx.quadraticCurveTo(Px - 20 * zoomLevel, Py, Px + 20 * zoomLevel, Py + 150 * zoomLevel);
-      } else {
         ctx.moveTo(Px - 20 * zoomLevel, Py - 150 * zoomLevel);
         ctx.quadraticCurveTo(Px + 20 * zoomLevel, Py, Px - 20 * zoomLevel, Py + 150 * zoomLevel);
+      } else {
+        ctx.moveTo(Px + 20 * zoomLevel, Py - 150 * zoomLevel);
+        ctx.quadraticCurveTo(Px - 20 * zoomLevel, Py, Px + 20 * zoomLevel, Py + 150 * zoomLevel);
       }
       ctx.stroke();
 
@@ -678,8 +721,8 @@
       for (let y = -140; y <= 140; y += 10) {
         // approximate x on curve
         let t = (y + 150) / 300;
-        let ctrlX = (mirrorType === 'concave' ? -20 : 20) * zoomLevel;
-        let startX = (mirrorType === 'concave' ? 20 : -20) * zoomLevel;
+        let ctrlX = (mirrorType === 'concave' ? 20 : -20) * zoomLevel;
+        let startX = (mirrorType === 'concave' ? -20 : 20) * zoomLevel;
         let cx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * ctrlX + t * t * startX + Px;
 
         ctx.beginPath();
@@ -703,9 +746,11 @@
       drawPoint(Cx, 'C');
 
       // 4. Draw Object
-      let Ox = Px + u_cm * SCALE * zoomLevel;
-      let Oy_tip = Py - ho_cm * SCALE * zoomLevel; // negative because canvas Y is down
-      drawArrow(ctx, Ox, Py, Oy_tip, '#3b82f6', 'Object'); // Blue
+      if (u_cm !== -Infinity) {
+        let Ox = Px + u_cm * SCALE * zoomLevel;
+        let Oy_tip = Py - ho_cm * SCALE * zoomLevel; // negative because canvas Y is down
+        drawArrow(ctx, Ox, Py, Oy_tip, '#3b82f6', 'Object'); // Blue
+      }
 
       if (v_cm !== Infinity) {
         // 5. Ray Tracing!
@@ -720,49 +765,86 @@
           ctx.setLineDash([]);
         };
 
-        // Ray 1: Parallel to Principal Axis -> Reflects through/from Focus
-        let r1_hitX = Px;
-        let r1_hitY = Oy_tip;
-        // Incident
-        drawRay(Ox, Oy_tip, r1_hitX, r1_hitY, 'rgba(59, 130, 246, 0.7)');
-        // Arrowhead
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.7)'; ctx.beginPath(); ctx.moveTo(Px - 15, r1_hitY - 5); ctx.lineTo(Px - 5, r1_hitY); ctx.lineTo(Px - 15, r1_hitY + 5); ctx.fill();
+        if (u_cm === -Infinity) {
+          const heights = [ho_cm, ho_cm * 0.5];
+          heights.forEach(h => {
+            const y_val = Py - h * SCALE * zoomLevel;
+            // Incident ray
+            drawRay(0, y_val, Px, y_val, 'rgba(59, 130, 246, 0.7)');
+            // Arrowhead
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.7)'; ctx.beginPath(); ctx.moveTo(Px - 60, y_val - 5); ctx.lineTo(Px - 50, y_val); ctx.lineTo(Px - 60, y_val + 5); ctx.fill();
 
-        // Ray 2: Pole Ray -> Reflects symmetrically
-        let r2_hitX = Px;
-        let r2_hitY = Py;
-        // Incident
-        drawRay(Ox, Oy_tip, r2_hitX, r2_hitY, 'rgba(59, 130, 246, 0.7)');
+            // Reflected ray
+            if (mirrorType === 'concave') {
+              // Reflects through Focus F (Fx, Py)
+              const slope = (Py - y_val) / (Fx - Px);
+              drawRay(Px, y_val, Px - 2000, y_val - slope * 2000, '#f43f5e');
+            } else {
+              // Reflects away from Focus F (Fx, Py)
+              const slope = (Py - y_val) / (Fx - Px);
+              drawRay(Px, y_val, Px - 2000, y_val - slope * 2000, '#f43f5e');
+              // Virtual extension to Focus F (Fx)
+              drawRay(Px, y_val, Fx, Py, '#fb7185', true);
+            }
+          });
 
-        let Ix = Px + v_cm * SCALE * zoomLevel;
-        let Iy_tip = Py - hi_cm * SCALE * zoomLevel;
+          // Axis ray
+          drawRay(0, Py, Px, Py, 'rgba(59, 130, 246, 0.7)');
+          drawRay(Px, Py, 0, Py, '#f43f5e');
 
-        // Draw Reflected Rays
-        if (v_cm < 0) {
-          // Real Image (Formed on left side)
-          // Ray 1 reflects through Focus (which is on left for concave)
-          // We draw it passing through Image Tip
-          drawRay(r1_hitX, r1_hitY, Ix - 2000, Iy_tip + ((Iy_tip - r1_hitY) / (Ix - r1_hitX)) * (-2000), '#f43f5e');
-          // Ray 2 reflects through Image Tip
-          drawRay(r2_hitX, r2_hitY, Ix - 2000, Iy_tip + ((Iy_tip - r2_hitY) / (Ix - r2_hitX)) * (-2000), '#f43f5e');
-
+          // Point Image at Focus
+          ctx.fillStyle = '#f43f5e';
+          ctx.beginPath(); ctx.arc(Fx, Py, 5.5, 0, Math.PI * 2); ctx.fill();
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText("Point Image", Fx, Py - 12);
         } else {
-          // Virtual Image (Formed on right side)
-          // Reflected real rays (diverge on left)
-          // They look like they came from Image Tip (Ix, Iy_tip)
-          // Ray 1 real reflection (Left side)
-          drawRay(r1_hitX, r1_hitY, r1_hitX - 2000, r1_hitY + ((r1_hitY - Iy_tip) / (r1_hitX - Ix)) * (-2000), '#f43f5e');
-          // Ray 1 virtual projection (Right side)
-          drawRay(r1_hitX, r1_hitY, Ix + 2000, Iy_tip + ((Iy_tip - r1_hitY) / (Ix - r1_hitX)) * (2000), '#fb7185', true);
+          let Ox = Px + u_cm * SCALE * zoomLevel;
+          let Oy_tip = Py - ho_cm * SCALE * zoomLevel;
 
-          // Ray 2 real reflection (Left side)
-          drawRay(r2_hitX, r2_hitY, r2_hitX - 2000, r2_hitY + ((r2_hitY - Iy_tip) / (r2_hitX - Ix)) * (-2000), '#f43f5e');
-          // Ray 2 virtual projection (Right side)
-          drawRay(r2_hitX, r2_hitY, Ix + 2000, Iy_tip + ((Iy_tip - r2_hitY) / (Ix - r2_hitX)) * (2000), '#fb7185', true);
+          // Ray 1: Parallel to Principal Axis -> Reflects through/from Focus
+          let r1_hitX = Px;
+          let r1_hitY = Oy_tip;
+          // Incident
+          drawRay(Ox, Oy_tip, r1_hitX, r1_hitY, 'rgba(59, 130, 246, 0.7)');
+          // Arrowhead
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.7)'; ctx.beginPath(); ctx.moveTo(Px - 15, r1_hitY - 5); ctx.lineTo(Px - 5, r1_hitY); ctx.lineTo(Px - 15, r1_hitY + 5); ctx.fill();
+
+          // Ray 2: Pole Ray -> Reflects symmetrically
+          let r2_hitX = Px;
+          let r2_hitY = Py;
+          // Incident
+          drawRay(Ox, Oy_tip, r2_hitX, r2_hitY, 'rgba(59, 130, 246, 0.7)');
+
+          let Ix = Px + v_cm * SCALE * zoomLevel;
+          let Iy_tip = Py - hi_cm * SCALE * zoomLevel;
+
+          // Draw Reflected Rays
+          if (v_cm < 0) {
+            // Real Image (Formed on left side)
+            // Ray 1 reflects through Focus (which is on left for concave)
+            // We draw it passing through Image Tip
+            drawRay(r1_hitX, r1_hitY, Ix - 2000, Iy_tip + ((Iy_tip - r1_hitY) / (Ix - r1_hitX)) * (-2000), '#f43f5e');
+            // Ray 2 reflects through Image Tip
+            drawRay(r2_hitX, r2_hitY, Ix - 2000, Iy_tip + ((Iy_tip - r2_hitY) / (Ix - r2_hitX)) * (-2000), '#f43f5e');
+
+          } else {
+            // Virtual Image (Formed on right side)
+            // Reflected real rays (diverge on left)
+            // They look like they came from Image Tip (Ix, Iy_tip)
+            // Ray 1 real reflection (Left side)
+            drawRay(r1_hitX, r1_hitY, r1_hitX - 2000, r1_hitY + ((r1_hitY - Iy_tip) / (r1_hitX - Ix)) * (-2000), '#f43f5e');
+            // Ray 1 virtual projection (Right side)
+            drawRay(r1_hitX, r1_hitY, Ix + 2000, Iy_tip + ((Iy_tip - r1_hitY) / (Ix - r1_hitX)) * (2000), '#fb7185', true);
+
+            // Ray 2 real reflection (Left side)
+            drawRay(r2_hitX, r2_hitY, r2_hitX - 2000, r2_hitY + ((r2_hitY - Iy_tip) / (r2_hitX - Ix)) * (-2000), '#f43f5e');
+            // Ray 2 virtual projection (Right side)
+            drawRay(r2_hitX, r2_hitY, Ix + 2000, Iy_tip + ((Iy_tip - r2_hitY) / (Ix - r2_hitX)) * (2000), '#fb7185', true);
+          }
+
+          // 6. Draw Image
+          drawArrow(ctx, Ix, Py, Iy_tip, '#f43f5e', 'Image'); // Rose
         }
-
-        // 6. Draw Image
-        drawArrow(ctx, Ix, Py, Iy_tip, '#f43f5e', 'Image'); // Rose
       }
 
       requestAnimationFrame(renderCanvas);

@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Shared Altitude Tracing Geometry Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #000000 !important;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.95);
+    }
+    .draggable-point {
+      cursor: grab;
+      transition: fill 0.15s, stroke-width 0.15s, r 0.15s;
+    }
+    .draggable-point:active {
+      cursor: grabbing;
+      fill: #a7f3d0;
+      r: 10;
+    }
+    .right-angle-marker {
+      stroke: #facc15;
+      stroke-width: 1.5;
+      fill: rgba(250, 204, 21, 0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-4">
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+  
+  <!-- Header -->
+  <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+      <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+        <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Shared Altitude Tracing Laboratory</h1>
+        <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">Interactive Vector Altitudes &amp; Area Ratios</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5" id="btn-open-guide">
+        <span>📘</span> Lab Guide &amp; Proofs
+      </button>
+      <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+        <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Geometry Engine Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Controls Bar -->
+  <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+    <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+      <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Geometric Model:</span>
+      <select class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-geometry-mode">
+        <option selected value="bpt">1. Thales's Figure (Basic Proportionality Theorem)</option>
+        <option value="trapezoid">2. Trapezoid with Diagonal Intersection</option>
+        <option value="cevian">3. Cevian Split (Triangle Partition)</option>
+      </select>
+      
+      <span class="h-6 w-px bg-slate-200 hidden sm:inline mx-3"></span>
+      
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+      </button>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-4">
+      <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer hover:text-indigo-650">
+        <input checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-grid" type="checkbox"/>
+        <span>Show Grid Pattern</span>
+      </label>
+      <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer hover:text-indigo-650">
+        <input checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-lengths" type="checkbox"/>
+        <span>Show Value Labels</span>
+      </label>
+      <span class="h-6 w-px bg-slate-200 hidden sm:inline mx-1"></span>
+      <button class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5" id="btn-reset">
+        <span>🔄</span> Reset Workspace
+      </button>
+    </div>
+  </div>
+
+  <!-- Layout Grid -->
+  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    
+    <!-- Left Controls Panel -->
+    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[760px] viva-scrollbar">
+      <div class="space-y-4">
+        
+        <!-- Trace Altitude Action Button (Moved to Top) -->
+        <button class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md border border-amber-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2" disabled id="btn-trace-altitude">
+          <span>⚡</span> Trace Altitude Perpendicular
+        </button>
+
+        <!-- Presets Selector Panel -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2.5" id="pnl-presets">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Figure presets</span>
+          <div class="flex flex-col gap-2" id="presets-list">
+            <!-- Injected by JS based on geometry mode -->
+          </div>
+        </div>
+
+        <!-- Selected Triangle Info Card -->
+        <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-200/60 shadow-sm space-y-2" id="pnl-selected-info">
+          <span class="text-[9px] font-extrabold text-indigo-500 uppercase tracking-widest block">Selected Target</span>
+          <h3 class="text-sm font-extrabold text-slate-800" id="lbl-selected-name">No Triangle Selected</h3>
+          <div class="text-[11px] text-slate-600 leading-normal font-semibold space-y-1">
+            <p>• Base Segment: <span class="text-indigo-700 font-bold" id="lbl-base-segment">-</span></p>
+            <p>• Height Origin: <span class="text-indigo-700 font-bold" id="lbl-height-vertex">-</span></p>
+          </div>
+        </div>
+
+        <!-- Live Telemetry Results (Dark theme dashboard) -->
+        <div class="bg-[#0f172a] text-slate-300 p-4.5 rounded-xl border border-slate-800 shadow-lg space-y-3">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-800 pb-1.5">Live Telemetry Metrics</span>
+          
+          <div class="space-y-2 text-xs font-semibold" id="telemetry-metrics">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span class="text-slate-400">Base Length:</span>
+              <span class="font-bold font-mono text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]" id="tel-base-val">0.0 u</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span class="text-slate-400">Height (Altitude):</span>
+              <span class="font-bold font-mono text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]" id="tel-height-val">0.0 u</span>
+            </div>
+            <div class="flex items-center justify-between pb-1">
+              <span class="text-slate-400">Calculated Area:</span>
+              <span class="font-bold font-mono text-emerald-400 text-sm drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]" id="tel-area-val">0.0 u²</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Canvas Simulation Stage -->
+    <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[580px]">
+      
+      <!-- 2D SVG Viewport -->
+      <div class="absolute inset-0 w-full h-full block" id="view-sandbox-panel">
+        
+        <!-- Combined Sparkl Logo & Active overlay badge (Top Left) -->
+        <div class="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-700 shadow-lg z-20 pointer-events-none select-none flex items-center gap-3">
+          <img alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+          <div class="h-6 w-[1px] bg-slate-700"></div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span>
+            <span class="text-xs font-bold text-slate-300 tracking-wider uppercase">Altitude Canvas</span>
+          </div>
+        </div>
+        
+        <svg class="w-full h-full select-none" id="geometry-svg" viewBox="0 0 800 500">
+          <!-- Background Grids pattern -->
+          <defs>
+            <pattern height="25" id="grid" width="25">
+              <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect fill="url(#grid)" height="100%" id="grid-rect" width="100%"/>
+          
+          <!-- Static Figure outline paths -->
+          <g id="svg-figure-bg"></g>
+          
+          <!-- Highlighted Triangle overlay -->
+          <g id="svg-triangle-overlay"></g>
+          
+          <!-- Base Extension indicator -->
+          <g id="svg-base-extension"></g>
+          
+          <!-- Animated Altitude perpendicular line -->
+          <g id="svg-altitude-drawing"></g>
+
+          <!-- Interactive Handles -->
+          <g id="svg-handles-group"></g>
+          
+          <!-- Labels and values text overlays -->
+          <g id="svg-labels-group"></g>
+        </svg>
+      </div>
+
+      <!-- Zoom/Recenter Controls overlay -->
+      <div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md border border-slate-800 p-1.5 rounded-xl shadow-sm flex flex-col gap-1 z-20">
+        <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-650 transition-all">+</button>
+        <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-650 transition-all">-</button>
+        <button id="btn-recenter" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-650 transition-all text-[9px]" title="Recenter Camera">RST</button>
+      </div>
+
+      <!-- Instruction Hint Overlay -->
+      <div class="absolute bottom-4 left-4 bg-slate-950/85 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-850 shadow-sm flex items-center gap-2 max-w-sm pointer-events-none select-none z-20">
+        <span class="text-xs font-bold text-indigo-400 leading-tight" id="lbl-status-hint">Choose a presets or select three custom points. Drag corners to change geometries.</span>
+      </div>
+
+    </section>
+
+    <!-- Right MCQ Quiz Panel -->
+    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[760px] overflow-y-auto viva-scrollbar">
+      
+      <!-- Question Filter -->
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+        <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+          <option value="all">All Categories</option>
+          <option value="core">Core Concept</option>
+          <option value="obtuse">Obtuse Altitudes</option>
+          <option value="trapezoid">Trapezoid Diagonals</option>
+          <option value="cevian">Cevian Ratios</option>
+        </select>
+      </div>
+
+      <!-- Score Indicator -->
+      <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+        <div class="flex justify-between items-center mt-0.5">
+          <h2 class="text-sm font-bold tracking-tight text-slate-200">Altitude &amp; Ratio Theory</h2>
+          <span id="viva-score" class="text-[11px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full shadow-[0_0_8px_#6366f1]">Score: 0 / 4</span>
+        </div>
+      </div>
+
+      <!-- Explanation Panel -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Altitude Concept Explanation</span>
+        <div class="text-xs text-slate-600 leading-relaxed font-semibold space-y-2" id="explanation-text-content">
+          Select a triangle and press "Trace Altitude" to view the mathematical explanation here.
+        </div>
+      </div>
+
+      <!-- MCQ Question Cards -->
+      <div class="space-y-3 pb-4">
+        <!-- Q1 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="core">
+          <div class="space-y-2">
+            <span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Core Concept]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-cyan-700">
+              Why do triangles $ADE$ and $BDE$ (bases along $AB$, opposite vertex $E$) share the exact same height $EN$?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q1-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="obtuse">
+          <div class="space-y-2">
+            <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Obtuse Altitudes]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-pink-700">
+              For an obtuse triangle like $BDE$ (where base angle at $D$ is obtuse), where does the altitude dropped from $E$ land?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q2-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="trapezoid">
+          <div class="space-y-2">
+            <span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Trapezoid Diagonals]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-emerald-700">
+              In trapezoid $ABCD$ ($BC \parallel AD$) with diagonal intersection $O$, why is $\text{ar}(AOB)/\text{ar}(COB) = AO/CO$?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q3-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cevian">
+          <div class="space-y-2">
+            <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Cevian Ratios]</span>
+            <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-amber-700">
+              If cevian $AD$ divides base $BC$ of $\triangle ABC$ such that $BD/DC = 2/3$, what is the ratio of area $\text{ar}(ABD)/\text{ar}(ACD)$?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q4-feedback"></p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Modal Study Guide -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-widest">
+        <span>📐</span> SHARED ALTITUDE GUIDE
+      </h3>
+      <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">&times;</button>
+    </div>
+    <div class="space-y-4 text-sm text-slate-650 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+      <p>Welcome to the <strong>Shared Altitude Tracing Laboratory</strong>! This workspace demonstrates that triangles can share heights even when skewed or having different shapes.</p>
+      
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-indigo-650 text-xs uppercase tracking-widest">📐 Draggable Vertices</h4>
+        <p>Drag any primary corner node (blue/purple) to modify the geometries. You can skew them to force the altitudes outside the bases (obtuse cases).</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-indigo-650 text-xs uppercase tracking-widest">⚡ Triangle Presets</h4>
+        <p>Use the **Presets** sidebar to load classic sub-triangles. Each preset will automatically select the base segment and height vertex on the canvas.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-indigo-650 text-xs uppercase tracking-widest">🎬 Altitude Animation tracing</h4>
+        <p>Select a triangle and click **Trace Altitude**. The canvas will visually project the base line, draw base extensions if needed, drop the perpendicular height, and pulse a right-angle symbol.</p>
+      </div>
+    </div>
+    <div class="pt-4 border-t border-slate-100 flex justify-end">
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-sm rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Start Tracing</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- VIVA ASSESSMENT DATA ---
+  const appState = {
+    vivaScore: 0,
+    answers: { q1: null, q2: null, q3: null, q4: null }
+  };
+
+  const vivaData = {
+    q1: {
+      options: [
+        { text: "Because their bases AD and DB are on the same line AB, and they share vertex E.", isCorrect: true, exp: "Correct! The altitude of a triangle is the perpendicular distance from the opposite vertex to the base line. Since bases $AD$ and $DB$ are collinear along $AB$, the perpendicular dropped from the shared opposite vertex $E$ to line $AB$ is the identical altitude $EN$ for both!" },
+        { text: "Because segment DE is parallel to side BC.", isCorrect: false, exp: "Incorrect. While $DE \\parallel BC$ is true, it does not explain why $EN$ is the height for both." },
+        { text: "Because the triangles are similar.", isCorrect: false, exp: "Incorrect. Triangles $ADE$ and $BDE$ are not similar in general." },
+        { text: "Because segment AB is vertical.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q2: {
+      options: [
+        { text: "On the base segment DB itself.", isCorrect: false, exp: "Incorrect. Because the angle at D is obtuse (>90°), the altitude must land outside the segment." },
+        { text: "On the base line extension (past vertex D).", isCorrect: true, exp: "Correct! In an obtuse-angled triangle, the perpendicular dropped from an acute vertex to the opposite side falls outside the segment itself, landing on the extension of that base line." },
+        { text: "Directly on vertex D.", isCorrect: false, exp: "Incorrect. It would only fall at D if the angle was exactly 90°." },
+        { text: "It cannot be drawn.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q3: {
+      options: [
+        { text: "They share the diagonal line AC (bases AO and CO) and opposite vertex B.", isCorrect: true, exp: "Correct! Sub-triangles $AOB$ and $COB$ have their bases $AO$ and $CO$ along the same diagonal line segment $AC$, and they share the common opposite vertex $B$. Therefore, their perpendicular height from $B$ to diagonal $AC$ is identical, making their area ratio equal to their base ratio: $AO/CO$." },
+        { text: "Because the diagonals of a trapezoid are always equal.", isCorrect: false, exp: "Incorrect. Trapezoid diagonals are only equal if it is isosceles, which is not required." },
+        { text: "Because triangles AOB and COB are congruent.", isCorrect: false, exp: "Incorrect. They have different shapes." },
+        { text: "Because the height of the trapezoid is constant.", isCorrect: false, exp: "Incorrect." }
+      ]
+    },
+    q4: {
+      options: [
+        { text: "4/9", isCorrect: false, exp: "Incorrect." },
+        { text: "2/3", isCorrect: true, exp: "Correct! Triangles $ABD$ and $ACD$ share bases $BD$ and $CD$ along the collinear segment $BC$ and share the common vertex $A$. Thus, they share the same perpendicular altitude from $A$. Their area ratio is exactly equal to the ratio of their bases: $BD/DC = 2/3$." },
+        { text: "3/2", isCorrect: false, exp: "Incorrect. Recalculate using $\\text{ar}(ABD)/\\text{ar}(ACD) = BD/DC$." },
+        { text: "1/1", isCorrect: false, exp: "Incorrect." }
+      ]
+    }
+  };
+
+  const colorsMap = {
+    q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+    q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+    q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+    q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+  };
+
+  function triggerConfetti() {
+    const container = document.body;
+    const colors = ['#6366f1', '#10b981', '#06b6d4', '#ec4899', '#f59e0b', '#a855f7'];
+    const numParticles = 65;
+    for (let i = 0; i < numParticles; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      const w = Math.random() * 8 + 5;
+      const h = Math.random() * 8 + 5;
+      confetti.style.width = `${w}px`;
+      confetti.style.height = `${h}px`;
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+      
+      const fromLeft = i < numParticles / 2;
+      confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+      confetti.style.top = 'calc(100vh + 10px)';
+      
+      const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+      const velocity = Math.random() * 350 + 250;
+      
+      const dx = Math.cos(angle) * velocity;
+      const dy = -Math.sin(angle) * velocity;
+      const fallDuration = Math.random() * 1.5 + 1.5;
+      const spinRotation = Math.random() * 720 - 360;
+      
+      confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+      container.appendChild(confetti);
+      confetti.offsetHeight;
+      confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+      confetti.style.opacity = '0';
+      
+      setTimeout(() => { confetti.remove(); }, fallDuration * 1000);
+    }
+  }
+
+  function renderQuestions() {
+    const scoreLabel = document.getElementById('viva-score');
+    Object.keys(vivaData).forEach(qKey => {
+      const data = vivaData[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      if (!optionsContainer || !feedbackContainer) return;
+      optionsContainer.innerHTML = '';
+      
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `relative text-left p-2.5 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+        let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+        btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+        
+        btn.addEventListener('click', () => {
+          if (appState.answers[qKey] !== null) return;
+          appState.answers[qKey] = idx;
+          if (opt.isCorrect) {
+            appState.vivaScore++;
+            triggerConfetti();
+          }
+          if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+          
+          const buttons = optionsContainer.querySelectorAll('button');
+          buttons.forEach((b, i) => {
+            b.disabled = true;
+            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+            b.classList.add('cursor-not-allowed', 'shadow-none');
+            if (appState.answers[qKey] === i) {
+              if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+              else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            } else if (data.options[i].isCorrect) {
+              b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+            } else {
+              b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+            }
+          });
+          feedbackContainer.innerHTML = opt.exp;
+          feedbackContainer.classList.remove('hidden');
+          if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+        });
+        optionsContainer.appendChild(btn);
+      });
+    });
+  }
+
+  // --- Category Filter Handler ---
+  const selectCategory = document.getElementById('select-category');
+  if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+          const cat = selectCategory.value;
+          const questions = document.querySelectorAll('[data-category]');
+          questions.forEach(q => {
+              const qCat = q.getAttribute('data-category');
+              if (cat === 'all' || qCat === cat) {
+                  q.classList.remove('hidden');
+              } else {
+                  q.classList.add('hidden');
+              }
+          });
+      });
+  }
+
+  // --- GEOMETRY WORKSPACE ENGINE ---
+  let activeMode = 'bpt'; // 'bpt' | 'trapezoid' | 'cevian'
+
+  // Coordinates data
+  const pts = {
+    // Mode 1: BPT
+    bpt: {
+      A: { x: 400, y: 70 },
+      B: { x: 180, y: 430 },
+      C: { x: 620, y: 430 },
+      r: 0.45 // Parallel ratio
+    },
+    // Mode 2: Trapezoid
+    trapezoid: {
+      A: { x: 180, y: 410 },
+      D: { x: 620, y: 410 },
+      B: { x: 280, y: 170 },
+      C: { x: 520, y: 170 }
+    },
+    // Mode 3: Cevian
+    cevian: {
+      A: { x: 400, y: 80 },
+      B: { x: 180, y: 420 },
+      C: { x: 620, y: 420 },
+      D_r: 0.42 // D position ratio on BC
+    }
+  };
+
+  // Predefined triangles presets config
+  const presets = {
+    bpt: [
+      { name: "ΔADE (Base: AD, Vertex: E)", base: ["A", "D"], vertex: "E" },
+      { name: "ΔBDE (Base: DB, Vertex: E)", base: ["D", "B"], vertex: "E" },
+      { name: "ΔADE (Base: AE, Vertex: D)", base: ["A", "E"], vertex: "D" },
+      { name: "ΔCDE (Base: EC, Vertex: D)", base: ["E", "C"], vertex: "D" },
+      { name: "ΔABC (Base: BC, Vertex: A)", base: ["B", "C"], vertex: "A" }
+    ],
+    trapezoid: [
+      { name: "ΔAOB (Base: AO, Vertex: B)", base: ["A", "O"], vertex: "B" },
+      { name: "ΔCOB (Base: CO, Vertex: B)", base: ["C", "O"], vertex: "B" },
+      { name: "ΔAOD (Base: AO, Vertex: D)", base: ["A", "O"], vertex: "D" },
+      { name: "ΔCOD (Base: CO, Vertex: D)", base: ["C", "O"], vertex: "D" },
+      { name: "ΔABD (Base: AD, Vertex: B)", base: ["A", "D"], vertex: "B" },
+      { name: "ΔACD (Base: AD, Vertex: C)", base: ["A", "D"], vertex: "C" }
+    ],
+    cevian: [
+      { name: "ΔABD (Base: BD, Vertex: A)", base: ["B", "D"], vertex: "A" },
+      { name: "ΔACD (Base: CD, Vertex: A)", base: ["C", "D"], vertex: "A" },
+      { name: "ΔABC (Base: BC, Vertex: A)", base: ["B", "C"], vertex: "A" }
+    ]
+  };
+
+  // State of the current selection
+  let selectedTriangle = null; // { name, base: [pt1, pt2], vertex }
+
+  // State for altitude animation
+  let isAnimating = false;
+  let animProgress = 0; // 0 to 1
+  let animStep = 'none'; // 'highlight' | 'extension' | 'drawing' | 'complete'
+  let animStartTime = 0;
+
+  // Geometry details calculated on redraw
+  let currentCoords = {}; // Active coordinate mapping for drawing
+  let activeAltInfo = null; // { foot, t, extStart, extEnd }
+
+  // Drag variables
+  let dragNode = null;
+  let zoomLevel = 1.0;
+
+  const svg = document.getElementById('geometry-svg');
+
+  function dist(p1, p2) {
+    return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+  }
+
+  // Find intersection of line segments (for O in trapezoid)
+  function getIntersection(p1, p2, p3, p4) {
+    const d = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+    if (Math.abs(d) < 0.001) return null;
+    const x = ((p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x)) / d;
+    const y = ((p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x)) / d;
+    return { x, y };
+  }
+
+  // Project point onto line defined by base1 and base2
+  function projectPointOnLine(base1, base2, P) {
+    const vx = base2.x - base1.x;
+    const vy = base2.y - base1.y;
+    const lenSq = vx * vx + vy * vy;
+    if (lenSq === 0) return { foot: Object.assign({}, base1), t: 0 };
+    const wx = P.x - base1.x;
+    const wy = P.y - base1.y;
+    const t = (wx * vx + wy * vy) / lenSq;
+    const foot = {
+      x: base1.x + t * vx,
+      y: base1.y + t * vy
+    };
+    return { foot, t };
+  }
+
+  // Calculate coordinates for the selected model
+  function computeCoordinates() {
+    const coords = {};
+    if (activeMode === 'bpt') {
+      const b = pts.bpt;
+      coords.A = Object.assign({}, b.A);
+      coords.B = Object.assign({}, b.B);
+      coords.C = Object.assign({}, b.C);
+      
+      // D and E computed using ratio
+      coords.D = {
+        x: b.A.x + b.r * (b.B.x - b.A.x),
+        y: b.A.y + b.r * (b.B.y - b.A.y)
+      };
+      coords.E = {
+        x: b.A.x + b.r * (b.C.x - b.A.x),
+        y: b.A.y + b.r * (b.C.y - b.A.y)
+      };
+    } else if (activeMode === 'trapezoid') {
+      const t = pts.trapezoid;
+      coords.A = Object.assign({}, t.A);
+      coords.D = Object.assign({}, t.D);
+      coords.B = Object.assign({}, t.B);
+      coords.C = Object.assign({}, t.C);
+      
+      // O is the diagonal intersection
+      coords.O = getIntersection(coords.A, coords.C, coords.B, coords.D) || { x: 400, y: 290 };
+    } else if (activeMode === 'cevian') {
+      const c = pts.cevian;
+      coords.A = Object.assign({}, c.A);
+      coords.B = Object.assign({}, c.B);
+      coords.C = Object.assign({}, c.C);
+      
+      // D computed on BC using D_r
+      coords.D = {
+        x: c.B.x + c.D_r * (c.C.x - c.B.x),
+        y: c.B.y + c.D_r * (c.C.y - c.B.y)
+      };
+    }
+    return coords;
+  }
+
+  // Get active coordinate object by name
+  function getPointCoord(ptName) {
+    return currentCoords[ptName] || { x: 0, y: 0 };
+  }
+
+  // Generate dynamic explanations based on active selection
+  function updateExplanationPanel() {
+    const panel = document.getElementById('explanation-text-content');
+    if (!selectedTriangle) {
+      panel.innerHTML = `Select a triangle and press "Trace Altitude" to view the mathematical explanation here.`;
+      return;
+    }
+
+    const basePt1Name = selectedTriangle.base[0];
+    const basePt2Name = selectedTriangle.base[1];
+    const vertexName = selectedTriangle.vertex;
+
+    const basePt1 = getPointCoord(basePt1Name);
+    const basePt2 = getPointCoord(basePt2Name);
+    const vertex = getPointCoord(vertexName);
+
+    const bLen = dist(basePt1, basePt2);
+    const { foot, t } = projectPointOnLine(basePt1, basePt2, vertex);
+    const hLen = dist(vertex, foot);
+    const area = 0.5 * bLen * hLen;
+
+    const bName = `${basePt1Name}${basePt2Name}`;
+    const trName = `\\Delta ${basePt1Name}${basePt2Name}${vertexName}`;
+
+    // Custom text based on projection t
+    let obtuseClause = "";
+    if (t < 0 || t > 1) {
+      obtuseClause = `Note that because the triangle is **obtuse-angled** relative to base $${bName}$, the projection falls **outside** the base segment onto the base line extension. The altitude is drawn to the extension.`;
+    } else {
+      obtuseClause = `The altitude falls **inside** the base segment $${bName}$.`;
+    }
+
+    let sharedAltClause = "";
+    if (activeMode === 'bpt') {
+      if (vertexName === 'E' && (bName === 'AD' || bName === 'DB' || bName === 'AB')) {
+        sharedAltClause = `In Thales's geometry proof, both $\\Delta ADE$ (base $AD$) and $\\Delta BDE$ (base $DB$) share the same vertex $E$. Thus, they share the exact same height $EN = ${hLen.toFixed(1)}$ units. This is why their area ratio depends solely on base ratio: $\\frac{\\text{ar}(ADE)}{\\text{ar}(BDE)} = \\frac{AD}{DB}$.`;
+      } else if (vertexName === 'D' && (bName === 'AE' || bName === 'EC' || bName === 'AC')) {
+        sharedAltClause = `In Thales's geometry proof, both $\\Delta ADE$ (base $AE$) and $\\Delta CDE$ (base $EC$) share vertex $D$. They share height $DM = ${hLen.toFixed(1)}$ units, giving the ratio: $\\frac{\\text{ar}(ADE)}{\\text{ar}(CDE)} = \\frac{AE}{EC}$.`;
+      }
+    } else if (activeMode === 'trapezoid') {
+      if (vertexName === 'B' && (bName === 'AO' || bName === 'CO' || bName === 'AC')) {
+        sharedAltClause = `Because diagonal $AC$ is a straight line, $\\Delta AOB$ and $\\Delta COB$ lie on collinear bases $AO$ and $CO$ with shared opposite vertex $B$. Their common altitude dropped from $B$ to diagonal $AC$ is identical. This proves: $\\frac{\\text{ar}(AOB)}{\\text{ar}(COB)} = \\frac{AO}{CO}$.`;
+      } else if (vertexName === 'D' && (bName === 'AO' || bName === 'CO' || bName === 'AC')) {
+        sharedAltClause = `Similarly, $\\Delta AOD$ and $\\Delta COD$ lie on bases $AO$ and $CO$ and share vertex $D$. They share height $h_d = ${hLen.toFixed(1)}$ units.`;
+      }
+    } else if (activeMode === 'cevian') {
+      sharedAltClause = `Here, $\\Delta ABD$ (base $BD$) and $\\Delta ACD$ (base $CD$) are partition triangles of $\\Delta ABC$ along base $BC$. Both share the vertex $A$, meaning they share the exact same altitude dropped from $A$. The area ratio is exactly equal to base division ratio $BD/CD$.`;
+    }
+
+    panel.innerHTML = `
+      <div class="space-y-2 text-slate-600 font-semibold text-xs">
+        <p>For $${trName}$, the opposite base segment is $${bName}$ and the height origin vertex is $${vertexName}$.</p>
+        <p class="font-mono text-xs bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-indigo-300">
+          • Base ($${bName}$): ${(bLen/10).toFixed(1)} u<br/>
+          • Height: ${(hLen/10).toFixed(1)} u<br/>
+          • Area: ${((area)/100).toFixed(1)} u²
+        </p>
+        <p>${obtuseClause}</p>
+        <p class="text-emerald-600 font-bold mt-2">${sharedAltClause}</p>
+      </div>
+    `;
+    if (window.MathJax) MathJax.typesetPromise([panel]);
+  }
+
+  // Draw the entire geometry scene
+  function redraw() {
+    currentCoords = computeCoordinates();
+
+    const figBg = document.getElementById('svg-figure-bg');
+    const triOverlay = document.getElementById('svg-triangle-overlay');
+    const baseExt = document.getElementById('svg-base-extension');
+    const altDrawing = document.getElementById('svg-altitude-drawing');
+    const handlesGroup = document.getElementById('svg-handles-group');
+    const labelsGroup = document.getElementById('svg-labels-group');
+
+    figBg.innerHTML = '';
+    triOverlay.innerHTML = '';
+    baseExt.innerHTML = '';
+    altDrawing.innerHTML = '';
+    handlesGroup.innerHTML = '';
+    labelsGroup.innerHTML = '';
+
+    const showLengths = document.getElementById('chk-lengths').checked;
+
+    // --- DRAW BACKGROUND FIGURE SHAPES ---
+    if (activeMode === 'bpt') {
+      const { A, B, C, D, E } = currentCoords;
+      figBg.innerHTML += `
+        <!-- Main Triangle ABC -->
+        <polygon points="${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}" fill="none" stroke="#475569" stroke-width="2" />
+        <!-- Parallel line DE -->
+        <line x1="${D.x}" y1="${D.y}" x2="${E.x}" y2="${E.y}" stroke="#6366f1" stroke-width="3" stroke-linecap="round" />
+        <!-- Arrows showing DE || BC -->
+        <polygon points="${(D.x+E.x)/2 - 5},${(D.y+E.y)/2 + 5} ${(D.x+E.x)/2 + 5},${(D.y+E.y)/2} ${(D.x+E.x)/2 - 5},${(D.y+E.y)/2 - 5}" fill="#6366f1" />
+        <polygon points="${(B.x+C.x)/2 - 5},${(B.y+C.y)/2 + 5} ${(B.x+C.x)/2 + 5},${(B.y+C.y)/2} ${(B.x+C.x)/2 - 5},${(B.y+C.y)/2 - 5}" fill="#cbd5e1" />
+        
+        <!-- Helper lines BE & CD -->
+        <line x1="${B.x}" y1="${B.y}" x2="${E.x}" y2="${E.y}" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3,3" />
+        <line x1="${C.x}" y1="${C.y}" x2="${D.x}" y2="${D.y}" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3,3" />
+      `;
+    } else if (activeMode === 'trapezoid') {
+      const { A, B, C, D, O } = currentCoords;
+      figBg.innerHTML += `
+        <!-- Parallel bases AD & BC -->
+        <line x1="${A.x}" y1="${A.y}" x2="${D.x}" y2="${D.y}" stroke="#cbd5e1" stroke-width="2" />
+        <line x1="${B.x}" y1="${B.y}" x2="${C.x}" y2="${C.y}" stroke="#cbd5e1" stroke-width="2" />
+        <!-- Non-parallel side bounds -->
+        <line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#475569" stroke-width="1.5" />
+        <line x1="${D.x}" y1="${D.y}" x2="${C.x}" y2="${C.y}" stroke="#475569" stroke-width="1.5" />
+        <!-- Diagonals -->
+        <line x1="${A.x}" y1="${A.y}" x2="${C.x}" y2="${C.y}" stroke="#64748b" stroke-width="2" stroke-dasharray="4,4" />
+        <line x1="${B.x}" y1="${B.y}" x2="${D.x}" y2="${D.y}" stroke="#64748b" stroke-width="2" stroke-dasharray="4,4" />
+        <!-- Parallel arrows -->
+        <polygon points="${(B.x+C.x)/2 - 5},${(B.y+C.y)/2 + 5} ${(B.x+C.x)/2 + 5},${(B.y+C.y)/2} ${(B.x+C.x)/2 - 5},${(B.y+C.y)/2 - 5}" fill="#cbd5e1" />
+        <polygon points="${(A.x+D.x)/2 - 5},${(A.y+D.y)/2 + 5} ${(A.x+D.x)/2 + 5},${(A.y+D.y)/2} ${(A.x+D.x)/2 - 5},${(A.y+D.y)/2 - 5}" fill="#cbd5e1" />
+      `;
+    } else if (activeMode === 'cevian') {
+      const { A, B, C, D } = currentCoords;
+      figBg.innerHTML += `
+        <!-- Main triangle ABC outline -->
+        <polygon points="${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}" fill="none" stroke="#cbd5e1" stroke-width="2" />
+        <!-- Cevian AD -->
+        <line x1="${A.x}" y1="${A.y}" x2="${D.x}" y2="${D.y}" stroke="#6366f1" stroke-width="2.5" />
+      `;
+    }
+
+    // --- DRAW SELECTION & ANIMATIONS ---
+    if (selectedTriangle) {
+      const p1 = getPointCoord(selectedTriangle.base[0]);
+      const p2 = getPointCoord(selectedTriangle.base[1]);
+      const v = getPointCoord(selectedTriangle.vertex);
+
+      // Draw highlighted triangle shading overlay
+      triOverlay.innerHTML += `
+        <polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${v.x},${v.y}" fill="rgba(99,102,241,0.12)" stroke="rgba(99,102,241,0.6)" stroke-width="2.5" stroke-dasharray="6,4" />
+      `;
+
+      // Calculate altitude Math
+      const altResult = projectPointOnLine(p1, p2, v);
+      if (altResult) {
+        const { foot, t } = altResult;
+        const bLen = dist(p1, p2);
+        const hLen = dist(v, foot);
+
+        // Update Left panel metrics dynamically
+        document.getElementById('tel-base-val').innerText = `${(bLen/10).toFixed(1)} u`;
+        document.getElementById('tel-height-val').innerText = `${(hLen/10).toFixed(1)} u`;
+        document.getElementById('tel-area-val').innerText = `${((0.5 * bLen * hLen)/100).toFixed(1)} u²`;
+
+        // Handle animation steps
+        if (isAnimating) {
+          if (animStep === 'highlight') {
+            // Flash polygon outline
+            const pulseOpacity = 0.3 + 0.5 * Math.abs(Math.sin(animProgress * Math.PI * 4));
+            triOverlay.innerHTML = `<polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${v.x},${v.y}" fill="rgba(99, 102, 241, ${pulseOpacity*0.35})" stroke="#6366f1" stroke-width="3.5" />`;
+          } else if (animStep === 'extension') {
+            // Draw base extension growing
+            if (t < 0) {
+              const currentX = p1.x + animProgress * (foot.x - p1.x);
+              const currentY = p1.y + animProgress * (foot.y - p1.y);
+              baseExt.innerHTML = `<line x1="${p1.x}" y1="${p1.y}" x2="${currentX}" y2="${currentY}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />`;
+            } else if (t > 1) {
+              const currentX = p2.x + animProgress * (foot.x - p2.x);
+              const currentY = p2.y + animProgress * (foot.y - p2.y);
+              baseExt.innerHTML = `<line x1="${p2.x}" y1="${p2.y}" x2="${currentX}" y2="${currentY}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />`;
+            }
+          } else if (animStep === 'drawing') {
+            // Draw baseline extensions fully if needed
+            if (t < 0) {
+              baseExt.innerHTML = `<line x1="${p1.x}" y1="${p1.y}" x2="${foot.x}" y2="${foot.y}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />`;
+            } else if (t > 1) {
+              baseExt.innerHTML = `<line x1="${p2.x}" y1="${p2.y}" x2="${foot.x}" y2="${foot.y}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />`;
+            }
+            // Draw altitude drop growing
+            const currentX = v.x + animProgress * (foot.x - v.x);
+            const currentY = v.y + animProgress * (foot.y - v.y);
+            altDrawing.innerHTML = `
+              <line x1="${v.x}" y1="${v.y}" x2="${currentX}" y2="${currentY}" stroke="#facc15" stroke-width="3" />
+              <circle cx="${currentX}" cy="${currentY}" r="4" fill="#ffffff" stroke="#facc15" stroke-width="2" />
+            `;
+          } else if (animStep === 'complete') {
+            // Draw full base extension and altitude line
+            if (t < 0) {
+              baseExt.innerHTML = `<line x1="${p1.x}" y1="${p1.y}" x2="${foot.x}" y2="${foot.y}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />`;
+            } else if (t > 1) {
+              baseExt.innerHTML = `<line x1="${p2.x}" y1="${p2.y}" x2="${foot.x}" y2="${foot.y}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4" />`;
+            }
+            altDrawing.innerHTML = `<line x1="${v.x}" y1="${v.y}" x2="${foot.x}" y2="${foot.y}" stroke="#facc15" stroke-width="3.5" />`;
+
+            // Draw right angle symbol at foot
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const bDist = dist(p1, p2);
+            if (bDist > 0) {
+              const ux = dx / bDist;
+              const uy = dy / bDist;
+              const px = -uy;
+              const py = ux;
+              const sign = ((v.x - foot.x)*px + (v.y - foot.y)*py) > 0 ? 1 : -1;
+              
+              const size = 12 * Math.min(1.0, animProgress * 1.5);
+              const rx = foot.x + ux * size;
+              const ry = foot.y + uy * size;
+              const rpx = foot.x + sign * px * size;
+              const rpy = foot.y + sign * py * size;
+              const cornerX = foot.x + ux * size + sign * px * size;
+              const cornerY = foot.y + uy * size + sign * py * size;
+              altDrawing.innerHTML += `<polygon points="${rx},${ry} ${cornerX},${cornerY} ${rpx},${rpy} ${foot.x},${foot.y}" class="right-angle-marker" />`;
+            }
+
+            // Draw text value label
+            labelsGroup.innerHTML += `
+              <text x="${(v.x + foot.x)/2 + 12}" y="${(v.y + foot.y)/2 + 4}" fill="#facc15" font-size="11" font-weight="800" font-family="'JetBrains Mono'">h = ${(hLen/10).toFixed(1)} u</text>
+            `;
+            if (showLengths) {
+              labelsGroup.innerHTML += `
+                <text x="${(p1.x + p2.x)/2}" y="${(p1.y + p2.y)/2 - 10}" fill="#6366f1" font-size="11" font-weight="800" text-anchor="middle">Base = ${(bLen/10).toFixed(1)} u</text>
+              `;
+            }
+          }
+        }
+      }
+    }
+
+    // --- DRAW INTERACTIVE NODES & LABELS ---
+    Object.keys(currentCoords).forEach(ptName => {
+      const pt = currentCoords[ptName];
+      
+      // Determine node colors and styling
+      let fill = '#6366f1';
+      let stroke = '#ffffff';
+      let r = 8.5;
+      
+      if (selectedTriangle && (selectedTriangle.base.includes(ptName) || selectedTriangle.vertex === ptName)) {
+        if (selectedTriangle.vertex === ptName) {
+          fill = '#facc15';
+          r = 10;
+        } else {
+          fill = '#10b981';
+          r = 10;
+        }
+      }
+
+      // Predefined points that are non-draggable (like intersection O or computed D, E)
+      const isDraggable = (activeMode === 'bpt' && ['A', 'B', 'C'].includes(ptName)) ||
+                          (activeMode === 'trapezoid' && ['A', 'B', 'C', 'D'].includes(ptName)) ||
+                          (activeMode === 'cevian' && ['A', 'B', 'C', 'D'].includes(ptName));
+
+      const dragClass = isDraggable ? 'draggable-point' : '';
+
+      handlesGroup.innerHTML += `
+        <circle cx="${pt.x}" cy="${pt.y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="2.5" class="${dragClass}" id="pt-${ptName}" />
+      `;
+
+      labelsGroup.innerHTML += `
+        <text x="${pt.x}" y="${pt.y - r - 6}" fill="#f8fafc" font-size="13" font-weight="800" text-anchor="middle" font-family="'Plus Jakarta Sans'">${ptName}</text>
+      `;
+    });
+  }
+
+  // --- ANIMATION CONTROLLER ---
+  function startAltitudeAnimation() {
+    if (!selectedTriangle) return;
+    
+    isAnimating = true;
+    animProgress = 0;
+    animStep = 'highlight';
+    animStartTime = Date.now();
+    
+    document.getElementById('btn-trace-altitude').disabled = true;
+    document.getElementById('lbl-status-hint').innerText = "Analyzing triangle vertices...";
+    
+    runAnimationLoop();
+  }
+
+  function runAnimationLoop() {
+    if (!isAnimating) return;
+
+    const duration = animStep === 'highlight' ? 1200 : (animStep === 'complete' ? 600 : 1000);
+    const elapsed = Date.now() - animStartTime;
+    animProgress = Math.min(1.0, elapsed / duration);
+
+    if (animProgress >= 1.0) {
+      if (animStep === 'highlight') {
+        const p1 = getPointCoord(selectedTriangle.base[0]);
+        const p2 = getPointCoord(selectedTriangle.base[1]);
+        const v = getPointCoord(selectedTriangle.vertex);
+        const { t } = projectPointOnLine(p1, p2, v);
+        
+        if (t < 0 || t > 1) {
+          animStep = 'extension';
+          document.getElementById('lbl-status-hint').innerText = "An obtuse base angle is detected. Projecting base line extension...";
+        } else {
+          animStep = 'drawing';
+          document.getElementById('lbl-status-hint').innerText = "Projecting perpendicular height vector from origin...";
+        }
+        animProgress = 0;
+        animStartTime = Date.now();
+      } else if (animStep === 'extension') {
+        animStep = 'drawing';
+        document.getElementById('lbl-status-hint').innerText = "Projecting perpendicular height vector from origin...";
+        animProgress = 0;
+        animStartTime = Date.now();
+      } else if (animStep === 'drawing') {
+        animStep = 'complete';
+        document.getElementById('lbl-status-hint').innerText = "Height intersection completed successfully.";
+        animProgress = 0;
+        animStartTime = Date.now();
+        updateExplanationPanel();
+      } else if (animStep === 'complete') {
+        isAnimating = false;
+        document.getElementById('btn-trace-altitude').disabled = false;
+        document.getElementById('lbl-status-hint').innerText = "Altitude verification loaded. Drag handles to skew geometry.";
+        redraw();
+        return;
+      }
+    }
+
+    redraw();
+    requestAnimationFrame(runAnimationLoop);
+  }
+
+  // --- SELECTION STATE MANAGER ---
+  function selectPresetTriangle(index) {
+    const list = presets[activeMode];
+    if (!list || !list[index]) return;
+    
+    selectedTriangle = list[index];
+    document.getElementById('lbl-selected-name').innerText = selectedTriangle.name;
+    document.getElementById('lbl-base-segment').innerText = selectedTriangle.base.join('');
+    document.getElementById('lbl-height-vertex').innerText = selectedTriangle.vertex;
+    document.getElementById('btn-trace-altitude').disabled = false;
+
+    // Reset animation state
+    isAnimating = false;
+    redraw();
+  }
+
+
+
+  // Render presets buttons in the sidebar
+  function loadSidebarPresets() {
+    const container = document.getElementById('presets-list');
+    container.innerHTML = '';
+    
+    const list = presets[activeMode];
+    list.forEach((pr, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'w-full text-left p-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-indigo-650 border border-slate-200 hover:border-slate-300 font-bold text-xs rounded-lg transition-all shadow-sm flex items-center gap-2 cursor-pointer';
+      btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-slate-350"></span> ${pr.name}`;
+      btn.addEventListener('click', () => {
+        // Deselect active preset styling
+        const buttons = container.querySelectorAll('button');
+        buttons.forEach(b => {
+          b.className = 'w-full text-left p-2.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-indigo-650 border border-slate-200 hover:border-slate-300 font-bold text-xs rounded-lg transition-all shadow-sm flex items-center gap-2 cursor-pointer';
+          const indicator = b.querySelector('span');
+          if (indicator) {
+            indicator.className = 'w-1.5 h-1.5 rounded-full bg-slate-350';
+          }
+        });
+        btn.className = 'w-full text-left p-2.5 bg-indigo-50/60 text-indigo-700 border border-indigo-400 font-bold text-xs rounded-lg transition-all shadow-sm flex items-center gap-2 cursor-pointer';
+        const indicator = btn.querySelector('span');
+        if (indicator) {
+          indicator.className = 'w-1.5 h-1.5 rounded-full bg-indigo-600';
+        }
+        selectPresetTriangle(idx);
+      });
+      container.appendChild(btn);
+    });
+
+    // select first preset by default
+    selectPresetTriangle(0);
+    const firstBtn = container.querySelector('button');
+    if (firstBtn) {
+      firstBtn.className = 'w-full text-left p-2.5 bg-indigo-50/60 text-indigo-700 border border-indigo-400 font-bold text-xs rounded-lg transition-all shadow-sm flex items-center gap-2 cursor-pointer';
+      const firstIndicator = firstBtn.querySelector('span');
+      if (firstIndicator) {
+        firstIndicator.className = 'w-1.5 h-1.5 rounded-full bg-indigo-600';
+      }
+    }
+  }
+
+  // --- MOUSE/TOUCH VECTOR DRAGGING ---
+  function getMousePos(evt) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: ((evt.clientX - rect.left) / rect.width) * 800,
+      y: ((evt.clientY - rect.top) / rect.height) * 500
+    };
+  }
+
+  svg.addEventListener('mousedown', (evt) => {
+    const target = evt.target;
+    if (target.classList.contains('draggable-point')) {
+      dragNode = target.id.replace('pt-', '');
+      evt.preventDefault();
+    }
+  });
+
+  window.addEventListener('mousemove', (evt) => {
+    if (!dragNode) return;
+    const pos = getMousePos(evt);
+
+    // boundaries clamp
+    pos.x = Math.max(30, Math.min(770, pos.x));
+    pos.y = Math.max(30, Math.min(470, pos.y));
+
+    if (activeMode === 'bpt') {
+      pts.bpt[dragNode].x = pos.x;
+      pts.bpt[dragNode].y = pos.y;
+    } else if (activeMode === 'trapezoid') {
+      if (dragNode === 'A') {
+        pts.trapezoid.A.x = pos.x;
+        // lock bottom parallel horizontals
+        pts.trapezoid.A.y = pos.y;
+        pts.trapezoid.D.y = pos.y;
+      } else if (dragNode === 'D') {
+        pts.trapezoid.D.x = pos.x;
+        pts.trapezoid.D.y = pos.y;
+        pts.trapezoid.A.y = pos.y;
+      } else if (dragNode === 'B') {
+        pts.trapezoid.B.x = pos.x;
+        // lock top parallel horizontals
+        pts.trapezoid.B.y = pos.y;
+        pts.trapezoid.C.y = pos.y;
+      } else if (dragNode === 'C') {
+        pts.trapezoid.C.x = pos.x;
+        pts.trapezoid.C.y = pos.y;
+        pts.trapezoid.B.y = pos.y;
+      }
+    } else if (activeMode === 'cevian') {
+      if (dragNode === 'D') {
+        // Project D on base segment BC
+        const B = pts.cevian.B;
+        const C = pts.cevian.C;
+        const proj = projectPointOnLine(B, C, pos);
+        // Clamp projection ratio
+        let r = proj.t;
+        r = Math.max(0.05, Math.min(0.95, r));
+        pts.cevian.D_r = r;
+      } else {
+        pts.cevian[dragNode].x = pos.x;
+        pts.cevian[dragNode].y = pos.y;
+      }
+    }
+
+    redraw();
+  });
+
+  window.addEventListener('mouseup', () => {
+    dragNode = null;
+  });
+
+  // Touch handlers
+  svg.addEventListener('touchstart', (evt) => {
+    if (evt.touches.length === 1) {
+      const touch = evt.touches[0];
+      const target = touch.target;
+      if (target.classList.contains('draggable-point')) {
+        dragNode = target.id.replace('pt-', '');
+        evt.preventDefault();
+      }
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (evt) => {
+    if (!dragNode || evt.touches.length !== 1) return;
+    const touch = evt.touches[0];
+    const pos = getMousePos(touch);
+
+    pos.x = Math.max(30, Math.min(770, pos.x));
+    pos.y = Math.max(30, Math.min(470, pos.y));
+
+    if (activeMode === 'bpt') {
+      pts.bpt[dragNode].x = pos.x;
+      pts.bpt[dragNode].y = pos.y;
+    } else if (activeMode === 'trapezoid') {
+      if (dragNode === 'A') {
+        pts.trapezoid.A.x = pos.x;
+        pts.trapezoid.A.y = pos.y;
+        pts.trapezoid.D.y = pos.y;
+      } else if (dragNode === 'D') {
+        pts.trapezoid.D.x = pos.x;
+        pts.trapezoid.D.y = pos.y;
+        pts.trapezoid.A.y = pos.y;
+      } else if (dragNode === 'B') {
+        pts.trapezoid.B.x = pos.x;
+        pts.trapezoid.B.y = pos.y;
+        pts.trapezoid.C.y = pos.y;
+      } else if (dragNode === 'C') {
+        pts.trapezoid.C.x = pos.x;
+        pts.trapezoid.C.y = pos.y;
+        pts.trapezoid.B.y = pos.y;
+      }
+    } else if (activeMode === 'cevian') {
+      if (dragNode === 'D') {
+        const B = pts.cevian.B;
+        const C = pts.cevian.C;
+        const proj = projectPointOnLine(B, C, pos);
+        let r = proj.t;
+        r = Math.max(0.05, Math.min(0.95, r));
+        pts.cevian.D_r = r;
+      } else {
+        pts.cevian[dragNode].x = pos.x;
+        pts.cevian[dragNode].y = pos.y;
+      }
+    }
+
+    redraw();
+  }, { passive: false });
+
+  window.addEventListener('touchend', () => {
+    dragNode = null;
+  });
+
+  // --- VIEW TABS / TOGGLES EVENT HANDLERS ---
+  
+  // Geometry mode toggle
+  document.getElementById('select-geometry-mode').addEventListener('change', (e) => {
+    activeMode = e.target.value;
+    selectedTriangle = null;
+    isAnimating = false;
+    loadSidebarPresets();
+  });
+
+  // Checkbox toggles
+  document.getElementById('chk-grid').addEventListener('change', (e) => {
+    const rect = document.getElementById('grid-rect');
+    if (e.target.checked) rect.setAttribute('fill', 'url(#grid)');
+    else rect.setAttribute('fill', 'none');
+  });
+  document.getElementById('chk-lengths').addEventListener('change', redraw);
+
+  // Trace Altitude click action
+  document.getElementById('btn-trace-altitude').addEventListener('click', startAltitudeAnimation);
+
+  // Zoom / Recenter
+  document.getElementById('btn-zoom-in').addEventListener('click', () => {
+    zoomLevel *= 1.1;
+    svg.style.transform = `scale(${zoomLevel})`;
+  });
+  document.getElementById('btn-zoom-out').addEventListener('click', () => {
+    zoomLevel /= 1.1;
+    svg.style.transform = `scale(${zoomLevel})`;
+  });
+  document.getElementById('btn-recenter').addEventListener('click', () => {
+    zoomLevel = 1.0;
+    svg.style.transform = 'none';
+  });
+
+  // Reset workspace
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    pts.bpt.A = { x: 400, y: 70 };
+    pts.bpt.B = { x: 180, y: 430 };
+    pts.bpt.C = { x: 620, y: 430 };
+    pts.bpt.r = 0.45;
+
+    pts.trapezoid.A = { x: 180, y: 410 };
+    pts.trapezoid.D = { x: 620, y: 410 };
+    pts.trapezoid.B = { x: 280, y: 170 };
+    pts.trapezoid.C = { x: 520, y: 170 };
+
+    pts.cevian.A = { x: 400, y: 80 };
+    pts.cevian.B = { x: 180, y: 420 };
+    pts.cevian.C = { x: 620, y: 420 };
+    pts.cevian.D_r = 0.42;
+
+    zoomLevel = 1.0;
+    svg.style.transform = 'none';
+    
+    isAnimating = false;
+    loadSidebarPresets();
+  });
+
+  // Modal Study Guide
+  const guideModal = document.getElementById('user-guide-modal');
+  document.getElementById('btn-open-guide').addEventListener('click', () => {
+    guideModal.classList.remove('hidden');
+  });
+  document.getElementById('btn-close-guide').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+  document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+
+  // Setup layout panel collapse
+  (function() {
+    const btnToggleLeft = document.getElementById('btn-toggle-left');
+    const btnToggleViva = document.getElementById('btn-toggle-viva');
+    const leftPanel = document.getElementById('left-panel');
+    const vivaSection = document.getElementById('viva-section');
+    const mainLayout = document.getElementById('main-layout');
+    const canvasContainer = document.getElementById('canvas-container-wrapper');
+
+    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) return;
+
+    let leftVisible = true;
+    let vivaVisible = true;
+
+    function updateLayout() {
+      if (leftVisible) {
+        leftPanel.classList.remove('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-605 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+      } else {
+        leftPanel.classList.add('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+      }
+
+      if (vivaVisible) {
+        vivaSection.classList.remove('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-605 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+      } else {
+        vivaSection.classList.add('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+      }
+
+      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+      
+      let span = 12;
+      if (leftVisible && vivaVisible) span = 6;
+      else if (!leftVisible && !vivaVisible) span = 12;
+      else span = 9;
+
+      canvasContainer.classList.add('lg:col-span-' + span, 'md:col-span-' + span);
+
+      if (leftVisible && vivaVisible) {
+        mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      } else if (!leftVisible && !vivaVisible) {
+        mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      } else {
+        mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+      }
+    }
+
+    btnToggleLeft.addEventListener('click', () => {
+      leftVisible = !leftVisible;
+      updateLayout();
+    });
+    btnToggleViva.addEventListener('click', () => {
+      vivaVisible = !vivaVisible;
+      updateLayout();
+    });
+  })();
+
+  // Boot setup
+  window.addEventListener('DOMContentLoaded', () => {
+    renderQuestions();
+    loadSidebarPresets();
+    
+    // trigger guide modal
+    document.getElementById('user-guide-modal').classList.remove('hidden');
+  });
+</script>
+</body>
+</html>

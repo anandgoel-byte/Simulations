@@ -214,41 +214,49 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
 </div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q1-text">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[AIPMT 2007]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.01] group-hover:text-cyan-700" id="q1-text">
         Question 1
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q2-text">
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[AIEEE 2005]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.01] group-hover:text-pink-700" id="q2-text">
         Question 2
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q3-text">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 1998]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.01] group-hover:text-emerald-700" id="q3-text">
         Question 3
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q4-text">
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2015]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.01] group-hover:text-amber-700" id="q4-text">
         Question 4
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
@@ -292,16 +300,16 @@
 
 const vivaData = {
   q1: {
-    question: "The number of moles of KMnO₄ that will be needed to react with one mole of sulphite ion in acidic solution is: [AIPMT 2007]",
+    question: "The number of moles of $\\text{KMnO}_4$ that will be needed to react with one mole of sulphite ion ($\\text{SO}_3^{2-}$) in acidic solution is: [AIPMT 2007]",
     options: [
       { text: "1", isCorrect: false, exp: "Incorrect. You need to balance the number of electrons transferred (the n-factor) for both species." },
-      { text: "2/5", isCorrect: true, exp: "Correct! In acidic medium, KMnO₄ goes from Mn⁺⁷ to Mn⁺² (n-factor = 5). Sulphite (SO₃²⁻) goes to sulphate (SO₄²⁻) (n-factor = 2). Equating equivalents: n(KMnO₄) × 5 = n(SO₃²⁻) × 2. Therefore, n(KMnO₄) = 2/5 × 1 = 2/5." },
-      { text: "3/5", isCorrect: false, exp: "Incorrect. Check the oxidation state changes. Mn goes from +7 to +2, and S goes from +4 to +6." },
-      { text: "4/5", isCorrect: false, exp: "Incorrect. Ensure you are dividing the equivalents correctly." }
+      { text: "$2/5$", isCorrect: true, exp: "Correct! In acidic medium, $\\text{KMnO}_4$ goes from $\\text{Mn}^{+7}$ to $\\text{Mn}^{+2}$ (n-factor = 5). Sulphite ($\\text{SO}_3^{2-}$) goes to sulphate ($\\text{SO}_4^{2-}$) (n-factor = 2). Equating equivalents: $n(\\text{KMnO}_4) \\times 5 = n(\\text{SO}_3^{2-}) \\times 2$. Therefore, $n(\\text{KMnO}_4) = 2/5 \\times 1 = 2/5$." },
+      { text: "$3/5$", isCorrect: false, exp: "Incorrect. Check the oxidation state changes. $\\text{Mn}$ goes from $+7$ to $+2$, and $\\text{S}$ goes from $+4$ to $+6$." },
+      { text: "$4/5$", isCorrect: false, exp: "Incorrect. Ensure you are dividing the equivalents correctly." }
     ]
   },
   q2: {
-    question: "Which of the following indicators is most suitable for the titration of a weak acid (like acetic acid) and a strong base (like NaOH)? [AIEEE 2005]",
+    question: "Which of the following indicators is most suitable for the titration of a weak acid (like acetic acid) and a strong base (like $\\text{NaOH}$)? [AIEEE 2005]",
     options: [
       { text: "Methyl orange", isCorrect: false, exp: "Incorrect. Methyl orange works best in the acidic range (pH 3.1 - 4.4), making it suitable for strong acid-weak base titrations." },
       { text: "Methyl red", isCorrect: false, exp: "Incorrect. Methyl red changes color in the slightly acidic range (pH 4.4 - 6.2)." },
@@ -310,7 +318,7 @@ const vivaData = {
     ]
   },
   q3: {
-    question: "In the volumetric titration of iodine (I₂) against sodium thiosulphate (Na₂S₂O₃), the indicator used is: [NEET 1998]",
+    question: "In the volumetric titration of iodine ($\\text{I}_2$) against sodium thiosulphate ($\\text{Na}_2\\text{S}_2\\text{O}_3$), the indicator used is: [NEET 1998]",
     options: [
       { text: "Phenolphthalein", isCorrect: false, exp: "Incorrect. Phenolphthalein is an acid-base indicator, but this is a redox (iodometric) titration." },
       { text: "Potassium ferricyanide", isCorrect: false, exp: "Incorrect. This is not used as an internal indicator for iodine titrations." },
@@ -319,23 +327,31 @@ const vivaData = {
     ]
   },
   q4: {
-    question: "25 mL of a 0.05 M Ba(OH)₂ solution requires 20 mL of HNO₃ solution for complete neutralization. The molarity of the HNO₃ solution is: [NEET 2015]",
+    question: "$25\\text{ mL}$ of a $0.05\\text{ M}$ $\\text{Ba(OH)}_2$ solution requires $20\\text{ mL}$ of $\\text{HNO}_3$ solution for complete neutralization. The molarity of the $\\text{HNO}_3$ solution is: [NEET 2015]",
     options: [
-      { text: "0.0625 M", isCorrect: false, exp: "Incorrect. Did you forget that Ba(OH)₂ provides two moles of hydroxide ions per mole of formula unit?" },
-      { text: "0.125 M", isCorrect: true, exp: "Correct! At equivalence, N_acid × V_acid = N_base × V_base. N(HNO₃) = M₁ × 1, and N(Ba(OH)₂) = 0.05 × 2 = 0.1 N. So, M₁ × 20 = 0.1 × 25. Solving this gives M₁ = 2.5 / 20 = 0.125 M." },
-      { text: "0.250 M", isCorrect: false, exp: "Incorrect. Check your cross-multiplication after applying the normality equation." },
-      { text: "0.500 M", isCorrect: false, exp: "Incorrect. You may have placed the n-factor on the wrong side of the neutralization equation." }
+      { text: "$0.0625\\text{ M}$", isCorrect: false, exp: "Incorrect. Did you forget that $\\text{Ba(OH)}_2$ provides two moles of hydroxide ions per mole of formula unit?" },
+      { text: "$0.125\\text{ M}$", isCorrect: true, exp: "Correct! At equivalence, $N_{\\text{acid}} \\times V_{\\text{acid}} = N_{\\text{base}} \\times V_{\\text{base}}$. $N(\\text{HNO}_3) = M_1 \\times 1$, and $N(\\text{Ba(OH)}_2) = 0.05 \\times 2 = 0.1\\text{ N}$. So, $M_1 \\times 20 = 0.1 \\times 25$. Solving this gives $M_1 = 2.5 / 20 = 0.125\\text{ M}$." },
+      { text: "$0.250\\text{ M}$", isCorrect: false, exp: "Incorrect. Check your cross-multiplication after applying the normality equation." },
+      { text: "$0.500\\text{ M}$", isCorrect: false, exp: "Incorrect. You may have placed the n-factor on the wrong side of the neutralization equation." }
     ]
   }
 };
+
+const colorsMap = {
+  q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+  q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+  q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+  q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+};
+
 function renderQuestions() {
   const scoreLabel = document.getElementById('viva-score');
   
   // Inject Question Text statically on render
-  document.getElementById('q1-text').textContent = vivaData.q1.question;
-  document.getElementById('q2-text').textContent = vivaData.q2.question;
-  document.getElementById('q3-text').textContent = vivaData.q3.question;
-  document.getElementById('q4-text').textContent = vivaData.q4.question;
+  document.getElementById('q1-text').innerHTML = vivaData.q1.question;
+  document.getElementById('q2-text').innerHTML = vivaData.q2.question;
+  document.getElementById('q3-text').innerHTML = vivaData.q3.question;
+  document.getElementById('q4-text').innerHTML = vivaData.q4.question;
 
   Object.keys(vivaData).forEach(qKey => {
     const data = vivaData[qKey];
@@ -349,11 +365,11 @@ function renderQuestions() {
     data.options.forEach((opt, idx) => {
       // Build Button
       const btn = document.createElement('button');
-      btn.className = "text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white hover:bg-slate-50 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+      btn.className = `text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-semibold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
       
       // Add A, B, C, D labels
       let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
-      btn.innerHTML = `<span class="font-extrabold text-indigo-500 w-4">${letter}</span> <span>${opt.text}</span>`;
+      btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
       
       // Click Logic
       btn.addEventListener('click', () => {
@@ -367,7 +383,7 @@ function renderQuestions() {
         const buttons = optionsContainer.querySelectorAll('button');
         buttons.forEach((b, i) => {
           b.disabled = true;
-          b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+          b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
           b.classList.add('cursor-not-allowed', 'shadow-none');
           
           if (appState.answers[qKey] === i) {
@@ -384,12 +400,14 @@ function renderQuestions() {
         });
         
         // Show Feedback
-        feedbackContainer.textContent = opt.exp;
+        feedbackContainer.innerHTML = opt.exp;
         feedbackContainer.classList.remove('hidden');
+        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
       });
       optionsContainer.appendChild(btn);
     });
   });
+  if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
 }
     // --- CHEMISTRY ENGINE ---
     const canvas = document.getElementById('simCanvas');
@@ -759,6 +777,23 @@ function renderQuestions() {
         }
 
         requestAnimationFrame(renderGraph);
+    }
+
+    // Category Filter Handler
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+      selectCategory.addEventListener('change', () => {
+        const cat = selectCategory.value;
+        const questions = document.querySelectorAll('[data-category]');
+        questions.forEach(q => {
+          const qCat = q.getAttribute('data-category');
+          if (cat === 'all' || qCat === cat) {
+            q.classList.remove('hidden');
+          } else {
+            q.classList.add('hidden');
+          }
+        });
+      });
     }
 
     // --- Boot Sequence ---

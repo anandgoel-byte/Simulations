@@ -226,41 +226,41 @@
 <option value="neet">NEET Prep</option>
 </select>
 </div><div class="space-y-3">
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
 <div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main PYQ]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        What is the difference between "Spring Equilibrium" and "System Equilibrium"?
+                        A block of mass m is attached to a vertical spring of constant k. If it is released from the position where the spring is unstretched, what is the maximum extension in the spring?
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        At what position is the Kinetic Energy ($K$) of the mass at its absolute maximum?
+                        At the equilibrium position of a vertical spring-mass system, the kinetic energy is:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
 </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
+<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
 <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        If the block is dropped from rest at the Spring Equilibrium, how far down will it fall?
+                        For a vertical spring, the potential energy is minimum at:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
 </div>
 </div>
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
-                        Does changing gravity ($g$) alter the period of oscillation?
+<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+                        When a vertical spring is compressed by x, the change in total potential energy is:
                       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
 <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
@@ -700,37 +700,41 @@
 
     const vivaData = {
         q1: {
+            question: "A block of mass $m$ is attached to a vertical spring of constant $k$. If it is released from the position where the spring is unstretched, what is the maximum extension in the spring?",
             options: [
-                { text: "Spring Equilibrium is not the unstretched natural length of the spring ($y=0$), where $F_s = 0$", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Spring Equilibrium is the unstretched natural length of the spring ($y=0$), where $F_s = 0$", isCorrect: true, exp: "Correct! Spring Equilibrium is the unstretched natural length of the spring ($y=0$), where $F_s = 0$. System Equilibrium is where the net force is zero ($F_{net} = 0$). This occurs lower down when the upward spring force exactly cancels the downward gravitational weight: $$ky = mg \implies y_{eq} = \frac{mg}{k}$$" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$mg/k$", isCorrect: false, exp: "Incorrect. This is the static equilibrium extension, not the maximum dynamic extension." },
+                { text: "$2mg/k$", isCorrect: true, exp: "Correct! By conservation of mechanical energy: Loss in gravitational PE = Gain in elastic PE. $$mgx = \\frac{1}{2}kx^2$$ Solving for $x$ (where $x \\neq 0$) gives: $$x = \\frac{2mg}{k}$$" },
+                { text: "$mg/2k$", isCorrect: false, exp: "Incorrect. You might have misarranged the energy balance equation." },
+                { text: "$4mg/k$", isCorrect: false, exp: "Incorrect. The factor of $2$ arises from the $\\frac{1}{2}$ in the elastic potential energy formula." }
             ]
         },
         q2: {
+            question: "At the equilibrium position of a vertical spring-mass system, the kinetic energy is:",
             options: [
-                { text: "Kinetic Energy is not maximized when velocity is not highest.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Kinetic Energy is maximized when velocity is highest.", isCorrect: true, exp: "Correct! Kinetic Energy is maximized when velocity is highest. This occurs exactly as the mass crosses the System Equilibrium point. At this point, the acceleration switches from positive to negative, meaning velocity has reached its peak." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "Minimum", isCorrect: false, exp: "Incorrect. At equilibrium, velocity is at its maximum." },
+                { text: "Maximum", isCorrect: true, exp: "Correct! At the equilibrium point, the net force is zero and the block reaches its maximum velocity, thus maximum kinetic energy." },
+                { text: "Zero", isCorrect: false, exp: "Incorrect. The mass is moving fastest through the equilibrium point." },
+                { text: "Equal to potential energy", isCorrect: false, exp: "Incorrect. This is only true at specific points in the oscillation, not necessarily equilibrium." }
             ]
         },
         q3: {
+            question: "For a vertical spring, the potential energy is minimum at:",
             options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Using conservation of energy from $y=0$ (where $v=0, U_s=0$) to the lowest point $y_{low}$ (where $v=0$...", isCorrect: true, exp: "Correct! Using conservation of energy from $y=0$ (where $v=0, U_s=0$) to the lowest point $y_{low}$ (where $v=0$ again): $$\Delta U_g + \Delta U_s = 0$$ $$-mg(y_{low}) + \frac{1}{2}k(y_{low})^2 = 0$$ $$y_{low} = \frac{2mg}{k}$$ It falls exactly twice the distance of the System Equilibrium!" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "The lowest point", isCorrect: false, exp: "Incorrect. The spring potential energy is maximum at the lowest point." },
+                { text: "The equilibrium position", isCorrect: true, exp: "Correct! The sum of elastic potential energy ($U_s = \\frac{1}{2}kx^2$) and gravitational potential energy ($U_g = -mgx$) is minimized at the equilibrium position (where the net force is zero: $kx = mg$)." },
+                { text: "The highest point", isCorrect: false, exp: "Incorrect. The gravitational potential energy is highest here." },
+                { text: "The natural length", isCorrect: false, exp: "Incorrect. This is a common trap, but total potential energy is lower at equilibrium." }
             ]
         },
         q4: {
+            question: "When a vertical spring is compressed by $x$, the change in total potential energy is:",
             options: [
-                { text: "No The period of a mass-spring system is completely dependent of gravity: $$T = 2\pi\sqrt{\frac{m}{k}}$$...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "No The period of a mass-spring system is completely independent of gravity: $$T = 2\pi\sqrt{\frac{m}{k}}$$...", isCorrect: true, exp: "Correct! No. The period of a mass-spring system is completely independent of gravity: $$T = 2\pi\sqrt{\frac{m}{k}}$$ Gravity only shifts the central equilibrium point downwards, it does not change the restoring stiffness or the time it takes to complete one cycle." },
-                { text: "No The period of a mass-spring system is not completely independent of gravity: $$T = 2\pi\sqrt{\frac{m}{k}}$$...", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
+                { text: "$\\frac{1}{2}kx^2$", isCorrect: false, exp: "Incorrect. This only accounts for elastic potential energy, ignoring gravity." },
+                { text: "$\\frac{1}{2}kx^2 + mgx$", isCorrect: true, exp: "Correct! Compression adds elastic potential energy ($\\frac{1}{2}kx^2$) and moving the mass upwards increases gravitational potential energy ($mgx$)." },
+                { text: "$\\frac{1}{2}kx^2 - mgx$", isCorrect: false, exp: "Incorrect. Work is done against gravity, so gravitational potential energy increases." },
+                { text: "$mgx$", isCorrect: false, exp: "Incorrect. This ignores the energy stored in the spring." }
             ]
-        },
+        }
     };
 
     const colorsMap = {
@@ -793,6 +797,10 @@
 
         Object.keys(vivaData).forEach(qKey => {
             const data = vivaData[qKey];
+            const textContainer = document.getElementById(`${qKey}-text`);
+            if (textContainer) {
+                textContainer.innerHTML = data.question;
+            }
             const optionsContainer = document.getElementById(`${qKey}-options`);
             const feedbackContainer = document.getElementById(`${qKey}-feedback`);
 
@@ -834,13 +842,19 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    if (window.MathJax) {
+                        MathJax.typesetPromise([feedbackContainer]).catch(err => console.error(err));
+                    }
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax) {
+            setTimeout(() => {
+                MathJax.typesetPromise().catch(err => console.error(err));
+            }, 50);
+        }
     }
 
     // Category Filter Handler

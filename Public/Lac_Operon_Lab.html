@@ -67,10 +67,12 @@
     .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     
     .lab-stage {
-      background-color: #0b1329 !important;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1.2px, transparent 1.2px) !important;
-      background-size: 24px 24px !important;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+      background-color: #080d1a !important;
+      background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.04) 1.2px, transparent 1.2px),
+        linear-gradient(0deg, rgba(8, 13, 26, 1) 0%, rgba(13, 23, 46, 1) 100%) !important;
+      background-size: 24px 24px, 100% 100% !important;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.85);
     }
   </style>
 </head>
@@ -80,7 +82,7 @@
   <!-- Header -->
   <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
     <div class="flex items-center space-x-4 mb-3 sm:mb-0">
-      <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+      <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-center">
         <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
       </div>
       <div>
@@ -92,120 +94,119 @@
       <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
         <span>📘</span> Study Guide
       </button>
-      <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3.5 py-2 rounded-full border border-slate-800 shadow-inner">
-        <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
-        <span class="text-sm text-slate-300 font-bold font-mono uppercase tracking-widest">Negative Control Active</span>
+      <div class="flex items-center space-x-2 bg-slate-950 px-3.5 py-2 rounded-full border border-slate-800 shadow-inner">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]" id="mode-led"></span>
+        <span class="text-xs text-slate-300 font-bold font-mono uppercase tracking-widest" id="mode-badge-text">Negative Control</span>
       </div>
     </div>
   </header>
 
   <!-- Controls Bar -->
   <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-    <div class="flex items-center space-x-2">
-      <span class="text-sm font-bold text-slate-500 uppercase tracking-wider mr-2">Environment Preset:</span>
-      <select class="bg-white border border-slate-300 text-indigo-700 text-sm font-bold rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm" id="select-preset">
-        <option value="off">Lactose Absent (Operon Switched OFF)</option>
-        <option value="on">Lactose Present (Operon Switched ON)</option>
-        <option value="dynamic">Active Influx & Digestion Mode</option>
+    <div class="flex items-center space-x-2 flex-wrap gap-2">
+      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1">Operon Preset:</span>
+      <select class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm" id="select-preset">
+        <option value="off">Lactose Absent (OFF State)</option>
+        <option value="on">Lactose Present (ON State)</option>
       </select>
-      <button class="px-4 py-2 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-sm rounded transition-all flex items-center gap-1.5 shadow-sm" id="btn-reset">
+      <button class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded transition-all flex items-center gap-1.5 shadow-sm" id="btn-reset">
         <span>🔄</span> Reset
       </button>
-      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+      <button class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
         <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
       </button>
-      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+      <button class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
         <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
       </button>
     </div>
     <div class="flex items-center space-x-4">
-      <label class="flex items-center space-x-2 text-base font-semibold text-slate-700 cursor-pointer select-none">
-        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-5 w-5" id="chk-particles" type="checkbox"/>
-        <span>Show Molecules &amp; Ribosomes</span>
+      <label class="flex items-center space-x-2 text-xs font-semibold text-slate-700 cursor-pointer select-none">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-particles" type="checkbox"/>
+        <span>Show Cytoplasmic Details</span>
       </label>
     </div>
   </div>
 
   <!-- Main Layout Grid -->
-  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[660px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
     
     <!-- Left Controls Panel -->
-    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
-      <div class="space-y-5">
-        
-        <!-- Objective -->
-        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
-          <span class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider block mb-2 border-b border-indigo-100 pb-1">NCERT Core Concept</span>
-          <p class="text-xs font-medium text-slate-700 leading-relaxed">
-            Regulation of the lac operon by the repressor protein is <b>negative regulation</b>. The regulatory gene <b>$i$</b> (inhibitor) constitutively produces the repressor, which blocks RNA polymerase. Lactose (the <b>inducer</b>) binds and inactivates the repressor to switch the operon ON.
+    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-4 overflow-y-auto max-h-[780px] viva-scrollbar">
+      <div class="space-y-4">
+
+        <!-- Static Concept Box -->
+        <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm transition-all duration-300" id="concept-box">
+          <span class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider block mb-1.5 border-b border-indigo-100 pb-1" id="concept-title">Negative Control (NCERT Core)</span>
+          <p class="text-xs font-medium text-slate-700 leading-relaxed" id="concept-text">
+            In the absence of lactose, the regulatory gene <b>$i$</b> transcribes repressor mRNA, producing an active repressor protein that binds operator <b>$o$</b>, preventing RNA Polymerase transcription.
           </p>
         </div>
 
         <!-- Lactose Slider -->
-        <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm transition-colors duration-300">
-          <div class="flex justify-between items-center text-sm font-bold text-slate-600 mb-1">
+        <div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm transition-all">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
             <span class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-amber-400 block"></span> 
+              <span class="w-2 h-2 rounded-full bg-amber-500 block"></span> 
               <span class="uppercase text-amber-600" id="lactose-label-text">Lactose (Inducer)</span>
             </span>
-            <span class="font-mono text-amber-600 text-lg font-bold" id="lbl-lactose">0%</span>
+            <span class="font-mono text-amber-600 text-base font-extrabold" id="lbl-lactose">0%</span>
           </div>
           <input class="w-full mt-2" id="sl-lactose" max="100" min="0" step="1" style="accent-color: #f59e0b;" type="range" value="0"/>
-          <div class="text-xs font-semibold text-slate-500 mt-3 leading-tight bg-amber-50 p-2.5 rounded border border-amber-100" id="lactose-desc">
-            In static mode, this adjusts intracellular lactose. In dynamic mode, it sets the initial extracellular lactose supply.
+          <div class="text-[11px] text-slate-500 mt-2 leading-snug bg-amber-50/50 p-2 rounded border border-amber-100" id="lactose-desc">
+            Represents inducer availability. At 0%, repressor blocks operator. At >0%, lactose binds repressor to switch operon ON.
           </div>
         </div>
 
-        <!-- Genetics / Mutation Selector -->
+        <!-- Genetics / Mutation Selector (Crucial for NEET) -->
         <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm">
-          <label class="block text-sm font-bold text-slate-600 uppercase tracking-wider mb-2">Operon Genetics (NEET Prep)</label>
-          <select class="w-full bg-slate-50 border border-slate-300 text-rose-700 text-sm font-bold rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-rose-500 transition-all cursor-pointer shadow-sm" id="select-mutation">
+          <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Genetic Constitution (NEET Prep)</label>
+          <select class="w-full bg-slate-50 border border-slate-300 text-rose-700 text-xs font-bold rounded-lg px-2.5 py-2 outline-none focus:ring-2 focus:ring-rose-500 transition-all cursor-pointer shadow-sm" id="select-mutation">
             <option value="wild_type">Wild Type (Normal Lac Operon)</option>
-            <option value="mutant_i">Mutant i-Gene (i⁻ : Non-functional Repressor)</option>
-            <option value="mutant_o">Mutant Operator (oᶜ : Repressor cannot bind)</option>
-            <option value="mutant_z">Mutant z-Gene (z⁻ : Non-functional β-Gal)</option>
-            <option value="mutant_y">Mutant y-Gene (y⁻ : Non-functional Permease)</option>
+            <option value="mutant_i">Mutant i-Gene ($i^{-}$ : Defective Repressor)</option>
+            <option value="mutant_o">Mutant Operator ($o^{c}$ : Constitutive, cannot bind repressor)</option>
+            <option value="mutant_z">Mutant z-Gene ($z^{-}$ : Non-functional β-Galactosidase)</option>
+            <option value="mutant_y">Mutant y-Gene ($y^{-}$ : Non-functional Permease)</option>
           </select>
-          <div class="text-xs font-semibold text-slate-500 mt-3 leading-tight bg-rose-50 p-2.5 rounded border border-rose-100" id="mutation-desc">
-            Normal operon: Switched off by default. Mutations in $i$ or $o$ result in constitutive (continuous) enzyme production!
+          <div class="text-[11px] text-slate-500 mt-2 leading-snug bg-rose-50/50 p-2 rounded border border-rose-100" id="mutation-desc">
+            Observe how structural gene mutations or regulator mutations affect transcription states.
           </div>
         </div>
 
         <!-- Simulation Speed -->
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div class="flex justify-between items-center text-sm font-bold text-slate-600 mb-1">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
             <span class="uppercase">Simulation Speed</span>
             <span class="font-mono text-indigo-600 font-bold" id="lbl-speed">1.0x</span>
           </div>
-          <input class="w-full mt-2" id="sl-speed" max="2" min="0.5" step="0.1" style="accent-color: #4f46e5;" type="range" value="1"/>
+          <input class="w-full mt-2" id="sl-speed" max="2.0" min="0.5" step="0.1" style="accent-color: #4f46e5;" type="range" value="1.0"/>
         </div>
 
         <!-- Telemetry -->
-        <div class="space-y-3">
-          <span class="text-xs font-extrabold uppercase tracking-widest text-slate-500 block">Telemetry Panel</span>
-          <div class="grid grid-cols-2 gap-2 text-center">
-            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
-              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Repressor State</div>
-              <div class="text-xs font-bold font-mono text-rose-600 leading-tight mt-0.5" id="tel-rep">Active & Bound</div>
+        <div class="space-y-2.5">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 block">Telemetry Panel</span>
+          <div class="grid grid-cols-2 gap-2 text-center text-[11px]">
+            <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Repressor state</div>
+              <div class="font-extrabold text-rose-600 text-xs" id="tel-rep">Active & Bound</div>
             </div>
-            <div class="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center">
-              <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Transcription</div>
-              <div class="text-xs font-bold font-mono text-slate-500 leading-tight mt-0.5" id="tel-trans">OFF (Blocked)</div>
+            <div class="bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center items-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-0.5">Operon Transcription Level</div>
+              <div class="font-extrabold text-indigo-600 text-xs" id="tel-trans">OFF (Blocked by Repressor)</div>
             </div>
-            <div class="bg-slate-900 text-slate-100 p-3 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
-              <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Enzymes Translated</div>
-              <div class="grid grid-cols-3 gap-2 w-full mt-1">
+            <div class="bg-slate-900 text-slate-100 p-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
+              <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1.5">Translated Enzymes (Cytoplasm)</div>
+              <div class="grid grid-cols-3 gap-1 w-full font-mono text-center">
                 <div>
-                  <div class="text-[9px] text-emerald-400 font-extrabold uppercase">β-Gal (z)</div>
-                  <div class="text-lg font-bold font-mono" id="tel-z">0</div>
+                  <div class="text-[8px] text-emerald-400 font-bold uppercase leading-none">β-Gal (z)</div>
+                  <div class="text-base font-extrabold mt-0.5 text-emerald-400" id="tel-z">0</div>
                 </div>
                 <div>
-                  <div class="text-[9px] text-orange-400 font-extrabold uppercase">Permease (y)</div>
-                  <div class="text-lg font-bold font-mono" id="tel-y">0</div>
+                  <div class="text-[8px] text-orange-400 font-bold uppercase leading-none">Permease (y)</div>
+                  <div class="text-base font-extrabold mt-0.5 text-orange-400" id="tel-y">0</div>
                 </div>
                 <div>
-                  <div class="text-[9px] text-amber-400 font-extrabold uppercase">Transac. (a)</div>
-                  <div class="text-lg font-bold font-mono" id="tel-a">0</div>
+                  <div class="text-[8px] text-amber-400 font-bold uppercase leading-none">Transac (a)</div>
+                  <div class="text-base font-extrabold mt-0.5 text-amber-400" id="tel-a">0</div>
                 </div>
               </div>
             </div>
@@ -215,109 +216,72 @@
     </section>
 
     <!-- Center Canvas Simulation Panel -->
-    <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+    <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-950 min-h-[500px]">
       <canvas class="absolute inset-0 w-full h-full block z-10" id="simCanvas"></canvas>
       
       <!-- Overlay HUD -->
       <div class="absolute top-4 left-4 flex flex-col gap-2 pointer-events-none select-none z-20">
-        <div class="bg-slate-950/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center justify-center self-start">
-          <img alt="Sparkl Logo" class="h-9 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        <div class="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 shadow-sm flex items-center justify-center self-start">
+          <img alt="Sparkl Logo" class="h-8 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
         </div>
-        <div class="bg-slate-950/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 self-start">
-          <span class="text-xs font-bold text-indigo-400 tracking-wider uppercase" id="canvas-hud">Cell Cytoplasm Simulator</span>
+        <div class="bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 shadow-sm flex items-center gap-2 self-start">
+          <span class="text-[11px] font-bold text-cyan-400 tracking-wider uppercase" id="canvas-hud">Cellular Transcriptome Simulator</span>
         </div>
       </div>
 
+      <!-- Live Banner Status -->
+      <div class="absolute top-4 right-4 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 shadow-sm flex items-center gap-2 pointer-events-none select-none z-20 max-w-[280px]">
+        <span class="w-2 h-2 rounded-full bg-rose-500 inline-block" id="status-pulse"></span>
+        <span class="text-[10px] font-extrabold text-slate-200 tracking-wide uppercase leading-normal" id="status-banner">Blocked: Repressor Bound</span>
+      </div>
+
+      <!-- Interactive Highlight Badge (Basal Permease) -->
+      <div class="absolute top-[82px] left-[150px] bg-slate-950/90 border border-slate-800 rounded-lg px-2.5 py-1 text-[9px] font-bold text-orange-400 z-20 pointer-events-none select-none shadow-md" id="basal-permease-badge">
+        Basal Permease (Always present)
+      </div>
+
       <!-- Molecule Legend -->
-      <div class="absolute bottom-4 left-4 bg-slate-950/90 backdrop-blur-md px-3 py-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col gap-1.5 pointer-events-none select-none z-20 text-xs">
+      <div class="absolute bottom-4 left-4 bg-slate-950/90 backdrop-blur-md px-3 py-2.5 rounded-xl border border-slate-800 shadow-sm flex flex-col gap-1.5 pointer-events-none select-none z-20 text-[10px]">
         <div class="flex items-center gap-1.5 font-bold text-slate-300">
-          <span class="w-3.5 h-2 bg-amber-500 rounded-sm inline-block"></span> Lactose (Inducer disaccharide)
+          <span class="w-3.5 h-2 bg-amber-500 rounded-sm inline-block"></span> Lactose (Inducer)
         </div>
         <div class="flex items-center gap-1.5 font-bold text-slate-300">
-          <span class="w-3 h-3 bg-red-500 rounded-full inline-block"></span> Active Repressor (blocks Operator)
+          <span class="w-3 h-3 bg-red-600 rounded-full inline-block border border-red-400"></span> Active Repressor (blocks Operator)
         </div>
         <div class="flex items-center gap-1.5 font-bold text-slate-300">
-          <span class="w-3 h-3 bg-slate-500 rounded-full inline-block"></span> Inactive / Mutant Repressor
+          <span class="w-3 h-3 bg-amber-400 rounded-full inline-block border border-amber-200"></span> Inactive Repressor (Lactose bound)
         </div>
         <div class="flex items-center gap-1.5 font-bold text-slate-300">
-          <span class="w-3 h-3 bg-emerald-500 rounded-sm inline-block"></span> β-Galactosidase (z) [hydrolyzes lactose]
+          <span class="w-3 h-3 bg-emerald-500 rounded-sm inline-block"></span> β-Galactosidase (z) [Cleaves Lactose]
         </div>
-        <div class="flex items-center gap-1.5 font-bold text-slate-300">
-          <span class="w-2.5 h-3.5 bg-orange-500 rounded-sm inline-block"></span> Permease (y) [membrane channel]
-        </div>
-        <div class="flex items-center gap-1.5 font-bold text-slate-300">
-          <span class="w-2 h-2 bg-emerald-400 rounded-full inline-block"></span> Glucose / <span class="w-2 h-2 bg-cyan-400 rounded-full inline-block"></span> Galactose
+        <div class="flex items-center gap-1.5 font-bold text-slate-300 flex-wrap">
+          <span class="w-2.5 h-2.5 bg-green-400 rounded-full inline-block"></span> Glucose &nbsp;
+          <span class="w-2.5 h-2.5 bg-sky-400 rounded-full inline-block"></span> Galactose
         </div>
       </div>
     </section>
 
     <!-- Right MCQ Quiz Panel -->
-    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[780px] overflow-y-auto viva-scrollbar">
       <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
-        <span class="text-sm font-extrabold uppercase tracking-widest text-indigo-400">NCERT/NEET MCQ Drill</span>
-        <div class="flex justify-between items-center mt-0.5">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">NCERT/NEET MCQ Drill</span>
+        <div class="flex justify-between items-center mt-1">
           <h2 class="text-base font-bold">Concept Check</h2>
-          <span class="text-base font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+          <span class="text-sm font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 6</span>
         </div>
       </div>
       
       <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
         <span class="text-xs font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
-        <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-[15px] font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
-          <option value="all">All Questions</option>
-          <option value="ncert">NCERT Core Theory</option>
-          <option value="neet">NEET Exam Practice</option>
+        <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+          <option value="all">All Topics</option>
+          <option value="negative">Negative Control (NCERT)</option>
+          <option value="neet">NEET / Mutations</option>
         </select>
       </div>
 
-      <div class="space-y-3 pb-4">
-        <!-- Q1 -->
-        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="ncert">
-          <div class="space-y-2">
-            <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT Core Theory]</span>
-            <h4 class="text-[14px] font-bold text-slate-800 leading-snug" id="q1-text">
-              What is the correct sequence of gene regions in the Lac Operon from left to right as per the NCERT model?
-            </h4>
-            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100 animate-fadeIn" id="q1-feedback"></p>
-          </div>
-        </div>
-
-        <!-- Q2 -->
-        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
-          <div class="space-y-2">
-            <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Exam Practice]</span>
-            <h4 class="text-[14px] font-bold text-slate-800 leading-snug" id="q2-text">
-              What is the specific function of the enzyme Permease encoded by the lacY structural gene?
-            </h4>
-            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100 animate-fadeIn" id="q2-feedback"></p>
-          </div>
-        </div>
-
-        <!-- Q3 -->
-        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="ncert">
-          <div class="space-y-2">
-            <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NCERT Core Theory]</span>
-            <h4 class="text-[14px] font-bold text-slate-800 leading-snug" id="q3-text">
-              Why is the regulation of the lac operon by the repressor protein referred to as negative regulation?
-            </h4>
-            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100 animate-fadeIn" id="q3-feedback"></p>
-          </div>
-        </div>
-
-        <!-- Q4 -->
-        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
-          <div class="space-y-2">
-            <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET Exam Practice]</span>
-            <h4 class="text-[14px] font-bold text-slate-800 leading-snug" id="q4-text">
-              In a mutant E. coli strain where the regulatory gene $i$ is non-functional ($i⁻$), what will be the state of operon transcription?
-            </h4>
-            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100 animate-fadeIn" id="q4-feedback"></p>
-          </div>
-        </div>
+      <div class="space-y-3.5 pb-4" id="questions-container">
+        <!-- Questions loaded dynamically -->
       </div>
     </section>
   </main>
@@ -325,156 +289,229 @@
 
 <!-- Modal Study Guide -->
 <div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
-  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200 text-base">
+  <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200 text-base">
     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-      <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
-        <span>📘</span> LAC OPERON NCERT PROTOCOL
+      <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+        <span>📘</span> LAC OPERON NCERT CORE STUDY SHEET
       </h3>
       <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
     </div>
     <div class="space-y-4 text-xs text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
-      <p>This virtual laboratory models gene regulation in <i>E. coli</i> based strictly on the NCERT Class 12 Molecular Genetics curriculum.</p>
+      <p class="leading-relaxed">This laboratory models the lac operon of <i>Escherichia coli</i> based strictly on the NCERT Class 12 Biology textbook curriculum for CBSE & NEET aspirants.</p>
       
       <div class="space-y-2">
-        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🧬 The Operon DNA Components</h4>
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🧬 Gene Sequence ($i - p - o - z - y - a$)</h4>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>i Gene (Regulator)</strong>: Transcribes repressor mRNA, which is translated into repressor protein. It is active constitutively (all the time).</li>
-          <li><strong>p (Promoter)</strong>: Binding site for RNA Polymerase.</li>
-          <li><strong>o (Operator)</strong>: Physical binding site for the repressor protein.</li>
-          <li><strong>Structural Genes (z, y, a)</strong>: Transcribed into a single polycistronic lac-mRNA.
-            <ul class="list-circle pl-5 mt-1 space-y-0.5">
-              <li><strong>z (β-Galactosidase)</strong>: Hydrolyzes lactose into Glucose & Galactose.</li>
-              <li><strong>y (Permease)</strong>: Multiplies membrane permeability to allow lactose entry.</li>
-              <li><strong>a (Transacetylase)</strong>: Transacetylase helper enzyme.</li>
+          <li><strong>$i$ (Inhibitor / Regulator)</strong>: Constitutively produces repressor protein.</li>
+          <li><strong>$p$ (Promoter)</strong>: Binding site for RNA Polymerase.</li>
+          <li><strong>$o$ (Operator)</strong>: Adjacent to promoter; binds the active repressor protein.</li>
+          <li><strong>Structural Genes ($z, y, a$)</strong>: Transcribed as a single polycistronic mRNA.
+            <ul class="list-circle pl-5 mt-1 space-y-1">
+              <li><strong>$lacZ$ ($\beta$-galactosidase)</strong>: Hydrolyzes lactose into Glucose and Galactose.</li>
+              <li><strong>$lacY$ (Permease)</strong>: Increases membrane permeability to allow lactose entry.</li>
+              <li><strong>$lacA$ (Transacetylase)</strong>: Catalyzes transacetylation reactions.</li>
             </ul>
           </li>
         </ul>
       </div>
 
       <div class="space-y-2">
-        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-amber-600">🔄 Inducer Action (Negative Control)</h4>
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-amber-600">🔄 Negative Regulation (Inducer Control)</h4>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Absence of Lactose</strong>: The active repressor protein binds to the Operator, blocking RNA Polymerase from moving past promoter. Transcription = OFF.</li>
-          <li><strong>Presence of Lactose (Inducer)</strong>: Lactose binds to the repressor, changing its conformation and inactivating it. The repressor detaches, allowing RNA Polymerase to transcribe $z, y, a$.</li>
-          <li><strong>Neet High-Yield Note</strong>: A baseline expression level of the operon is always required, as lactose cannot enter the cell without a few permease channels initially present!</li>
+          <li><strong>Lactose Absent</strong>: Repressor binds to Operator ($o$), physically blocking RNA Polymerase. Transcription is shut down (OFF).</li>
+          <li><strong>Lactose Present (Induction)</strong>: Lactose (acting as inducer) binds to the repressor, changing its shape. The inactive repressor falls off the Operator, allowing transcription to begin (ON).</li>
+          <li><strong>Basal Expression Requirement</strong>: Lactose cannot enter E. coli unless permease channels are already active. A tiny <b>basal level</b> of transcription is always active in the cell to maintain permease channels.</li>
         </ul>
       </div>
     </div>
     <div class="pt-3 border-t border-slate-100 flex justify-end">
-      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 text-xs rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2 text-xs rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
     </div>
   </div>
 </div>
 
 <script>
-  // --- VIVA MCQS DECK (NCERT / NEET Prep) ---
+  // --- NEET/NCERT MCQ DRILL DATA ---
   const appState = {
     vivaScore: 0,
-    answers: { q1: null, q2: null, q3: null, q4: null }
+    answers: {}
   };
 
-  const vivaData = {
-    q1: {
-      question: "What is the correct sequence of gene regions in the Lac Operon from left to right as per the NCERT model?",
+  const quizQuestions = [
+    {
+      id: 'q1',
+      category: 'negative',
+      question: "Which of the following is the correct linear arrangement of genetic segments in the Lac Operon from left to right as per the NCERT model?",
       options: [
-        { text: "p - i - o - z - y - a", isCorrect: false, exp: "Incorrect. The regulator gene $i$ is located upstream of the promoter region." },
+        { text: "p - i - o - z - y - a", isCorrect: false, exp: "Incorrect. The regulator gene $i$ is situated upstream of the promoter region." },
         { text: "i - p - o - z - y - a", isCorrect: true, exp: "Correct! The sequence is $i$ (regulatory gene), followed by promoter $p$, operator $o$, and structural genes $z$, $y$, and $a$." },
-        { text: "z - y - a - i - p - o", isCorrect: false, exp: "Incorrect. Structural genes are placed downstream of regulator/control elements." },
+        { text: "z - y - a - i - p - o", isCorrect: false, exp: "Incorrect. Structural genes are placed downstream of control elements." },
         { text: "p - o - i - z - y - a", isCorrect: false, exp: "Incorrect. The regulator gene $i$ comes before promoter $p$ in the operon schematic." }
       ]
     },
-    q2: {
-      question: "What is the specific function of the enzyme Permease encoded by the lacY structural gene?",
+    {
+      id: 'q2',
+      category: 'negative',
+      question: "What is the critical physiological role of the enzyme Permease ($lacY$) in Lac Operon regulation?",
       options: [
-        { text: "It hydrolyzes lactose into glucose and galactose.", isCorrect: false, exp: "Incorrect. This is the function of β-galactosidase, encoded by the $lacZ$ gene." },
-        { text: "It transfers an acetyl group to β-galactosides.", isCorrect: false, exp: "Incorrect. This is the function of transacetylase, encoded by the $lacA$ gene." },
-        { text: "It increases the permeability of the cell membrane to β-galactosides (lactose).", isCorrect: true, exp: "Correct! Permease inserts itself into the cell membrane, allowing extracellular lactose to enter the bacterial cell." },
-        { text: "It prevents the repressor from binding to the promoter region.", isCorrect: false, exp: "Incorrect. Permease does not directly affect repressor binding or interactions." }
+        { text: "It hydrolyzes the disaccharide lactose into glucose and galactose.", isCorrect: false, exp: "Incorrect. This hydrolysis is performed by $\beta$-galactosidase." },
+        { text: "It actively increases membrane permeability to lactose so that the inducer can enter E. coli.", isCorrect: true, exp: "Correct! Permease channels insert into the membrane, allowing extracellular lactose to enter the cytoplasm." },
+        { text: "It acts as a feedback repressor by directly binding to the operator region.", isCorrect: false, exp: "Incorrect. Repressor is synthesized by the regulatory $i$ gene." },
+        { text: "It converts cyclic AMP to AMP to downregulate transcription.", isCorrect: false, exp: "Incorrect. It does not affect cAMP levels directly." }
       ]
     },
-    q3: {
-      question: "Why is the regulation of the lac operon by the repressor protein referred to as negative regulation?",
+    {
+      id: 'q3',
+      category: 'negative',
+      question: "Why is a basal level of lac operon expression always required in E. coli, even in the complete absence of lactose?",
       options: [
-        { text: "Because it halts cell growth when active.", isCorrect: false, exp: "Incorrect. Negative regulation refers to transcription control, not cell growth rate." },
-        { text: "Because the regulatory protein (repressor) prevents transcription when bound.", isCorrect: true, exp: "Correct! In negative regulation, the active state of the regulatory protein (repressor) shuts down transcription." },
-        { text: "Because it results in negative electrical potential across the bacterial cell membrane.", isCorrect: false, exp: "Incorrect. This has no relation to operon gene regulation." },
-        { text: "Because the operon can never be switched ON.", isCorrect: false, exp: "Incorrect. The operon is switched ON in the presence of an inducer (lactose)." }
+        { text: "To keep the cell membrane structure rigid.", isCorrect: false, exp: "Incorrect. It has no structural role in the membrane outer wall." },
+        { text: "Because lactose cannot enter E. coli cells unless permease channels are already present in a small quantity.", isCorrect: true, exp: "Correct! E. coli must maintain basal permease so lactose can enter to act as an inducer in the first place." },
+        { text: "To ensure glucose is converted to lactose when required.", isCorrect: false, exp: "Incorrect. E. coli does not synthesize lactose from glucose." },
+        { text: "To prevent the repressor protein from binding promoter sites.", isCorrect: false, exp: "Incorrect. Basal expression is present despite repressor binding operator." }
       ]
     },
-    q4: {
-      question: "In a mutant E. coli strain where the regulatory gene $i$ is non-functional ($i⁻$), what will be the state of operon transcription?",
+    {
+      id: 'q4',
+      category: 'neet',
+      question: "In a mutant strain where regulatory gene $i$ has a non-functional mutation ($i^{-}$), what transcription state will be observed?",
       options: [
-        { text: "The operon will be permanently switched OFF.", isCorrect: false, exp: "Incorrect. Switched OFF requires active repressor binding, which cannot occur without functional $i$." },
-        { text: "The operon will show constitutive (continuous) expression.", isCorrect: true, exp: "Correct! Since a functional repressor cannot be made, the operator is never blocked, allowing RNA polymerase to transcribe structural genes continuously." },
-        { text: "RNA polymerase will degrade because it cannot bind the promoter.", isCorrect: false, exp: "Incorrect. RNA polymerase binds normally, and DNA/proteins do not degrade." },
-        { text: "Transcription will occur but translation of enzymes will be blocked.", isCorrect: false, exp: "Incorrect. Translation occurs normally, producing enzymes continuously." }
+        { text: "Constitutive (continuous) expression of structural genes.", isCorrect: true, exp: "Correct! Without a functional repressor, the operator is left unoccupied, enabling RNA polymerase to transcribe continuously." },
+        { text: "Absolute permanent shutdown of the operon.", isCorrect: false, exp: "Incorrect. A shutdown would require active repressor blocking operator, which cannot happen here." },
+        { text: "Normal inducible response upon adding lactose.", isCorrect: false, exp: "Incorrect. Lactose has no target since no repressor is present." },
+        { text: "Transcription of $z$ and $y$ only, with $a$ gene blocked.", isCorrect: false, exp: "Incorrect. Polycistronic transcription transcribes all genes or none." }
+      ]
+    },
+    {
+      id: 'q5',
+      category: 'negative',
+      question: "What is the function of the regulatory gene $i$ in the lac operon?",
+      options: [
+        { text: "It codes for RNA polymerase which transcribes structural genes.", isCorrect: false, exp: "Incorrect. RNA polymerase is a general cell transcription enzyme not coded by the $i$ gene." },
+        { text: "It produces the repressor protein that regulates the operon constitutively.", isCorrect: true, exp: "Correct! The regulatory gene $i$ codes for the repressor protein, which is produced constitutively (all the time)." },
+        { text: "It increases cell wall thickness to block lactose entry.", isCorrect: false, exp: "Incorrect. The regulator gene has no relation to cell wall structures." },
+        { text: "It acts as the binding site for cAMP-CAP complex.", isCorrect: false, exp: "Incorrect. The promoter region contains the activator binding sites." }
+      ]
+    },
+    {
+      id: 'q6',
+      category: 'neet',
+      question: "Which of the following is correct regarding the binding of the inducer (lactose) to the repressor?",
+      options: [
+        { text: "It increases the repressor's affinity for the operator region.", isCorrect: false, exp: "Incorrect. It decreases the repressor's affinity, causing it to fall off." },
+        { text: "It inactivates the repressor, allowing RNA polymerase access to the promoter.", isCorrect: true, exp: "Correct! The inducer binds to the repressor, changing its shape so it cannot bind the operator, freeing the promoter for RNA Polymerase." },
+        { text: "It acts as a promoter cofactor that binds to RNA polymerase.", isCorrect: false, exp: "Incorrect. Lactose does not bind to RNA polymerase." },
+        { text: "It degrades the regulatory gene $i$ physically.", isCorrect: false, exp: "Incorrect. Inducers do not modify or degrade DNA sequences." }
       ]
     }
-  };
-
-  const colorsMap = {
-    q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
-    q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
-    q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
-    q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
-  };
+  ];
 
   function renderQuestions() {
+    const container = document.getElementById('questions-container');
     const scoreLabel = document.getElementById('viva-score');
-    Object.keys(vivaData).forEach(qKey => {
-      const data = vivaData[qKey];
-      const optionsContainer = document.getElementById(`${qKey}-options`);
-      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+    container.innerHTML = '';
+
+    const filterVal = document.getElementById('select-category').value;
+
+    quizQuestions.forEach((q, qIndex) => {
+      // Apply filter
+      if (filterVal !== 'all' && q.category !== filterVal) return;
+
+      const qCard = document.createElement('div');
+      qCard.className = `group bg-white border border-slate-200 rounded-xl p-4 transition-all duration-300 shadow-sm hover:shadow-md hover:border-indigo-400`;
       
-      if (!optionsContainer || !feedbackContainer) return; 
-      optionsContainer.innerHTML = '';
-      
-      data.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = `relative text-left p-2.5 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
-        let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
-        btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
-        
-        btn.addEventListener('click', () => {
-          if (appState.answers[qKey] !== null) return; 
-          
-          appState.answers[qKey] = idx;
-          if (opt.isCorrect) appState.vivaScore++;
-          scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
-          
-          const buttons = optionsContainer.querySelectorAll('button');
-          buttons.forEach((b, i) => {
-            b.disabled = true;
-            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
-            b.classList.add('cursor-not-allowed', 'shadow-none');
-            if (appState.answers[qKey] === i) {
-              if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
-              else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
-            } else if (data.options[i].isCorrect) {
-              b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+      const badgeColor = q.category === 'negative' ? 'bg-cyan-50 text-cyan-700' : 'bg-rose-50 text-rose-700';
+      const categoryLabel = q.category === 'negative' ? 'Negative Control' : 'NEET / Mutations';
+
+      let optionsHTML = '';
+      q.options.forEach((opt, oIdx) => {
+        const letter = String.fromCharCode(65 + oIdx);
+        optionsHTML += `
+          <button class="w-full text-left p-2.5 rounded-lg text-xs font-semibold border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-start gap-2 text-slate-700 cursor-pointer" 
+                  onclick="selectOption('${q.id}', ${oIdx}, this)">
+            <span class="font-extrabold text-indigo-600">${letter}</span>
+            <span class="flex-1">${opt.text}</span>
+          </button>
+        `;
+      });
+
+      qCard.innerHTML = `
+        <div class="space-y-2">
+          <span class="inline-block ${badgeColor} text-[10px] font-extrabold px-2 py-0.5 rounded font-mono uppercase tracking-wider">${categoryLabel}</span>
+          <h4 class="text-[13px] font-bold text-slate-800 leading-snug">${q.question}</h4>
+          <div class="flex flex-col gap-2 mt-2" id="options-${q.id}">
+            ${optionsHTML}
+          </div>
+          <p class="hidden text-xs mt-2 text-slate-600 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100 animate-fadeIn" id="feedback-${q.id}"></p>
+        </div>
+      `;
+
+      container.appendChild(qCard);
+    });
+
+    // Restore any previously answered states in current list
+    Object.keys(appState.answers).forEach(qId => {
+      const savedIndex = appState.answers[qId];
+      const optContainer = document.getElementById(`options-${qId}`);
+      if (optContainer) {
+        const btns = optContainer.querySelectorAll('button');
+        const qData = quizQuestions.find(q => q.id === qId);
+        const feedbackP = document.getElementById(`feedback-${qId}`);
+
+        btns.forEach((btn, index) => {
+          btn.disabled = true;
+          btn.classList.remove('hover:bg-slate-50', 'hover:border-slate-300', 'cursor-pointer');
+          btn.classList.add('cursor-not-allowed');
+
+          if (index === savedIndex) {
+            if (qData.options[index].isCorrect) {
+              btn.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800');
             } else {
-              b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              btn.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-800');
             }
-          });
-          feedbackContainer.innerHTML = opt.exp;
-          feedbackContainer.classList.remove('hidden');
-          if (window.MathJax) {
-            MathJax.typesetPromise([feedbackContainer]).catch((err) => console.log(err));
+          } else if (qData.options[index].isCorrect) {
+            btn.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+          } else {
+            btn.classList.add('opacity-40');
           }
         });
-        optionsContainer.appendChild(btn);
-      });
-      if (window.MathJax) {
-        MathJax.typesetPromise([optionsContainer]).catch((err) => console.log(err));
+
+        if (feedbackP) {
+          feedbackP.innerHTML = qData.options[savedIndex].exp;
+          feedbackP.classList.remove('hidden');
+        }
       }
     });
+
+    scoreLabel.textContent = `Score: ${appState.vivaScore} / ${quizQuestions.length}`;
+    if (window.MathJax) {
+      MathJax.typesetPromise([container]).catch((err) => console.warn("MathJax error:", err));
+    }
   }
 
-  // --- NCERT BIOLOGY ENGINE ---
+  function selectOption(qId, oIdx, btn) {
+    if (appState.answers[qId] !== undefined) return; // Already answered
+
+    appState.answers[qId] = oIdx;
+    const qData = quizQuestions.find(q => q.id === qId);
+    if (qData.options[oIdx].isCorrect) {
+      appState.vivaScore++;
+    }
+
+    // Refresh UI questions
+    renderQuestions();
+  }
+
+  // Bind categories selector
+  document.getElementById('select-category').addEventListener('change', renderQuestions);
+</script>
+
+<script>
+  // --- LAC OPERON LAB SIMULATION ENGINE ---
   const canvas = document.getElementById('simCanvas');
   const ctx = canvas.getContext('2d');
 
-  // UI Elements
+  // Control Elements references
   const slLactose = document.getElementById('sl-lactose');
   const lblLactose = document.getElementById('lbl-lactose');
   const selectMutation = document.getElementById('select-mutation');
@@ -490,1053 +527,831 @@
   const telY = document.getElementById('tel-y');
   const telA = document.getElementById('tel-a');
 
-  // Simulation State
-  const simState = {
-    preset: 'off',
+  const conceptTitle = document.getElementById('concept-title');
+  const conceptText = document.getElementById('concept-text');
+  const modeBadgeText = document.getElementById('mode-badge-text');
+  const modeLed = document.getElementById('mode-led');
+  const statusBanner = document.getElementById('status-banner');
+  const statusPulse = document.getElementById('status-pulse');
+
+  // Simulation State parameters
+  const simParams = {
+    lactose: 0,       // 0 to 100
     mutation: 'wild_type',
-    lactoseLevel: 0,
     speed: 1.0,
-    showMolecules: true
+    showDetails: true
   };
 
-  // Environment Physics arrays
-  let particles = [];        // Floating molecules: lactose, glucose, galactose
-  let mRNAs = [];            // Transcribed mRNAs: repressor_mRNA, lac_mRNA
-  let ribosomes = [];        // Translating ribosomes
-  let repressors = [];       // Repressor protein molecules
-  let activePermeases = [];  // Membrane-inserted Permease channels (x coordinates)
-  let enzymes = [];          // Translated enzymes: beta_gal, permease, transacetylase
-  
-  let rnaPolyI = null;       // RNA polymerase active on i gene
-  let rnaPolyLac = null;     // RNA polymerase active on lac operon
-  let isOperatorBlocked = false;
-  let time = 0;
-  
-  // HUD Message queue
-  let hudMessage = "Operon Switched OFF - Repressor bound to Operator.";
-  let hudColor = "#f43f5e";
+  // Positions on stage
+  const membraneY = 65;
+  const dnaY = 240;
 
-  // Coordinates
-  const membraneY = 80;
-  const dnaY = 280;
+  // Render variables
+  let frame = 0;
+  let polymerases = [];      // Running RNA Polymerases
+  let repressormRNA = null;  // Floating i-mRNA
+  let lacmRNA = null;        // Transcribed polycistronic mRNA
+  let translatingRibosomes = []; // List of ribosomes doing translation
+  
+  let enzymes = [];          // List of translated enzyme molecules
+  let permeasesInMembrane = []; // Permease channels: { x }
+  let molecules = [];        // Floating particles: lactose, glucose, galactose
+
+  let transcriptionCounter = 0;
+
+  // Active repressor docking state
+  let repressorDocked = false; // Is the repressor currently bound to the operator?
 
   function initSimulation() {
-    particles = [];
-    mRNAs = [];
-    ribosomes = [];
-    repressors = [];
-    activePermeases = [];
+    polymerases = [];
+    repressormRNA = null;
+    lacmRNA = null;
+    translatingRibosomes = [];
     enzymes = [];
-    rnaPolyI = null;
-    rnaPolyLac = null;
-    isOperatorBlocked = true;
-
-    // A baseline Permease channel is always present (NCERT core detail)
-    activePermeases.push({ x: 150 }); 
+    molecules = [];
     
-    // Initial repressor pool ( constitutively made )
-    if (simState.mutation === 'mutant_i') {
-      repressors.push({ x: 300, y: 180, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: true });
-      repressors.push({ x: 500, y: 200, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: true });
-    } else {
-      repressors.push({ x: 300, y: 180, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: false });
-      repressors.push({ x: 500, y: 200, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: false });
-    }
+    // Always start with exactly 1 "Basal Permease" (NCERT CORE details: a basal expression level is always required)
+    permeasesInMembrane = [{ x: 190, label: 'Basal' }];
     
-    applyPresetState();
+    // Extracellular molecules populate based on Lactose slider
+    updateLactoseMolecules();
+    
+    frame = 0;
+    transcriptionCounter = 0;
   }
 
-  function applyPresetState() {
-    // Presets configuration
-    particles = [];
-    // Reset baseline Permease channel
-    activePermeases = [{ x: 200 }];
-
-    if (simState.preset === 'off') {
-      simState.lactoseLevel = 0;
-      slLactose.value = 0;
-      lblLactose.textContent = "0%";
-      document.getElementById('lactose-label-text').textContent = "Lactose (Intracellular)";
-      document.getElementById('lactose-desc').textContent = "Lactose level inside the bacterial cell. Switched OFF when 0.";
-      hudMessage = "Operon Switched OFF - Active Repressor blocks RNA Polymerase.";
-      hudColor = "#f43f5e";
-    } else if (simState.preset === 'on') {
-      simState.lactoseLevel = 80;
-      slLactose.value = 80;
-      lblLactose.textContent = "80%";
-      document.getElementById('lactose-label-text').textContent = "Lactose (Intracellular)";
-      document.getElementById('lactose-desc').textContent = "Lactose inactivates repressor, enabling structural gene transcription.";
-      hudMessage = "Operon Switched ON - Lactose inactivates Repressor!";
-      hudColor = "#10b981";
-
-      // Populate cytoplasmic lactose
-      for (let i = 0; i < 30; i++) {
-        particles.push({
+  function updateLactoseMolecules() {
+    // Keep Lactose molecules: outside the cell membrane
+    const count = Math.floor(simParams.lactose * 0.35);
+    // Remove or add lactose particles
+    let currentLactose = molecules.filter(m => m.type === 'lactose');
+    if (currentLactose.length < count) {
+      for (let i = 0; i < (count - currentLactose.length); i++) {
+        molecules.push({
           type: 'lactose',
-          x: 100 + Math.random() * 600,
-          y: membraneY + 30 + Math.random() * 120,
-          vx: (Math.random() - 0.5) * 1.5,
-          vy: (Math.random() - 0.5) * 1.5,
-          state: 'inside'
+          x: 40 + Math.random() * (canvas.width / devicePixelRatio - 80),
+          y: 15 + Math.random() * 35,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: (Math.random() - 0.5) * 0.5,
+          state: 'outside' // outside cell membrane
         });
       }
-    } else if (simState.preset === 'dynamic') {
-      simState.lactoseLevel = 100;
-      slLactose.value = 100;
-      lblLactose.textContent = "100%";
-      document.getElementById('lactose-label-text').textContent = "Extracellular Lactose";
-      document.getElementById('lactose-desc').textContent = "Lactose added outside the cell. Influx starts through basal permease.";
-      hudMessage = "Dynamic Mode - Extracellular Lactose added outside membrane.";
-      hudColor = "#eab308";
-
-      // Populate extracellular lactose (y < membraneY)
-      for (let i = 0; i < 40; i++) {
-        particles.push({
-          type: 'lactose',
-          x: 50 + Math.random() * 700,
-          y: 20 + Math.random() * 45,
-          vx: (Math.random() - 0.5) * 1.5,
-          vy: (Math.random() - 0.5) * 1.0,
-          state: 'outside'
-        });
+    } else if (currentLactose.length > count) {
+      let excess = currentLactose.length - count;
+      for (let i = molecules.length - 1; i >= 0; i--) {
+        if (molecules[i].type === 'lactose' && excess > 0) {
+          molecules.splice(i, 1);
+          excess--;
+        }
       }
     }
   }
 
-  function handleMutationChange() {
-    simState.mutation = selectMutation.value;
-    
-    // Clear and convert all existing repressors
-    repressors = [];
-    if (simState.mutation === 'mutant_i') {
-      repressors.push({ x: 300, y: 180, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: true });
-      repressors.push({ x: 500, y: 200, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: true });
-      hudMessage = "Mutant i⁻ - Repressor protein is non-functional; cannot bind operator!";
-      hudColor = "#eab308";
+  function updateConceptExplanation() {
+    let txt = "";
+    if (simParams.lactose === 0) {
+      txt = "<b>Lactose is Absent:</b> Regulatory gene $i$ synthesizes mRNA which translates active Repressor protein. This Repressor binds operator $o$, which blocks RNA Polymerase. <b>Operon is switched OFF.</b>";
     } else {
-      repressors.push({ x: 300, y: 180, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: false });
-      repressors.push({ x: 500, y: 200, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, state: 'floating', lactoseBound: false, mutant: false });
-      if (simState.mutation === 'mutant_o') {
-        hudMessage = "Mutant oᶜ - Operator sequence is altered; Repressors cannot bind DNA!";
-        hudColor = "#eab308";
-      } else if (simState.mutation === 'mutant_z') {
-        hudMessage = "Mutant z⁻ - Translated β-Galactosidase is defective (cannot digest lactose).";
-        hudColor = "#ec4899";
-      } else if (simState.mutation === 'mutant_y') {
-        hudMessage = "Mutant y⁻ - Translated Permease is defective (membrane transport blocked).";
-        hudColor = "#ec4899";
-      } else {
-        hudMessage = "Genetics reset to normal Wild Type.";
-        hudColor = "#818cf8";
-      }
+      txt = "<b>Lactose is Present (Inducer):</b> Lactose enters through basal permease channels and binds Repressor, inactivating it. Inactivated Repressor detaches, operator $o$ is cleared, and RNA Polymerase transcribes polycistronic lac-mRNA. <b>Operon is switched ON!</b>";
     }
-
-    // Adapt existing enzymes
-    enzymes.forEach(e => {
-      if (simState.mutation === 'mutant_z' && e.type === 'beta_gal') e.mutant = true;
-      if (simState.mutation === 'mutant_y' && e.type === 'permease') e.mutant = true;
-      if (simState.mutation === 'wild_type') e.mutant = false;
-    });
-
-    if (simState.mutation === 'mutant_y') {
-      // Remove induced permease channels from membrane
-      activePermeases = [{ x: 200 }];
+    if (simParams.mutation !== 'wild_type') {
+      txt += "<br/><span class='text-rose-600 font-bold'>NEET Mutant Active:</span> " + getMutationDetailsText();
+    }
+    conceptText.innerHTML = txt;
+    if (window.MathJax) {
+      MathJax.typesetPromise([conceptText]).catch((err) => console.warn("MathJax error:", err));
     }
   }
 
-  // Bind Listeners
+  function getMutationDetailsText() {
+    switch (simParams.mutation) {
+      case 'mutant_i': return "Regulatory $i^-$ mutant: Repressor protein is defective and cannot bind operator. Operon is constitutively ON.";
+      case 'mutant_o': return "Operator $o^c$ mutant: Operator DNA sequence is altered; normal repressor cannot bind it. Operon is constitutively ON.";
+      case 'mutant_z': return "Structural $z^-$ mutant: Beta-galactosidase is defective. Cell cannot hydrolyze lactose; operon stays ON longer.";
+      case 'mutant_y': return "Structural $y^-$ mutant: Permease is defective. New permease channels cannot be inserted into the membrane, preventing increased lactose influx.";
+      default: return "";
+    }
+  }
+
+  // Sliders binding
   slLactose.addEventListener('input', (e) => {
-    const val = parseInt(e.target.value);
-    simState.lactoseLevel = val;
-    lblLactose.textContent = `${val}%`;
-
-    // Adjust lactose counts dynamically if not in dynamic mode
-    if (simState.preset !== 'dynamic') {
-      const targetCount = Math.floor(val * 0.35);
-      const currentInside = particles.filter(p => p.type === 'lactose' && p.state === 'inside');
-      if (currentInside.length < targetCount) {
-        // Add more
-        for (let i = 0; i < (targetCount - currentInside.length); i++) {
-          particles.push({
-            type: 'lactose',
-            x: 100 + Math.random() * 600,
-            y: membraneY + 35 + Math.random() * 120,
-            vx: (Math.random() - 0.5) * 1.5,
-            vy: (Math.random() - 0.5) * 1.5,
-            state: 'inside'
-          });
-        }
-      } else if (currentInside.length > targetCount) {
-        // Remove surplus
-        let toRemove = currentInside.length - targetCount;
-        for (let i = particles.length - 1; i >= 0; i--) {
-          if (particles[i].type === 'lactose' && particles[i].state === 'inside' && toRemove > 0) {
-            particles.splice(i, 1);
-            toRemove--;
-          }
-        }
-      }
-    } else {
-      // Dynamic mode - adjusts external lactose
-      const targetCount = Math.floor(val * 0.4);
-      const currentOutside = particles.filter(p => p.type === 'lactose' && p.state === 'outside');
-      if (currentOutside.length < targetCount) {
-        for (let i = 0; i < (targetCount - currentOutside.length); i++) {
-          particles.push({
-            type: 'lactose',
-            x: 50 + Math.random() * 700,
-            y: 20 + Math.random() * 45,
-            vx: (Math.random() - 0.5) * 1.5,
-            vy: (Math.random() - 0.5) * 1.0,
-            state: 'outside'
-          });
-        }
-      } else if (currentOutside.length > targetCount) {
-        let toRemove = currentOutside.length - targetCount;
-        for (let i = particles.length - 1; i >= 0; i--) {
-          if (particles[i].type === 'lactose' && particles[i].state === 'outside' && toRemove > 0) {
-            particles.splice(i, 1);
-            toRemove--;
-          }
-        }
-      }
-    }
+    simParams.lactose = parseInt(e.target.value);
+    lblLactose.textContent = `${simParams.lactose}%`;
+    updateLactoseMolecules();
+    updateConceptExplanation();
   });
 
-  selectPreset.addEventListener('change', (e) => {
-    simState.preset = e.target.value;
-    applyPresetState();
+  selectMutation.addEventListener('change', (e) => {
+    simParams.mutation = e.target.value;
+    updateConceptExplanation();
   });
-
-  selectMutation.addEventListener('change', handleMutationChange);
 
   slSpeed.addEventListener('input', (e) => {
-    simState.speed = parseFloat(e.target.value);
-    lblSpeed.textContent = `${simState.speed.toFixed(1)}x`;
+    simParams.speed = parseFloat(e.target.value);
+    lblSpeed.textContent = `${simParams.speed.toFixed(1)}x`;
   });
 
   btnReset.addEventListener('click', () => {
-    selectPreset.value = 'off';
-    simState.preset = 'off';
-    selectMutation.value = 'wild_type';
-    simState.mutation = 'wild_type';
-    simState.speed = 1.0;
+    slLactose.value = 0;
+    simParams.lactose = 0;
+    lblLactose.textContent = "0%";
+    
+    selectMutation.value = "wild_type";
+    simParams.mutation = "wild_type";
+    
     slSpeed.value = 1.0;
+    simParams.speed = 1.0;
     lblSpeed.textContent = "1.0x";
+    
+    selectPreset.value = "off";
+    
     initSimulation();
+    updateConceptExplanation();
   });
 
-  chkParticles.addEventListener('change', (e) => {
-    simState.showMolecules = e.target.checked;
+  selectPreset.addEventListener('change', (e) => {
+    const preset = e.target.value;
+    if (preset === 'off') {
+      slLactose.value = 0;
+      simParams.lactose = 0;
+      lblLactose.textContent = "0%";
+    } else if (preset === 'on') {
+      slLactose.value = 80;
+      simParams.lactose = 80;
+      lblLactose.textContent = "80%";
+    }
+    initSimulation();
+    updateConceptExplanation();
   });
 
-  // --- RENDERING & MOLECULAR PHYSICS LOOP ---
-  function updatePhysics(cw, ch) {
-    const s = simState.speed;
+  // --- PHYSICS ENGINE AND DATA LOOPS ---
+  function updatePhysics(cw) {
+    const speed = simParams.speed;
+    frame += 1 * speed;
 
-    // Boundaries definition for floating molecules
-    const topLimit = membraneY + 15;
-    const botLimit = dnaY - 40;
-    const leftLimit = 15;
-    const rightLimit = cw - 15;
-
-    // Check operator blockage
-    const hasDockedRepressor = repressors.some(r => r.state === 'docked');
-    isOperatorBlocked = hasDockedRepressor && (simState.mutation !== 'mutant_o');
-
-    // 1. Regulator (i) transcription - Constitutive
-    if (!rnaPolyI && Math.random() < 0.006 * s) {
-      rnaPolyI = {
-        x: cw * 0.08,
-        y: dnaY,
-        path: []
-      };
-    }
-
-    if (rnaPolyI) {
-      rnaPolyI.x += 1.2 * s;
-      const progressY = dnaY + 16 + Math.sin(rnaPolyI.x * 0.15) * 3;
-      rnaPolyI.path.push({ x: rnaPolyI.x, y: progressY });
-
-      // Detach when done transcribing i-gene
-      const iGeneEnd = cw * 0.08 + (cw * 0.84) * 0.15;
-      if (rnaPolyI.x >= iGeneEnd) {
-        mRNAs.push({
-          type: 'repressor',
-          path: [...rnaPolyI.path],
-          x: (cw * 0.08 + iGeneEnd) / 2,
-          y: dnaY + 25,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: 0.3 + Math.random() * 0.3,
-          ribosomeAttached: false,
-          lifespan: 1000
-        });
-        rnaPolyI = null;
-      }
-    }
-
-    // 2. Structural operon transcription (z, y, a)
-    const promoterX = cw * 0.08 + (cw * 0.84) * 0.16;
-    const operatorX = cw * 0.08 + (cw * 0.84) * 0.32;
-    const aGeneEnd = cw * 0.08 + (cw * 0.84) * 0.94;
-
-    if (!rnaPolyLac && Math.random() < 0.012 * s) {
-      rnaPolyLac = {
-        x: promoterX,
-        y: dnaY,
-        path: [],
-        blockedTimer: 0
-      };
-    }
-
-    if (rnaPolyLac) {
-      // Check roadblock at operator
-      if (isOperatorBlocked && rnaPolyLac.x < operatorX + 5) {
-        if (rnaPolyLac.x + 1.2 * s >= operatorX - 5) {
-          rnaPolyLac.x = operatorX - 5;
-          rnaPolyLac.blockedTimer += 1 * s;
-          hudMessage = "RNA Polymerase blocked at Operator by Repressor!";
-          hudColor = "#f43f5e";
-          
-          if (rnaPolyLac.blockedTimer > 90) {
-            // Abort transcription
-            rnaPolyLac = null;
-          }
-        } else {
-          rnaPolyLac.x += 1.2 * s;
-        }
-      } else {
-        // Path is free
-        rnaPolyLac.x += 1.2 * s;
-        const progressY = dnaY + 18 + Math.sin(rnaPolyLac.x * 0.08) * 4;
-        rnaPolyLac.path.push({ x: rnaPolyLac.x, y: progressY });
-        
-        if (rnaPolyLac.x > operatorX + 10) {
-          hudMessage = "RNA Polymerase transcribing polycistronic lac-mRNA...";
-          hudColor = "#a855f7";
-        }
-      }
-
-      if (rnaPolyLac && rnaPolyLac.x >= aGeneEnd) {
-        mRNAs.push({
-          type: 'lac',
-          path: [...rnaPolyLac.path],
-          x: (promoterX + aGeneEnd) / 2,
-          y: dnaY + 30,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: 0.2 + Math.random() * 0.2,
-          ribosomeAttached: false,
-          lifespan: 1200
-        });
-        rnaPolyLac = null;
-      }
-    }
-
-    // 3. Update mRNAs & Ribosomes translation
-    for (let i = mRNAs.length - 1; i >= 0; i--) {
-      const m = mRNAs[i];
-      m.x += m.vx * s;
-      m.y += m.vy * s;
-      
-      // Update coordinates of path points
-      m.path.forEach(pt => {
-        pt.x += m.vx * s;
-        pt.y += m.vy * s;
-      });
-
-      // Keep inside boundaries
-      if (m.x < leftLimit || m.x > rightLimit) m.vx *= -1;
-      if (m.y > botLimit || m.y < membraneY + 20) m.vy *= -1;
-
-      // Spawning Ribosome translation
-      if (simState.showMolecules && !m.ribosomeAttached && Math.random() < 0.015 * s) {
-        m.ribosomeAttached = true;
-        ribosomes.push({
-          mRNA: m,
-          progress: 0,
-          spawnedZ: false,
-          spawnedY: false,
-          spawnedA: false
-        });
-      }
-
-      m.lifespan -= 1 * s;
-      if (m.lifespan <= 0) {
-        // Remove attached ribosome
-        ribosomes = ribosomes.filter(rib => rib.mRNA !== m);
-        mRNAs.splice(i, 1);
-      }
-    }
-
-    // 4. Update Ribosomes
-    for (let i = ribosomes.length - 1; i >= 0; i--) {
-      const rib = ribosomes[i];
-      const path = rib.mRNA.path;
-      if (!path || path.length === 0) {
-        ribosomes.splice(i, 1);
-        continue;
-      }
-
-      // Step along the mRNA strand
-      rib.progress += 0.85 * s;
-      const idx = Math.floor(rib.progress);
-
-      if (idx >= path.length) {
-        // translation finished
-        if (rib.mRNA.type === 'repressor') {
-          // Translate repressor protein
-          const isMutantRep = (simState.mutation === 'mutant_i');
-          repressors.push({
-            x: path[path.length - 1].x,
-            y: path[path.length - 1].y + 10,
-            vx: (Math.random() - 0.5) * 1.2,
-            vy: (Math.random() - 0.5) * 1.2,
-            state: 'floating',
-            lactoseBound: false,
-            mutant: isMutantRep
-          });
-        }
-        
-        // Remove ribosome
-        ribosomes.splice(i, 1);
-        continue;
-      }
-
-      // Current translation coordinates
-      const cx = path[idx].x;
-      const cy = path[idx].y;
-
-      // Translate structural gene products polycistronically based on DNA regions
-      if (rib.mRNA.type === 'lac') {
-        const operonW = cw * 0.84;
-        const zMid = cw * 0.08 + operonW * 0.55;
-        const yMid = cw * 0.08 + operonW * 0.72;
-        const aMid = cw * 0.08 + operonW * 0.87;
-
-        // β-Galactosidase (z)
-        if (cx >= zMid && !rib.spawnedZ) {
-          const isMutantZ = (simState.mutation === 'mutant_z');
-          enzymes.push({
-            type: 'beta_gal',
-            x: cx,
-            y: cy + 12,
-            vx: (Math.random() - 0.5) * 1.0,
-            vy: (Math.random() - 0.5) * 1.0,
-            targetLactose: null,
-            timer: 0,
-            mutant: isMutantZ
-          });
-          rib.spawnedZ = true;
-        }
-        
-        // Permease (y)
-        if (cx >= yMid && !rib.spawnedY) {
-          const isMutantY = (simState.mutation === 'mutant_y');
-          enzymes.push({
-            type: 'permease',
-            x: cx,
-            y: cy + 12,
-            vx: (Math.random() - 0.5) * 0.8,
-            vy: 0.5,
-            state: 'floating',
-            mutant: isMutantY
-          });
-          rib.spawnedY = true;
-        }
-
-        // Transacetylase (a)
-        if (cx >= aMid && !rib.spawnedA) {
-          enzymes.push({
-            type: 'transacetylase',
-            x: cx,
-            y: cy + 12,
-            vx: (Math.random() - 0.5) * 1.2,
-            vy: (Math.random() - 0.5) * 1.2
-          });
-          rib.spawnedA = true;
-        }
-      }
-    }
-
-    // 5. Update Repressors (Operator binding vs. Lactose inactivation)
-    const operatorMidX = operatorX + (cw * 0.84) * 0.06;
-    let operatorDocked = false;
-
-    repressors.forEach(rep => {
-      // In mutant i, all repressors are non-functional
-      if (simState.mutation === 'mutant_i') rep.mutant = true;
-
-      if (rep.mutant) {
-        rep.state = 'floating';
-        rep.lactoseBound = false;
-        // Float aimlessly
-        rep.x += rep.vx * s;
-        rep.y += rep.vy * s;
-        if (rep.x < leftLimit || rep.x > rightLimit) rep.vx *= -1;
-        if (rep.y < topLimit || rep.y > botLimit) rep.vy *= -1;
-        return;
-      }
-
-      // Normal repressor
-      if (rep.lactoseBound) {
-        rep.state = 'inactive';
-        rep.x += rep.vx * s;
-        rep.y += rep.vy * s;
-        if (rep.x < leftLimit || rep.x > rightLimit) rep.vx *= -1;
-        if (rep.y < topLimit || rep.y > botLimit) rep.vy *= -1;
-
-        // Slow dissociation/digestion of bound lactose
-        if (Math.random() < 0.0012 * s) {
-          rep.lactoseBound = false;
-          rep.state = 'floating';
-        }
-      } else {
-        // Active repressor
-        if (rep.state === 'docked') {
-          rep.x = operatorMidX;
-          rep.y = dnaY;
-          operatorDocked = true;
-
-          // Check if internal lactose bumps and inactivates it
-          const nearestLactose = particles.find(p => p.type === 'lactose' && p.state === 'inside' && Math.hypot(p.x - rep.x, p.y - rep.y) < 20);
-          if (nearestLactose) {
-            rep.lactoseBound = true;
-            rep.state = 'inactive';
-            // Consume that lactose molecule
-            particles = particles.filter(p => p !== nearestLactose);
-            hudMessage = "Lactose (inducer) bound repressor, releasing Operator!";
-            hudColor = "#10b981";
-          }
-        } else {
-          // Floating active repressor wants to go to Operator if free
-          const anotherDocked = repressors.some(other => other !== rep && other.state === 'docked');
-          if (!anotherDocked && simState.mutation !== 'mutant_o') {
-            rep.state = 'docking';
-            const dx = operatorMidX - rep.x;
-            const dy = dnaY - rep.y;
-            const dist = Math.hypot(dx, dy);
-            
-            if (dist < 4) {
-              rep.state = 'docked';
+    // A: INFLUX OF LACTOSE FROM ENVIRONMENT
+    // Extracellular Lactose particles cross membrane through available permease channels
+    molecules.forEach(m => {
+      if (m.type === 'lactose') {
+        if (m.state === 'outside') {
+          // move randomly
+          m.x += m.vx * speed;
+          m.y += m.vy * speed;
+          // boundaries
+          if (m.x < 15 || m.x > cw - 15) m.vx *= -1;
+          if (m.y < 10) m.vy = Math.abs(m.vy);
+          if (m.y > membraneY - 6) {
+            // bounce off membrane, unless near a permease channel
+            const channel = permeasesInMembrane.find(ch => Math.abs(m.x - ch.x) < 14);
+            if (channel) {
+              m.state = 'transiting';
+              m.targetX = channel.x;
             } else {
-              rep.x += (dx / dist) * 2.5 * s;
-              rep.y += (dy / dist) * 2.5 * s;
+              m.vy = -Math.abs(m.vy);
+            }
+          }
+        } else if (m.state === 'transiting') {
+          // pull through pore
+          m.x += (m.targetX - m.x) * 0.1 * speed;
+          m.y += 2 * speed;
+          if (m.y >= membraneY + 14) {
+            m.state = 'cytoplasm';
+            m.vx = (Math.random() - 0.5) * 1.5;
+            m.vy = 0.5 + Math.random() * 0.5;
+          }
+        } else if (m.state === 'cytoplasm') {
+          m.x += m.vx * speed;
+          m.y += m.vy * speed;
+          // boundaries inside cytoplasm
+          if (m.x < 15 || m.x > cw - 15) m.vx *= -1;
+          if (m.y < membraneY + 12 || m.y > 480) m.vy *= -1;
+        }
+      } else {
+        // glucose, galactose float in cytoplasm
+        m.x += m.vx * speed;
+        m.y += m.vy * speed;
+        if (m.x < 15 || m.x > cw - 15) m.vx *= -1;
+        if (m.y < membraneY + 15 || m.y > 480) m.vy *= -1;
+      }
+    });
+
+    // B: REPRESSOR STATE KINETICS (Negative Regulation)
+    // 1. Regulator i-Gene constitutively transcribes a repressor mRNA.
+    if (!repressormRNA && frame % 150 < 1 * speed) {
+      repressormRNA = {
+        x: cw * 0.1,
+        y: dnaY + 25,
+        progress: 0,
+        translationDone: false
+      };
+    }
+
+    // 2. Ribosome translates i-mRNA in cytoplasm to form Repressor Protein monomer
+    if (repressormRNA && !repressormRNA.translationDone) {
+      repressormRNA.progress += 0.8 * speed;
+      if (repressormRNA.progress >= 100) {
+        repressormRNA.translationDone = true;
+        
+        // Spawn active Repressor monomer into cytoplasm
+        const isMutantI = (simParams.mutation === 'mutant_i');
+        enzymes.push({
+          type: 'repressor',
+          x: cw * 0.11,
+          y: dnaY + 45,
+          vx: (Math.random() - 0.5) * 1.0,
+          vy: (Math.random() - 0.5) * 1.0,
+          mutant: isMutantI,
+          lactoseBound: false,
+          state: 'floating'
+        });
+        
+        repressormRNA = null;
+      }
+    }
+
+    // 3. Repressor Binding / Inactivation
+    let operatorMidX = cw * 0.44;
+    let hasDocked = false;
+
+    // Check operator mutation
+    const operatorMutant = (simParams.mutation === 'mutant_o');
+
+    enzymes.forEach(enz => {
+      if (enz.type === 'repressor') {
+        if (enz.mutant) {
+          enz.state = 'inactivated'; // Mutant regulator i- cannot bind operator
+          enz.x += enz.vx * speed;
+          enz.y += enz.vy * speed;
+          if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+          if (enz.y < membraneY + 15 || enz.y > 480) enz.vy *= -1;
+          return;
+        }
+
+        if (enz.lactoseBound) {
+          enz.state = 'inactivated';
+          enz.x += enz.vx * speed;
+          enz.y += enz.vy * speed;
+          if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+          if (enz.y < membraneY + 15 || enz.y > 480) enz.vy *= -1;
+
+          if (Math.random() < 0.001 * speed) {
+            enz.lactoseBound = false;
+            enz.state = 'floating';
+          }
+        } else {
+          // Check if any cytoplasm lactose is near enough to bind the active repressor
+          const nearestLac = molecules.find(m => m.type === 'lactose' && m.state === 'cytoplasm' && Math.hypot(m.x - enz.x, m.y - enz.y) < 25);
+          if (nearestLac) {
+            enz.lactoseBound = true;
+            enz.state = 'inactivated';
+            molecules = molecules.filter(m => m !== nearestLac);
+            
+            if (enz.state === 'docked') {
+              enz.state = 'floating';
+            }
+            return;
+          }
+
+          if (operatorMutant) {
+            enz.state = 'floating';
+            enz.x += enz.vx * speed;
+            enz.y += enz.vy * speed;
+            if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+            if (enz.y < membraneY + 15 || enz.y > 480) enz.vy *= -1;
+            return;
+          }
+
+          const alreadyBound = enzymes.some(other => other !== enz && other.type === 'repressor' && other.state === 'docked');
+          if (!alreadyBound) {
+            enz.state = 'docking';
+            const dx = operatorMidX - enz.x;
+            const dy = (dnaY - 14) - enz.y;
+            const d = Math.hypot(dx, dy);
+            if (d < 4) {
+              enz.state = 'docked';
+              enz.x = operatorMidX;
+              enz.y = dnaY - 14;
+            } else {
+              enz.x += (dx / d) * 2.0 * speed;
+              enz.y += (dy / d) * 2.0 * speed;
             }
           } else {
-            rep.state = 'floating';
-            rep.x += rep.vx * s;
-            rep.y += rep.vy * s;
-            if (rep.x < leftLimit || rep.x > rightLimit) rep.vx *= -1;
-            if (rep.y < topLimit || rep.y > botLimit) rep.vy *= -1;
+            enz.state = 'floating';
+            enz.x += enz.vx * speed;
+            enz.y += enz.vy * speed;
+            if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+            if (enz.y < membraneY + 15 || enz.y > 480) enz.vy *= -1;
           }
+        }
+
+        if (enz.state === 'docked') {
+          hasDocked = true;
         }
       }
     });
 
-    // 6. Update Enzymes (Beta-gal digestion & Permease insertion)
+    repressorDocked = hasDocked;
+
+    // D: RNA POLYMERASE & TRANSCRIPTION LOOP
+    // Spawning Polymerase at promoter region
+    transcriptionCounter += 1 * speed;
+    
+    let spawnRate = 300;
+    if (repressorDocked) {
+      spawnRate = 350; // Still binds but gets blocked and falls off
+    }
+
+    if (polymerases.length === 0 && transcriptionCounter >= spawnRate) {
+      transcriptionCounter = 0;
+      polymerases.push({
+        x: cw * 0.30,
+        y: dnaY,
+        blocked: false,
+        blockedTimer: 0,
+        transcriptPath: []
+      });
+    }
+
+    // Animate Polymerase transcription
+    for (let i = polymerases.length - 1; i >= 0; i--) {
+      const pol = polymerases[i];
+      const operatorLeftBound = cw * 0.39;
+      
+      if (repressorDocked && pol.x >= operatorLeftBound - 12 && pol.x < operatorMidX) {
+        pol.x = operatorLeftBound - 12;
+        pol.blocked = true;
+        pol.blockedTimer += 1 * speed;
+        if (pol.blockedTimer > 100) {
+          polymerases.splice(i, 1);
+          continue;
+        }
+      } else {
+        pol.blocked = false;
+        let transcribeSpeed = 1.2;
+        pol.x += transcribeSpeed * speed;
+        
+        if (pol.x > cw * 0.49) { // transcribing structural genes
+          pol.transcriptPath.push({ x: pol.x - 5, y: dnaY + 20 + Math.sin(pol.x * 0.1) * 3 });
+        }
+      }
+
+      if (pol.x >= cw * 0.94) {
+        lacmRNA = {
+          x: cw * 0.70,
+          y: dnaY + 45,
+          path: [...pol.transcriptPath],
+          lifespan: 1400
+        };
+        polymerases.splice(i, 1);
+        setupTranslationRibosomes(cw);
+      }
+    }
+
+    // E: TRANSLATION & ENZYME PRODUCTION
+    for (let i = translatingRibosomes.length - 1; i >= 0; i--) {
+      const rib = translatingRibosomes[i];
+      rib.progress += 0.7 * speed;
+      
+      const pathIdx = Math.floor(rib.progress);
+      if (pathIdx >= rib.path.length) {
+        const isMutantZ = (simParams.mutation === 'mutant_z');
+        const isMutantY = (simParams.mutation === 'mutant_y');
+
+        if (rib.gene === 'z') {
+          enzymes.push({ type: 'beta_gal', x: rib.path[rib.path.length - 1].x, y: dnaY + 70, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, mutant: isMutantZ });
+        } else if (rib.gene === 'y') {
+          enzymes.push({ type: 'permease_carrier', x: rib.path[rib.path.length - 1].x, y: dnaY + 70, vx: (Math.random() - 0.5) * 0.8, vy: -0.6 * speed, mutant: isMutantY, state: 'floating' });
+        } else if (rib.gene === 'a') {
+          enzymes.push({ type: 'transacetylase', x: rib.path[rib.path.length - 1].x, y: dnaY + 70, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2 });
+        }
+        
+        translatingRibosomes.splice(i, 1);
+        continue;
+      }
+
+      rib.x = rib.path[pathIdx].x;
+      rib.y = rib.path[pathIdx].y;
+    }
+
+    if (lacmRNA) {
+      lacmRNA.lifespan -= 1 * speed;
+      if (lacmRNA.lifespan <= 0) {
+        lacmRNA = null;
+      }
+    }
+
+    // F: ENZYMATIC REACTIONS & TRANSPORTER INSERTIONS
     enzymes.forEach(enz => {
-      if (enz.type === 'beta_gal') {
-        if (enz.mutant) {
-          // mutant β-gal floats aimlessly
-          enz.x += enz.vx * s;
-          enz.y += enz.vy * s;
-          if (enz.x < leftLimit || enz.x > rightLimit) enz.vx *= -1;
-          if (enz.y < topLimit || enz.y > botLimit) enz.vy *= -1;
-          return;
-        }
-
-        // Active β-gal: search lactose
-        if (!enz.targetLactose) {
-          const lacList = particles.filter(p => p.type === 'lactose' && p.state === 'inside');
-          if (lacList.length > 0) {
-            enz.targetLactose = lacList[Math.floor(Math.random() * lacList.length)];
-          }
-        }
-
-        if (enz.targetLactose && particles.includes(enz.targetLactose)) {
-          const dx = enz.targetLactose.x - enz.x;
-          const dy = enz.targetLactose.y - enz.y;
+      if (enz.type === 'beta_gal' && !enz.mutant) {
+        const targetLactose = molecules.find(m => m.type === 'lactose' && m.state === 'cytoplasm');
+        if (targetLactose) {
+          const dx = targetLactose.x - enz.x;
+          const dy = targetLactose.y - enz.y;
           const dist = Math.hypot(dx, dy);
-          
           if (dist < 8) {
-            // Digestion event! Splitting lactose disaccharide into Glucose + Galactose
-            particles = particles.filter(p => p !== enz.targetLactose);
-            
-            // Spawn monosaccharides
-            particles.push({
+            molecules = molecules.filter(m => m !== targetLactose);
+            molecules.push({
               type: 'glucose',
               x: enz.x,
               y: enz.y,
               vx: (Math.random() - 0.5) * 1.5,
               vy: (Math.random() - 0.5) * 1.5,
-              lifespan: 120
+              state: 'cytoplasm'
             });
-            particles.push({
+            molecules.push({
               type: 'galactose',
               x: enz.x,
               y: enz.y,
               vx: (Math.random() - 0.5) * 1.5,
               vy: (Math.random() - 0.5) * 1.5,
-              lifespan: 120
+              state: 'cytoplasm'
             });
-
-            hudMessage = "β-Galactosidase hydrolyzing lactose into Glucose + Galactose!";
-            hudColor = "#10b981";
-            enz.targetLactose = null;
+            triggerCleavageEffect();
           } else {
-            enz.x += (dx / dist) * 1.8 * s;
-            enz.y += (dy / dist) * 1.8 * s;
+            enz.x += (dx / dist) * 1.4 * speed;
+            enz.y += (dy / dist) * 1.4 * speed;
           }
         } else {
-          enz.targetLactose = null;
-          enz.x += enz.vx * s;
-          enz.y += enz.vy * s;
-          if (enz.x < leftLimit || enz.x > rightLimit) enz.vx *= -1;
-          if (enz.y < topLimit || enz.y > botLimit) enz.vy *= -1;
+          enz.x += enz.vx * speed;
+          enz.y += enz.vy * speed;
+          if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+          if (enz.y < membraneY + 30 || enz.y > 480) enz.vy *= -1;
         }
-      } else if (enz.type === 'permease') {
-        if (enz.state === 'floating') {
-          if (enz.mutant) {
-            enz.x += enz.vx * s;
-            enz.y += enz.vy * s;
-            if (enz.x < leftLimit || enz.x > rightLimit) enz.vx *= -1;
-            if (enz.y < topLimit || enz.y > botLimit) enz.vy *= -1;
-            return;
-          }
+      } else if (enz.type === 'permease_carrier' && enz.state === 'floating') {
+        if (enz.mutant) {
+          enz.x += enz.vx * speed;
+          enz.y += enz.vy * speed;
+          if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+          if (enz.y < membraneY + 30 || enz.y > 480) enz.vy *= -1;
+          return;
+        }
 
-          // Moves up to insert into cell membrane
-          const dy = (membraneY) - enz.y;
-          if (Math.abs(dy) < 5) {
-            enz.state = 'inserted';
-            activePermeases.push({ x: enz.x });
-            hudMessage = "Permease channel inserted into Cell Membrane!";
-            hudColor = "#ea580c";
-          } else {
-            enz.x += enz.vx * s;
-            enz.y += (dy > 0 ? 1 : -1) * 1.2 * s;
-            if (enz.x < leftLimit || enz.x > rightLimit) enz.vx *= -1;
-          }
+        enz.y += enz.vy;
+        if (enz.y <= membraneY + 12) {
+          enz.state = 'inserted';
+          permeasesInMembrane.push({ x: enz.x, label: 'LacY' });
         }
-      } else if (enz.type === 'transacetylase') {
-        enz.x += enz.vx * s;
-        enz.y += enz.vy * s;
-        if (enz.x < leftLimit || enz.x > rightLimit) enz.vx *= -1;
-        if (enz.y < topLimit || enz.y > botLimit) enz.vy *= -1;
+      } else {
+        enz.x += enz.vx * speed;
+        enz.y += enz.vy * speed;
+        if (enz.x < 15 || enz.x > cw - 15) enz.vx *= -1;
+        if (enz.y < membraneY + 30 || enz.y > 480) enz.vy *= -1;
       }
     });
 
-    // 7. Update particles (lactose, glucose, galactose)
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
-
-      if (p.type === 'glucose' || p.type === 'galactose') {
-        p.x += p.x > cw/2 ? 0.3*s : -0.3*s;
-        p.y += p.vy * s;
-        p.lifespan -= 1 * s;
-        if (p.lifespan <= 0) particles.splice(i, 1);
-        continue;
+    if (frame % 80 < 1 * speed) {
+      const glucoseList = molecules.filter(m => m.type === 'glucose');
+      const galactoseList = molecules.filter(m => m.type === 'galactose');
+      if (glucoseList.length > 15) {
+        const firstIdx = molecules.findIndex(m => m.type === 'glucose');
+        if (firstIdx !== -1) molecules.splice(firstIdx, 1);
       }
-
-      // Lactose kinetics
-      if (p.state === 'outside') {
-        p.x += p.vx * s;
-        p.y += p.vy * s;
-        
-        // Bounce off extracellular boundaries
-        if (p.x < leftLimit || p.x > rightLimit) p.vx *= -1;
-        if (p.y < 10) p.vy = Math.abs(p.vy);
-        if (p.y > membraneY - 8) {
-          // Bounces off membrane unless hitting permease
-          p.vy = -Math.abs(p.vy);
-        }
-
-        // Check channel transport
-        const channel = activePermeases.find(ch => Math.abs(p.x - ch.x) < 16);
-        if (channel && p.y > membraneY - 14) {
-          p.state = 'entering';
-          p.channelX = channel.x;
-        }
-      } else if (p.state === 'entering') {
-        p.x = p.channelX;
-        p.y += 2.0 * s;
-        if (p.y >= membraneY + 18) {
-          p.state = 'inside';
-          p.vx = (Math.random() - 0.5) * 1.5;
-          p.vy = 0.5 + Math.random() * 0.5;
-        }
-      } else if (p.state === 'inside') {
-        p.x += p.x > cw/2 ? 0.4*s : -0.4*s;
-        p.y += p.vy * s;
-
-        // Bounce inside cytoplasm
-        if (p.x < leftLimit || p.x > rightLimit) p.vx *= -1;
-        if (p.y < membraneY + 12) p.vy = Math.abs(p.vy);
-        if (p.y > botLimit) p.vy = -Math.abs(p.vy);
-
-        // Attract to active repressor (inducer effect)
-        repressors.forEach(rep => {
-          if (!rep.mutant && !rep.lactoseBound) {
-            const dist = Math.hypot(rep.x - p.x, rep.y - p.y);
-            if (dist < 18) {
-              rep.lactoseBound = true;
-              rep.state = 'inactive';
-              if (rep.state === 'docked') {
-                rep.state = 'floating';
-              }
-              // Lactose is now bound to repressor, remove from free pool
-              particles.splice(i, 1);
-              hudMessage = "Inducer binds to Repressor and inactivates it!";
-              hudColor = "#10b981";
-            }
-          }
-        });
+      if (galactoseList.length > 15) {
+        const firstIdx = molecules.findIndex(m => m.type === 'galactose');
+        if (firstIdx !== -1) molecules.splice(firstIdx, 1);
       }
     }
 
-    // Telemetry Update
-    const betaGalCount = enzymes.filter(e => e.type === 'beta_gal' && !e.mutant).length;
-    const permeaseCount = activePermeases.length - 1; // subtract basal channel
-    const transacetylaseCount = enzymes.filter(e => e.type === 'transacetylase').length;
+    updateTelemetry(cw);
+  }
 
-    telZ.textContent = betaGalCount;
-    telY.textContent = permeaseCount;
-    telA.textContent = transacetylaseCount;
+  function setupTranslationRibosomes(cw) {
+    if (!lacmRNA || lacmRNA.path.length === 0) return;
+    const path = lacmRNA.path;
+    const len = path.length;
 
-    if (isOperatorBlocked) {
+    translatingRibosomes.push({
+      gene: 'z',
+      progress: 0,
+      path: path.slice(0, Math.floor(len * 0.45)),
+      x: path[0].x,
+      y: path[0].y
+    });
+
+    translatingRibosomes.push({
+      gene: 'y',
+      progress: 0,
+      path: path.slice(Math.floor(len * 0.46), Math.floor(len * 0.76)),
+      x: path[Math.floor(len * 0.46)].x,
+      y: path[Math.floor(len * 0.46)].y
+    });
+
+    translatingRibosomes.push({
+      gene: 'a',
+      progress: 0,
+      path: path.slice(Math.floor(len * 0.77), len),
+      x: path[Math.floor(len * 0.77)].x,
+      y: path[Math.floor(len * 0.77)].y
+    });
+  }
+
+  function triggerCleavageEffect() {
+    statusPulse.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shadow-[0_0_8px_#34d399]";
+    setTimeout(() => {
+      statusPulse.className = "w-2 h-2 rounded-full bg-emerald-500 inline-block";
+    }, 600);
+  }
+
+  function updateTelemetry(cw) {
+    const zCount = enzymes.filter(e => e.type === 'beta_gal' && !e.mutant).length;
+    const yCount = permeasesInMembrane.filter(ch => ch.label === 'LacY').length;
+    const aCount = enzymes.filter(e => e.type === 'transacetylase').length;
+
+    telZ.textContent = zCount;
+    telY.textContent = yCount;
+    telA.textContent = aCount;
+
+    if (simParams.mutation === 'mutant_i') {
+      telRep.textContent = "Defective (i-)";
+      telRep.className = "font-extrabold text-slate-400 text-xs";
+    } else if (repressorDocked) {
       telRep.textContent = "Bound to Operator";
-      telRep.className = "text-xs font-bold font-mono text-rose-600 leading-tight mt-0.5";
-      telTrans.textContent = "OFF (Blocked)";
-      telTrans.className = "text-xs font-bold font-mono text-slate-500 leading-tight mt-0.5";
+      telRep.className = "font-extrabold text-rose-500 text-xs";
     } else {
-      if (simState.mutation === 'mutant_i') {
-        telRep.textContent = "Mutant (Defective)";
-        telRep.className = "text-xs font-bold font-mono text-slate-400 leading-tight mt-0.5";
+      const activeRepressors = enzymes.filter(e => e.type === 'repressor' && !e.lactoseBound && !e.mutant);
+      if (activeRepressors.length === 0) {
+        telRep.textContent = "No Repressors Made";
+        telRep.className = "font-extrabold text-slate-400 text-xs";
       } else {
-        const boundCount = repressors.filter(r => r.lactoseBound).length;
-        telRep.textContent = `Inactivated (${boundCount})`;
-        telRep.className = "text-xs font-bold font-mono text-emerald-500 leading-tight mt-0.5";
+        telRep.textContent = "Inactivated by Lactose";
+        telRep.className = "font-extrabold text-emerald-500 animate-pulse text-xs";
       }
+    }
 
-      telTrans.textContent = "ON (Active)";
-      telTrans.className = "text-xs font-bold font-mono text-emerald-500 leading-tight mt-0.5";
+    if (repressorDocked) {
+      telTrans.textContent = "OFF (Blocked)";
+      telTrans.className = "font-extrabold text-rose-600 text-xs";
+      statusBanner.textContent = "Blocked: Repressor Bound";
+      statusBanner.className = "text-[10px] font-extrabold text-rose-400 tracking-wide uppercase";
+      statusPulse.className = "w-2.5 h-2.5 rounded-full bg-rose-500 inline-block";
+    } else {
+      telTrans.textContent = "ON (Standard Rate)";
+      telTrans.className = "font-extrabold text-cyan-400 animate-pulse text-xs";
+      statusBanner.textContent = "ACTIVE: TRANSCRIBING";
+      statusBanner.className = "text-[10px] font-extrabold text-cyan-400 tracking-wide uppercase";
+      statusPulse.className = "w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#22d3ee]";
     }
   }
 
+  // --- RENDER PATHS ---
   function render(cw, ch) {
     ctx.clearRect(0, 0, cw, ch);
 
-    // 1. Draw Cell Membrane Bilayer
-    // Extracellular fluid top (dark blue), Cytoplasm bottom (slightly warmer navy)
-    ctx.fillStyle = '#060a18';
+    // 1. CELL MEMBRANE DRAWING
+    ctx.fillStyle = '#050914';
     ctx.fillRect(0, 0, cw, membraneY);
-    ctx.fillStyle = '#0b1329';
+    ctx.fillStyle = 'rgba(8,13,26,0.2)';
     ctx.fillRect(0, membraneY, cw, ch - membraneY);
 
-    // Phospholipids heads
-    ctx.fillStyle = '#eab308';
-    ctx.strokeStyle = '#facc15';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < cw; x += 12) {
-      // Top lipid layer
-      ctx.beginPath(); ctx.arc(x, membraneY - 4, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(x, membraneY - 1); ctx.lineTo(x, membraneY + 4); ctx.stroke();
-      
-      // Bottom lipid layer
-      ctx.beginPath(); ctx.arc(x, membraneY + 8, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(x, membraneY + 5); ctx.lineTo(x, membraneY); ctx.stroke();
+    ctx.fillStyle = '#d97706';
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 0.5;
+    for (let x = 4; x < cw; x += 10) {
+      ctx.beginPath(); ctx.arc(x, membraneY - 4, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x, membraneY - 1.5); ctx.lineTo(x, membraneY + 4); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, membraneY + 8, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x, membraneY + 5.5); ctx.lineTo(x, membraneY); ctx.stroke();
     }
 
-    // Draw Permease Channels in membrane
-    activePermeases.forEach((perm, idx) => {
-      // Draw orange transport channels breaking the membrane
-      ctx.fillStyle = '#f97316';
-      ctx.strokeStyle = '#ea580c';
-      ctx.lineWidth = 2;
-      ctx.fillRect(perm.x - 10, membraneY - 8, 20, 20);
-      ctx.strokeRect(perm.x - 10, membraneY - 8, 20, 20);
+    permeasesInMembrane.forEach(perm => {
+      ctx.fillStyle = '#ea580c';
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(perm.x - 9, membraneY - 8, 18, 20);
+      ctx.strokeRect(perm.x - 9, membraneY - 8, 18, 20);
 
-      // Draw Pore
-      ctx.fillStyle = '#060a18';
-      ctx.fillRect(perm.x - 3, membraneY - 8, 6, 20);
+      ctx.fillStyle = '#050914';
+      ctx.fillRect(perm.x - 2.5, membraneY - 8, 5, 20);
 
-      // Channel label
       ctx.fillStyle = '#ffedd5';
-      ctx.font = 'bold 8px sans-serif';
+      ctx.font = 'bold 7.5px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(idx === 0 ? "Basal" : "LacY", perm.x, membraneY - 12);
+      ctx.fillText(perm.label, perm.x, membraneY - 11);
     });
 
-    // 2. Draw DNA Strand with structural components
-    const startX = cw * 0.08;
-    const operonW = cw * 0.84;
-    
-    // Draw backbone
-    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-    ctx.lineWidth = 4;
-    ctx.beginPath(); ctx.moveTo(0, dnaY); ctx.lineTo(cw, dnaY); ctx.stroke();
-    
-    // DNA helical rungs
-    ctx.lineWidth = 2.5;
-    for (let x = 15; x < cw; x += 18) {
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-      ctx.beginPath(); ctx.moveTo(x, dnaY - 12); ctx.lineTo(x, dnaY + 12); ctx.stroke();
+    // 2. DNA OPERON DOUBLE HELIX STRAND
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(10, dnaY - 10); ctx.lineTo(cw - 10, dnaY - 10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(10, dnaY + 10); ctx.lineTo(cw - 10, dnaY + 10); ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1.5;
+    for (let x = 15; x < cw - 10; x += 12) {
+      ctx.beginPath(); ctx.moveTo(x, dnaY - 10); ctx.lineTo(x, dnaY + 10); ctx.stroke();
     }
 
-    const regions = {
-      i: { x1: startX, x2: startX + 0.15*operonW, color: '#0284c7', label: 'i (Regulator)', name: 'i' },
-      p: { x1: startX + 0.16*operonW, x2: startX + 0.31*operonW, color: '#7c3aed', label: 'p (Promoter)', name: 'p' },
-      o: { x1: startX + 0.32*operonW, x2: startX + 0.44*operonW, color: '#db2777', label: 'o (Operator)', name: 'o' },
-      z: { x1: startX + 0.45*operonW, x2: startX + 0.65*operonW, color: '#16a34a', label: 'z (lacZ)', name: 'z' },
-      y: { x1: startX + 0.66*operonW, x2: startX + 0.79*operonW, color: '#ea580c', label: 'y (lacY)', name: 'y' },
-      a: { x1: startX + 0.80*operonW, x2: startX + 0.94*operonW, color: '#ca8a04', label: 'a (lacA)', name: 'a' }
+    const dnaSegments = {
+      i: { xStart: cw * 0.05, xEnd: cw * 0.20, color: '#0284c7', label: 'i (Regulator)', symbol: 'i' },
+      p: { xStart: cw * 0.22, xEnd: cw * 0.37, color: '#6d28d9', label: 'p (Promoter)', symbol: 'p' },
+      o: { xStart: cw * 0.38, xEnd: cw * 0.48, color: '#be185d', label: 'o (Operator)', symbol: 'o' },
+      z: { xStart: cw * 0.50, xEnd: cw * 0.65, color: '#15803d', label: 'z (lacZ)', symbol: 'z' },
+      y: { xStart: cw * 0.67, xEnd: cw * 0.80, color: '#c2410c', label: 'y (lacY)', symbol: 'y' },
+      a: { xStart: cw * 0.82, xEnd: cw * 0.95, color: '#a21caf', label: 'a (lacA)', symbol: 'a' }
     };
 
-    // Draw region boxes
-    Object.keys(regions).forEach(key => {
-      const r = regions[key];
-      ctx.fillStyle = r.color + '44'; // 25% opacity
-      ctx.strokeStyle = r.color;
+    Object.keys(dnaSegments).forEach(key => {
+      const seg = dnaSegments[key];
+      const width = seg.xEnd - seg.xStart;
+
+      ctx.fillStyle = seg.color + '33';
+      ctx.fillRect(seg.xStart, dnaY - 13, width, 26);
+
+      ctx.strokeStyle = seg.color;
       ctx.lineWidth = 2;
-      ctx.fillRect(r.x1, dnaY - 14, r.x2 - r.x1, 28);
-      ctx.strokeRect(r.x1, dnaY - 14, r.x2 - r.x1, 28);
+      ctx.strokeRect(seg.xStart, dnaY - 13, width, 26);
 
-      // Label text
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 11px sans-serif';
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 10.5px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(r.label, (r.x1 + r.x2) / 2, dnaY + 30);
+      ctx.fillText(seg.label, seg.xStart + width / 2, dnaY + 26);
 
-      // Mutation labels
-      if (simState.mutation === `mutant_${key}`) {
+      if (simParams.mutation === `mutant_${key}`) {
         ctx.fillStyle = '#ef4444';
-        ctx.font = 'bold 9px sans-serif';
-        ctx.fillText("MUTANT", (r.x1 + r.x2)/2, dnaY - 19);
+        ctx.font = 'extrabold 8.5px monospace';
+        ctx.fillText("MUTATED", seg.xStart + width / 2, dnaY - 18);
       }
     });
 
-    // Draw HUD text inside canvas
-    ctx.fillStyle = hudColor;
-    ctx.font = 'bold 12px sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText(hudMessage, cw - 20, 32);
+    // 3. DRAW DOCKED REPRESSOR ON OPERATOR
+    enzymes.forEach(enz => {
+      if (enz.type === 'repressor') {
+        if (enz.state === 'docked') {
+          ctx.fillStyle = '#ef4444';
+          ctx.strokeStyle = '#b91c1c';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(enz.x - 5, enz.y, 6, 0, Math.PI * 2);
+          ctx.arc(enz.x + 5, enz.y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillRect(enz.x - 5, enz.y - 3, 10, 6);
+          ctx.stroke();
 
-    // 3. Draw Constitutive RNA Polymerase I on i-gene
-    if (rnaPolyI) {
-      ctx.fillStyle = '#64748b';
-      ctx.strokeStyle = '#94a3b8';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(rnaPolyI.x, rnaPolyI.y, 11, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#fff';
-      ctx.font = '9px monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText("Pol I", rnaPolyI.x, rnaPolyI.y + 3);
-
-      // mRNA growing
-      if (rnaPolyI.path.length > 0) {
-        ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        rnaPolyI.path.forEach((pt, i) => {
-          if (i === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        });
-        ctx.stroke();
+          ctx.fillStyle = '#ef4444';
+          ctx.font = 'bold 8px sans-serif';
+          ctx.fillText("Bound Repressor", enz.x, enz.y - 12);
+        }
       }
-    }
+    });
 
-    // 4. Draw RNA Polymerase on operon
-    if (rnaPolyLac) {
-      ctx.fillStyle = '#a855f7';
-      ctx.strokeStyle = '#c084fc';
+    // 4. CONSTITUTIVE i-GENE TRANSCRIPTION AND mRNA PATHWAY
+    if (repressormRNA) {
+      ctx.strokeStyle = '#38bdf8';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.ellipse(rnaPolyLac.x, rnaPolyLac.y, 16, 12, 0, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-      
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 9px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText("RNA Pol", rnaPolyLac.x, rnaPolyLac.y + 3);
+      ctx.moveTo(cw * 0.08, dnaY + 20);
+      ctx.bezierCurveTo(cw * 0.10, dnaY + 35, cw * 0.12, dnaY + 15, cw * 0.14, dnaY + 30);
+      ctx.stroke();
 
-      // Growing lac polycistronic mRNA
-      if (rnaPolyLac.path.length > 0) {
-        ctx.strokeStyle = '#e9d5ff';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        rnaPolyLac.path.forEach((pt, i) => {
-          if (i === 0) ctx.moveTo(pt.x, pt.y);
-          else ctx.lineTo(pt.x, pt.y);
-        });
-        ctx.stroke();
-      }
+      const ribX = cw * 0.08 + (cw * 0.06) * (repressormRNA.progress / 100);
+      const ribY = dnaY + 24;
+      ctx.fillStyle = '#84cc16';
+      ctx.strokeStyle = '#65a30d';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(ribX, ribY - 3, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(ribX, ribY + 1.5, 3.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     }
 
-    // 5. Draw floating mRNAs and attached ribosomes
-    if (simState.showMolecules) {
-      mRNAs.forEach(m => {
-        ctx.strokeStyle = m.type === 'repressor' ? '#38bdf8' : '#e9d5ff';
+    // 5. DRAW ACTIVE RNA POLYMERASE MOVING ALONG STRAND
+    polymerases.forEach(pol => {
+      ctx.fillStyle = pol.blocked ? '#94a3b8' : '#8b5cf6';
+      ctx.strokeStyle = pol.blocked ? '#64748b' : '#a78bfa';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(pol.x, pol.y, 15, 11, 0, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 8.5px sans-serif';
+      ctx.fillText("RNA Pol", pol.x, pol.y + 3);
+
+      if (pol.transcriptPath.length > 0) {
+        ctx.strokeStyle = '#e879f9';
         ctx.lineWidth = 2.5;
         ctx.beginPath();
-        m.path.forEach((pt, idx) => {
+        pol.transcriptPath.forEach((pt, idx) => {
           if (idx === 0) ctx.moveTo(pt.x, pt.y);
           else ctx.lineTo(pt.x, pt.y);
         });
         ctx.stroke();
+      }
+    });
 
-        // Label mRNA type
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        ctx.font = '8px monospace';
-        ctx.fillText(m.type === 'repressor' ? 'repressor mRNA' : 'lac mRNA', m.x, m.y - 8);
+    // 6. DRAW FREE mRNA STRAND
+    if (lacmRNA) {
+      ctx.strokeStyle = '#e879f9';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      lacmRNA.path.forEach((pt, idx) => {
+        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
       });
+      ctx.stroke();
 
-      // Ribosomes translating mRNAs
-      ribosomes.forEach(rib => {
-        const path = rib.mRNA.path;
-        const idx = Math.floor(rib.progress);
-        if (idx < path.length) {
-          const pt = path[idx];
-          // Draw ribosome (large subunit + small subunit)
-          ctx.fillStyle = '#84cc16';
-          ctx.strokeStyle = '#65a30d';
-          ctx.lineWidth = 1;
-          
-          // Large Subunit
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y - 4, 7, 0, Math.PI * 2);
-          ctx.fill(); ctx.stroke();
-          
-          // Small Subunit
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y + 2, 4.5, 0, Math.PI * 2);
-          ctx.fill(); ctx.stroke();
-        }
-      });
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = 'bold 8px monospace';
+      ctx.fillText("Polycistronic lac-mRNA", lacmRNA.x, dnaY + 36);
     }
 
-    // 6. Draw Repressors
-    repressors.forEach(rep => {
-      if (rep.mutant) {
-        // Mutant non-functional repressor (Grey cracked sphere)
-        ctx.fillStyle = '#64748b';
-        ctx.strokeStyle = '#475569';
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(rep.x, rep.y, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        // Draw cross crack
-        ctx.strokeStyle = '#ef4444';
-        ctx.beginPath(); ctx.moveTo(rep.x - 5, rep.y - 5); ctx.lineTo(rep.x + 5, rep.y + 5); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(rep.x + 5, rep.y - 5); ctx.lineTo(rep.x - 5, rep.y + 5); ctx.stroke();
-        return;
-      }
+    // 7. DRAW TRANSLATING RIBOSOMES
+    translatingRibosomes.forEach(rib => {
+      ctx.fillStyle = '#84cc16';
+      ctx.strokeStyle = '#65a30d';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(rib.x, rib.y - 3, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(rib.x, rib.y + 2.5, 4.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 7px sans-serif';
+      ctx.fillText(rib.gene.toUpperCase(), rib.x, rib.y - 1.5);
+    });
 
-      if (rep.lactoseBound) {
-        // Inactive Repressor (red dumbbell bound to yellow lactose)
-        ctx.fillStyle = '#f87171';
-        ctx.strokeStyle = '#ef4444';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.arc(rep.x - 4, rep.y, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.beginPath(); ctx.arc(rep.x + 4, rep.y, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.fillRect(rep.x - 4, rep.y - 2, 8, 4);
-
-        // Bind orange Lactose rings
-        ctx.fillStyle = '#f59e0b';
-        ctx.beginPath(); ctx.arc(rep.x, rep.y - 6, 3.5, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(rep.x, rep.y + 6, 3.5, 0, Math.PI*2); ctx.fill();
-      } else {
-        // Active functional Repressor (Red dumbbell)
-        ctx.fillStyle = '#ef4444';
-        ctx.strokeStyle = '#b91c1c';
-        ctx.lineWidth = 1.5;
-        
-        ctx.beginPath(); ctx.arc(rep.x - 5, rep.y, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.beginPath(); ctx.arc(rep.x + 5, rep.y, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.fillRect(rep.x - 5, rep.y - 3, 10, 6);
-        
-        if (rep.state === 'docked') {
+    // 8. DRAW ENZYMES AND OTHER CYTOPLASMIC DETAILS
+    enzymes.forEach(enz => {
+      if (enz.type === 'repressor') {
+        if (enz.state === 'floating') {
           ctx.fillStyle = '#ef4444';
-          ctx.font = 'bold 8px sans-serif';
-          ctx.fillText("Active Repressor", rep.x, rep.y - 12);
+          ctx.strokeStyle = '#b91c1c';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(enz.x - 5, enz.y, 5, 0, Math.PI * 2);
+          ctx.arc(enz.x + 5, enz.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillRect(enz.x - 5, enz.y - 2, 10, 4);
+          ctx.stroke();
+        } else if (enz.state === 'inactivated') {
+          ctx.fillStyle = '#fca5a5';
+          ctx.strokeStyle = '#f87171';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(enz.x - 4, enz.y, 4, 0, Math.PI * 2);
+          ctx.arc(enz.x + 4, enz.y, 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillRect(enz.x - 4, enz.y - 2, 8, 4);
+          ctx.stroke();
+          
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath(); ctx.arc(enz.x, enz.y - 5, 3.5, 0, Math.PI * 2); ctx.fill();
         }
       }
-    });
-
-    // 7. Draw Enzymes (Beta-gal, Permease, Transacetylase)
-    enzymes.forEach(e => {
-      if (e.type === 'beta_gal') {
-        if (e.mutant) {
-          // Grey mutant β-gal
-          ctx.fillStyle = '#475569';
-          ctx.strokeStyle = '#334155';
-          ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.arc(e.x, e.y, 11, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-          // Draw 'X'
-          ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.moveTo(e.x - 6, e.y - 6); ctx.lineTo(e.x + 6, e.y + 6); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(e.x + 6, e.y - 6); ctx.lineTo(e.x - 6, e.y + 6); ctx.stroke();
-        } else {
-          // Large green Clover-like Tetramer shape representing functional beta-gal
-          ctx.fillStyle = '#22c55e';
-          ctx.strokeStyle = '#16a34a';
+      
+      else if (enz.type === 'beta_gal') {
+        if (enz.mutant) {
+          ctx.fillStyle = '#64748b';
+          ctx.strokeStyle = '#ef4444';
           ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.arc(e.x - 4, e.y - 4, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-          ctx.beginPath(); ctx.arc(e.x + 4, e.y - 4, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-          ctx.beginPath(); ctx.arc(e.x - 4, e.y + 4, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-          ctx.beginPath(); ctx.arc(e.x + 4, e.y + 4, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.arc(enz.x, enz.y, 8, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(enz.x-5, enz.y-5); ctx.lineTo(enz.x+5, enz.y+5); ctx.stroke();
+        } else {
+          ctx.fillStyle = '#10b981';
+          ctx.strokeStyle = '#059669';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(enz.x - 3.5, enz.y - 3.5, 4.5, 0, Math.PI * 2);
+          ctx.arc(enz.x + 3.5, enz.y - 3.5, 4.5, 0, Math.PI * 2);
+          ctx.arc(enz.x - 3.5, enz.y + 3.5, 4.5, 0, Math.PI * 2);
+          ctx.arc(enz.x + 3.5, enz.y + 3.5, 4.5, 0, Math.PI * 2);
+          ctx.fill(); ctx.stroke();
         }
-      } else if (e.type === 'permease') {
-        if (e.state === 'floating') {
-          if (e.mutant) {
-            ctx.fillStyle = '#475569';
-            ctx.beginPath(); ctx.rect(e.x - 6, e.y - 8, 12, 16); ctx.fill();
-            ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
-            ctx.beginPath(); ctx.moveTo(e.x - 5, e.y - 5); ctx.lineTo(e.x + 5, e.y + 5); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(e.x + 5, e.y - 5); ctx.lineTo(e.x - 5, e.y + 5); ctx.stroke();
-          } else {
-            // Orange cylinder permease floating towards membrane
-            ctx.fillStyle = '#f97316';
-            ctx.strokeStyle = '#ea580c';
-            ctx.lineWidth = 1.5;
-            ctx.fillRect(e.x - 7, e.y - 9, 14, 18);
-            ctx.strokeRect(e.x - 7, e.y - 9, 14, 18);
-            ctx.fillStyle = '#ffedd5';
-            ctx.fillRect(e.x - 2, e.y - 9, 4, 18);
-          }
-        }
-      } else if (e.type === 'transacetylase') {
-        // Small yellow/pink complex
-        ctx.fillStyle = '#eab308';
-        ctx.beginPath(); ctx.arc(e.x, e.y, 6, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = '#ec4899';
-        ctx.beginPath(); ctx.arc(e.x + 4, e.y - 4, 2.5, 0, Math.PI*2); ctx.fill();
+      }
+
+      else if (enz.type === 'permease_carrier' && enz.state === 'floating') {
+        ctx.fillStyle = enz.mutant ? '#64748b' : '#ea580c';
+        ctx.strokeStyle = enz.mutant ? '#ef4444' : '#f97316';
+        ctx.lineWidth = 1;
+        ctx.fillRect(enz.x - 5, enz.y - 6, 10, 12);
+        ctx.strokeRect(enz.x - 5, enz.y - 6, 10, 12);
+      }
+
+      else if (enz.type === 'transacetylase') {
+        ctx.fillStyle = '#d946ef';
+        ctx.beginPath(); ctx.arc(enz.x, enz.y, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#a21caf';
+        ctx.beginPath(); ctx.arc(enz.x + 3, enz.y - 2, 2, 0, Math.PI * 2); ctx.fill();
       }
     });
 
-    // 8. Draw floating Lactose & Digestion byproducts
-    if (simState.showMolecules) {
-      particles.forEach(p => {
-        if (p.type === 'lactose') {
-          // Disaccharide - 2 connected amber rings
+    // 9. DRAW CYTOPLASMIC MOLECULES
+    if (simParams.showDetails) {
+      molecules.forEach(m => {
+        if (m.type === 'lactose') {
           ctx.fillStyle = '#fbbf24';
           ctx.strokeStyle = '#d97706';
-          ctx.lineWidth = 1.2;
-          
-          ctx.beginPath(); ctx.arc(p.x - 3, p.y, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-          ctx.beginPath(); ctx.arc(p.x + 3, p.y, 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        } else if (p.type === 'glucose') {
-          // Green Monosaccharide hexagon
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.arc(m.x - 2.5, m.y, 3.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.beginPath(); ctx.arc(m.x + 2.5, m.y, 3.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        } else if (m.type === 'glucose') {
           ctx.fillStyle = '#4ade80';
-          drawPolygon(ctx, p.x, p.y, 6, 4.5);
-        } else if (p.type === 'galactose') {
-          // Cyan Monosaccharide pentagon
-          ctx.fillStyle = '#22d3ee';
-          drawPolygon(ctx, p.x, p.y, 5, 4.5);
+          drawPolygon(m.x, m.y, 6, 4.5);
+        } else if (m.type === 'galactose') {
+          ctx.fillStyle = '#38bdf8';
+          drawPolygon(m.x, m.y, 5, 4.5);
         }
       });
     }
   }
 
-  function drawPolygon(ctx, x, y, sides, radius) {
+  function drawPolygon(x, y, sides, radius) {
     ctx.beginPath();
     for (let i = 0; i < sides; i++) {
       const angle = (i * 2 * Math.PI) / sides;
@@ -1549,12 +1364,13 @@
     ctx.fill();
   }
 
+  // --- CORE RENDER LOOP ---
   function renderLoop() {
     const container = canvas.parentElement;
     const dpr = window.devicePixelRatio || 1;
     let cw = Math.max(container.clientWidth, 100);
     let ch = Math.max(container.clientHeight, 100);
-    
+
     if (canvas.width !== Math.floor(cw * dpr) || canvas.height !== Math.floor(ch * dpr)) {
       ctx.resetTransform();
       canvas.width = cw * dpr;
@@ -1562,45 +1378,33 @@
       ctx.scale(dpr, dpr);
     }
 
-    updatePhysics(cw, ch);
-    render(cw, ch);
-    
+    updatePhysics(cw);
+    render(cw, ch / dpr);
+
     requestAnimationFrame(renderLoop);
   }
 
   window.addEventListener('load', () => {
-    try { renderQuestions(); } catch(e) { console.error(e); }
+    renderQuestions();
+    
+    chkParticles.addEventListener('change', (e) => {
+      simParams.showDetails = e.target.checked;
+    });
+
     initSimulation();
+    updateConceptExplanation();
 
-    // Modal Events
-    const userGuideModal = document.getElementById('user-guide-modal');
-    document.getElementById('btn-open-guide').addEventListener('click', () => userGuideModal.classList.remove('hidden'));
-    const closeGuide = () => userGuideModal.classList.add('hidden');
-    document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
-    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
-
-    // Filter MCQ Questions
-    const selectCategory = document.getElementById('select-category');
-    if (selectCategory) {
-      selectCategory.addEventListener('change', () => {
-        const cat = selectCategory.value;
-        const questions = document.querySelectorAll('[data-category]');
-        questions.forEach(q => {
-          const qCat = q.getAttribute('data-category');
-          if (cat === 'all' || qCat === cat) {
-            q.classList.remove('hidden');
-          } else {
-            q.classList.add('hidden');
-          }
-        });
-      });
-    }
+    const modal = document.getElementById('user-guide-modal');
+    document.getElementById('btn-open-guide').addEventListener('click', () => modal.classList.remove('hidden'));
+    const closeModal = () => modal.classList.add('hidden');
+    document.getElementById('btn-close-guide').addEventListener('click', closeModal);
+    document.getElementById('btn-close-guide-confirm').addEventListener('click', closeModal);
 
     requestAnimationFrame(renderLoop);
   });
 </script>
 
-<!-- Layout Collapsible Panels Handler -->
+<!-- Layout Collapsible Panels JS -->
 <script>
   (function() {
     const btnToggleLeft = document.getElementById('btn-toggle-left');
@@ -1608,51 +1412,39 @@
     const leftPanel = document.getElementById('left-panel');
     const vivaSection = document.getElementById('viva-section');
     const mainLayout = document.getElementById('main-layout');
-    const canvasContainer = document.getElementById('canvas-container-wrapper') || document.getElementById('canvas-container') || document.getElementById('three-container');
+    const canvasContainer = document.getElementById('canvas-container-wrapper');
 
-    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) {
-      console.warn('Collapsible panels elements missing:', {btnToggleLeft, btnToggleViva, leftPanel, vivaSection, mainLayout, canvasContainer});
-      return;
-    }
+    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) return;
 
     let leftPanelVisible = true;
     let vivaVisible = true;
 
-    const leftClasses = Array.from(leftPanel.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-3';
-    const canvasClasses = Array.from(canvasContainer.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-6';
-    const vivaClasses = Array.from(vivaSection.classList).find(c => c.startsWith('lg:col-span-') || c.startsWith('md:col-span-')) || 'lg:col-span-3';
-
-    const getColSpanVal = (classStr) => {
-      const match = classStr.match(/(?:lg:|md:)?col-span-(\d+)/);
-      return match ? parseInt(match[1]) : 0;
-    };
-
-    const leftColSpan = getColSpanVal(leftClasses);
-    const canvasColSpan = getColSpanVal(canvasClasses);
-    const vivaColSpan = getColSpanVal(vivaClasses);
+    const leftColSpan = 3;
+    const canvasColSpan = 6;
+    const vivaColSpan = 3;
 
     function updateLayout() {
       if (leftPanelVisible) {
         leftPanel.classList.remove('hidden');
-        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        btnToggleLeft.className = 'px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
         document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
       } else {
         leftPanel.classList.add('hidden');
-        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        btnToggleLeft.className = 'px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
         document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
       }
 
       if (vivaVisible) {
         vivaSection.classList.remove('hidden');
-        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        btnToggleViva.className = 'px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
         document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
       } else {
         vivaSection.classList.add('hidden');
-        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        btnToggleViva.className = 'px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
         document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
       }
 
-      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12');
       
       let newSpan = 12;
       if (leftPanelVisible && vivaVisible) {
@@ -1664,16 +1456,12 @@
       } else if (!leftPanelVisible && vivaVisible) {
         newSpan = canvasColSpan + leftColSpan;
       }
-      canvasContainer.classList.add('lg:col-span-' + newSpan, 'md:col-span-' + newSpan);
+      canvasContainer.classList.add('lg:col-span-' + newSpan);
 
       if (leftPanelVisible && vivaVisible) {
         mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-      } else if (!leftPanelVisible && !vivaVisible) {
-        mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
       } else {
-        if (!leftPanelVisible) {
-          mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
-        }
+        mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
       }
 
       window.dispatchEvent(new Event('resize'));

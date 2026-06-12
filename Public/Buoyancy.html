@@ -231,7 +231,14 @@
 <div class="text-sm font-bold text-blue-400 font-mono mt-0.5" id="telemetryVs">0.00</div>
 </div>
 </div>
-</div></div></div>
+</div>
+<div class="bg-slate-900 text-slate-300 p-4 rounded-xl border border-slate-800 space-y-2.5 shadow-md">
+<span class="text-[9px] font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-800 pb-1.5 flex items-center gap-1.5">📡 Chamber Analytical Feed</span>
+<div class="space-y-2 text-[10px] font-mono leading-normal" id="analyticalFeed">
+<div>Chamber initializing...</div>
+</div>
+</div>
+</div></div>
 <!-- 3D Perspective Tank visualizer Stage (8 Columns of 9) -->
 <div id="canvas-container-wrapper" class="md:col-span-8 relative bg-slate-950 overflow-hidden flex flex-col justify-center min-h-[500px] border-8 border-slate-900">
 <!-- Main Canvas -->
@@ -249,13 +256,19 @@
 </div>
 </section>
 <!-- RIGHT PANEL: Viva Assessment Workspace & Laws Reference (3 Columns) -->
+<<<<<<< HEAD
 <section id="viva-section" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar"><div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+=======
+<section class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+<div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
 <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
 <div class="flex justify-between items-center mt-0.5">
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
-</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+</div>
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
 <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
 <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
 <option value="all">All Categories</option>
@@ -263,68 +276,53 @@
 <option value="cbse">School Board PYQ</option>
 <option value="neet">NEET Prep</option>
 </select>
-</div><div class="space-y-3">
-<!-- QUESTION 1 -->
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
-                        State Archimedes' Principle and write its mathematical form.
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
+<div class="space-y-3">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
+    <div class="space-y-2">
+        <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
+            A solid sphere of density ρ is placed in a liquid of density σ. The sphere will float if:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+        <p id="q1-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<!-- QUESTION 2 -->
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
-                        Under what condition does an object float, sink, or achieve neutral buoyancy?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
+            An object weighs 50 N in air and 40 N when fully submerged in water. What is the buoyant force acting on it?
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+        <p id="q2-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
+
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
+    <div class="space-y-2">
+        <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[CBSE PYQ]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
+            According to Archimedes' principle, the buoyant force on a submerged object is equal to:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+        <p id="q3-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
-<!-- QUESTION 3 -->
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="jee">
-<div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Advanced]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
-                        What fraction of a floating object's volume is submerged?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
-</div>
-</div>
-<!-- QUESTION 4 -->
+
 <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="neet">
-<div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
-                        How does fluid viscosity affect buoyancy and terminal velocity?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q4-feedback"></p>
+    <div class="space-y-2">
+        <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Concept Check]</span>
+        <h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-600" id="q4-text">
+            If the density of an object is equal to the density of the fluid it is in, the object will:
+        </h4>
+        <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+        <p id="q4-feedback" class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100"></p>
+    </div>
 </div>
 </div>
-<!-- QUESTION 5 -->
-<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-rose-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="cbse">
-<div class="space-y-2">
-<span class="inline-block bg-rose-50 text-rose-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
-<h4 class="text-sm font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-rose-700" id="q5-text">
-                        Why can a heavy steel ship (ρ ≈ 7.8 g/cm³) float easily on water?
-                      </h4>
-<div class="flex flex-col gap-1.5 mt-2" id="q5-options"></div>
-<p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q5-feedback"></p>
-</div>
-</div>
-</div><div class="bg-slate-900 text-slate-300 p-4 rounded-xl border border-slate-800 space-y-2.5 shadow-md">
-<span class="text-[9px] font-extrabold uppercase tracking-widest text-emerald-400 block border-b border-slate-800 pb-1.5 flex items-center gap-1.5">📡 Chamber Analytical Feed</span>
-<div class="space-y-2 text-[10px] font-mono leading-normal" id="analyticalFeed">
-<div>Chamber initializing...</div>
-</div>
-</div></section>
+</section>
 </main>
 <!-- Calibration Footer -->
 <footer class="bg-slate-50 border-t border-slate-200 px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-medium">
@@ -578,11 +576,93 @@
       tCtx.fillStyle = bgGrad;
       tCtx.fillRect(0, 0, W, H);
 
+      // --- 3D TANK ENVIRONMENT ---
+      // Tank Back Wall Fill
+      tCtx.beginPath();
+      tCtx.moveTo(tankL + skew, tankT - skew/2);
+      tCtx.lineTo(tankR + skew, tankT - skew/2);
+      tCtx.lineTo(tankR + skew, tankB - skew/2);
+      tCtx.lineTo(tankL + skew, tankB - skew/2);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(15,23,42,0.6)';
+      tCtx.fill();
+
+      // Tank Bottom Plate Fill
+      tCtx.beginPath();
+      tCtx.moveTo(tankL, tankB);
+      tCtx.lineTo(tankL + skew, tankB - skew/2);
+      tCtx.lineTo(tankR + skew, tankB - skew/2);
+      tCtx.lineTo(tankR, tankB);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(30,41,59,0.85)';
+      tCtx.fill();
+
+      // Tank Left Glass Panel
+      tCtx.beginPath();
+      tCtx.moveTo(tankL, tankT);
+      tCtx.lineTo(tankL + skew, tankT - skew/2);
+      tCtx.lineTo(tankL + skew, tankB - skew/2);
+      tCtx.lineTo(tankL, tankB);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(255,255,255,0.02)';
+      tCtx.fill();
+
+      // Tank Right Glass Panel
+      tCtx.beginPath();
+      tCtx.moveTo(tankR, tankT);
+      tCtx.lineTo(tankR + skew, tankT - skew/2);
+      tCtx.lineTo(tankR + skew, tankB - skew/2);
+      tCtx.lineTo(tankR, tankB);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(255,255,255,0.02)';
+      tCtx.fill();
+
       // Fluid level
       const fluidFraction = 0.7; // 70% full
       const fluidTop = tankT + tankH * (1 - fluidFraction);
 
-      // Draw fluid block back-face
+      // Draw 3D Volumetric Fluid block faces (left side, right side, bottom, back, front)
+      // Left fluid face
+      tCtx.beginPath();
+      tCtx.moveTo(tankL, fluidTop);
+      tCtx.lineTo(tankL + skew, fluidTop - skew/2);
+      tCtx.lineTo(tankL + skew, tankB - skew/2);
+      tCtx.lineTo(tankL, tankB);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(3,105,161,0.20)';
+      tCtx.fill();
+
+      // Right fluid face
+      tCtx.beginPath();
+      tCtx.moveTo(tankR, fluidTop);
+      tCtx.lineTo(tankR + skew, fluidTop - skew/2);
+      tCtx.lineTo(tankR + skew, tankB - skew/2);
+      tCtx.lineTo(tankR, tankB);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(3,105,161,0.35)';
+      tCtx.fill();
+
+      // Bottom fluid face
+      tCtx.beginPath();
+      tCtx.moveTo(tankL, tankB);
+      tCtx.lineTo(tankL + skew, tankB - skew/2);
+      tCtx.lineTo(tankR + skew, tankB - skew/2);
+      tCtx.lineTo(tankR, tankB);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(12,74,96,0.45)';
+      tCtx.fill();
+
+      // Back fluid face
+      tCtx.beginPath();
+      tCtx.moveTo(tankL + skew, fluidTop - skew/2);
+      tCtx.lineTo(tankR + skew, fluidTop - skew/2);
+      tCtx.lineTo(tankR + skew, tankB - skew/2);
+      tCtx.lineTo(tankL + skew, tankB - skew/2);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(3,105,161,0.18)';
+      tCtx.fill();
+
+      // Main front fluid face
       const fluidGrad = tCtx.createLinearGradient(tankL, fluidTop, tankL, tankB);
       fluidGrad.addColorStop(0, 'rgba(14,165,233,0.22)');
       fluidGrad.addColorStop(0.5, 'rgba(3,105,161,0.30)');
@@ -690,6 +770,19 @@
       tCtx.strokeStyle = 'rgba(255,255,255,0.45)';
       tCtx.lineWidth = 1.5;
       tCtx.strokeRect(objX, currentObjY, objW, objH);
+
+      // Draw perspective top surface overlay of fluid (covers submerged objects)
+      tCtx.beginPath();
+      tCtx.moveTo(tankL, fluidTop);
+      tCtx.lineTo(tankL + skew, fluidTop - skew/2);
+      tCtx.lineTo(tankR + skew, fluidTop - skew/2);
+      tCtx.lineTo(tankR, fluidTop);
+      tCtx.closePath();
+      tCtx.fillStyle = 'rgba(14,165,233,0.35)'; // translucent light blue water surface
+      tCtx.fill();
+      tCtx.strokeStyle = 'rgba(56,189,248,0.55)';
+      tCtx.lineWidth = 1.5;
+      tCtx.stroke();
 
       // Volume Submerged Numbers annotations overlays
       if (chkNums.checked) {
@@ -836,58 +929,53 @@
     // --- VIVA MCQS DECK STATE & DATA ---
     const appState = {
         vivaScore: 0,
-        answers: { q1: null, q2: null, q3: null, q4: null, q5: null }
+        answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
     const vivaData = {
-        q1: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Any object immersed in a fluid experiences an upward buoyant force equal to the weight of fluid displaced:...", isCorrect: true, exp: "Correct! Any object immersed in a fluid experiences an upward buoyant force equal to the weight of fluid displaced: $$F_b = \rho_F \cdot V_{sub} \cdot g$$ where $\rho_F$ is fluid density, $V_{sub}$ is the submerged volume, and $g$ is gravitational acceleration." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q2: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Buoyancy states depend on the ratio of object density ($\rho_o$) to fluid density ($\rho_F$): $$\rho_o...", isCorrect: true, exp: "Correct! Buoyancy states depend on the ratio of object density ($\rho_o$) to fluid density ($\rho_F$): $$\rho_o &lt; \rho_F \implies \text{Floats } (F_b &gt; W)$$ $$\rho_o = \rho_F \implies \text{Neutral } (F_b = W)$$ $$\rho_o &gt; \rho_F \implies \text{Sinks } (F_b &lt; W)$$" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q3: {
-            options: [
-                { text: "It is dependent on the initial state parameters.", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "At vertical static equilibrium, upward Buoyant force exactly balances gravity Weight: $$W = F_b \implies...", isCorrect: true, exp: "Correct! At vertical static equilibrium, upward Buoyant force exactly balances gravity Weight: $$W = F_b \implies \rho_o V g = \rho_F V_{sub} g$$ Canceling gravity $g$ yields the submerged fraction equation: $$\frac{V_{sub}}{V} = \frac{\rho_o}{\rho_F}$$" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q4: {
-            options: [
-                { text: "Viscosity does not NOT affect buoyant force $F_b$", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "Viscosity does NOT affect buoyant force $F_b$", isCorrect: true, exp: "Correct! Viscosity does NOT affect buoyant force $F_b$. However, viscosity alters drag: $$F_{drag} = 6\pi \eta r v$$ At sinking/rising terminal velocity, drag force perfectly balances the net force difference: $$F_{drag} + F_b = W$$" },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
-        q5: {
-            options: [
-                { text: "A ship's hull is not shaped to enclose a massive volume of air, making the effective average density much...", isCorrect: false, exp: "Incorrect. Consider the physical laws governing this state." },
-                { text: "A ship's hull is shaped to enclose a massive volume of air, making the effective average density much...", isCorrect: true, exp: "Correct! A ship's hull is shaped to enclose a massive volume of air, making the effective average density much smaller: $$\rho_{eff} = \frac{M_{total}}{V_{total}} &lt; \rho_{water}$$ Displacing water equal to its total massive weight keeps the ship floating." },
-                { text: "The value remains unchanged under standard conditions.", isCorrect: false, exp: "Incorrect. Think about the direct dependencies involved." },
-                { text: "It decreases exponentially as the system propagates.", isCorrect: false, exp: "Incorrect. Check your calculations and definitions." },
-            ]
-        },
+      q1: {
+        question: "A solid sphere of density $\\rho$ is placed in a liquid of density $\\sigma$. The sphere will float if:",
+        options: [
+          { text: "$\\rho > \\sigma$", isCorrect: false, exp: "Incorrect. If the sphere is denser than the liquid, it will sink." },
+          { text: "$\\rho < \\sigma$", isCorrect: true, exp: "Correct! For an object to float, it must be less dense than the fluid it is displacing: $$\\rho < \\sigma$$" },
+          { text: "$\\rho = \\sigma$", isCorrect: false, exp: "Incorrect. In this case, the object would be neutrally buoyant and suspended in the liquid." },
+          { text: "$\\rho = 0$", isCorrect: false, exp: "Incorrect. A density of zero is physically impossible for a solid sphere." }
+        ]
+      },
+      q2: {
+        question: "An object weighs 50 N in air and 40 N when fully submerged in water. What is the buoyant force acting on it?",
+        options: [
+          { text: "50 N", isCorrect: false, exp: "Incorrect. That is the weight of the object in air." },
+          { text: "90 N", isCorrect: false, exp: "Incorrect. You added the weights instead of finding the difference." },
+          { text: "10 N", isCorrect: true, exp: "Correct! The buoyant force is equal to the loss in weight: $$F_b = W_{\\text{air}} - W_{\\text{submerged}} = 50\\text{ N} - 40\\text{ N} = 10\\text{ N}$$" },
+          { text: "40 N", isCorrect: false, exp: "Incorrect. That is the apparent weight in water." }
+        ]
+      },
+      q3: {
+        question: "According to Archimedes' principle, the buoyant force on a submerged object is equal to:",
+        options: [
+          { text: "The volume of the object", isCorrect: false, exp: "Incorrect. Buoyant force is a force (Newtons), not a volume." },
+          { text: "The weight of the displaced fluid", isCorrect: true, exp: "Correct! Archimedes' principle states the buoyant force equals the weight of the fluid pushed aside by the object: $$F_b = \\rho_f V_{\\text{sub}} g$$" },
+          { text: "The mass of the object", isCorrect: false, exp: "Incorrect. The buoyant force depends on the fluid's density, not the object's mass." },
+          { text: "The atmospheric pressure", isCorrect: false, exp: "Incorrect. Atmospheric pressure acts on the surface but does not determine buoyancy." }
+        ]
+      },
+      q4: {
+        question: "If the density of an object is equal to the density of the fluid it is in, the object will:",
+        options: [
+          { text: "Sink to the bottom", isCorrect: false, exp: "Incorrect. It would only sink if it were denser than the fluid." },
+          { text: "Float on the surface", isCorrect: false, exp: "Incorrect. It would only float if it were less dense than the fluid." },
+          { text: "Remain suspended (neutrally buoyant)", isCorrect: true, exp: "Correct! When densities are equal ($\\rho_o = \\rho_f$), the gravitational force equals the buoyant force ($$W = F_b$$), so the object stays in equilibrium at any depth." },
+          { text: "Accelerate upwards", isCorrect: false, exp: "Incorrect. This would only occur if the object were less dense than the fluid." }
+        ]
+      }
     };
 
     const colorsMap = {
         q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
         q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
         q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
-        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' },
-        q5: { hoverBg: 'hover:bg-rose-50', hoverBorder: 'hover:border-rose-400', labelText: 'text-rose-600' }
+        q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
     };
 
     function triggerConfetti() {
@@ -942,8 +1030,13 @@
 
         Object.keys(vivaData).forEach(qKey => {
             const data = vivaData[qKey];
+            const textContainer = document.getElementById(`${qKey}-text`);
             const optionsContainer = document.getElementById(`${qKey}-options`);
             const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+
+            if (textContainer) {
+                textContainer.innerHTML = data.question;
+            }
 
             if (!optionsContainer || !feedbackContainer) return;
             optionsContainer.innerHTML = '';
@@ -963,7 +1056,7 @@
                         appState.vivaScore++;
                         triggerConfetti();
                     }
-                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 5`;
+                    if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
 
                     const buttons = optionsContainer.querySelectorAll('button');
                     buttons.forEach((b, i) => {
@@ -983,13 +1076,13 @@
 
                     feedbackContainer.innerHTML = opt.exp;
                     feedbackContainer.classList.remove('hidden');
-                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+                    if (window.MathJax) MathJax.typesetPromise([feedbackContainer]).catch(err => console.log(err));
                 });
                 optionsContainer.appendChild(btn);
             });
         });
 
-        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+        if (window.MathJax) setTimeout(() => { MathJax.typesetPromise().catch(err => console.log(err)); }, 50);
     }
 
     // Category Filter Handler

@@ -63,6 +63,14 @@
       background-color: #10b981;
       box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
     }
+    input[type="range"].slider-rose::-webkit-slider-thumb {
+      background-color: #f43f5e;
+      box-shadow: 0 0 6px rgba(244, 63, 94, 0.4);
+    }
+    input[type="range"].slider-cyan::-webkit-slider-thumb {
+      background-color: #06b6d4;
+      box-shadow: 0 0 6px rgba(6, 182, 212, 0.4);
+    }
     input[type="range"]::-webkit-slider-thumb:hover {
       transform: scale(1.15);
     }
@@ -142,27 +150,20 @@
 <span>0V</span>
 <span>24V</span>
 </div>
-</div><div class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm transition-colors duration-300">
-<div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
-<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400 block"></span> <span class="uppercase text-amber-600">Resistor 1 ($R_1$)</span></span>
-<span class="font-mono text-amber-600 text-sm" id="lbl-r1">10 Ω</span>
+</div><div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-3">
+<div class="flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+<span id="lbl-branch-title">Circuit Resistors</span>
+<span class="font-mono text-indigo-600 text-sm font-bold" id="lbl-branch-count">2 Resistors</span>
 </div>
-<input class="w-full mt-2 slider-amber" id="sl-r1" max="100" min="1" step="1" type="range" value="10"/>
-<div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
-<span>1 Ω</span>
-<span>100 Ω</span>
+<div class="grid grid-cols-2 gap-2">
+<button id="btn-add-resistor" class="px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-lg border border-indigo-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs">
+<span>➕</span> Add
+</button>
+<button id="btn-remove-resistor" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-lg border border-rose-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs">
+<span>➖</span> Remove
+</button>
 </div>
-</div><div class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm transition-colors duration-300">
-<div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
-<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 block"></span> <span class="uppercase text-emerald-600">Resistor 2 ($R_2$)</span></span>
-<span class="font-mono text-emerald-600 text-sm" id="lbl-r2">10 Ω</span>
-</div>
-<input class="w-full mt-2 slider-emerald" id="sl-r2" max="100" min="1" step="1" type="range" value="10"/>
-<div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
-<span>1 Ω</span>
-<span>100 Ω</span>
-</div>
-</div><div class="space-y-3">
+</div><div id="resistors-control-container" class="space-y-4"></div><div class="space-y-3">
 <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-500 block">Circuit Telemetry</span>
 <div class="grid grid-cols-2 gap-2 text-center">
 <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 shadow-sm flex flex-col justify-center items-center text-center col-span-2">
@@ -173,14 +174,7 @@
 <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Circuit Current ($I_{total}$)</div>
 <div class="text-2xl font-bold font-mono text-slate-700" id="tel-itotal">0.60 A</div>
 </div>
-<div class="bg-amber-50 p-3 rounded-xl border border-amber-200 shadow-sm flex flex-col justify-center items-center transition-all" id="box-sub1">
-<div class="text-[8px] text-amber-700 font-bold uppercase tracking-wider mb-0.5" id="lbl-sub1">Voltage Drop ($V_1$)</div>
-<div class="text-sm font-bold font-mono text-amber-600" id="tel-sub1">6.0 V</div>
-</div>
-<div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 shadow-sm flex flex-col justify-center items-center transition-all" id="box-sub2">
-<div class="text-[8px] text-emerald-700 font-bold uppercase tracking-wider mb-0.5" id="lbl-sub2">Voltage Drop ($V_2$)</div>
-<div class="text-sm font-bold font-mono text-emerald-600" id="tel-sub2">6.0 V</div>
-</div>
+<div id="sub-telemetry-container" class="col-span-2 grid grid-cols-2 gap-2"></div>
 </div>
 </div><div class="bg-indigo-50 text-indigo-900 rounded-xl p-3.5 shadow-sm border border-indigo-200 space-y-2 transition-all" id="eq-box">
 <span class="text-[9px] font-extrabold uppercase tracking-widest text-indigo-600 block border-b border-indigo-200 pb-1">Equivalent Resistance</span>
@@ -208,41 +202,49 @@
 <h2 class="text-base font-bold">Conceptual Assessments</h2>
 <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
 </div>
+</div><div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+<span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+<select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+<option value="all">All Categories</option>
+<option value="jee">JEE Main / Advanced</option>
+<option value="cbse">School Board PYQ</option>
+<option value="neet">NEET Prep</option>
+</select>
 </div><div class="space-y-3 pb-4">
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-indigo-50 text-indigo-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 1</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q1-text">
+<span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[AIPMT 2002]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-cyan-700" id="q1-text">
         Question 1
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q1-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="jee">
 <div class="space-y-2">
-<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 2</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q2-text">
+<span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[JEE Main (AIEEE)]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-pink-700" id="q2-text">
         Question 2
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q2-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="cbse">
 <div class="space-y-2">
-<span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 3</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q3-text">
+<span class="inline-block bg-emerald-50 text-emerald-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[School Board PYQ]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-emerald-700" id="q3-text">
         Question 3
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
 <p class="hidden text-[10px] mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2 rounded-lg border border-slate-100" id="q3-feedback"></p>
 </div>
 </div>
-<div class="bg-white border border-slate-200 rounded-xl p-3.5 hover:border-indigo-300 hover:shadow-md transition-all shadow-sm">
+<div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer shadow-sm" data-category="neet">
 <div class="space-y-2">
-<span class="inline-block bg-rose-50 text-rose-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">Question 4</span>
-<h4 class="text-xs font-bold text-slate-800 leading-snug" id="q4-text">
+<span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[NEET 2018]</span>
+<h4 class="text-xs font-bold text-slate-800 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.03] group-hover:text-amber-700" id="q4-text">
         Question 4
       </h4>
 <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
@@ -321,6 +323,13 @@ const vivaData = {
     ]
   }
 };
+const colorsMap = {
+  q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+  q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+  q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+  q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+};
+
 function renderQuestions() {
   const scoreLabel = document.getElementById('viva-score');
   
@@ -342,25 +351,28 @@ function renderQuestions() {
     data.options.forEach((opt, idx) => {
       // Build Button
       const btn = document.createElement('button');
-      btn.className = "text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white hover:bg-slate-50 border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2";
+      btn.className = `text-left p-3 rounded-lg text-[11px] transition-all border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
       
       // Add A, B, C, D labels
       let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
-      btn.innerHTML = `<span class="font-extrabold text-indigo-500 w-4">${letter}</span> <span>${opt.text}</span>`;
+      btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
       
       // Click Logic
       btn.addEventListener('click', () => {
         if (appState.answers[qKey] !== null) return; // Prevent double answering
         
         appState.answers[qKey] = idx;
-        if (opt.isCorrect) appState.vivaScore++;
+        if (opt.isCorrect) {
+          appState.vivaScore++;
+          try { triggerConfetti(); } catch(e) {}
+        }
         if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
         
         // Style all buttons post-click
         const buttons = optionsContainer.querySelectorAll('button');
         buttons.forEach((b, i) => {
           b.disabled = true;
-          b.classList.remove('bg-white', 'hover:bg-slate-50', 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+          b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
           b.classList.add('cursor-not-allowed', 'shadow-none');
           
           if (appState.answers[qKey] === i) {
@@ -379,6 +391,7 @@ function renderQuestions() {
         // Show Feedback
         feedbackContainer.textContent = opt.exp;
         feedbackContainer.classList.remove('hidden');
+        if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
       });
       optionsContainer.appendChild(btn);
     });
@@ -391,11 +404,6 @@ function renderQuestions() {
     // UI Elements
     const slVolt = document.getElementById('sl-voltage');
     const lblVolt = document.getElementById('lbl-voltage');
-    const slR1 = document.getElementById('sl-r1');
-    const lblR1 = document.getElementById('lbl-r1');
-    const slR2 = document.getElementById('sl-r2');
-    const lblR2 = document.getElementById('lbl-r2');
-    
     const btnSeries = document.getElementById('btn-series');
     const btnParallel = document.getElementById('btn-parallel');
     const chkElectrons = document.getElementById('chk-electrons');
@@ -406,39 +414,121 @@ function renderQuestions() {
 
     const telReq = document.getElementById('tel-req');
     const telItotal = document.getElementById('tel-itotal');
-    
-    const lblSub1 = document.getElementById('lbl-sub1');
-    const telSub1 = document.getElementById('tel-sub1');
-    const lblSub2 = document.getElementById('lbl-sub2');
-    const telSub2 = document.getElementById('tel-sub2');
 
-    // State Variables
+    const btnAddResistor = document.getElementById('btn-add-resistor');
+    const btnRemoveResistor = document.getElementById('btn-remove-resistor');
+    const lblBranchTitle = document.getElementById('lbl-branch-title');
+    const lblBranchCount = document.getElementById('lbl-branch-count');
+    const resistorsControlContainer = document.getElementById('resistors-control-container');
+    const subTelemetryContainer = document.getElementById('sub-telemetry-container');
+
+    // Dynamic State Variables
+    let circuitResistors = [
+      { id: 1, val: 10, theme: 'amber', color: '#f59e0b' },
+      { id: 2, val: 10, theme: 'emerald', color: '#10b981' }
+    ];
+    const themesList = [
+      { theme: 'amber', color: '#f59e0b' },
+      { theme: 'emerald', color: '#10b981' },
+      { theme: 'rose', color: '#f43f5e' },
+      { theme: 'cyan', color: '#06b6d4' }
+    ];
+
     let mode = 'series'; // 'series' or 'parallel'
-    let V = 12.0;
-    let R1 = 10;
-    let R2 = 10;
-    
     let Req = 20;
     let Itotal = 0.6;
-    let V1 = 6, V2 = 6; // Series drops
-    let I1 = 1.2, I2 = 1.2; // Parallel branches
 
     // Particles for animation
-    // Define simple path definitions based on 0-1 offset
     let particles = [];
     
     function initParticles() {
         particles = [];
-        // Spawn 40 particles
-        for(let i=0; i<40; i++) {
-            // For parallel, randomly assign to branch 1 or 2 based on current ratio
-            let branch = 1;
-            if (mode === 'parallel') {
-                let r = Math.random();
-                // I1 and I2 calculated later, but assume equal initially for spawn distribution
-                if (r > 0.5) branch = 2;
+        const n = circuitResistors.length;
+        let V = parseFloat(slVolt.value);
+        
+        let currents = [];
+        let totalC = 0;
+        circuitResistors.forEach(res => {
+            let I = res.val > 0 ? V / res.val : 0;
+            currents.push(I);
+            totalC += I;
+        });
+
+        for (let i = 0; i < 40; i++) {
+            let branchIdx = 0;
+            if (mode === 'parallel' && totalC > 0) {
+                let r = Math.random() * totalC;
+                let runningSum = 0;
+                for (let j = 0; j < n; j++) {
+                    runningSum += currents[j];
+                    if (r <= runningSum) {
+                        branchIdx = j;
+                        break;
+                    }
+                }
             }
-            particles.push({ offset: Math.random(), branch: branch });
+            particles.push({ offset: Math.random(), branch: branchIdx });
+        }
+    }
+
+    function renderSliders() {
+        resistorsControlContainer.innerHTML = '';
+        circuitResistors.forEach((res, index) => {
+            const card = document.createElement('div');
+            card.className = `bg-white p-4 rounded-xl border border-${res.theme}-200 shadow-sm transition-colors duration-300`;
+            card.innerHTML = `
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-${res.theme === 'rose' ? 'rose-500' : res.theme === 'cyan' ? 'cyan-400' : res.theme + '-400'} block"></span> 
+                  <span class="uppercase text-${res.theme}-600">Resistor ${index + 1} ($R_{${index + 1}}$)</span>
+                </span>
+                <span class="font-mono text-${res.theme}-600 text-sm" id="lbl-r${index + 1}">${res.val} Ω</span>
+              </div>
+              <input class="w-full mt-2 slider-${res.theme}" id="sl-r${index + 1}" max="100" min="1" step="1" type="range" value="${res.val}"/>
+              <div class="flex justify-between text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
+                <span>1 Ω</span>
+                <span>100 Ω</span>
+              </div>
+            `;
+            resistorsControlContainer.appendChild(card);
+            
+            const slider = card.querySelector('input[type="range"]');
+            const label = card.querySelector(`#lbl-r${index + 1}`);
+            slider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value);
+                res.val = val;
+                label.innerText = `${val} Ω`;
+                calculatePhysics();
+            });
+        });
+        
+        if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+            MathJax.typesetPromise([resistorsControlContainer]).catch(err => console.log(err));
+        }
+    }
+
+    function updateMathJaxFormula() {
+        const n = circuitResistors.length;
+        if (mode === 'series') {
+            eqDesc.innerText = "In Series, resistance is purely additive.";
+            let terms = [];
+            for (let i = 1; i <= n; i++) terms.push(`R_${i}`);
+            eqMath.innerHTML = `$$R_{eq} = ${terms.join(' + ')}$$`;
+        } else {
+            eqDesc.innerText = "In Parallel, total resistance is lower than the lowest branch.";
+            if (n === 1) {
+                eqMath.innerHTML = `$$R_{eq} = R_1$$`;
+            } else if (n === 2) {
+                eqMath.innerHTML = `$$R_{eq} = \\frac{R_1 \\cdot R_2}{R_1 + R_2}$$`;
+            } else {
+                let terms = [];
+                for (let i = 1; i <= n; i++) terms.push(`\\frac{1}{R_${i}}`);
+                eqMath.innerHTML = `$$\\frac{1}{R_{eq}} = ${terms.join(' + ')}$$`;
+            }
+        }
+
+        if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+            MathJax.typesetPromise([eqMath]).catch((err) => console.log(err));
         }
     }
 
@@ -448,39 +538,24 @@ function renderQuestions() {
             btnSeries.className = "px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded transition-all shadow-sm";
             btnParallel.className = "px-4 py-1.5 ml-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
             
-            eqMath.innerHTML = "$$R_{eq} = R_1 + R_2$$";
-            eqDesc.innerText = "In Series, resistance is purely additive.";
             canvasHud.innerText = "Schematic: Series Topology";
             canvasHud.className = "text-[10px] font-bold text-indigo-400 tracking-wider uppercase";
 
-            lblSub1.innerText = "Voltage Drop ($V_1$)";
-            lblSub2.innerText = "Voltage Drop ($V_2$)";
+            lblBranchTitle.innerText = "Circuit Resistors";
+            lblBranchCount.innerText = `${circuitResistors.length} Resistors`;
         } else {
             btnParallel.className = "px-4 py-1.5 ml-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded transition-all shadow-sm";
             btnSeries.className = "px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded transition-all shadow-sm";
             
-            eqMath.innerHTML = "$$R_{eq} = \\frac{R_1 \\cdot R_2}{R_1 + R_2}$$";
-            eqDesc.innerText = "In Parallel, total resistance is lower than the lowest branch.";
             canvasHud.innerText = "Schematic: Parallel Topology";
             canvasHud.className = "text-[10px] font-bold text-emerald-400 tracking-wider uppercase";
 
-            lblSub1.innerText = "Branch Current ($I_1$)";
-            lblSub2.innerText = "Branch Current ($I_2$)";
-        }
-        
-        if (window.MathJax) {
-            MathJax.typesetPromise([eqMath]).catch((err) => console.log(err));
+            lblBranchTitle.innerText = "Parallel Branches";
+            lblBranchCount.innerText = `${circuitResistors.length} Branches`;
         }
 
-        // Re-distribute particles for parallel branches
-        particles.forEach(p => {
-            if (mode === 'parallel') {
-                p.branch = Math.random() < (I1 / Itotal) ? 1 : 2;
-            } else {
-                p.branch = 1; // Series only has 1 path
-            }
-        });
-
+        updateMathJaxFormula();
+        initParticles();
         calculatePhysics();
     }
 
@@ -488,44 +563,84 @@ function renderQuestions() {
     btnParallel.addEventListener('click', () => setMode('parallel'));
 
     function calculatePhysics() {
-        if (mode === 'series') {
-            Req = R1 + R2;
-            Itotal = V / Req;
-            V1 = Itotal * R1;
-            V2 = Itotal * R2;
-            
-            telSub1.innerText = `${V1.toFixed(1)} V`;
-            telSub2.innerText = `${V2.toFixed(1)} V`;
-        } else {
-            Req = (R1 * R2) / (R1 + R2);
-            Itotal = V / Req;
-            I1 = V / R1;
-            I2 = V / R2;
+        let V = parseFloat(slVolt.value);
+        lblVolt.innerText = `${V.toFixed(1)} V`;
 
-            telSub1.innerText = `${I1.toFixed(2)} A`;
-            telSub2.innerText = `${I2.toFixed(2)} A`;
+        if (mode === 'series') {
+            Req = circuitResistors.reduce((sum, res) => sum + res.val, 0);
+            Itotal = Req > 0 ? V / Req : 0;
+        } else {
+            let invSum = circuitResistors.reduce((sum, res) => sum + (1 / res.val), 0);
+            Req = invSum > 0 ? 1 / invSum : 0;
+            Itotal = Req > 0 ? V / Req : 0;
         }
 
         telReq.innerText = `${Req.toFixed(1)} Ω`;
         telItotal.innerText = `${Itotal.toFixed(2)} A`;
+
+        subTelemetryContainer.innerHTML = '';
+        circuitResistors.forEach((res, index) => {
+            const card = document.createElement('div');
+            const isLastOfOdd = (circuitResistors.length % 2 !== 0) && (index === circuitResistors.length - 1);
+            const spanClass = isLastOfOdd ? 'col-span-2' : 'col-span-1';
+            
+            card.className = `${spanClass} p-3 rounded-xl border border-${res.theme}-200 shadow-sm flex flex-col justify-center items-center transition-all bg-${res.theme}-50/50`;
+            
+            let name, valText;
+            if (mode === 'series') {
+                name = `Voltage Drop ($V_{${index + 1}}$)`;
+                let Vi = Itotal * res.val;
+                valText = `${Vi.toFixed(1)} V`;
+            } else {
+                name = `Branch Current ($I_{${index + 1}}$)`;
+                let Ii = res.val > 0 ? V / res.val : 0;
+                valText = `${Ii.toFixed(2)} A`;
+            }
+
+            card.innerHTML = `
+              <div class="text-[8px] text-${res.theme}-700 font-bold uppercase tracking-wider mb-0.5">${name}</div>
+              <div class="text-sm font-bold font-mono text-${res.theme}-600">${valText}</div>
+            `;
+            subTelemetryContainer.appendChild(card);
+        });
+
+        if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+            MathJax.typesetPromise([subTelemetryContainer]).catch(err => console.log(err));
+        }
     }
 
-    slVolt.addEventListener('input', e => {
-        V = parseFloat(e.target.value);
-        lblVolt.innerText = `${V.toFixed(1)} V`;
+    slVolt.addEventListener('input', () => {
         calculatePhysics();
     });
 
-    slR1.addEventListener('input', e => {
-        R1 = parseInt(e.target.value);
-        lblR1.innerText = `${R1} Ω`;
-        calculatePhysics();
+    btnAddResistor.addEventListener('click', () => {
+        const n = circuitResistors.length;
+        if (n < 4) {
+            const nextTheme = themesList[n];
+            circuitResistors.push({
+                id: n + 1,
+                val: 10,
+                theme: nextTheme.theme,
+                color: nextTheme.color
+            });
+            lblBranchCount.innerText = mode === 'series' ? `${circuitResistors.length} Resistors` : `${circuitResistors.length} Branches`;
+            renderSliders();
+            updateMathJaxFormula();
+            initParticles();
+            calculatePhysics();
+        }
     });
 
-    slR2.addEventListener('input', e => {
-        R2 = parseInt(e.target.value);
-        lblR2.innerText = `${R2} Ω`;
-        calculatePhysics();
+    btnRemoveResistor.addEventListener('click', () => {
+        const n = circuitResistors.length;
+        if (n > 1) {
+            circuitResistors.pop();
+            lblBranchCount.innerText = mode === 'series' ? `${circuitResistors.length} Resistors` : `${circuitResistors.length} Branches`;
+            renderSliders();
+            updateMathJaxFormula();
+            initParticles();
+            calculatePhysics();
+        }
     });
 
     // --- CANVAS RENDERING ---
@@ -558,9 +673,9 @@ function renderQuestions() {
         return pathNodes[pathNodes.length-1]; // Failsafe
     }
 
-    function drawResistor(ctx, x, y, width, height, isVertical=false) {
-        ctx.strokeStyle = '#fbbf24'; // Amber
-        ctx.lineWidth = 3;
+    function drawResistor(ctx, x, y, width, height, color, label, isVertical=false) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3.5;
         ctx.lineJoin = 'round';
         ctx.beginPath();
         
@@ -573,7 +688,7 @@ function renderQuestions() {
             for(let i=1; i<=segments; i++) {
                 let nx = x + (i%2===0 ? -amp : amp);
                 let ny = (y - height/2) + i*step;
-                if(i===segments) nx = x; // end in center
+                if(i===segments) nx = x;
                 ctx.lineTo(nx, ny);
             }
         } else {
@@ -581,11 +696,16 @@ function renderQuestions() {
             for(let i=1; i<=segments; i++) {
                 let nx = (x - width/2) + i*step;
                 let ny = y + (i%2===0 ? -amp : amp);
-                if(i===segments) ny = y; // end in center
+                if(i===segments) ny = y;
                 ctx.lineTo(nx, ny);
             }
         }
         ctx.stroke();
+
+        ctx.fillStyle = color;
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x, y - height/2 - 10);
     }
 
     function renderCircuit() {
@@ -616,129 +736,246 @@ function renderQuestions() {
       ctx.lineWidth = 4;
       
       let pathSeries = [];
-      let pathPar1 = [];
-      let pathPar2 = [];
+      let parallelPaths = [];
+      const n = circuitResistors.length;
+      const R_width = 70;
+      const R_height = 16;
 
       if (mode === 'series') {
-          // Wiring
           ctx.beginPath();
           ctx.moveTo(cx + 20, botY);
           ctx.lineTo(rightX, botY); ctx.lineTo(rightX, topY);
-          ctx.lineTo(cx + 40, topY); // to R2
-          ctx.moveTo(cx - 40, topY); ctx.lineTo(cx - 60, topY); // between R2 and R1
-          ctx.moveTo(cx - 140, topY); // from R1
-          ctx.lineTo(leftX, topY); ctx.lineTo(leftX, botY);
-          ctx.lineTo(cx - 20, botY);
+          
+          ctx.moveTo(cx - 20, botY);
+          ctx.lineTo(leftX, botY); ctx.lineTo(leftX, topY);
           ctx.stroke();
 
-          // Resistors
-          drawResistor(ctx, cx + 80, topY, 80, 20, false); // R2
-          drawResistor(ctx, cx - 100, topY, 80, 20, false); // R1
+          let W = rightX - leftX;
+          let segment_w = W / n;
+          
+          let lastX = leftX;
+          for (let i = 0; i < n; i++) {
+              let res = circuitResistors[i];
+              let rx = leftX + segment_w * (i + 0.5);
+              
+              ctx.strokeStyle = '#475569';
+              ctx.lineWidth = 4;
+              ctx.beginPath();
+              ctx.moveTo(lastX, topY);
+              ctx.lineTo(rx - R_width/2, topY);
+              ctx.stroke();
+              
+              drawResistor(ctx, rx, topY, R_width, R_height, res.color, `R${i+1} (${res.val}Ω)`);
+              
+              lastX = rx + R_width/2;
+          }
+          
+          ctx.strokeStyle = '#475569';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(lastX, topY);
+          ctx.lineTo(rightX, topY);
+          ctx.stroke();
 
-          // Labels
-          ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
-          ctx.fillText("R1", cx - 100, topY - 25);
-          ctx.fillStyle = '#10b981';
-          ctx.fillText("R2", cx + 80, topY - 25);
-
-          // Path for particles (counter clockwise from positive right terminal to left negative)
           pathSeries = [
               {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: topY},
               {x: leftX, y: topY}, {x: leftX, y: botY}, {x: cx-20, y: botY}
           ];
 
       } else {
-          // Parallel Wiring
+          let lowY = botY - 80;
+          let y_coords = [];
+          if (n === 1) {
+              y_coords = [midY];
+          } else {
+              for (let j = 0; j < n; j++) {
+                  y_coords.push(topY + ((lowY - topY) / (n - 1)) * j);
+              }
+          }
+
+          let busY0 = y_coords[0];
+          let busY1 = y_coords[y_coords.length - 1];
+
+          ctx.strokeStyle = '#475569';
+          ctx.lineWidth = 4;
+
           ctx.beginPath();
-          // Battery to right junction
-          ctx.moveTo(cx + 20, botY); ctx.lineTo(rightX, botY); ctx.lineTo(rightX, midY);
-          // Right junction up to R1, left through R1 to left junction
-          ctx.moveTo(rightX, midY); ctx.lineTo(rightX, topY); ctx.lineTo(cx + 40, topY);
-          ctx.moveTo(cx - 40, topY); ctx.lineTo(leftX, topY); ctx.lineTo(leftX, midY);
-          // Right junction left through R2 to left junction
-          ctx.moveTo(rightX, midY); ctx.lineTo(cx + 40, midY);
-          ctx.moveTo(cx - 40, midY); ctx.lineTo(leftX, midY);
-          // Left junction to battery
-          ctx.moveTo(leftX, midY); ctx.lineTo(leftX, botY); ctx.lineTo(cx - 20, botY);
+          ctx.moveTo(cx + 20, botY);
+          ctx.lineTo(rightX, botY);
+          ctx.lineTo(rightX, busY1);
           
-          // Draw Junction Dots
-          ctx.fillStyle = '#475569';
-          ctx.arc(rightX, midY, 6, 0, Math.PI*2); ctx.fill();
-          ctx.beginPath(); ctx.arc(leftX, midY, 6, 0, Math.PI*2); ctx.fill();
+          ctx.moveTo(cx - 20, botY);
+          ctx.lineTo(leftX, botY);
+          ctx.lineTo(leftX, busY1);
           ctx.stroke();
 
-          // Resistors
-          drawResistor(ctx, cx, topY, 80, 20, false); // R1 (Top)
-          drawResistor(ctx, cx, midY, 80, 20, false); // R2 (Middle)
+          if (n > 1) {
+              ctx.beginPath();
+              ctx.moveTo(leftX, busY0);
+              ctx.lineTo(leftX, busY1);
+              ctx.moveTo(rightX, busY0);
+              ctx.lineTo(rightX, busY1);
+              ctx.stroke();
+          }
 
-          // Labels
-          ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
-          ctx.fillText("R1", cx, topY - 25);
-          ctx.fillStyle = '#10b981';
-          ctx.fillText("R2", cx, midY - 25);
+          for (let j = 0; j < n; j++) {
+              let res = circuitResistors[j];
+              let y = y_coords[j];
 
-          pathPar1 = [
-              {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: topY},
-              {x: leftX, y: topY}, {x: leftX, y: botY}, {x: cx-20, y: botY}
-          ];
-          pathPar2 = [
-              {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: midY},
-              {x: leftX, y: midY}, {x: leftX, y: botY}, {x: cx-20, y: botY}
-          ];
+              ctx.strokeStyle = '#475569';
+              ctx.lineWidth = 4;
+              ctx.beginPath();
+              ctx.moveTo(leftX, y);
+              ctx.lineTo(cx - R_width/2, y);
+              ctx.moveTo(cx + R_width/2, y);
+              ctx.lineTo(rightX, y);
+              ctx.stroke();
+
+              drawResistor(ctx, cx, y, R_width, R_height, res.color, `R${j+1} (${res.val}Ω)`);
+
+              if (n > 1) {
+                  ctx.fillStyle = '#475569';
+                  ctx.beginPath(); ctx.arc(leftX, y, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                  ctx.beginPath(); ctx.arc(rightX, y, 6, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+              }
+
+              parallelPaths.push([
+                  {x: cx+20, y: botY}, {x: rightX, y: botY}, {x: rightX, y: y},
+                  {x: leftX, y: y}, {x: leftX, y: botY}, {x: cx-20, y: botY}
+              ]);
+          }
       }
 
       // Battery
-      ctx.fillStyle = '#0f172a'; ctx.fillRect(cx - 30, botY - 20, 60, 40); // wipe wire behind
-      ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4; // Blue
-      ctx.beginPath(); ctx.moveTo(cx - 15, botY - 15); ctx.lineTo(cx - 15, botY + 15); ctx.stroke(); // short (-)
-      ctx.beginPath(); ctx.moveTo(cx + 15, botY - 25); ctx.lineTo(cx + 15, botY + 25); ctx.stroke(); // long (+)
+      ctx.fillStyle = '#0f172a'; ctx.fillRect(cx - 30, botY - 20, 60, 40);
+      ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(cx - 15, botY - 15); ctx.lineTo(cx - 15, botY + 15); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx + 15, botY - 25); ctx.lineTo(cx + 15, botY + 25); ctx.stroke();
       ctx.fillStyle = '#3b82f6'; ctx.font = '14px monospace'; ctx.fillText("+", cx + 25, botY - 15);
       ctx.fillText("-", cx - 25, botY - 15);
       ctx.fillText("V", cx, botY + 40);
 
       // --- Electron Animation ---
+      let V = parseFloat(slVolt.value);
       if (chkElectrons.checked && V > 0) {
-          
           let baseSpeed = 0.005;
 
           particles.forEach(p => {
-              // Calculate specific speed
               let speed = 0;
               if (mode === 'series') {
                   speed = baseSpeed * Itotal;
+                  p.offset += speed;
+                  if (p.offset >= 1) p.offset -= 1;
+                  
+                  let pos = getPathPos(p.offset, pathSeries);
+                  ctx.fillStyle = '#38bdf8';
+                  ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 6;
+                  ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
+                  ctx.shadowBlur = 0;
               } else {
-                  // In parallel, speed along the branch depends on the current in that branch
-                  // To keep things visually intuitive, we scale speed.
-                  speed = baseSpeed * (p.branch === 1 ? I1 : I2);
-                  // Ensure minimum speed so they don't stall completely if R is high
-                  speed = Math.max(speed, 0.001); 
-              }
-
-              p.offset += speed;
-
-              // If particle completes a loop, re-assign branch randomly for parallel
-              if (p.offset >= 1) {
-                  p.offset -= 1;
-                  if (mode === 'parallel') {
-                      // Probability of going to branch 1 is I1 / Itotal
-                      let prob1 = I1 / Itotal;
-                      p.branch = Math.random() < prob1 ? 1 : 2;
+                  if (p.branch >= n) {
+                      p.branch = Math.floor(Math.random() * n);
                   }
+                  
+                  let res = circuitResistors[p.branch];
+                  let I_branch = res.val > 0 ? V / res.val : 0;
+                  speed = baseSpeed * I_branch;
+                  speed = Math.max(speed, 0.001);
+
+                  p.offset += speed;
+                  if (p.offset >= 1) {
+                      p.offset -= 1;
+                      let currents = circuitResistors.map(r => r.val > 0 ? V / r.val : 0);
+                      let totalC = currents.reduce((a, b) => a + b, 0);
+                      if (totalC > 0) {
+                          let r = Math.random() * totalC;
+                          let runningSum = 0;
+                          for (let j = 0; j < n; j++) {
+                              runningSum += currents[j];
+                              if (r <= runningSum) {
+                                  p.branch = j;
+                                  break;
+                              }
+                          }
+                      } else {
+                          p.branch = 0;
+                      }
+                  }
+
+                  let pos = getPathPos(p.offset, parallelPaths[p.branch]);
+                  ctx.fillStyle = '#38bdf8';
+                  ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 6;
+                  ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
+                  ctx.shadowBlur = 0;
               }
-
-              let pos;
-              if (mode === 'series') pos = getPathPos(p.offset, pathSeries);
-              else if (p.branch === 1) pos = getPathPos(p.offset, pathPar1);
-              else pos = getPathPos(p.offset, pathPar2);
-
-              ctx.fillStyle = '#38bdf8'; // Cyan
-              ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 6;
-              ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI*2); ctx.fill();
-              ctx.shadowBlur = 0;
           });
       }
 
       requestAnimationFrame(renderCircuit);
+    }
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    // --- Category Filter Handler ---
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
     }
 
     // --- Boot Sequence ---
@@ -751,6 +988,7 @@ function renderQuestions() {
       document.getElementById('btn-close-guide').addEventListener('click', closeGuide);
       document.getElementById('btn-close-guide-confirm').addEventListener('click', closeGuide);
 
+      renderSliders();
       setMode('series');
       initParticles();
       requestAnimationFrame(renderCircuit);

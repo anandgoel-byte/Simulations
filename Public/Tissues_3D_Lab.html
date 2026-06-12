@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>3D Plant & Animal Tissues Histology Laboratory</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  
+  <!-- Three.js and OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      background: #e2e8f0;
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -5px;
+      background-color: #6366f1;
+      border-radius: 9999px;
+      height: 16px;
+      width: 16px;
+      transition: all 0.15s ease-in-out;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background-color: #4f46e5;
+      transform: scale(1.15);
+    }
+    /* Custom Scrollbar */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .lab-stage {
+      background-color: #000000 !important;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+<div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+  
+  <!-- Header -->
+  <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800">
+    <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+      <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 flex items-center justify-center">
+        <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+      </div>
+      <div>
+        <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Plant & Animal Tissues Histology Laboratory</h1>
+        <p class="text-[11px] text-indigo-400 font-medium tracking-wider uppercase">3D WebGL Cellular Anatomy Workbench</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-all flex items-center gap-1.5" id="btn-open-guide">
+        <span>📘</span> Laboratory Guide
+      </button>
+      <button class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5" id="btn-reset">
+        <span>🔄</span> Reset Simulation
+      </button>
+    </div>
+  </header>
+
+  <!-- Controls Bar -->
+  <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center space-x-2">
+      <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mr-2">Jump to Tissue:</span>
+      <select class="bg-white border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-4 py-1.5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm" id="select-tissue-type">
+        <optgroup label="Simple Permanent Tissues (Plant)">
+          <option value="parenchyma" selected>Parenchyma (Living Packing)</option>
+          <option value="collenchyma">Collenchyma (Flexible Support)</option>
+          <option value="sclerenchyma">Sclerenchyma (Dead Fibers)</option>
+        </optgroup>
+        <optgroup label="Complex Permanent Tissues (Plant)">
+          <option value="xylem">Xylem (Water Vessels)</option>
+          <option value="phloem">Phloem (Sieve Tubes)</option>
+        </optgroup>
+        <optgroup label="Epithelial Tissues (Animal)">
+          <option value="squamous">Simple Squamous Epithelium</option>
+          <option value="cuboidal">Simple Cuboidal Epithelium</option>
+          <option value="columnar">Simple Columnar Epithelium</option>
+          <option value="stratified">Stratified Squamous Epithelium</option>
+        </optgroup>
+      </select>
+      
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer ml-2" id="btn-toggle-left">
+        <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+      </button>
+      <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+        <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+      </button>
+    </div>
+    
+    <div class="flex flex-wrap items-center gap-4">
+      <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-nucleus" type="checkbox"/>
+        <span>Highlight Nuclei</span>
+      </label>
+      <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-flow" type="checkbox"/>
+        <span>Show Flow Particles</span>
+      </label>
+      <label class="flex items-center space-x-2 text-sm font-semibold text-slate-700 cursor-pointer">
+        <input checked="" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5" id="chk-rotate" type="checkbox"/>
+        <span>Auto-Rotation</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Layout Grid -->
+  <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[600px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+    
+    <!-- Left Controls Panel -->
+    <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[760px] viva-scrollbar">
+      <div class="space-y-5">
+        
+        <!-- Tab Selector -->
+        <div>
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">Workspace View</span>
+          <div class="flex bg-slate-200/80 p-1 rounded-xl border border-slate-300 w-full">
+            <button class="flex-1 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm" id="tab-sandbox">
+              ⚛️ 3D Sandbox View
+            </button>
+            <button class="flex-1 px-3.5 py-2 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950" id="tab-analogies">
+              🎨 Analogy Map
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Tissue Parameters -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4" id="pnl-tissue-parameters">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Tissue Parameters</span>
+          <div id="dynamic-sliders-container" class="space-y-3">
+            <!-- Sliders will be injected here dynamically by JavaScript -->
+          </div>
+        </div>
+
+        <!-- 3D Stage Settings -->
+        <div class="space-y-4 border-b border-slate-200 pb-4">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Viewport Controls</span>
+          
+          <div class="bg-white p-3.5 rounded-xl border border-indigo-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="uppercase">Auto-Rotation Speed</span>
+              <span class="font-mono text-indigo-600 text-sm font-bold" id="lbl-rotate-speed">1.0x</span>
+            </div>
+            <input class="w-full mt-2" id="sl-rotate-speed" max="3" min="0" step="0.1" type="range" value="1"/>
+          </div>
+
+          <div class="bg-white p-3.5 rounded-xl border border-indigo-200 shadow-sm">
+            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+              <span class="uppercase">Cytosol Lighting Intensity</span>
+              <span class="font-mono text-indigo-600 text-sm font-bold" id="lbl-light-intensity">1.0</span>
+            </div>
+            <input class="w-full mt-2" id="sl-light-intensity" max="2" min="0.2" step="0.1" type="range" value="1"/>
+          </div>
+        </div>
+
+        <!-- Detail Card -->
+        <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200 shadow-sm" id="pnl-details">
+          <span class="text-[9px] font-extrabold text-indigo-600 uppercase tracking-widest block mb-0.5" id="lbl-nickname">Living Packing Tissue</span>
+          <h2 class="text-base font-bold text-slate-900 leading-tight mb-2" id="lbl-tissue-name">Parenchyma</h2>
+          <p class="text-xs text-slate-600 leading-relaxed font-semibold mb-3" id="lbl-description">
+            Living, relatively unspecialized cells with thin cellulose walls. They are loosely packed, leaving large intercellular spaces, and are used for storage and photosynthesis.
+          </p>
+          <div class="bg-white p-3 rounded-lg border border-indigo-100 shadow-xs mb-3">
+            <span class="text-[9px] font-extrabold text-indigo-500 uppercase tracking-wider block mb-1">NEET High-Yield Fact</span>
+            <p class="text-[10px] text-slate-700 leading-normal font-bold italic" id="lbl-neet-fact">
+              Parenchyma cells form the bulk of plant organs (ground tissue). When they contain chlorophyll, they are termed chlorenchyma (perform photosynthesis). In aquatic plants, large air cavities make them aerenchyma, providing buoyancy.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[10px]">
+            <div class="bg-indigo-100/40 p-2 rounded border border-indigo-200/40 font-bold">
+              <span class="text-slate-400 block uppercase text-[8px] mb-0.5">Living/Dead Status</span>
+              <span class="text-indigo-800" id="lbl-stat-status">Living</span>
+            </div>
+            <div class="bg-indigo-100/40 p-2 rounded border border-indigo-200/40 font-bold">
+              <span class="text-slate-400 block uppercase text-[8px] mb-0.5">Cell Wall Material</span>
+              <span class="text-indigo-800" id="lbl-stat-wall">Thin Cellulose</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Structure Inspector (Interactive Hotspots Info) -->
+        <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-700 shadow-sm transition-all" id="pnl-hotspot-inspector">
+          <span class="text-[9px] font-extrabold text-emerald-400 uppercase tracking-widest block mb-0.5">3D Structure Inspector</span>
+          <h3 class="text-xs font-bold text-slate-100 mb-1" id="lbl-hotspot-name">Anatomical Hotspots</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed" id="lbl-hotspot-desc">
+            Click any pulsing green 3D label badge directly on the canvas to inspect its histology, compositions, and anatomical specifications.
+          </p>
+          <p class="hidden text-[10px] text-indigo-300 leading-relaxed font-semibold italic mt-2 pt-2 border-t border-slate-800" id="lbl-hotspot-fact"></p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Canvas Simulation Stage -->
+    <section id="canvas-container-wrapper" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[580px]">
+      
+      <!-- 3D Sandbox Container -->
+      <div class="absolute inset-0 w-full h-full block" id="view-sandbox-panel">
+        <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center justify-center pointer-events-none select-none z-10">
+          <span class="text-[9px] font-bold tracking-widest text-emerald-400 uppercase">3D HISTOLOGY PROJECTION SPACE</span>
+        </div>
+        
+        <div class="absolute inset-0 w-full h-full z-0 cursor-grab active:cursor-grabbing" id="three-container"></div>
+        <!-- Hotspot labels overlay container -->
+        <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden" id="hotspot-labels-overlay"></div>
+      </div>
+
+      <!-- Analogy Map Container -->
+      <div class="hidden absolute inset-0 w-full h-full bg-slate-900/95 p-6 flex flex-col gap-6 text-white overflow-y-auto z-10 viva-scrollbar" id="view-analogies-panel">
+        <div>
+          <h2 class="text-xl font-bold mb-2 text-purple-400">🎨 Tissue Functional Analogy Map</h2>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Tissues organize single cells into specialized cooperative structures, much like different sectors of a municipal infrastructure cooperating to run a community.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-indigo-400 tracking-wider">Parenchyma</span>
+              <h3 class="text-base font-bold text-slate-200 mt-1">Silos &amp; Green Spaces</h3>
+              <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                Parenchyma serves as food reserve silos (storage vacuoles) and local green spaces (photosynthesis chlorenchyma). They represent loosely packed storage depots.
+              </p>
+            </div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-amber-400 tracking-wider">Collenchyma &amp; Sclerenchyma</span>
+              <h3 class="text-base font-bold text-slate-200 mt-1">Flexible Cables &amp; Concrete Pillars</h3>
+              <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                **Collenchyma** resembles flexible steel suspension cables (bending without breaking, pectin reinforcement). **Sclerenchyma** represents structural concrete pillars (rigid, dead, lignified secondary coatings).
+              </p>
+            </div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-rose-400 tracking-wider">Xylem &amp; Phloem</span>
+              <h3 class="text-base font-bold text-slate-200 mt-1">Water Pipelines &amp; Transit Highways</h3>
+              <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                **Xylem** functions as the municipal water main pipes (one-way upward suction pull). **Phloem** represents the bidirectional shipping transport express highways (carrying manufactured sucrose food sheets).
+              </p>
+            </div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-pink-400 tracking-wider">Epithelium</span>
+              <h3 class="text-base font-bold text-slate-200 mt-1">City Boundary Walls &amp; Filters</h3>
+              <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                **Epithelial tissue** serves as city boundary walls (protective stratified squamous skin) and selective screening checkpoints (simple squamous paving tiles for diffusion).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zoom and Recenter Controls overlay -->
+      <div class="absolute top-4 right-4 bg-slate-900/80 backdrop-blur-md border border-slate-700 p-1.5 rounded-xl shadow-sm flex flex-col gap-1 z-20">
+        <button id="btn-zoom-in" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all">+</button>
+        <button id="btn-zoom-out" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all">-</button>
+        <button id="btn-recenter" class="w-7 h-7 flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all text-[9px]" title="Recenter Camera">RST</button>
+      </div>
+
+      <!-- Instruction Hint Overlay -->
+      <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700 shadow-sm flex items-center gap-2 max-w-sm pointer-events-none select-none z-20">
+        <span class="text-xs font-bold text-indigo-400 leading-tight">Click on any 3D cell structure or pulsing hotspot to zoom and display specs.</span>
+      </div>
+
+    </section>
+
+    <!-- Right MCQ Quiz Panel -->
+    <section id="viva-section" class="lg:col-span-3 flex flex-col bg-slate-50 p-5 space-y-4 max-h-[760px] overflow-y-auto viva-scrollbar">
+      
+      <!-- Score Indicator -->
+      <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+        <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+        <div class="flex justify-between items-center mt-0.5">
+          <h2 class="text-base font-bold">Conceptual Assessments</h2>
+          <span class="text-[13px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full" id="viva-score">Score: 0 / 4</span>
+        </div>
+      </div>
+
+      <!-- Category Selector -->
+      <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[10px] font-extrabold text-slate-500 tracking-wider uppercase">Category</span>
+          <select id="select-category" class="bg-slate-50 border border-slate-300 text-slate-700 text-xs font-bold rounded-lg px-2 py-1 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm">
+            <option value="all" selected>All Questions</option>
+            <option value="simple">Simple Permanent</option>
+            <option value="complex">Complex Permanent</option>
+            <option value="epithelial">Epithelial Tissue</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MCQ Question Cards -->
+      <div class="space-y-3 pb-4">
+        <!-- Q1 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="simple">
+          <div class="space-y-2">
+            <span class="inline-block bg-cyan-50 text-cyan-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Simple Permanent]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q1-text">
+              Pectin and cellulose thickenings deposited selectively at the corners of living elongated cells are characteristic of which tissue?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q1-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="complex">
+          <div class="space-y-2">
+            <span class="inline-block bg-pink-50 text-pink-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Complex Permanent]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q2-text">
+              The tubular cells of xylem that are elongated, have lignified walls, tapered ends, and are dead at maturity, but do NOT possess wide open vessel perforations are:
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q2-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-emerald-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="complex">
+          <div class="space-y-2">
+            <span class="inline-block bg-emerald-50 text-emerald-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Complex Permanent]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q3-text">
+              Which cells in the phloem tissue are specialized for translocation, lack nuclei at maturity, but remain metabolically coupled to companion cells?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q3-feedback"></p>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="epithelial">
+          <div class="space-y-2">
+            <span class="inline-block bg-amber-50 text-amber-700 text-xs font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Epithelial Tissue]</span>
+            <h4 class="text-sm font-bold text-slate-800 leading-snug" id="q4-text">
+              Which type of animal epithelial tissue is made of a single flat layer of polygonal tile-like paving cells, optimizing rapid chemical diffusion across alveoli?
+            </h4>
+            <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+            <p class="hidden text-xs mt-1.5 text-slate-500 italic font-bold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="q4-feedback"></p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<!-- Modal Study Guide -->
+<div class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" id="user-guide-modal">
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
+        <span class="inline-block text-sm mr-1.5 select-none leading-none">🌎</span> TISSUE ANATOMY LABORATORY GUIDE
+      </h3>
+      <button class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none" id="btn-close-guide">×</button>
+    </div>
+    <div class="space-y-4 text-xs text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+      <p>Welcome to the <strong>Plant & Animal Tissues Virtual Laboratory</strong>! This histology sandbox lets you visualize structural setups of tissues on a cellular level.</p>
+      
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-indigo-600">🧬 Plant vs Animal Tissues</h4>
+        <p>Use the drop-down selector to load various plant tissue layers (Parenchyma, Collenchyma, Sclerenchyma, Xylem, Phloem) and animal epithelia. Plant cells display rigid green borders and central vacuoles, while animal epithelia rest on a fibrous basement membrane layer.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-emerald-600">🖱️ 3D Actions & Hotspots</h4>
+        <p>Rotate the models in 3D using your mouse, and scroll/pinch to zoom. **Click on the pulsing green labels** directly in the 3D viewport to inspect detailed wall thickenings, sieve plates, or microvilli structures.</p>
+      </div>
+
+      <div class="space-y-2">
+        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-widest text-rose-600">📋 Sliders & Flow Particles</h4>
+        <p>Modify anatomical parameters using the sliders. For transport tissues (xylem and phloem), toggle **Show Flow Particles** to visualize transpiration pulls or sucrose translocations.</p>
+      </div>
+    </div>
+    <div class="pt-3 border-t border-slate-100 flex justify-end">
+      <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 text-xs rounded-xl shadow-md transition-all" id="btn-close-guide-confirm">Acknowledge</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- VIVA ASSESSMENT DATA ---
+  const appState = {
+    vivaScore: 0,
+    answers: { q1: null, q2: null, q3: null, q4: null }
+  };
+
+  const vivaData = {
+    q1: {
+      options: [
+        { text: "Collenchyma", isCorrect: true, exp: "Correct! **Collenchyma** consists of living, elongated cells with characteristic pectin and cellulose thickening deposited at the angles/corners. It provides mechanical flexibility." },
+        { text: "Parenchyma", isCorrect: false, exp: "Incorrect. Parenchyma cells have thin, uniform cellulose walls, not corner thickenings." },
+        { text: "Sclerenchyma", isCorrect: false, exp: "Incorrect. Sclerenchyma is dead at maturity and thickened uniformly with lignin, not pectin at corners." },
+        { text: "Xylem Vessels", isCorrect: false, exp: "Incorrect. Vessels are dead transport structures." }
+      ]
+    },
+    q2: {
+      options: [
+        { text: "Tracheids", isCorrect: true, exp: "Correct! **Tracheids** are elongated, tube-like dead cells with thick, lignified walls and tapering ends. They are the primary water-conducting elements in primitive plants (pteridophytes/gymnosperms) and lack perforated vessel plates." },
+        { text: "Xylem Vessels", isCorrect: false, exp: "Incorrect. Vessels have perforated end-plates and wide open lumens, rather than tapered closed ends." },
+        { text: "Sieve Tubes", isCorrect: false, exp: "Incorrect. Sieve tubes conduct food in phloem and are living cells." },
+        { text: "Xylem Fibres", isCorrect: false, exp: "Incorrect. Fibres are purely mechanical support elements and do not conduct water." }
+      ]
+    },
+    q3: {
+      options: [
+        { text: "Sieve Tube Elements", isCorrect: true, exp: "Correct! **Sieve Tube Elements** are living cells that lack a nucleus, ribosomes, and vacuoles at maturity. They rely on the adjacent **Companion Cells** connected via plasmodesmata for metabolic maintenance." },
+        { text: "Tracheids", isCorrect: false, exp: "Incorrect. Tracheids are dead cells with no cytoplasm at all." },
+        { text: "Phloem Parenchyma", isCorrect: false, exp: "Incorrect. Phloem parenchyma cells are typical living cells that retain their own nuclei." },
+        { text: "Sclereids", isCorrect: false, exp: "Incorrect. Sclereids are dead, heavily thickened sclerenchymatous cells." }
+      ]
+    },
+    q4: {
+      options: [
+        { text: "Simple Squamous Epithelium", isCorrect: true, exp: "Correct! **Simple Squamous Epithelium** consists of a single layer of thin, flat, tile-like polygonal cells. It forms paving-like barriers optimized for passive diffusion, such as in lung alveoli and blood capillaries." },
+        { text: "Simple Cuboidal Epithelium", isCorrect: false, exp: "Incorrect. Cuboidal cells are cube-shaped and carry out secretion and absorption (e.g. kidney tubules)." },
+        { text: "Simple Columnar Epithelium", isCorrect: false, exp: "Incorrect. Columnar cells are tall pillar-like structures." },
+        { text: "Stratified Squamous Epithelium", isCorrect: false, exp: "Incorrect. Stratified squamous consists of multiple stacked layers for protection against wear and tear." }
+      ]
+    }
+  };
+
+  const colorsMap = {
+    q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+    q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+    q3: { hoverBg: 'hover:bg-emerald-50', hoverBorder: 'hover:border-emerald-400', labelText: 'text-emerald-600' },
+    q4: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' }
+  };
+
+  function triggerConfetti() {
+    const container = document.body;
+    const colors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#06b6d4', '#a855f7'];
+    const numParticles = 60;
+    for (let i = 0; i < numParticles; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      const w = Math.random() * 8 + 5;
+      const h = Math.random() * 8 + 5;
+      confetti.style.width = `${w}px`;
+      confetti.style.height = `${h}px`;
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.zIndex = '9999';
+      confetti.style.pointerEvents = 'none';
+      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%';
+      
+      const fromLeft = i < numParticles / 2;
+      confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+      confetti.style.top = 'calc(100vh + 10px)';
+      
+      const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+      const velocity = Math.random() * 350 + 250;
+      
+      const dx = Math.cos(angle) * velocity;
+      const dy = -Math.sin(angle) * velocity;
+      const fallDuration = Math.random() * 1.5 + 1.5;
+      const spinRotation = Math.random() * 720 - 360;
+      
+      confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+      container.appendChild(confetti);
+      confetti.offsetHeight;
+      confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+      confetti.style.opacity = '0';
+      
+      setTimeout(() => { confetti.remove(); }, fallDuration * 1000);
+    }
+  }
+
+  function renderQuestions() {
+    const scoreLabel = document.getElementById('viva-score');
+    Object.keys(vivaData).forEach(qKey => {
+      const data = vivaData[qKey];
+      const optionsContainer = document.getElementById(`${qKey}-options`);
+      const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+      
+      if (!optionsContainer || !feedbackContainer) return;
+      optionsContainer.innerHTML = '';
+      
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `relative text-left p-2.5 rounded-lg text-xs transition border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+        let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+        btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+        
+        btn.addEventListener('click', () => {
+          if (appState.answers[qKey] !== null) return;
+          appState.answers[qKey] = idx;
+          if (opt.isCorrect) {
+            appState.vivaScore++;
+            triggerConfetti();
+          }
+          if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+          
+          const buttons = optionsContainer.querySelectorAll('button');
+          buttons.forEach((b, i) => {
+            b.disabled = true;
+            b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+            b.classList.add('cursor-not-allowed', 'shadow-none');
+            if (appState.answers[qKey] === i) {
+              if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+              else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+            } else if (data.options[i].isCorrect) {
+              b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+            } else {
+              b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+            }
+          });
+          feedbackContainer.innerHTML = opt.exp;
+          feedbackContainer.classList.remove('hidden');
+          if (window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+        });
+        optionsContainer.appendChild(btn);
+      });
+    });
+  }
+
+  // --- HISTOLOGY METADATA ---
+  const tissuesData = {
+    parenchyma: {
+      name: "Parenchyma",
+      nickname: "Living Ground Tissue",
+      description: "Cells with uniform thin cellulose walls, spherical shapes, large central vacuoles, and intercellular spaces. Functions in storage, photosynthesis, and secretion.",
+      neetFact: "Forms the bulk of ground tissue. Specialized as chlorenchyma (chloroplast-bearing) for carbon fixation, and aerenchyma (with massive intercellular air sacs) in aquatic plants for floatation.",
+      status: "Living cells",
+      wall: "Thin Cellulose primary wall",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    collenchyma: {
+      name: "Collenchyma",
+      nickname: "Flexible Tensile Support",
+      description: "Living cells showing characteristic pectin, cellulose, and hemicellulose thickened deposits concentrated at cell angles/corners. Oval or polygonal profiles.",
+      neetFact: "Discovered by Schleiden. Absent in monocot plants and roots. Provides mechanical elasticity and tensile strength to growing organs (like petioles and young herbaceous stems).",
+      status: "Living cells",
+      wall: "Selective Pectin & Cellulose corner depositions",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    sclerenchyma: {
+      name: "Sclerenchyma",
+      nickname: "Rigid Concrete Fibers",
+      description: "Dead, narrow, elongated fibers with uniformly thick, highly lignified secondary cell walls and narrow internal cavities. Pit channels connect adjacent cells.",
+      neetFact: "Provides static structural reinforcement. Divided into elongated Sclerenchyma Fibres and short, squarish Sclereids (stone cells, which give the gritty texture to pears and sapota fruits).",
+      status: "Dead at maturity",
+      wall: "Highly thickened, lignified secondary walls",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    xylem: {
+      name: "Xylem Vessels & Tracheids",
+      nickname: "Water Pipelines",
+      description: "Complex tissue specialized in water conduction. Includes long hollow vessels aligned end-to-end and tapered tracheids, showing annular or spiral lignin thickeners.",
+      neetFact: "Conducts water unidirectionally (upward) via transpirational suction pull. Vessels are only found in angiosperms (flowering plants) and represent columns of fused dead cells.",
+      status: "Vessels/Tracheids: Dead; Xylem Parenchyma: Living",
+      wall: "Lignified annular/spiral secondary structures",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    phloem: {
+      name: "Phloem Sieve Tubes",
+      nickname: "Bidirectional Sucrose Highways",
+      description: "Conducts organic sucrose solutions. Features stacked sieve tube elements connected via perforated sieve plates, closely partnered with companion cells.",
+      neetFact: "Translocation is bidirectional. Sieve tube elements are unique living cells that lack a nucleus, ribosomes, and vacuoles, relying on the companion cells' nuclei for metabolic transcription.",
+      status: "Sieve tubes/Companion: Living; Phloem Fibres: Dead",
+      wall: "Primary cellulose walls with sieve pores",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    squamous: {
+      name: "Simple Squamous Epithelium",
+      nickname: "Selective Paving Tiles",
+      description: "A single layer of thin, extremely flat, tile-like polygonal cells fitting tightly like pavement. Rests on a fibrous extracellular basement membrane.",
+      neetFact: "Optimized for passive chemical filtration and diffusion. Lines blood capillary walls, alveoli sacs of lungs, and Bowman's capsules in kidney nephrons.",
+      status: "Living animal cells",
+      wall: "No cell wall; thin plasma membrane on basement sheath",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    cuboidal: {
+      name: "Simple Cuboidal Epithelium",
+      nickname: "Boxy Secretory Glands",
+      description: "A single layer of square, cube-like cells with prominent, round, centrally positioned nuclei, specialized for secretion and absorption.",
+      neetFact: "Lines salivary glands, thyroid vesicles, pancreatic ducts, and kidney proximal tubules (where they feature microvilli brushes for active reabsorption).",
+      status: "Living animal cells",
+      wall: "No cell wall; cube-shaped plasma membrane on basement layer",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    columnar: {
+      name: "Simple Columnar Epithelium",
+      nickname: "Apical Microvilli Pillars",
+      description: "Tall, pillar-like columnar cells with oval nuclei located near the cell base. The apical surface frequently features microscopic microvilli brushes.",
+      neetFact: "Lines the interior mucosal layers of the stomach, small intestine, and gallbladder. Columnar cells secrete digestive juices and actively absorb nutrients.",
+      status: "Living animal cells",
+      wall: "No cell wall; tall columnar cells with apical microvilli",
+      pos: { x: 0, y: 0, z: 0 }
+    },
+    stratified: {
+      name: "Stratified Squamous Epithelium",
+      nickname: "Frictional Boundary Shield",
+      description: "Multiple stacked layers of cells. The superficial layers are flat squamous plates, while the basal layers are active, dividing cuboidal/columnar cells.",
+      neetFact: "Designed to protect underlying tissues from mechanical abrasion. Forms the outer epidermis layer of skin (keratinized dead plates) and lines the esophagus and mouth cavity (non-keratinized living plates).",
+      status: "Living basal layers; cornified dead superficial plates",
+      wall: "No cell wall; multiple stacked cell layers on basement membrane",
+      pos: { x: 0, y: 0, z: 0 }
+    }
+  };
+
+  // --- 3D HOTSPOTS CONFIGS ---
+  const hotspotsConfig = {
+    parenchyma: [
+      { key: 'vacuole', label: 'Storage Vacuole', pos: new THREE.Vector3(0.0, 0.4, 0.4) },
+      { key: 'space', label: 'Intercellular Space', pos: new THREE.Vector3(1.3, 1.3, 0.0) },
+      { key: 'primaryWall', label: 'Cellulose Wall', pos: new THREE.Vector3(-1.8, 1.0, 0.5) }
+    ],
+    collenchyma: [
+      { key: 'deposition', label: 'Pectin Corners', pos: new THREE.Vector3(1.1, 1.1, 1.0) },
+      { key: 'lumen', label: 'Cell Lumen', pos: new THREE.Vector3(0.0, 0.2, 0.0) }
+    ],
+    sclerenchyma: [
+      { key: 'lignin', label: 'Lignified Secondary Wall', pos: new THREE.Vector3(1.5, 1.0, 0.0) },
+      { key: 'narrowLumen', label: 'Narrow Lumen', pos: new THREE.Vector3(0.0, 0.0, 0.5) },
+      { key: 'pits', label: 'Radial Pits', pos: new THREE.Vector3(-1.2, -1.0, -0.6) }
+    ],
+    xylem: [
+      { key: 'vessel', label: 'Wide Open Vessel', pos: new THREE.Vector3(0.0, 0.0, 0.0) },
+      { key: 'spiral', label: 'Spiral Lignin Thickeners', pos: new THREE.Vector3(1.85, 1.2, 0.5) },
+      { key: 'tracheid', label: 'Tapered Tracheid', pos: new THREE.Vector3(-2.8, -1.5, 0.8) }
+    ],
+    phloem: [
+      { key: 'sievePlate', label: 'Sieve Plate Pores', pos: new THREE.Vector3(0.0, 2.05, 0.0) },
+      { key: 'sieveTube', label: 'Sieve Tube Element', pos: new THREE.Vector3(0.0, -0.5, 0.0) },
+      { key: 'companion', label: 'Companion Cell', pos: new THREE.Vector3(2.1, 0.0, 0.5) }
+    ],
+    squamous: [
+      { key: 'tile', label: 'Flat Squamous Tile', pos: new THREE.Vector3(1.0, 0.15, 1.0) },
+      { key: 'flatNucleus', label: 'Flat Nucleus', pos: new THREE.Vector3(0.0, 0.22, 0.0) },
+      { key: 'basementSq', label: 'Basement Membrane', pos: new THREE.Vector3(0.0, -0.65, 0.0) }
+    ],
+    cuboidal: [
+      { key: 'cube', label: 'Cuboidal Cell', pos: new THREE.Vector3(1.1, 1.0, 1.1) },
+      { key: 'roundNucleus', label: 'Round Central Nucleus', pos: new THREE.Vector3(0.0, 1.0, 0.0) },
+      { key: 'basementCub', label: 'Basement Sheath', pos: new THREE.Vector3(0.0, -0.15, 0.0) }
+    ],
+    columnar: [
+      { key: 'pillar', label: 'Tall Columnar Cell', pos: new THREE.Vector3(0.8, 1.5, 0.8) },
+      { key: 'ovalNucleus', label: 'Basal Oval Nucleus', pos: new THREE.Vector3(0.0, 0.8, 0.0) },
+      { key: 'microvilli', label: 'Apical Microvilli brush', pos: new THREE.Vector3(0.0, 3.55, 0.0) }
+    ],
+    stratified: [
+      { key: 'superficial', label: 'Flat Superficial Plates', pos: new THREE.Vector3(0.0, 2.55, 0.0) },
+      { key: 'basal', label: 'Basal Germinative Cells', pos: new THREE.Vector3(0.0, -1.05, 0.0) },
+      { key: 'basementStrat', label: 'Basement Extracellular Layer', pos: new THREE.Vector3(0.0, -1.75, 0.0) }
+    ]
+  };
+
+  // --- ANATOMICAL HOTSPOT EXPOSURES DETAILS ---
+  const structureData = {
+    parenchyma: {
+      vacuole: {
+        name: "Central Storage Vacuole",
+        desc: "A large, membrane-bound organelle inside parenchyma cells containing sap, water, and nutrients.",
+        fact: "Parenchyma vacuoles maintain cell turgidity, pushing cell membranes against cell walls, which keeps the plant erect."
+      },
+      space: {
+        name: "Intercellular Air Spaces",
+        desc: "Gaps between loosely packed parenchyma cells that enable carbon dioxide and oxygen gas diffusion.",
+        fact: "In aquatic plants, these spaces expand tremendously into air chambers (aerenchyma), providing buoyancy."
+      },
+      primaryWall: {
+        name: "Thin Primary Cellulose Wall",
+        desc: "A thin outer layer made of structural cellulose fibers, highly permeable to water and dissolved solutes.",
+        fact: "Maintains elasticity, allowing parenchyma cells to swell under osmotic pressure without rupturing."
+      }
+    },
+    collenchyma: {
+      deposition: {
+        name: "Corner Pectin Thickening",
+        desc: "Deposition of pectin, cellulose, and hemicellulose concentrated at the angles/corners where cells meet.",
+        fact: "Provides mechanical support combined with elasticity, allowing stems and leaf stalks to bend without breaking."
+      },
+      lumen: {
+        name: "Cell Lumen & Vacuole",
+        desc: "The living cell cavity containing cytoplasm, nucleus, and vacuoles.",
+        fact: "Unlike sclerenchyma, collenchyma cells remain living at maturity to maintain their mechanical elasticity."
+      }
+    },
+    sclerenchyma: {
+      lignin: {
+        name: "Lignified Secondary Wall",
+        desc: "A highly thickened secondary cell wall impregnated with lignin, a rigid organic polymer.",
+        fact: "Lignification makes the wall impermeable to water and gases, causing the living protoplast to die at maturity."
+      },
+      narrowLumen: {
+        name: "Narrow Lumen",
+        desc: "The extremely narrow cell cavity left inside due to the thick inward growth of lignified secondary walls.",
+        fact: "Has no active physiological role; serves purely as a structural dead cavity."
+      },
+      pits: {
+        name: "Radial Pits",
+        desc: "Thin channels piercing the lignified walls, through which plasmodesmata once connected neighboring cells.",
+        fact: "Provides pathways for lateral material exchange when the cells were living during initial development."
+      }
+    },
+    xylem: {
+      vessel: {
+        name: "Wide Open Vessel Element",
+        desc: "Large, cylindrical hollow tubes aligned end-to-end with open perforations at their ends.",
+        fact: "Acts like water pipes, offering low resistance to bulk water flow driven by transpiration pull."
+      },
+      spiral: {
+        name: "Spiral Lignin Thickeners",
+        desc: "Spiraling bands of structural lignin reinforcing the secondary walls.",
+        fact: "Prevents the water column tubes from collapsing inward under the high negative tension generated by transpiration pull."
+      },
+      tracheid: {
+        name: "Tapered conduct tracheid",
+        desc: "Elongated conducting cells with closed, tapering ends and lignified walls.",
+        fact: "Primitive conducting elements. Lacks open end perforations; water passes laterally from cell to cell via bordered pits."
+      }
+    },
+    phloem: {
+      sievePlate: {
+        name: "Perforated Sieve Plate",
+        desc: "End-walls of sieve tube elements perforated with sieve pores, resembling a sieve.",
+        fact: "Allows cytoplasmic continuity, enabling sucrose-rich sap to flow easily from source to sink organs."
+      },
+      sieveTube: {
+        name: "Sieve Tube Element",
+        desc: "Living conducting cylinders stacked together, lacking a nucleus, ribosomes, and vacuoles at maturity.",
+        fact: "Designed to minimize friction against sap flow. Governs organic translocation through mass flow."
+      },
+      companion: {
+        name: "Companion Cell",
+        desc: "A specialized living parenchyma cell containing a large nucleus and dense cytoplasm, situated adjacent to sieve tubes.",
+        fact: "Connected via dense plasmodesmata pores; actively loads/unloads sucrose and supplies proteins/nuclear templates to sieve elements."
+      }
+    },
+    squamous: {
+      tile: {
+        name: "Polygonal Squamous cell",
+        desc: "A single layer of extremely thin, polygonal, tile-like pavement cells.",
+        fact: "Ideal for fast passive transport; forms the lining of lung alveoli where oxygen and CO2 exchange."
+      },
+      flatNucleus: {
+        name: "Flat Central Nucleus",
+        desc: "A flattened, oval nucleus situated in the center of the thin paving cell.",
+        fact: "Adapted to fit the thin cell profile, minimizing obstruction to transport across the tissue surface."
+      },
+      basementSq: {
+        name: "Basement Membrane",
+        desc: "A thin, fibrous, non-cellular extracellular matrix anchoring the epithelial cells.",
+        fact: "Secreted by epithelial and connective tissues, serving as a selective chemical filter."
+      }
+    },
+    cuboidal: {
+      cube: {
+        name: "Boxy Cuboidal Cell",
+        desc: "A single layer of neat, cube-shaped cells with uniform dimensions.",
+        fact: "Optimized for secretion and absorption; commonly found lining gland ducts and kidney tubules."
+      },
+      roundNucleus: {
+        name: "Spherical Central Nucleus",
+        desc: "A large, spherical nucleus situated exactly in the center of the cuboidal cell.",
+        fact: "Governs protein synthesis required for active secretion (e.g. thyroid hormones)."
+      },
+      basementCub: {
+        name: "Basement Extracellular Sheath",
+        desc: "A fibrous collagen membrane providing structural support and vascular nourishment.",
+        fact: "Since epithelial tissues are avascular (lacking blood vessels), they rely on diffusion across this membrane."
+      }
+    },
+    columnar: {
+      pillar: {
+        name: "Pillar Columnar Cell",
+        desc: "Tall, slender columnar cells resembling columns or pillars.",
+        fact: "Provides physical protection and hosts organelles for active reabsorption in the digestive tract."
+      },
+      ovalNucleus: {
+        name: "Basal Oval Nucleus",
+        desc: "An elongated oval nucleus located near the basal third of the columnar cell.",
+        fact: "Positioned away from the apical surface to protect genetic material from digestive fluids."
+      },
+      microvilli: {
+        name: "Apical Microvilli brush",
+        desc: "Microscopic finger-like folds on the apical surface, forming a brush border.",
+        fact: "Increases surface area up to 30-fold, maximizing nutrient absorption in the small intestine."
+      }
+    },
+    stratified: {
+      superficial: {
+        name: "Flat Superficial Plates",
+        desc: "Multiple layers of flattened squamous cells at the tissue surface.",
+        fact: "Constantly sloughed off by friction and replaced by cells migrating from deeper layers."
+      },
+      basal: {
+        name: "Basal Germinative Cells",
+        desc: "Deepest layers of cuboidal/columnar cells actively undergoing mitosis.",
+        fact: "Creates new cells that migrate upward, flattening as they move away from the vascular basement sheath."
+      },
+      basementStrat: {
+        name: "Basement Membrane",
+        desc: "A thick extracellular boundary sheet anchoring the multi-layered epithelium.",
+        fact: "Withstands significant mechanical shearing forces (e.g. in the esophagus and skin)."
+      }
+    }
+  };
+
+  // --- DYNAMIC SLIDERS CONFIGS ---
+  const slidersConfig = {
+    parenchyma: [
+      { id: 'param-turgor', label: 'Cell Turgidity', min: 0.5, max: 2.0, step: 0.1, val: 1.0, unit: 'x' },
+      { id: 'param-space-size', label: 'Intercellular Space', min: 0.05, max: 0.5, step: 0.05, val: 0.2, unit: ' mm' }
+    ],
+    collenchyma: [
+      { id: 'param-deposition-thickness', label: 'Corner Thickening', min: 0.1, max: 0.6, step: 0.05, val: 0.3, unit: ' mm' },
+      { id: 'param-flexibility', label: 'Cell Elasticity', min: 0.5, max: 2.0, step: 0.1, val: 1.0, unit: 'x' }
+    ],
+    sclerenchyma: [
+      { id: 'param-lignin-thickness', label: 'Lignified Wall Thickness', min: 0.2, max: 0.8, step: 0.05, val: 0.5, unit: ' mm' },
+      { id: 'param-pit-count', label: 'Radial Pit Channels', min: 2, max: 10, step: 1, val: 6, unit: ' pits' }
+    ],
+    xylem: [
+      { id: 'param-flow-rate', label: 'Transpiration Pull', min: 0.0, max: 3.0, step: 0.1, val: 1.0, unit: 'x' },
+      { id: 'param-spiral-reinforce', label: 'Spiral reinforcement', min: 0.3, max: 1.5, step: 0.1, val: 0.8, unit: 'x' }
+    ],
+    phloem: [
+      { id: 'param-translocation-rate', label: 'Sucrose Flow Speed', min: 0.0, max: 3.0, step: 0.1, val: 1.0, unit: 'x' },
+      { id: 'param-sieve-pore-size', label: 'Sieve Plate Pores', min: 0.05, max: 0.3, step: 0.02, val: 0.15, unit: ' mm' }
+    ],
+    squamous: [
+      { id: 'param-membrane-thickness', label: 'Basement Sheath', min: 0.1, max: 1.5, step: 0.1, val: 0.6, unit: ' µm' },
+      { id: 'param-tile-wiggle', label: 'Thermal Vibration', min: 0.0, max: 2.0, step: 0.1, val: 0.5, unit: 'x' }
+    ],
+    cuboidal: [
+      { id: 'param-cube-size', label: 'Cell Height', min: 0.5, max: 2.0, step: 0.1, val: 1.0, unit: 'x' },
+      { id: 'param-secretory-rate', label: 'Secretory Activity', min: 0.0, max: 3.0, step: 0.1, val: 1.0, unit: 'x' }
+    ],
+    columnar: [
+      { id: 'param-column-height', label: 'Pillar Height', min: 1.5, max: 3.5, step: 0.1, val: 2.5, unit: 'x' },
+      { id: 'param-cilia-rate', label: 'Microvilli Beat Frequency', min: 0.0, max: 4.0, step: 0.2, val: 1.5, unit: ' Hz' }
+    ],
+    stratified: [
+      { id: 'param-layers-count', label: 'Cell Stratum Layers', min: 2, max: 6, step: 1, val: 4, unit: ' layers' },
+      { id: 'param-basal-mitosis', label: 'Mitotic Division Speed', min: 0.2, max: 3.0, step: 0.1, val: 1.0, unit: 'x' }
+    ]
+  };
+
+  // --- 3D WEBGL ENGINE CONFIG ---
+  let scene, camera, renderer, controls;
+  let tissueMeshes = {};
+  let currentSelectedKey = 'parenchyma';
+  let isAutoRotating = true;
+  let clock;
+
+  // Lights
+  let ambientLight, dirLight1, dirLight2;
+
+  function getSliderVal(key, id) {
+    const config = slidersConfig[key];
+    if (!config) return 1.0;
+    const s = config.find(x => x.id === id);
+    return s ? s.val : 1.0;
+  }
+
+  // --- FUNCTIONAL PARTICLE SYSTEM ---
+  const particleSystem = {
+    particles: [],
+    group: null,
+    lastSpawnTime: 0,
+    spawnInterval: 0.15, // seconds
+
+    init() {
+      this.group = new THREE.Group();
+      scene.add(this.group);
+    },
+
+    clear() {
+      if (this.group) {
+        while (this.group.children.length > 0) {
+          const child = this.group.children[0];
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) child.material.dispose();
+          this.group.remove(child);
+        }
+      }
+      this.particles = [];
+      this.lastSpawnTime = 0;
+    },
+
+    spawn(geom, mat, behavior) {
+      const mesh = new THREE.Mesh(geom, mat);
+      this.group.add(mesh);
+      this.particles.push({
+        mesh: mesh,
+        update: behavior,
+        age: 0,
+        life: Math.random() * 1.5 + 1.2
+      });
+    },
+
+    update(delta) {
+      if (!document.getElementById('chk-flow').checked) {
+        this.clear();
+        return;
+      }
+
+      let flowSpeed = 1.0;
+      if (currentSelectedKey === 'xylem') {
+        flowSpeed = getSliderVal('xylem', 'param-flow-rate');
+      } else if (currentSelectedKey === 'phloem') {
+        flowSpeed = getSliderVal('phloem', 'param-translocation-rate');
+      } else if (currentSelectedKey === 'cuboidal') {
+        flowSpeed = getSliderVal('cuboidal', 'param-secretory-rate');
+      } else if (currentSelectedKey === 'stratified') {
+        flowSpeed = getSliderVal('stratified', 'param-basal-mitosis');
+      }
+
+      if (flowSpeed > 0) {
+        const now = clock.getElapsedTime();
+        if (now - this.lastSpawnTime > (this.spawnInterval / flowSpeed)) {
+          this.lastSpawnTime = now;
+          spawnTissueParticles(currentSelectedKey, flowSpeed);
+        }
+      }
+
+      // Update active particles
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        const p = this.particles[i];
+        p.age += delta;
+        p.update(p, delta);
+        if (p.age >= p.life) {
+          this.group.remove(p.mesh);
+          if (p.mesh.geometry) p.mesh.geometry.dispose();
+          this.particles.splice(i, 1);
+        }
+      }
+    }
+  };
+
+  function spawnTissueParticles(key, speed) {
+    if (key === 'xylem') {
+      // Upward flowing water particles along the hollow cylinders
+      const geom = new THREE.SphereGeometry(0.12, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0.95 });
+      particleSystem.spawn(geom, mat, (p, dt) => {
+        p.life = 2.0;
+        const t = p.age / p.life;
+        if (p.age === dt) {
+          // spawn randomly near bottom plate
+          p.mesh.position.set((Math.random() - 0.5) * 1.6, -3.0, (Math.random() - 0.5) * 1.6);
+        }
+        p.mesh.position.y += 0.07 * speed;
+        p.mesh.scale.setScalar(1.0 - t * 0.3);
+      });
+    }
+    else if (key === 'phloem') {
+      // Bidirectional sucrose sap flow
+      const geom = new THREE.SphereGeometry(0.1, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.9 });
+      const upFlow = Math.random() > 0.5;
+      
+      particleSystem.spawn(geom, mat, (p, dt) => {
+        p.life = 2.2;
+        const t = p.age / p.life;
+        if (p.age === dt) {
+          p.mesh.position.set((Math.random() - 0.5) * 1.2, upFlow ? -3.0 : 3.0, (Math.random() - 0.5) * 1.2);
+          p.dirSign = upFlow ? 1 : -1;
+        }
+        p.mesh.position.y += 0.055 * p.dirSign * speed;
+        // squeeze through sieve plates at y = 1.6, 0.0, -1.6
+        const distToPlate = Math.min(Math.abs(p.mesh.position.y - 1.6), Math.abs(p.mesh.position.y), Math.abs(p.mesh.position.y + 1.6));
+        if (distToPlate < 0.15) {
+          const poreSize = getSliderVal('phloem', 'param-sieve-pore-size');
+          p.mesh.scale.setScalar(poreSize * 6);
+        } else {
+          p.mesh.scale.setScalar(1.2 - t * 0.3);
+        }
+      });
+    }
+    else if (key === 'parenchyma') {
+      // Buoyant gas particles inside intercellular air spaces
+      const geom = new THREE.SphereGeometry(0.12, 6, 6);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x34d399, transparent: true, opacity: 0.7 });
+      
+      particleSystem.spawn(geom, mat, (p, dt) => {
+        p.life = 2.5;
+        const t = p.age / p.life;
+        if (p.age === dt) {
+          // spawn randomly near the sides of intercellular spaces
+          const angle = Math.random() * Math.PI * 2;
+          p.mesh.position.set(Math.cos(angle) * 1.7, (Math.random() - 0.5) * 4, Math.sin(angle) * 1.7);
+          p.vel = new THREE.Vector3((Math.random() - 0.5) * 0.015, Math.random() * 0.015 + 0.01, (Math.random() - 0.5) * 0.015);
+        }
+        p.mesh.position.add(p.vel);
+        p.mesh.scale.setScalar((1.0 - t) * 1.2);
+      });
+    }
+    else if (key === 'cuboidal') {
+      // Glowing secretory droplets moving upwards away from the base
+      const geom = new THREE.SphereGeometry(0.08, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.9 });
+      
+      particleSystem.spawn(geom, mat, (p, dt) => {
+        p.life = 1.8;
+        const t = p.age / p.life;
+        if (p.age === dt) {
+          p.mesh.position.set((Math.random() - 0.5) * 2.8, -0.15, (Math.random() - 0.5) * 2.8);
+        }
+        p.mesh.position.y += 0.045 * speed;
+        p.mesh.scale.setScalar((1.0 - t) * 1.3);
+      });
+    }
+    else if (key === 'stratified') {
+      // Cell migration from basal germinative layers to surface
+      const geom = new THREE.SphereGeometry(0.15, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color: 0xf43f5e, transparent: true, opacity: 0.75 });
+      
+      particleSystem.spawn(geom, mat, (p, dt) => {
+        p.life = 3.0;
+        const t = p.age / p.life;
+        if (p.age === dt) {
+          p.mesh.position.set((Math.random() - 0.5) * 3.5, -1.05, (Math.random() - 0.5) * 3.5);
+        }
+        p.mesh.position.y += 0.025 * speed;
+        // flatten squamous shape as it reaches surface
+        if (t > 0.6) {
+          p.mesh.scale.set(1.5, (1.0 - t) * 1.2, 1.5);
+        } else {
+          p.mesh.scale.setScalar(1.0);
+        }
+      });
+    }
+  }
+
+  function init3D() {
+    const container = document.getElementById('three-container');
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+    scene.fog = new THREE.FogExp2(0x000000, 0.015);
+
+    camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+    camera.position.set(0, 3, 14);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.maxDistance = 30;
+    controls.minDistance = 5;
+
+    // Lighting
+    ambientLight = new THREE.HemisphereLight(0xffffff, 0x1e1b4b, 0.7);
+    scene.add(ambientLight);
+
+    dirLight1 = new THREE.DirectionalLight(0x6366f1, 1.4);
+    dirLight1.position.set(15, 20, 15);
+    scene.add(dirLight1);
+
+    dirLight2 = new THREE.DirectionalLight(0x06b6d4, 0.7);
+    dirLight2.position.set(-15, -15, -15);
+    scene.add(dirLight2);
+
+    clock = new THREE.Clock();
+    particleSystem.init();
+
+    rebuildScene();
+
+    renderer.domElement.addEventListener('pointerdown', onCanvasPointerDown);
+    window.addEventListener('resize', onWindowResize);
+  }
+
+  // --- PROCEDURAL 3D TISSUE BUILDERS ---
+  function clearScene() {
+    Object.keys(tissueMeshes).forEach(key => {
+      scene.remove(tissueMeshes[key]);
+    });
+    tissueMeshes = {};
+    particleSystem.clear();
+  }
+
+  function rebuildScene() {
+    clearScene();
+    
+    const key = currentSelectedKey;
+    const group = new THREE.Group();
+    group.userData = { tissueKey: key };
+
+    const highlightNucleus = document.getElementById('chk-nucleus').checked;
+
+    if (key === 'parenchyma') {
+      // Parenchyma: loosely packed spheres with spaces and large central vacuoles
+      const turgor = getSliderVal('parenchyma', 'param-turgor');
+      const space = getSliderVal('parenchyma', 'param-space-size');
+      
+      const positions = [
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(1.8 + space, 0, 0),
+        new THREE.Vector3(-1.8 - space, 0, 0),
+        new THREE.Vector3(0.9 + space/2, 1.6 + space, 0.5),
+        new THREE.Vector3(-0.9 - space/2, 1.6 + space, -0.5),
+        new THREE.Vector3(0.9 + space/2, -1.6 - space, -0.5),
+        new THREE.Vector3(-0.9 - space/2, -1.6 - space, 0.5)
+      ];
+
+      const cellGeom = new THREE.SphereGeometry(1.0, 24, 24);
+      const cellMat = new THREE.MeshPhongMaterial({
+        color: 0x16a34a,
+        transparent: true,
+        opacity: 0.65,
+        side: THREE.DoubleSide,
+        shininess: 30
+      });
+      const vacuoleGeom = new THREE.SphereGeometry(0.6, 16, 16);
+      const vacuoleMat = new THREE.MeshPhongMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.55
+      });
+      const nucleusGeom = new THREE.SphereGeometry(0.18, 12, 12);
+      const nucleusMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+
+      positions.forEach(pos => {
+        const cell = new THREE.Group();
+        cell.position.copy(pos);
+        cell.scale.setScalar(turgor);
+
+        // Thin outer cellulose wall
+        const wall = new THREE.Mesh(cellGeom, cellMat);
+        cell.add(wall);
+
+        // Central vacuole
+        const vac = new THREE.Mesh(vacuoleGeom, vacuoleMat);
+        vac.position.set(0.1, 0.1, 0.1);
+        cell.add(vac);
+
+        // Nucleus
+        if (highlightNucleus) {
+          const nuc = new THREE.Mesh(nucleusGeom, nucleusMat);
+          nuc.position.set(-0.5, 0.3, 0.2);
+          cell.add(nuc);
+        }
+
+        group.add(cell);
+      });
+    }
+    else if (key === 'collenchyma') {
+      // Collenchyma: elongated cylinders with thickened corners
+      const thickness = getSliderVal('collenchyma', 'param-deposition-thickness');
+      const flexibility = getSliderVal('collenchyma', 'param-flexibility');
+
+      const colPositions = [
+        { x: 0, z: 0 },
+        { x: 1.7, z: 0 },
+        { x: -1.7, z: 0 },
+        { x: 0.85, z: 1.5 },
+        { x: -0.85, z: 1.5 },
+        { x: 0.85, z: -1.5 },
+        { x: -0.85, z: -1.5 }
+      ];
+
+      const cellGeom = new THREE.CylinderGeometry(0.9, 0.9, 5.0, 6); // hexagonal cylinder
+      const cellMat = new THREE.MeshPhongMaterial({
+        color: 0x047857,
+        transparent: true,
+        opacity: 0.7,
+        shininess: 40
+      });
+      
+      const cornerGeom = new THREE.CylinderGeometry(thickness, thickness, 5.0, 8);
+      const cornerMat = new THREE.MeshPhongMaterial({
+        color: 0xa7f3d0,
+        emissive: 0x064e3b,
+        shininess: 60
+      });
+
+      const nucleusGeom = new THREE.SphereGeometry(0.18, 12, 12);
+      const nucleusMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+
+      colPositions.forEach(pos => {
+        const cell = new THREE.Group();
+        cell.position.set(pos.x, 0, pos.z);
+        cell.scale.set(flexibility, 1.0, flexibility);
+
+        // Cylindrical body
+        const body = new THREE.Mesh(cellGeom, cellMat);
+        cell.add(body);
+
+        // Add 6 corner thickenings (pectin depositions at corners)
+        for (let a = 0; a < 6; a++) {
+          const angle = (a / 6) * Math.PI * 2;
+          const corner = new THREE.Mesh(cornerGeom, cornerMat);
+          // offset exactly to hexagonal vertices
+          corner.position.set(Math.cos(angle) * 0.9, 0, Math.sin(angle) * 0.9);
+          cell.add(corner);
+        }
+
+        if (highlightNucleus) {
+          const nuc = new THREE.Mesh(nucleusGeom, nucleusMat);
+          nuc.position.set(0, 0, 0.5);
+          cell.add(nuc);
+        }
+
+        group.add(cell);
+      });
+    }
+    else if (key === 'sclerenchyma') {
+      // Sclerenchyma: narrow, dead polygonal fibers with thick lignified walls
+      const ligninThickness = getSliderVal('sclerenchyma', 'param-lignin-thickness');
+      const pitCount = getSliderVal('sclerenchyma', 'param-pit-count');
+
+      const positions = [
+        { x: 0, z: 0 },
+        { x: 1.5, z: 0.5 },
+        { x: -1.5, z: -0.5 },
+        { x: 0.6, z: 1.4 },
+        { x: -0.6, z: -1.4 }
+      ];
+
+      // Hollow polygonal fibers (outer thicker, inner narrow lumen)
+      positions.forEach(pos => {
+        const fiber = new THREE.Group();
+        fiber.position.set(pos.x, 0, pos.z);
+
+        // Outer secondary wall
+        const outerGeom = new THREE.CylinderGeometry(0.9, 0.9, 6.0, 5); // pentagonal fiber
+        const outerMat = new THREE.MeshPhongMaterial({
+          color: 0x78350f,
+          shininess: 10,
+          transparent: true,
+          opacity: 0.85
+        });
+        const outer = new THREE.Mesh(outerGeom, outerMat);
+        fiber.add(outer);
+
+        // Inner narrow lumen (representing the hollow center)
+        // radius decreases as lignin thickness increases
+        const lumenRadius = Math.max(0.05, 0.95 - ligninThickness);
+        const lumenGeom = new THREE.CylinderGeometry(lumenRadius, lumenRadius, 6.1, 5);
+        const lumenMat = new THREE.MeshPhongMaterial({
+          color: 0x1e1b4b,
+          transparent: true,
+          opacity: 0.95
+        });
+        const lumen = new THREE.Mesh(lumenGeom, lumenMat);
+        fiber.add(lumen);
+
+        // Radial pit channels piercing the walls
+        const pitGeom = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 8);
+        const pitMat = new THREE.MeshPhongMaterial({ color: 0x1e1b4b });
+        for (let p = 0; p < pitCount; p++) {
+          const pit = new THREE.Mesh(pitGeom, pitMat);
+          const yOffset = (p - (pitCount - 1) / 2) * (5.0 / pitCount);
+          const angle = p * 1.5; // alternate angles
+          pit.position.set(Math.cos(angle) * 0.5, yOffset, Math.sin(angle) * 0.5);
+          pit.rotation.z = Math.PI / 2;
+          pit.rotation.y = angle;
+          fiber.add(pit);
+        }
+
+        group.add(fiber);
+      });
+    }
+    else if (key === 'xylem') {
+      // Xylem: wide vessels and spiral reinforce
+      const spiralScale = getSliderVal('xylem', 'param-spiral-reinforce');
+
+      // 1. Main Wide Vessel (center)
+      const vessel = new THREE.Group();
+      vessel.position.set(0, 0, 0);
+
+      const outerVessel = new THREE.CylinderGeometry(1.6, 1.6, 6.0, 24, 1, true);
+      const vesselMat = new THREE.MeshPhongMaterial({
+        color: 0x92400e,
+        transparent: true,
+        opacity: 0.45,
+        side: THREE.DoubleSide
+      });
+      const meshVessel = new THREE.Mesh(outerVessel, vesselMat);
+      vessel.add(meshVessel);
+
+      // Spiral Lignin reinforce: we construct a spiral using toruses aligned stacked up,
+      // or a helical line path. Toruses look cleaner in standard Three.js without curve extensions!
+      const ringCount = 15;
+      const ringGeom = new THREE.TorusGeometry(1.58, 0.08, 8, 32);
+      const ringMat = new THREE.MeshPhongMaterial({ color: 0xf59e0b, shininess: 50 });
+      for (let r = 0; r < ringCount; r++) {
+        const ring = new THREE.Mesh(ringGeom, ringMat);
+        ring.position.y = (r - (ringCount - 1)/2) * 0.4;
+        ring.rotation.x = Math.PI / 2 + 0.15 * spiralScale; // tilt to simulate helix
+        vessel.add(ring);
+      }
+      group.add(vessel);
+
+      // 2. Narrow tapered tracheid (left side)
+      const tracheid = new THREE.Group();
+      tracheid.position.set(-2.8, 0, 0.5);
+      
+      const trachGeom = new THREE.CylinderGeometry(0.6, 0.2, 5.0, 16);
+      const trachMat = new THREE.MeshPhongMaterial({
+        color: 0x78350f,
+        transparent: true,
+        opacity: 0.6
+      });
+      const meshTrach = new THREE.Mesh(trachGeom, trachMat);
+      tracheid.add(meshTrach);
+
+      // Spiral reinforce inside tracheid
+      for (let r = 0; r < 12; r++) {
+        const rGeom = new THREE.TorusGeometry(0.57 - (Math.abs(r - 6) * 0.05), 0.04, 6, 16);
+        const ring = new THREE.Mesh(rGeom, ringMat);
+        ring.position.y = (r - 5.5) * 0.38;
+        ring.rotation.x = Math.PI / 2 + 0.15;
+        tracheid.add(ring);
+      }
+      group.add(tracheid);
+    }
+    else if (key === 'phloem') {
+      // Phloem: sieve tubes and perforated sieve plates + companion cells
+      const poreSize = getSliderVal('phloem', 'param-sieve-pore-size');
+
+      // 1. Sieve Tube Element (Center)
+      const tube = new THREE.Group();
+      tube.position.set(0, 0, 0);
+
+      const tubeGeom = new THREE.CylinderGeometry(1.2, 1.2, 5.8, 24, 1, true);
+      const tubeMat = new THREE.MeshPhongMaterial({
+        color: 0x059669,
+        transparent: true,
+        opacity: 0.52,
+        side: THREE.DoubleSide
+      });
+      const meshTube = new THREE.Mesh(tubeGeom, tubeMat);
+      tube.add(meshTube);
+
+      // Perforated Sieve Plates at y = 1.9, y = 0.0, y = -1.9
+      const platePositions = [1.9, 0.0, -1.9];
+      const plateMat = new THREE.MeshPhongMaterial({ color: 0x10b981, side: THREE.DoubleSide });
+      
+      platePositions.forEach(yPos => {
+        const plate = new THREE.Group();
+        plate.position.y = yPos;
+        
+        // Base plate ring
+        const plateRing = new THREE.Mesh(new THREE.CylinderGeometry(1.18, 1.18, 0.08, 24), plateMat);
+        plate.add(plateRing);
+        
+        // Drill sieve pores (sub-cylinders with negative colors or simple dark disks)
+        const poreGeom = new THREE.CylinderGeometry(poreSize, poreSize, 0.12, 12);
+        const poreMat = new THREE.MeshBasicMaterial({ color: 0x1e1b4b }); // dark hole look
+        const poresCount = 6;
+        for (let p = 0; p < poresCount; p++) {
+          const angle = (p / poresCount) * Math.PI * 2;
+          const pore = new THREE.Mesh(poreGeom, poreMat);
+          pore.position.set(Math.cos(angle) * 0.6, 0, Math.sin(angle) * 0.6);
+          plate.add(pore);
+        }
+        tube.add(plate);
+      });
+      group.add(tube);
+
+      // 2. Companion Cell (Right side attached to sieve element)
+      const companion = new THREE.Group();
+      companion.position.set(2.1, 0, 0.5);
+      
+      const compGeom = new THREE.CylinderGeometry(0.5, 0.5, 5.8, 16);
+      const compMat = new THREE.MeshPhongMaterial({ color: 0x047857, transparent: true, opacity: 0.7 });
+      const meshComp = new THREE.Mesh(compGeom, compMat);
+      companion.add(meshComp);
+
+      const nucleusGeom = new THREE.SphereGeometry(0.3, 16, 16);
+      const nucleusMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+      if (highlightNucleus) {
+        const compNuc = new THREE.Mesh(nucleusGeom, nucleusMat);
+        compNuc.position.set(0, 0.5, 0); // Basal nucleus
+        companion.add(compNuc);
+      }
+      group.add(companion);
+    }
+    else if (key === 'squamous') {
+      // Simple Squamous: flat paving tiles grid resting on basement membrane
+      const thick = getSliderVal('squamous', 'param-membrane-thickness');
+
+      const squamousGroup = new THREE.Group();
+      
+      // Basement membrane (translucent gray grid sheet)
+      const baseGeom = new THREE.BoxGeometry(7.0, thick * 0.4, 7.0);
+      const baseMat = new THREE.MeshPhongMaterial({ color: 0x64748b, transparent: true, opacity: 0.45 });
+      const basement = new THREE.Mesh(baseGeom, baseMat);
+      basement.position.y = -0.55;
+      squamousGroup.add(basement);
+
+      // 4x4 flat cells grid
+      const cellGeom = new THREE.CylinderGeometry(0.78, 0.78, 0.2, 6); // hexagonal flat tiles
+      const cellMat = new THREE.MeshPhongMaterial({ color: 0xf43f5e, transparent: true, opacity: 0.65 });
+      
+      const nucGeom = new THREE.SphereGeometry(0.18, 16, 16);
+      nucGeom.scale(1.5, 0.4, 1.5); // squashed flat nucleus
+      const nucMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+
+      for (let x = 0; x < 3; x++) {
+        for (let z = 0; z < 3; z++) {
+          const cell = new THREE.Group();
+          const px = (x - 1) * 1.6;
+          const pz = (z - 1) * 1.6;
+          cell.position.set(px, -0.35, pz);
+
+          const tile = new THREE.Mesh(cellGeom, cellMat);
+          cell.add(tile);
+
+          if (highlightNucleus) {
+            const nuc = new THREE.Mesh(nucGeom, nucMat);
+            nuc.position.y = 0.12;
+            cell.add(nuc);
+          }
+          squamousGroup.add(cell);
+        }
+      }
+      group.add(squamousGroup);
+    }
+    else if (key === 'cuboidal') {
+      // Simple Cuboidal: cube boxes resting on basement membrane
+      const cellHeight = getSliderVal('cuboidal', 'param-cube-size');
+
+      const cuboidalGroup = new THREE.Group();
+
+      // Basement membrane
+      const baseGeom = new THREE.BoxGeometry(7.0, 0.2, 7.0);
+      const baseMat = new THREE.MeshPhongMaterial({ color: 0x64748b, transparent: true, opacity: 0.45 });
+      const basement = new THREE.Mesh(baseGeom, baseMat);
+      basement.position.y = -0.1;
+      cuboidalGroup.add(basement);
+
+      // 3x3 Cube grid
+      const cellGeom = new THREE.BoxGeometry(1.6, 1.6 * cellHeight, 1.6);
+      const cellMat = new THREE.MeshPhongMaterial({ color: 0xec4899, transparent: true, opacity: 0.65, shininess: 40 });
+
+      const nucGeom = new THREE.SphereGeometry(0.35, 16, 16);
+      const nucMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+
+      for (let x = 0; x < 3; x++) {
+        for (let z = 0; z < 3; z++) {
+          const cell = new THREE.Group();
+          const px = (x - 1) * 1.8;
+          const pz = (z - 1) * 1.8;
+          cell.position.set(px, (0.8 * cellHeight), pz);
+
+          const cube = new THREE.Mesh(cellGeom, cellMat);
+          cell.add(cube);
+
+          if (highlightNucleus) {
+            const nuc = new THREE.Mesh(nucGeom, nucMat);
+            nuc.position.y = 0.05;
+            cell.add(nuc);
+          }
+          cuboidalGroup.add(cell);
+        }
+      }
+      group.add(cuboidalGroup);
+    }
+    else if (key === 'columnar') {
+      // Simple Columnar: Tall pillars, basal nuclei, microvilli cilia
+      const pillarHeight = getSliderVal('columnar', 'param-column-height');
+
+      const columnarGroup = new THREE.Group();
+
+      // Basement matrix
+      const baseGeom = new THREE.BoxGeometry(7.0, 0.2, 7.0);
+      const baseMat = new THREE.MeshPhongMaterial({ color: 0x64748b, transparent: true, opacity: 0.45 });
+      const basement = new THREE.Mesh(baseGeom, baseMat);
+      basement.position.y = -0.1;
+      columnarGroup.add(basement);
+
+      // 3x3 columnar prisms
+      const cellGeom = new THREE.BoxGeometry(1.4, pillarHeight, 1.4);
+      const cellMat = new THREE.MeshPhongMaterial({ color: 0xd946ef, transparent: true, opacity: 0.65 });
+
+      const nucGeom = new THREE.SphereGeometry(0.3, 16, 16);
+      nucGeom.scale(1.0, 1.6, 1.0); // basal oval nucleus
+      const nucMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+
+      for (let x = 0; x < 3; x++) {
+        for (let z = 0; z < 3; z++) {
+          const cell = new THREE.Group();
+          const px = (x - 1) * 1.6;
+          const pz = (z - 1) * 1.6;
+          cell.position.set(px, (pillarHeight / 2), pz);
+
+          const pillar = new THREE.Mesh(cellGeom, cellMat);
+          cell.add(pillar);
+
+          if (highlightNucleus) {
+            const nuc = new THREE.Mesh(nucGeom, nucMat);
+            nuc.position.y = -pillarHeight / 2.8; // basal third
+            cell.add(nuc);
+          }
+
+          // Draw wiggling microvilli cylinders on apical surface (represented by multiple small wiggling fibers)
+          const ciliaGroup = new THREE.Group();
+          ciliaGroup.name = "ciliaGroup";
+          ciliaGroup.position.y = (pillarHeight / 2);
+          
+          const cilGeom = new THREE.CylinderGeometry(0.02, 0.02, 0.3, 4);
+          const cilMat = new THREE.MeshPhongMaterial({ color: 0xfb7185 });
+          for (let c = 0; c < 12; c++) {
+            const cil = new THREE.Mesh(cilGeom, cilMat);
+            cil.position.set(
+              (Math.random() - 0.5) * 1.1,
+              0.15,
+              (Math.random() - 0.5) * 1.1
+            );
+            ciliaGroup.add(cil);
+          }
+          cell.add(ciliaGroup);
+
+          columnarGroup.add(cell);
+        }
+      }
+      group.add(columnarGroup);
+    }
+    else if (key === 'stratified') {
+      // Stratified Squamous: stacked layers
+      const stratumLayers = getSliderVal('stratified', 'param-layers-count');
+
+      const stratifiedGroup = new THREE.Group();
+
+      // Basement Extracellular
+      const baseGeom = new THREE.BoxGeometry(7.0, 0.2, 7.0);
+      const baseMat = new THREE.MeshPhongMaterial({ color: 0x64748b, transparent: true, opacity: 0.45 });
+      const basement = new THREE.Mesh(baseGeom, baseMat);
+      basement.position.y = -1.55;
+      stratifiedGroup.add(basement);
+
+      // Stack layers from bottom (basal) to top (superficial squamous plates)
+      for (let l = 0; l < stratumLayers; l++) {
+        const yOffset = -1.25 + l * 0.75;
+        // height/flattening depends on height level
+        const isSuperficial = (l === stratumLayers - 1);
+        const isBasal = (l === 0);
+        
+        let cellGeom, cellColor;
+        if (isSuperficial) {
+          cellGeom = new THREE.BoxGeometry(1.6, 0.18, 1.6); // squashed flat squamous plates
+          cellColor = 0xf43f5e;
+        } else if (isBasal) {
+          cellGeom = new THREE.BoxGeometry(1.6, 0.7, 1.6); // columnar/cuboidal basal
+          cellColor = 0xe11d48;
+        } else {
+          cellGeom = new THREE.BoxGeometry(1.6, 0.5, 1.6); // polygonal middle layers
+          cellColor = 0xf43f5e;
+        }
+
+        const cellMat = new THREE.MeshPhongMaterial({ color: cellColor, transparent: true, opacity: 0.65 });
+        const nucGeom = new THREE.SphereGeometry(isSuperficial ? 0.12 : 0.22, 12, 12);
+        if (isSuperficial) nucGeom.scale(1.5, 0.3, 1.5);
+        const nucMat = new THREE.MeshPhongMaterial({ color: 0x7c3aed });
+
+        for (let x = 0; x < 3; x++) {
+          for (let z = 0; z < 3; z++) {
+            const cell = new THREE.Group();
+            const px = (x - 1) * 1.7;
+            const pz = (z - 1) * 1.7;
+            cell.position.set(px, yOffset, pz);
+
+            const mesh = new THREE.Mesh(cellGeom, cellMat);
+            cell.add(mesh);
+
+            if (highlightNucleus) {
+              const nuc = new THREE.Mesh(nucGeom, nucMat);
+              cell.add(nuc);
+            }
+            stratifiedGroup.add(cell);
+          }
+        }
+      }
+      group.add(stratifiedGroup);
+    }
+
+    scene.add(group);
+    tissueMeshes[key] = group;
+    
+    // reset labels
+    rebuildHotspotLabels();
+  }
+
+  // --- ANIMATION ENGINE LOOP ---
+  function animate() {
+    requestAnimationFrame(animate);
+
+    const delta = clock.getDelta();
+    const time = clock.getElapsedTime();
+
+    if (isAutoRotating) {
+      const rotSpeed = parseFloat(document.getElementById('sl-rotate-speed').value) * 0.003;
+      Object.keys(tissueMeshes).forEach(key => {
+        tissueMeshes[key].rotation.y += rotSpeed;
+      });
+    }
+
+    // Columnar epithelium microvilli wiggles
+    if (currentSelectedKey === 'columnar') {
+      const beatFreq = getSliderVal('columnar', 'param-cilia-rate');
+      const activeGroup = tissueMeshes['columnar'];
+      if (activeGroup) {
+        activeGroup.children.forEach(child => {
+          // find microvilli group
+          const ciliaGroup = child.getObjectByName("ciliaGroup");
+          if (ciliaGroup) {
+            ciliaGroup.children.forEach((cil, idx) => {
+              cil.rotation.z = Math.sin(time * beatFreq * 5.0 + idx) * 0.12;
+              cil.rotation.x = Math.cos(time * beatFreq * 4.0 + idx) * 0.08;
+            });
+          }
+        });
+      }
+    }
+
+    // Parenchyma cell wall wiggles (floating breathing motion)
+    if (currentSelectedKey === 'parenchyma') {
+      const activeGroup = tissueMeshes['parenchyma'];
+      if (activeGroup) {
+        activeGroup.children.forEach((cell, idx) => {
+          cell.position.y += Math.sin(time * 2 + idx) * 0.001;
+        });
+      }
+    }
+
+    // Simple squamous pavement tiles wiggle wiggles
+    if (currentSelectedKey === 'squamous') {
+      const wiggleSpeed = getSliderVal('squamous', 'param-tile-wiggle');
+      const activeGroup = tissueMeshes['squamous'];
+      if (activeGroup && activeGroup.children) {
+        activeGroup.children.forEach((cell, idx) => {
+          // Skip basement membrane at index 0
+          if (idx > 0 && cell.position) {
+            cell.position.y = -0.35 + Math.sin(time * 5.0 * wiggleSpeed + idx) * 0.008;
+          }
+        });
+      }
+    }
+
+    // Update particle flow simulation
+    particleSystem.update(delta);
+
+    // Project label badges to screen coords
+    updateHotspotLabels();
+
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  // --- RAYCASTING CLICK DETECT ---
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+
+  function onCanvasPointerDown(e) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    if (intersects.length > 0) {
+      let obj = intersects[0].object;
+      while (obj && obj.parent !== scene) {
+        if (obj.userData && obj.userData.tissueKey) {
+          selectTissue(obj.userData.tissueKey);
+          break;
+        }
+        obj = obj.parent;
+      }
+    }
+  }
+
+  function selectTissue(key) {
+    currentSelectedKey = key;
+    const data = tissuesData[key];
+    if (!data) return;
+
+    // 1. Update UI panel labels
+    document.getElementById('lbl-tissue-name').textContent = data.name;
+    document.getElementById('lbl-nickname').textContent = data.nickname;
+    document.getElementById('lbl-description').textContent = data.description;
+    document.getElementById('lbl-neet-fact').textContent = data.neetFact;
+    document.getElementById('lbl-stat-status').textContent = data.status;
+    document.getElementById('lbl-stat-wall').textContent = data.wall;
+
+    // 2. Rebuild the sliders and hotspots
+    rebuildScene();
+    rebuildSliders(key);
+    rebuildHotspotLabels();
+
+    // 3. Highlight dropdown
+    document.getElementById('select-tissue-type').value = key;
+  }
+
+  // Hotspots UI builder
+  function rebuildHotspotLabels() {
+    const container = document.getElementById('hotspot-labels-overlay');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const list = hotspotsConfig[currentSelectedKey];
+    if (!list) return;
+
+    list.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'absolute pointer-events-auto -translate-x-1/2 -translate-y-1/2 bg-slate-900/90 hover:bg-indigo-600 text-white border border-indigo-500/50 hover:border-indigo-400 px-2.5 py-1 rounded-full shadow-md cursor-pointer transition-all flex items-center gap-1.5 select-none z-10';
+      el.innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span style="font-size: 9px; font-weight: 700; tracking-wide; text-transform: uppercase;">${item.label}</span>
+      `;
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectHotspot(currentSelectedKey, item.key);
+      });
+      container.appendChild(el);
+      item.element = el;
+    });
+
+    const inspectorName = document.getElementById('lbl-hotspot-name');
+    const inspectorDesc = document.getElementById('lbl-hotspot-desc');
+    const inspectorFact = document.getElementById('lbl-hotspot-fact');
+    if (inspectorName && inspectorDesc && inspectorFact) {
+      inspectorName.textContent = 'Anatomical Hotspots';
+      inspectorDesc.textContent = 'Click any pulsing green 3D label badge directly on the canvas to inspect its histology, compositions, and anatomical specifications.';
+      inspectorFact.classList.add('hidden');
+    }
+  }
+
+  function selectHotspot(tissueKey, hotspotKey) {
+    const tData = structureData[tissueKey];
+    if (!tData) return;
+    const hData = tData[hotspotKey];
+    if (!hData) return;
+
+    const inspectorName = document.getElementById('lbl-hotspot-name');
+    const inspectorDesc = document.getElementById('lbl-hotspot-desc');
+    const inspectorFact = document.getElementById('lbl-hotspot-fact');
+
+    if (inspectorName && inspectorDesc && inspectorFact) {
+      inspectorName.textContent = hData.name;
+      inspectorDesc.innerHTML = hData.desc;
+      inspectorFact.innerHTML = `<strong>High-Yield Fact:</strong> ${hData.fact}`;
+      inspectorFact.classList.remove('hidden');
+
+      if (window.MathJax) {
+        MathJax.typesetPromise([inspectorDesc, inspectorFact]);
+      }
+    }
+
+    // visual select
+    const list = hotspotsConfig[tissueKey];
+    if (list) {
+      list.forEach(item => {
+        if (!item.element) return;
+        if (item.key === hotspotKey) {
+          item.element.classList.remove('bg-slate-900/90', 'border-indigo-500/50');
+          item.element.classList.add('bg-indigo-600', 'border-white', 'scale-110');
+        } else {
+          item.element.classList.remove('bg-indigo-600', 'border-white', 'scale-110');
+          item.element.classList.add('bg-slate-900/90', 'border-indigo-500/50');
+        }
+      });
+    }
+  }
+
+  // Update hotspots badges coordinates
+  function updateHotspotLabels() {
+    const list = hotspotsConfig[currentSelectedKey];
+    if (!list) return;
+
+    const container = document.getElementById('three-container');
+    if (!container) return;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const activeGroup = tissueMeshes[currentSelectedKey];
+    if (!activeGroup) return;
+
+    list.forEach(item => {
+      if (!item.element) return;
+
+      const wp = item.pos.clone();
+      wp.applyMatrix4(activeGroup.matrixWorld);
+      wp.project(camera);
+
+      if (wp.z > 1) {
+        item.element.style.display = 'none';
+        return;
+      }
+
+      const x = (wp.x * 0.5 + 0.5) * width;
+      const y = (-(wp.y * 0.5) + 0.5) * height;
+
+      item.element.style.left = `${x}px`;
+      item.element.style.top = `${y}px`;
+      item.element.style.display = 'flex';
+    });
+  }
+
+  function rebuildSliders(key) {
+    const container = document.getElementById('dynamic-sliders-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const config = slidersConfig[key];
+    if (!config) return;
+
+    config.forEach(slider => {
+      const div = document.createElement('div');
+      div.className = 'bg-slate-50 p-3 rounded-lg border border-slate-200 shadow-xs';
+      div.innerHTML = `
+        <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+          <span class="uppercase">${slider.label}</span>
+          <span class="font-mono text-indigo-600 text-sm font-bold" id="lbl-${slider.id}">${slider.val.toFixed(slider.step % 1 === 0 ? 0 : 1)}${slider.unit}</span>
+        </div>
+        <input class="w-full mt-1.5 cursor-pointer" id="${slider.id}" max="${slider.max}" min="${slider.min}" step="${slider.step}" type="range" value="${slider.val}"/>
+      `;
+      container.appendChild(div);
+
+      const input = div.querySelector('input');
+      const label = div.querySelector(`#lbl-${slider.id}`);
+      input.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        slider.val = val;
+        label.textContent = `${val.toFixed(slider.step % 1 === 0 ? 0 : 1)}${slider.unit}`;
+        onSliderChange(key, slider.id, val);
+      });
+    });
+  }
+
+  function onSliderChange(key, id, val) {
+    // Sliders wiggles or redraws
+    if (id === 'param-space-size' || 
+        id === 'param-deposition-thickness' || 
+        id === 'param-lignin-thickness' || 
+        id === 'param-pit-count' || 
+        id === 'param-spiral-reinforce' || 
+        id === 'param-sieve-pore-size' || 
+        id === 'param-membrane-thickness' || 
+        id === 'param-cube-size' || 
+        id === 'param-column-height' || 
+        id === 'param-layers-count') {
+      rebuildScene();
+    }
+    else if (id === 'param-turgor' && key === 'parenchyma') {
+      const activeGroup = tissueMeshes['parenchyma'];
+      if (activeGroup) {
+        activeGroup.children.forEach(cell => {
+          cell.scale.setScalar(val);
+        });
+      }
+    }
+    else if (id === 'param-flexibility' && key === 'collenchyma') {
+      const activeGroup = tissueMeshes['collenchyma'];
+      if (activeGroup) {
+        activeGroup.children.forEach(cell => {
+          cell.scale.set(val, 1.0, val);
+        });
+      }
+    }
+  }
+
+  function onWindowResize() {
+    const container = document.getElementById('three-container');
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+
+  // --- UI EVENT LISTENERS ---
+  const selectTissueType = document.getElementById('select-tissue-type');
+  selectTissueType.addEventListener('change', e => {
+    selectTissue(e.target.value);
+  });
+
+  const chkNucleus = document.getElementById('chk-nucleus');
+  chkNucleus.addEventListener('change', () => {
+    rebuildScene();
+  });
+
+  const chkFlow = document.getElementById('chk-flow');
+  chkFlow.addEventListener('change', () => {
+    particleSystem.clear();
+  });
+
+  const chkRotate = document.getElementById('chk-rotate');
+  chkRotate.addEventListener('change', e => {
+    isAutoRotating = e.target.checked;
+  });
+
+  const slRotateSpeed = document.getElementById('sl-rotate-speed');
+  const lblRotateSpeed = document.getElementById('lbl-rotate-speed');
+  slRotateSpeed.addEventListener('input', e => {
+    lblRotateSpeed.textContent = parseFloat(e.target.value).toFixed(1) + 'x';
+  });
+
+  const slLightIntensity = document.getElementById('sl-light-intensity');
+  const lblLightIntensity = document.getElementById('lbl-light-intensity');
+  slLightIntensity.addEventListener('input', e => {
+    const val = parseFloat(e.target.value);
+    lblLightIntensity.textContent = val.toFixed(1);
+    dirLight1.intensity = val * 1.4;
+    dirLight2.intensity = val * 0.7;
+    ambientLight.intensity = val * 0.7;
+  });
+
+  // Reset Button
+  const btnReset = document.getElementById('btn-reset');
+  btnReset.addEventListener('click', () => {
+    selectTissueType.value = 'parenchyma';
+    currentSelectedKey = 'parenchyma';
+    chkNucleus.checked = true;
+    chkFlow.checked = true;
+    chkRotate.checked = true;
+    isAutoRotating = true;
+    slRotateSpeed.value = 1;
+    lblRotateSpeed.textContent = '1.0x';
+    slLightIntensity.value = 1;
+    lblLightIntensity.textContent = '1.0';
+    
+    dirLight1.intensity = 1.4;
+    dirLight2.intensity = 0.7;
+    ambientLight.intensity = 0.7;
+
+    // Reset default parameters
+    Object.keys(slidersConfig).forEach(key => {
+      slidersConfig[key].forEach(slider => {
+        if (slider.id.includes('space')) slider.val = 0.2;
+        else if (slider.id.includes('deposition')) slider.val = 0.3;
+        else if (slider.id.includes('lignin')) slider.val = 0.5;
+        else if (slider.id.includes('pit-count')) slider.val = 6;
+        else if (slider.id.includes('spiral')) slider.val = 0.8;
+        else if (slider.id.includes('pore')) slider.val = 0.15;
+        else if (slider.id.includes('membrane')) slider.val = 0.6;
+        else if (slider.id.includes('height')) slider.val = 2.5;
+        else if (slider.id.includes('layers')) slider.val = 4;
+        else slider.val = 1.0;
+      });
+    });
+
+    selectTissue('parenchyma');
+    camera.position.set(0, 3, 14);
+    controls.target.set(0, 0, 0);
+  });
+
+  document.getElementById('btn-zoom-in').addEventListener('click', () => {
+    camera.position.multiplyScalar(0.9);
+  });
+  document.getElementById('btn-zoom-out').addEventListener('click', () => {
+    camera.position.multiplyScalar(1.1);
+  });
+  document.getElementById('btn-recenter').addEventListener('click', () => {
+    camera.position.set(0, 3, 14);
+    controls.target.set(0, 0, 0);
+  });
+
+  // Tab views
+  const tabSandbox = document.getElementById('tab-sandbox');
+  const tabAnalogies = document.getElementById('tab-analogies');
+  const viewSandbox = document.getElementById('view-sandbox-panel');
+  const viewAnalogies = document.getElementById('view-analogies-panel');
+
+  tabSandbox.addEventListener('click', () => {
+    tabSandbox.className = 'flex-1 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm';
+    tabAnalogies.className = 'flex-1 px-3.5 py-2 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950';
+    viewSandbox.classList.remove('hidden');
+    viewAnalogies.classList.add('hidden');
+    setTimeout(() => { onWindowResize(); }, 30);
+  });
+
+  tabAnalogies.addEventListener('click', () => {
+    tabAnalogies.className = 'flex-1 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-white text-indigo-600 shadow-sm';
+    tabSandbox.className = 'flex-1 px-3.5 py-2 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-950';
+    viewSandbox.classList.add('hidden');
+    viewAnalogies.classList.remove('hidden');
+  });
+
+  // Category select filter
+  const selectCategory = document.getElementById('select-category');
+  selectCategory.addEventListener('change', e => {
+    const selected = e.target.value;
+    const qCards = document.querySelectorAll('#viva-section [data-category]');
+    qCards.forEach(card => {
+      if (selected === 'all' || card.getAttribute('data-category') === selected) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+
+  // Laboratory Guide modal triggers
+  const guideModal = document.getElementById('user-guide-modal');
+  document.getElementById('btn-open-guide').addEventListener('click', () => {
+    guideModal.classList.remove('hidden');
+  });
+  document.getElementById('btn-close-guide').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+  document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+    guideModal.classList.add('hidden');
+  });
+
+  // Setup layout panel collapse
+  (function() {
+    const btnToggleLeft = document.getElementById('btn-toggle-left');
+    const btnToggleViva = document.getElementById('btn-toggle-viva');
+    const leftPanel = document.getElementById('left-panel');
+    const vivaSection = document.getElementById('viva-section');
+    const mainLayout = document.getElementById('main-layout');
+    const canvasContainer = document.getElementById('canvas-container-wrapper');
+
+    if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) return;
+
+    let leftVisible = true;
+    let vivaVisible = true;
+
+    function updateLayout() {
+      if (leftVisible) {
+        leftPanel.classList.remove('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+      } else {
+        leftPanel.classList.add('hidden');
+        btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+      }
+
+      if (vivaVisible) {
+        vivaSection.classList.remove('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+      } else {
+        vivaSection.classList.add('hidden');
+        btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+        document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+      }
+
+      canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-9', 'lg:col-span-12');
+      let span = 12;
+      if (leftVisible && vivaVisible) span = 6;
+      else if (!leftVisible && !vivaVisible) span = 12;
+      else span = 9;
+
+      canvasContainer.classList.add('lg:col-span-' + span);
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    btnToggleLeft.addEventListener('click', () => {
+      leftVisible = !leftVisible;
+      updateLayout();
+    });
+    btnToggleViva.addEventListener('click', () => {
+      vivaVisible = !vivaVisible;
+      updateLayout();
+    });
+  })();
+
+  // Boot setup
+  window.addEventListener('DOMContentLoaded', () => {
+    init3D();
+    renderQuestions();
+    selectTissue('parenchyma');
+    animate();
+  });
+</script>
+</body>
+</html>

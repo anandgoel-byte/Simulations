@@ -1113,7 +1113,8 @@
           ctx.font = 'bold 11px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          const label = currentTab === 'real' ? REAL_MOLECULES[selectedMoleculeIndex].centralAtom[0] : 'A';
+          const match = REAL_MOLECULES[selectedMoleculeIndex].centralAtom.match(/\(([^)]+)\)/);
+          const label = currentTab === 'real' ? (match ? match[1] : REAL_MOLECULES[selectedMoleculeIndex].centralAtom[0]) : 'A';
           ctx.fillText(label, p.px, p.py);
 
         } else if (p.type === 'terminal') {

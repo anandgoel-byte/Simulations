@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Systems 2D Laboratory</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']], processEscapes: true },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; overflow-x: hidden; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Scrollbars */
+    .viva-scrollbar::-webkit-scrollbar { width: 5px; }
+    .viva-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .viva-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .viva-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Custom Range Sliders */
+    input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; width: 100%; }
+    input[type="range"]::-webkit-slider-runnable-track { background: #cbd5e1; border-radius: 9999px; height: 6px; }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; margin-top: -5px;
+      border-radius: 9999px; height: 16px; width: 16px;
+      border: 2px solid #ffffff; transition: 0.2s;
+    }
+    
+    input[type="range"].slider-cyan::-webkit-slider-thumb { background-color: #06b6d4; box-shadow: 0 0 8px rgba(6, 182, 212, 0.6); }
+    input[type="range"].slider-pink::-webkit-slider-thumb { background-color: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.6); }
+
+    /* 2D Canvas Background */
+    .lab-stage { 
+      background-color: #000000 !important; 
+      background-image: 
+        radial-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px, 25px 25px, 25px 25px;
+      box-shadow: inset 0 0 120px rgba(0,0,0,1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-2 sm:p-4">
+
+  <div class="w-full max-w-[1600px] bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+    
+    <!-- Header -->
+    <header class="bg-slate-900 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 shadow-lg relative z-20">
+      <div class="flex items-center space-x-4 mb-3 sm:mb-0">
+        <div class="bg-slate-800 p-2 rounded-xl border border-slate-600 shadow-inner flex items-center justify-center">
+          <img alt="Sparkl Logo" class="h-11 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white tracking-tight uppercase">Linear Systems Analytics</h1>
+          <p class="text-[11px] text-cyan-400 font-medium tracking-wider uppercase">2D Intersections & Coefficient Ratios</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button id="btn-open-guide" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5">
+          <span>📘</span> Algebra Guide
+        </button>
+        <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-full border border-slate-800 shadow-inner">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse shadow-[0_0_8px_#06b6d4]"></span>
+          <span class="text-[13px] text-slate-300 font-bold font-mono uppercase tracking-widest">Algebra Engine Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Subheader Controls bar -->
+    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-sm relative z-10">
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center space-x-2 text-sm font-bold text-slate-700 cursor-pointer hover:text-indigo-600 transition-colors">
+          <input type="checkbox" id="chk-grid" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 h-4.5 w-4.5">
+          <span>Show Cartesian Grid</span>
+        </label>
+        <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-left">
+          <span>🎛️</span>&nbsp;<span id="lbl-toggle-left">Hide Controls</span>
+        </button>
+        <button class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer" id="btn-toggle-viva">
+          <span>📝</span>&nbsp;<span id="lbl-toggle-viva">Hide Questions</span>
+        </button>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button id="btn-reset" class="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-lg shadow-md transition-all flex items-center gap-1.5">
+          <span>🔄</span> Reset Equations
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-12 min-h-[640px] divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+      
+      <!-- Left Controls Panel -->
+      <section id="left-panel" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col justify-between space-y-5 overflow-y-auto max-h-[740px] viva-scrollbar">
+        
+        <div class="space-y-4">
+            <!-- Line 1 Card -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="text-[10px] font-extrabold text-cyan-600 border-b border-slate-100 pb-2 flex justify-between items-center">
+                <span class="uppercase tracking-widest">Line 1:</span>
+                <span class="normal-case tracking-normal font-semibold">$a_1x + b_1y = c_1$</span>
+              </div>
+              
+              <div class="text-center font-mono text-lg font-bold text-cyan-500 my-2" id="eq1-display">1x + 2y = 4</div>
+
+              <div>
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Coefficient $a_1$</span> 
+                  <span id="val-a1" class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-[11px]">1</span>
+                </div>
+                <input type="range" id="sl-a1" min="-10" max="10" step="1" value="1" class="slider-cyan">
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Coefficient $b_1$</span> 
+                  <span id="val-b1" class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-[11px]">2</span>
+                </div>
+                <input type="range" id="sl-b1" min="-10" max="10" step="1" value="2" class="slider-cyan">
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Constant $c_1$</span> 
+                  <span id="val-c1" class="font-mono bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-[11px]">4</span>
+                </div>
+                <input type="range" id="sl-c1" min="-10" max="10" step="1" value="4" class="slider-cyan">
+              </div>
+            </div>
+
+            <!-- Line 2 Card -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div class="text-[10px] font-extrabold text-pink-600 border-b border-slate-100 pb-2 flex justify-between items-center">
+                <span class="uppercase tracking-widest">Line 2:</span>
+                <span class="normal-case tracking-normal font-semibold">$a_2x + b_2y = c_2$</span>
+              </div>
+              
+              <div class="text-center font-mono text-lg font-bold text-pink-500 my-2" id="eq2-display">2x - 1y = 3</div>
+
+              <div>
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Coefficient $a_2$</span> 
+                  <span id="val-a2" class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-[11px]">2</span>
+                </div>
+                <input type="range" id="sl-a2" min="-10" max="10" step="1" value="2" class="slider-pink">
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Coefficient $b_2$</span> 
+                  <span id="val-b2" class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-[11px]">-1</span>
+                </div>
+                <input type="range" id="sl-b2" min="-10" max="10" step="1" value="-1" class="slider-pink">
+              </div>
+              <div>
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Constant $c_2$</span> 
+                  <span id="val-c2" class="font-mono bg-pink-50 text-pink-700 px-1.5 py-0.5 rounded text-[11px]">3</span>
+                </div>
+                <input type="range" id="sl-c2" min="-10" max="10" step="1" value="3" class="slider-pink">
+              </div>
+            </div>
+        </div>
+
+        <!-- System Analytics Card (Dark theme dashboard) -->
+        <div class="bg-[#0f172a] text-slate-300 rounded-xl p-4 border border-slate-800 shadow-md space-y-3 mt-auto">
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block border-b border-slate-800 pb-2">System Analytics</span>
+          
+          <div class="grid grid-cols-3 gap-2 mt-2 border-b border-slate-800 pb-3">
+            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-700 flex flex-col items-center text-center">
+              <span class="text-[9px] font-bold text-slate-400">$a_1 / a_2$</span>
+              <span class="text-xs font-mono font-bold text-white mt-1" id="tel-ratio-a">0.5</span>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-700 flex flex-col items-center text-center">
+              <span class="text-[9px] font-bold text-slate-400">$b_1 / b_2$</span>
+              <span class="text-xs font-mono font-bold text-white mt-1" id="tel-ratio-b">-2.0</span>
+            </div>
+            <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-700 flex flex-col items-center text-center">
+              <span class="text-[9px] font-bold text-slate-400">$c_1 / c_2$</span>
+              <span class="text-xs font-mono font-bold text-white mt-1" id="tel-ratio-c">1.3</span>
+            </div>
+          </div>
+
+          <div id="box-status" class="bg-emerald-950/40 p-3 rounded-lg border border-emerald-500/50 text-center transition-all duration-300 mt-2">
+             <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-400" id="tel-status">One Unique Solution</div>
+             <div class="text-[9px] text-slate-400 mt-1" id="tel-desc">Lines Intersect. ($a_1/a_2 \neq b_1/b_2$)</div>
+             <div class="text-lg font-mono font-bold text-white mt-2 drop-shadow-md" id="tel-solution">(2.0, 1.0)</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Middle Canvas Panel -->
+      <section id="canvas-container" class="lg:col-span-6 relative lab-stage overflow-hidden flex flex-col justify-center border-8 border-slate-900 min-h-[500px]">
+        <canvas id="graphCanvas" class="w-full h-full block absolute inset-0 z-10"></canvas>
+        
+        <!-- Sparkl Logo & Graph Overlay (Top Left) -->
+        <div class="absolute top-4 left-4 bg-slate-900/85 backdrop-blur-md px-4 py-2 rounded-2xl border border-slate-700 shadow-lg z-20 pointer-events-none select-none flex items-center gap-3">
+          <img alt="Sparkl Logo" class="h-10 object-contain" onerror="this.style.display='none'" src="https://vista.sparkl.me/Student_Feedback_Form/js/logoWhite.png"/>
+          <div class="h-6 w-[1px] bg-slate-700"></div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] animate-pulse"></span>
+            <span class="text-xs font-bold text-slate-300 tracking-wider uppercase">Cartesian Graph</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Viva Voce Panel -->
+      <section id="viva-section" class="lg:col-span-3 bg-slate-50 p-5 flex flex-col space-y-4 max-h-[740px] overflow-y-auto viva-scrollbar">
+        
+        <!-- Question Filter -->
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block border-b border-slate-100 pb-1.5">Question Filter</span>
+          <select class="w-full bg-slate-50 border border-slate-300 text-indigo-700 text-xs font-bold rounded-lg px-2.5 py-1.5 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all cursor-pointer shadow-sm" id="select-category">
+            <option value="all">All Categories</option>
+            <option value="unique">Unique Solution</option>
+            <option value="parallel">No Solution</option>
+            <option value="infinite">Infinite Solutions</option>
+            <option value="consistency">Consistency</option>
+          </select>
+        </div>
+
+        <!-- Score Banner -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-xl p-4 shadow-lg border border-slate-700">
+          <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">Viva Voce Lab Desk</span>
+          <div class="flex justify-between items-center mt-0.5">
+            <h2 class="text-sm font-bold tracking-tight text-slate-200">System Mechanics</h2>
+            <span id="viva-score" class="text-[11px] font-mono font-bold text-white bg-indigo-500/30 border border-indigo-400/50 px-2 py-0.5 rounded-full shadow-[0_0_8px_#6366f1]">Score: 0 / 4</span>
+          </div>
+        </div>
+
+        <!-- MCQ Cards -->
+        <div class="space-y-3 pb-4">
+          
+          <!-- Question 1 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-cyan-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="unique">
+            <div class="space-y-2">
+              <span class="inline-block bg-cyan-50 text-cyan-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Unique Solution]</span>
+              <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-cyan-700" id="q1-text">
+                What is the algebraic condition for two lines to intersect exactly once?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q1-options"></div>
+              <p id="q1-feedback" class="hidden text-xs mt-2 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-pink-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="parallel">
+            <div class="space-y-2">
+              <span class="inline-block bg-pink-50 text-pink-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[No Solution]</span>
+              <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-pink-700" id="q2-text">
+                If the lines are parallel, the system has no solution. This occurs when:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q2-options"></div>
+              <p id="q2-feedback" class="hidden text-xs mt-2 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-amber-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="infinite">
+            <div class="space-y-2">
+              <span class="inline-block bg-amber-50 text-amber-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Infinite Solutions]</span>
+              <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-amber-700" id="q3-text">
+                When does a system of linear equations have infinitely many solutions?
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q3-options"></div>
+              <p id="q3-feedback" class="hidden text-xs mt-2 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="group bg-white border border-slate-200 rounded-xl p-3.5 hover:border-purple-400 hover:shadow-md transition-all duration-300 cursor-pointer" data-category="consistency">
+            <div class="space-y-2">
+              <span class="inline-block bg-purple-50 text-purple-700 text-[9px] font-extrabold px-2 py-1 rounded font-mono uppercase tracking-wider">[Consistency]</span>
+              <h4 class="text-xs font-bold text-slate-700 leading-snug transform transition-all duration-300 origin-left group-hover:scale-[1.02] group-hover:text-purple-700" id="q4-text">
+                A system of equations is considered "inconsistent" ONLY when:
+              </h4>
+              <div class="flex flex-col gap-1.5 mt-2" id="q4-options"></div>
+              <p id="q4-feedback" class="hidden text-xs mt-2 text-slate-600 italic font-semibold leading-relaxed bg-slate-50 p-2.5 rounded-lg border border-slate-100"></p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- User Guide Modal -->
+  <div id="user-guide-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 flex flex-col space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2 uppercase tracking-widest">
+          <span>📘</span> ALGEBRA PROTOCOLS
+        </h3>
+        <button id="btn-close-guide" class="text-slate-400 hover:text-slate-600 font-bold text-2xl p-1 transition-all leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-600 font-medium overflow-y-auto max-h-[400px] pr-2 scrollbar-thin">
+        <p>Welcome to the <strong>Linear Systems Simulator</strong>. We are visualizing how two equations interact simultaneously on a graph.</p>
+        <div class="space-y-3 mt-4">
+          <h4 class="font-extrabold text-indigo-600 text-xs uppercase tracking-widest border-l-2 border-indigo-500 pl-2">The Three Realities</h4>
+          <ul class="list-disc pl-5 space-y-2 text-slate-500 text-xs font-semibold">
+            <li><strong>Intersecting (1 Solution):</strong> The most common scenario. The lines have different slopes, so they MUST cross exactly once. The yellow dot marks the coordinate $(x,y)$ that perfectly satisfies both equations.</li>
+            <li><strong>Parallel (0 Solutions):</strong> Try setting $a_1=1, b_1=2$ and $a_2=1, b_2=2$, but make $c_1 \neq c_2$. The lines run side-by-side forever. Because they never touch, there is no shared point.</li>
+            <li><strong>Coincident (Infinite Solutions):</strong> Make both equations completely identical (e.g., $1x+1y=2$ and $2x+2y=4$). One line draws directly on top of the other. Every single point on the line is a solution!</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-5 border-t border-slate-100 flex justify-end">
+        <button id="btn-close-guide-confirm" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 text-xs uppercase tracking-wider rounded-lg shadow-md transition-all">
+          Start Graphing
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- VIVA MCQS DECK STATE & DATA ---
+    const appState = { vivaScore: 0, answers: { q1: null, q2: null, q3: null, q4: null } };
+
+    const vivaData = {
+      q1: {
+        options: [
+          { text: "$a_1/a_2 = b_1/b_2 = c_1/c_2$", isCorrect: false, exp: "Incorrect. This means the lines are coincident (infinite solutions)." },
+          { text: "$a_1/a_2 = b_1/b_2 \\neq c_1/c_2$", isCorrect: false, exp: "Incorrect. This means the lines are parallel (no solution)." },
+          { text: "$a_1/a_2 \\neq b_1/b_2$", isCorrect: true, exp: "Correct! If the ratio of the x-coefficients is different from the ratio of the y-coefficients, the lines have different slopes. Lines with different slopes will always intersect exactly once." },
+          { text: "$c_1 = c_2$", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q2: {
+        options: [
+          { text: "They have different slopes.", isCorrect: false, exp: "Incorrect." },
+          { text: "They have the same slope but different y-intercepts.", isCorrect: true, exp: "Correct! Mathematically, this is expressed as $a_1/a_2 = b_1/b_2 \\neq c_1/c_2$. The lines rise and run at the exact same rate, so they will never cross." },
+          { text: "They intersect at the origin.", isCorrect: false, exp: "Incorrect." },
+          { text: "Both lines pass through the x-axis at the same point.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q3: {
+        options: [
+          { text: "When the lines are perpendicular.", isCorrect: false, exp: "Incorrect." },
+          { text: "When $a_1/a_2 \\neq b_1/b_2$", isCorrect: false, exp: "Incorrect. That gives one unique solution." },
+          { text: "When the equations represent the exact same line ($a_1/a_2 = b_1/b_2 = c_1/c_2$).", isCorrect: true, exp: "Correct! These are called coincident lines. Because one line lies directly on top of the other, every point on the line is a point of intersection." },
+          { text: "When the determinant is greater than zero.", isCorrect: false, exp: "Incorrect." }
+        ]
+      },
+      q4: {
+        options: [
+          { text: "It has infinitely many solutions.", isCorrect: false, exp: "Incorrect. That is a consistent and dependent system." },
+          { text: "It has absolutely no solution.", isCorrect: true, exp: "Correct! A system is consistent if it has at least one solution. If the lines are parallel, there are zero solutions, making the system inconsistent." },
+          { text: "It has exactly one solution.", isCorrect: false, exp: "Incorrect. That is a consistent and independent system." },
+          { text: "The lines cross at a 90-degree angle.", isCorrect: false, exp: "Incorrect." }
+        ]
+      }
+    };
+
+    const colorsMap = {
+      q1: { hoverBg: 'hover:bg-cyan-50', hoverBorder: 'hover:border-cyan-400', labelText: 'text-cyan-600' },
+      q2: { hoverBg: 'hover:bg-pink-50', hoverBorder: 'hover:border-pink-400', labelText: 'text-pink-600' },
+      q3: { hoverBg: 'hover:bg-amber-50', hoverBorder: 'hover:border-amber-400', labelText: 'text-amber-600' },
+      q4: { hoverBg: 'hover:bg-purple-50', hoverBorder: 'hover:border-purple-400', labelText: 'text-purple-600' }
+    };
+
+    function triggerConfetti() {
+        const container = document.body;
+        const colors = ['#ff007f', '#ff00ff', '#7f00ff', '#00ffff', '#00ff00', '#ffff00', '#ff7f00', '#ff0000', '#4d4dff', '#00e676'];
+        const numParticles = 120;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            
+            const isRibbon = Math.random() > 0.8;
+            const w = isRibbon ? Math.random() * 4 + 2 : Math.random() * 8 + 6;
+            const h = isRibbon ? Math.random() * 25 + 15 : Math.random() * 8 + 6;
+            
+            confetti.style.width = `${w}px`;
+            confetti.style.height = `${h}px`;
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.zIndex = '9999';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.borderRadius = isRibbon ? '2px' : (Math.random() > 0.5 ? '50%' : '0%');
+            
+            const fromLeft = i < numParticles / 2;
+            confetti.style.left = fromLeft ? '-10px' : 'calc(100vw + 10px)';
+            confetti.style.top = 'calc(100vh + 10px)';
+            
+            const angle = fromLeft ? (Math.random() * 50 + 15) * Math.PI / 180 : (Math.random() * 50 + 115) * Math.PI / 180;
+            const velocity = Math.random() * 500 + 400;
+            
+            const dx = Math.cos(angle) * velocity;
+            const dy = -Math.sin(angle) * velocity;
+            
+            const fallDuration = Math.random() * 1.5 + 2.0;
+            const spinRotation = Math.random() * 1080 - 540;
+            
+            confetti.style.transform = 'translate(0px, 0px) rotate(0deg)';
+            confetti.style.transition = `transform ${fallDuration}s cubic-bezier(0.2, 0.9, 0.4, 1), opacity ${fallDuration}s ease-out`;
+            container.appendChild(confetti);
+            
+            confetti.offsetHeight; // force reflow
+            
+            confetti.style.transform = `translate(${dx}px, ${dy}px) rotate(${spinRotation}deg)`;
+            confetti.style.opacity = '0';
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, fallDuration * 1000);
+        }
+    }
+
+    function renderQuestions() {
+      const scoreLabel = document.getElementById('viva-score');
+      Object.keys(vivaData).forEach(qKey => {
+        const data = vivaData[qKey];
+        const optionsContainer = document.getElementById(`${qKey}-options`);
+        const feedbackContainer = document.getElementById(`${qKey}-feedback`);
+        if (!optionsContainer || !feedbackContainer) return; 
+        optionsContainer.innerHTML = ''; 
+        data.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = `relative text-left p-3 rounded-lg text-xs transition-all duration-200 border leading-snug font-bold bg-white ${colorsMap[qKey].hoverBg} ${colorsMap[qKey].hoverBorder} border-slate-200 text-slate-700 cursor-pointer w-full shadow-sm flex items-start gap-2`;
+          let letter = idx === 0 ? 'A)' : idx === 1 ? 'B)' : idx === 2 ? 'C)' : 'D)';
+          btn.innerHTML = `<span class="font-extrabold ${colorsMap[qKey].labelText} w-4">${letter}</span> <span>${opt.text}</span>`;
+          btn.addEventListener('click', () => {
+            if (appState.answers[qKey] !== null) return; 
+            appState.answers[qKey] = idx;
+            if (opt.isCorrect) {
+              appState.vivaScore++;
+              triggerConfetti();
+            }
+            if (scoreLabel) scoreLabel.textContent = `Score: ${appState.vivaScore} / 4`;
+            
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach((b, i) => {
+              b.disabled = true;
+              b.classList.remove('bg-white', colorsMap[qKey].hoverBg, colorsMap[qKey].hoverBorder, 'border-slate-200', 'text-slate-700', 'cursor-pointer', 'shadow-sm');
+              b.classList.add('cursor-not-allowed', 'shadow-none');
+              
+              if (appState.answers[qKey] === i) {
+                if (data.options[i].isCorrect) b.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-900');
+                else b.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-900');
+              } else if (data.options[i].isCorrect) {
+                b.classList.add('bg-emerald-50/50', 'border-emerald-300', 'text-emerald-800', 'opacity-70');
+              } else {
+                b.classList.add('bg-slate-50', 'border-slate-200', 'text-slate-400', 'opacity-40');
+              }
+            });
+            feedbackContainer.innerHTML = opt.exp;
+            feedbackContainer.classList.remove('hidden');
+            if(window.MathJax) MathJax.typesetPromise([feedbackContainer]);
+          });
+          optionsContainer.appendChild(btn);
+        });
+      });
+      if (window.MathJax) setTimeout(() => { MathJax.typesetPromise(); }, 50);
+    }
+
+    // --- Category Filter Handler ---
+    const selectCategory = document.getElementById('select-category');
+    if (selectCategory) {
+        selectCategory.addEventListener('change', () => {
+            const cat = selectCategory.value;
+            const questions = document.querySelectorAll('[data-category]');
+            questions.forEach(q => {
+                const qCat = q.getAttribute('data-category');
+                if (cat === 'all' || qCat === cat) {
+                    q.classList.remove('hidden');
+                } else {
+                    q.classList.add('hidden');
+                }
+            });
+        });
+    }
+
+    // --- STATE MANAGEMENT ---
+    const ids = ['a1', 'b1', 'c1', 'a2', 'b2', 'c2'];
+    const ui = {};
+    ids.forEach(id => {
+        ui[`sl_${id}`] = document.getElementById(`sl-${id}`);
+        ui[`val_${id}`] = document.getElementById(`val-${id}`);
+    });
+    
+    const eq1Display = document.getElementById('eq1-display');
+    const eq2Display = document.getElementById('eq2-display');
+    
+    const telRatioA = document.getElementById('tel-ratio-a');
+    const telRatioB = document.getElementById('tel-ratio-b');
+    const telRatioC = document.getElementById('tel-ratio-c');
+    
+    const boxStatus = document.getElementById('box-status');
+    const telStatus = document.getElementById('tel-status');
+    const telDesc = document.getElementById('tel-desc');
+    const telSolution = document.getElementById('tel-solution');
+    const chkGrid = document.getElementById('chk-grid');
+
+    let pState = { a1: 1, b1: 2, c1: 4, a2: 2, b2: -1, c2: 3, showGrid: true };
+
+    function fmtEq(a, b, c) {
+        let str = "";
+        if (a !== 0) str += `${a}x `;
+        if (b !== 0) {
+            if (a !== 0) str += (b > 0) ? `+ ${b}y ` : `- ${Math.abs(b)}y `;
+            else str += `${b}y `;
+        }
+        if (a === 0 && b === 0) str = "0 ";
+        str += `= ${c}`;
+        return str.trim();
+    }
+
+    function updateState() {
+      ids.forEach(id => {
+          pState[id] = parseInt(ui[`sl_${id}`].value);
+          ui[`val_${id}`].innerText = pState[id];
+      });
+      pState.showGrid = chkGrid.checked;
+
+      eq1Display.innerText = fmtEq(pState.a1, pState.b1, pState.c1);
+      eq2Display.innerText = fmtEq(pState.a2, pState.b2, pState.c2);
+
+      // Math Ratios
+      let rA = (pState.a2 !== 0) ? (pState.a1 / pState.a2).toFixed(2) : "∞";
+      let rB = (pState.b2 !== 0) ? (pState.b1 / pState.b2).toFixed(2) : "∞";
+      let rC = (pState.c2 !== 0) ? (pState.c1 / pState.c2).toFixed(2) : "∞";
+
+      telRatioA.innerText = rA;
+      telRatioB.innerText = rB;
+      telRatioC.innerText = rC;
+
+      // Determinant (Cramer's Rule logic)
+      let det = pState.a1 * pState.b2 - pState.a2 * pState.b1;
+      
+      pState.solType = 0; // 0 = Unique, 1 = Parallel, 2 = Coincident, 3 = Invalid
+
+      if (pState.a1 === 0 && pState.b1 === 0 && pState.c1 !== 0) pState.solType = 3;
+      else if (pState.a2 === 0 && pState.b2 === 0 && pState.c2 !== 0) pState.solType = 3;
+      else if (det !== 0) {
+          pState.solType = 0; // Unique
+          pState.intX = (pState.c1 * pState.b2 - pState.c2 * pState.b1) / det;
+          pState.intY = (pState.a1 * pState.c2 - pState.a2 * pState.c1) / det;
+      } else {
+          // Det is 0. Either parallel or coincident.
+          let cDet1 = pState.a1 * pState.c2 - pState.a2 * pState.c1;
+          let cDet2 = pState.b1 * pState.c2 - pState.b2 * pState.c1;
+          if (cDet1 === 0 && cDet2 === 0) pState.solType = 2; // Coincident
+          else pState.solType = 1; // Parallel
+      }
+
+      // Update UI Status
+      if (pState.solType === 0) {
+          boxStatus.className = "bg-emerald-950/40 p-3 rounded-lg border border-emerald-500/50 text-center transition-all duration-300 mt-2";
+          telStatus.className = "text-[11px] font-bold uppercase tracking-wider text-emerald-400";
+          telStatus.innerText = "One Unique Solution";
+          telDesc.innerText = "Lines Intersect. (a₁/a₂ ≠ b₁/b₂)";
+          telSolution.innerText = `(${pState.intX.toFixed(2)}, ${pState.intY.toFixed(2)})`;
+      } else if (pState.solType === 1) {
+          boxStatus.className = "bg-rose-950/40 p-3 rounded-lg border border-rose-500/50 text-center transition-all duration-300 mt-2";
+          telStatus.className = "text-[11px] font-bold uppercase tracking-wider text-rose-400";
+          telStatus.innerText = "No Solution";
+          telDesc.innerText = "Lines are Parallel. (a₁/a₂ = b₁/b₂ ≠ c₁/c₂)";
+          telSolution.innerText = "∅ (Empty Set)";
+      } else if (pState.solType === 2) {
+          boxStatus.className = "bg-amber-950/40 p-3 rounded-lg border border-amber-500/50 text-center transition-all duration-300 mt-2";
+          telStatus.className = "text-[11px] font-bold uppercase tracking-wider text-amber-400";
+          telStatus.innerText = "Infinite Solutions";
+          telDesc.innerText = "Lines are Coincident. (a₁/a₂ = b₁/b₂ = c₁/c₂)";
+          telSolution.innerText = "All points on line";
+      } else {
+          boxStatus.className = "bg-slate-900/80 p-3 rounded-lg border border-slate-700 text-center transition-all duration-300 mt-2";
+          telStatus.className = "text-[11px] font-bold uppercase tracking-wider text-slate-400";
+          telStatus.innerText = "Invalid System";
+          telDesc.innerText = "Mathematical contradiction (0 = c).";
+          telSolution.innerText = "Error";
+      }
+
+      requestAnimationFrame(renderCanvas);
+    }
+
+    ids.forEach(id => {
+        ui[`sl_${id}`].addEventListener('input', updateState);
+    });
+    chkGrid.addEventListener('change', updateState);
+
+    function resetSim() {
+      ui.sl_a1.value = 1; ui.sl_b1.value = 2; ui.sl_c1.value = 4;
+      ui.sl_a2.value = 2; ui.sl_b2.value = -1; ui.sl_c2.value = 3;
+      updateState();
+    }
+    document.getElementById('btn-reset').addEventListener('click', resetSim);
+
+    // --- CANVAS GRAPHICS ENGINE ---
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      let rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * dpr; 
+      canvas.height = rect.height * dpr;
+      ctx.resetTransform(); 
+      ctx.scale(dpr, dpr);
+      requestAnimationFrame(renderCanvas);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function renderCanvas() {
+        const cw = canvas.width / (window.devicePixelRatio || 1);
+        const ch = canvas.height / (window.devicePixelRatio || 1);
+        ctx.clearRect(0, 0, cw, ch);
+
+        let cx = cw / 2;
+        let cy = ch / 2;
+        let scale = 25; // pixels per unit
+
+        // Helper to map logic coords to canvas coords
+        const mapX = (x) => cx + (x * scale);
+        const mapY = (y) => cy - (y * scale); // Y is inverted on canvas
+
+        if (pState.showGrid) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            // Verticals
+            for(let x = 0; x <= cx; x += scale) {
+                ctx.moveTo(cx + x, 0); ctx.lineTo(cx + x, ch);
+                ctx.moveTo(cx - x, 0); ctx.lineTo(cx - x, ch);
+            }
+            // Horizontals
+            for(let y = 0; y <= cy; y += scale) {
+                ctx.moveTo(0, cy + y); ctx.lineTo(cw, cy + y);
+                ctx.moveTo(0, cy - y); ctx.lineTo(cw, cy - y);
+            }
+            ctx.stroke();
+        }
+
+        // Axes
+        ctx.beginPath();
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 2;
+        ctx.moveTo(0, cy); ctx.lineTo(cw, cy);
+        ctx.moveTo(cx, 0); ctx.lineTo(cx, ch);
+        ctx.stroke();
+
+        // Draw Line Function
+        const drawMathLine = (a, b, c, color) => {
+            if (a === 0 && b === 0) return; // Ignore invalid
+            
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+
+            // ax + by = c
+            if (b !== 0) {
+                // y = (c - ax)/b
+                let minX = -cx / scale;
+                let maxX = cx / scale;
+                let y1 = (c - a * minX) / b;
+                let y2 = (c - a * maxX) / b;
+                
+                ctx.moveTo(mapX(minX), mapY(y1));
+                ctx.lineTo(mapX(maxX), mapY(y2));
+            } else {
+                // b = 0, so ax = c => x = c/a (Vertical line)
+                let xFix = c / a;
+                ctx.moveTo(mapX(xFix), 0);
+                ctx.lineTo(mapX(xFix), ch);
+            }
+            ctx.stroke();
+        };
+
+        // If coincident, draw line 1 slightly thicker to show they overlap
+        if (pState.solType === 2) {
+            drawMathLine(pState.a1, pState.b1, pState.c1, '#06b6d4'); // Cyan Base
+            // Draw Line 2 dashed on top
+            ctx.setLineDash([10, 10]);
+            drawMathLine(pState.a2, pState.b2, pState.c2, '#ec4899'); // Pink Dashed
+            ctx.setLineDash([]);
+        } else {
+            drawMathLine(pState.a1, pState.b1, pState.c1, '#06b6d4'); // Line 1 Cyan
+            drawMathLine(pState.a2, pState.b2, pState.c2, '#ec4899'); // Line 2 Pink
+        }
+
+        // Intersection Point
+        if (pState.solType === 0) {
+            let px = mapX(pState.intX);
+            let py = mapY(pState.intY);
+
+            // Glow
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#facc15';
+            
+            ctx.beginPath();
+            ctx.arc(px, py, 6, 0, Math.PI*2);
+            ctx.fillStyle = '#facc15';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            ctx.shadowBlur = 0; // Reset
+            
+            // Label
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px "JetBrains Mono"';
+            ctx.fillText(`(${pState.intX.toFixed(2)}, ${pState.intY.toFixed(2)})`, px + 10, py - 10);
+        }
+    }
+
+    // Boot
+    window.addEventListener('load', () => {
+      try { renderQuestions(); } catch(e) { console.error(e); }
+      resizeCanvas();
+      updateState();
+      
+      document.getElementById('user-guide-modal').classList.remove('hidden');
+      document.getElementById('btn-close-guide').addEventListener('click', () => {
+        document.getElementById('user-guide-modal').classList.add('hidden');
+      });
+      document.getElementById('btn-close-guide-confirm').addEventListener('click', () => {
+        document.getElementById('user-guide-modal').classList.add('hidden');
+      });
+      document.getElementById('btn-open-guide').addEventListener('click', () => {
+        document.getElementById('user-guide-modal').classList.remove('hidden');
+      });
+    });
+
+    // --- Collapsible Layout Handlers ---
+    (function() {
+      const btnToggleLeft = document.getElementById('btn-toggle-left');
+      const btnToggleViva = document.getElementById('btn-toggle-viva');
+      const leftPanel = document.getElementById('left-panel');
+      const vivaSection = document.getElementById('viva-section');
+      const mainLayout = document.getElementById('main-layout');
+      const canvasContainer = document.getElementById('canvas-container');
+
+      if (!btnToggleLeft || !btnToggleViva || !leftPanel || !vivaSection || !mainLayout || !canvasContainer) {
+        console.warn('Collapsible panels elements missing:', {btnToggleLeft, btnToggleViva, leftPanel, vivaSection, mainLayout, canvasContainer});
+        return;
+      }
+
+      let leftPanelVisible = true;
+      let vivaVisible = true;
+
+      const canvasColSpan = 6;
+      const leftColSpan = 3;
+      const vivaColSpan = 3;
+
+      function updateLayout() {
+        if (leftPanelVisible) {
+          leftPanel.classList.remove('hidden');
+          btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-left').textContent = 'Hide Controls';
+        } else {
+          leftPanel.classList.add('hidden');
+          btnToggleLeft.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-left').textContent = 'Show Controls';
+        }
+
+        if (vivaVisible) {
+          vivaSection.classList.remove('hidden');
+          btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-600 shadow-md transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-viva').textContent = 'Hide Questions';
+        } else {
+          vivaSection.classList.add('hidden');
+          btnToggleViva.className = 'px-3.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-semibold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer';
+          document.getElementById('lbl-toggle-viva').textContent = 'Show Questions';
+        }
+
+        canvasContainer.classList.remove('lg:col-span-6', 'lg:col-span-8', 'lg:col-span-9', 'lg:col-span-12', 'md:col-span-6', 'md:col-span-8', 'md:col-span-9', 'md:col-span-12');
+        
+        let newSpan = 12;
+        if (leftPanelVisible && vivaVisible) {
+          newSpan = canvasColSpan;
+        } else if (!leftPanelVisible && !vivaVisible) {
+          newSpan = 12;
+        } else if (leftPanelVisible && !vivaVisible) {
+          newSpan = canvasColSpan + vivaColSpan;
+        } else if (!leftPanelVisible && vivaVisible) {
+          newSpan = canvasColSpan + leftColSpan;
+        }
+        canvasContainer.classList.add('lg:col-span-' + newSpan, 'md:col-span-' + newSpan);
+
+        if (leftPanelVisible && vivaVisible) {
+          mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+        } else if (!leftPanelVisible && !vivaVisible) {
+          mainLayout.classList.remove('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+        } else {
+          mainLayout.classList.add('lg:divide-x', 'divide-y', 'lg:divide-y-0');
+        }
+
+        resizeCanvas();
+      }
+
+      btnToggleLeft.addEventListener('click', () => {
+        leftPanelVisible = !leftPanelVisible;
+        updateLayout();
+      });
+
+      btnToggleViva.addEventListener('click', () => {
+        vivaVisible = !vivaVisible;
+        updateLayout();
+      });
+    })();
+  </script>
+</body>
+</html>

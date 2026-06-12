@@ -633,11 +633,12 @@
             // Offset angle to sit between petals
             let angle = ((i + 0.5) / numSepals) * Math.PI * 2;
             
-            let sepalGeo = new THREE.ConeGeometry(1, 4, 16);
-            sepalGeo.translate(0, 2, 0); // Move pivot
+            // Taller, wider sepals to form a complete protective envelope in bud stage
+            let sepalGeo = new THREE.ConeGeometry(1.2, 7.2, 16);
+            sepalGeo.translate(0, 3.6, 0); // Move pivot
             
             let sepal = new THREE.Mesh(sepalGeo, mSepal);
-            sepal.scale.z = 0.1; // flatten
+            sepal.scale.set(1.1, 1.0, 0.15); // flatten and widen slightly for coverage
             
             let radius = 1.2;
             let pivot = new THREE.Group();
@@ -666,13 +667,14 @@
       let b = pState.bloom;
       
       petals.forEach(p => {
-          // Rotate around X axis (which is local tangent due to Y-rotation setup)
-          let angle = THREE.MathUtils.lerp(1.2, 0.4, b); // 1.2rad folded in, 0.4rad folded out
+          // Bloom stage: 0 = Bud (closed tightly at 0.22 rad), 1 = Full (opened outward at -1.2 rad for full bloom)
+          let angle = THREE.MathUtils.lerp(0.22, -1.2, b); 
           p.children[0].rotation.x = angle;
       });
 
       sepals.forEach(s => {
-          let angle = THREE.MathUtils.lerp(0.8, -0.2, b); // Wraps around bud -> points down
+          // Bloom stage: 0 = Bud (closed tightly at 0.24 rad), 1 = Full (folded down at -1.5 rad for full bloom)
+          let angle = THREE.MathUtils.lerp(0.24, -1.5, b); 
           s.children[0].rotation.x = angle;
       });
 
@@ -683,16 +685,25 @@
       // Base and Gynoecium stay roughly centered
       gynoGroup.position.y = 0;
       
+      // Scale down inner organs in bud stage to avoid clipping/exposure through sepals
+      let scaleInner = THREE.MathUtils.lerp(0.35, 1.0, b);
+      gynoGroup.scale.set(scaleInner, scaleInner, scaleInner);
+      
       // Androecium moves up slightly and outwards radially
       androGroup.position.y = exp * 3;
       let scaleA = 1 + (exp * 0.5);
-      androGroup.scale.set(scaleA, 1, scaleA);
+      androGroup.scale.set(scaleA * scaleInner, scaleInner, scaleA * scaleInner);
 
-      // Corolla moves up more
+      // Corolla moves up more and scales both vertically and radially in bud stage
       corollaGroup.position.y = exp * 6;
+      let scaleC = THREE.MathUtils.lerp(0.85, 1.0, b);
+      let radialScaleC = THREE.MathUtils.lerp(0.55, 1.0, b); // shrink base radius in bud stage
+      corollaGroup.scale.set(radialScaleC, scaleC, radialScaleC);
       
-      // Calyx moves down slightly
+      // Calyx moves down slightly and scales radially in bud stage
       calyxGroup.position.y = -exp * 2;
+      let radialScaleK = THREE.MathUtils.lerp(0.55, 1.0, b); // shrink base radius in bud stage
+      calyxGroup.scale.set(radialScaleK, 1.0, radialScaleK);
       baseGroup.position.y = -exp * 2;
 
       // Global slow spin for presentation

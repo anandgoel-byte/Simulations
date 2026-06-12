@@ -209,8 +209,13 @@
 <span class="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_8px_#06b6d4] block"></span> Designation
                 </div>
 <div class="text-base font-bold font-mono tracking-widest text-white" id="telemetryName">
+<<<<<<< HEAD
                   2p<sub>z</sub>
                 </div>
+=======
+  2p<sub>z</sub>
+</div>
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
 </div>
 <div class="grid grid-cols-2 gap-2">
 <div class="bg-[#0f172a] p-2.5 rounded-2xl shadow-md flex flex-col justify-center items-center text-center border border-slate-800">
@@ -254,6 +259,7 @@
 <option value="school">School Board PYQ</option>
 <option value="jee">JEE Main</option>
 <option value="neet">NEET Prep</option>
+<option value="exemplar">NCERT Exemplar</option>
 </select>
 </div>
 <div class="space-y-4" id="viva-questions-container">
@@ -443,6 +449,7 @@
       answers: { q1: null, q2: null, q3: null, q4: null }
     };
 
+
     const vivaData = {
       q1: {
         question: "In the modern model of the atom, what is the primary difference between an 'orbit' and an 'orbital'?",
@@ -481,6 +488,61 @@
         ]
       }
     };
+    const questionsData = [
+      {
+        id: "q1",
+        category: "neet",
+        tag: "NCERT Exemplar",
+        colorClass: "bg-cyan-50 text-cyan-700 border-cyan-200",
+        question: "Which of the following sets of quantum numbers is not possible?",
+        options: [
+          { text: "n = 1, l = 0, ml = 0, ms = +1/2", isCorrect: false, exp: "Incorrect. This perfectly describes an electron in the 1s orbital." },
+          { text: "n = 2, l = 1, ml = 0, ms = -1/2", isCorrect: false, exp: "Incorrect. This is a valid set for an electron in a 2p orbital." },
+          { text: "n = 0, l = 0, ml = 0, ms = +1/2", isCorrect: true, exp: "Correct! The principal quantum number (n) represents the main electron shell and can only take positive integer values (n = 1, 2, 3...). It can never be 0." },
+          { text: "n = 3, l = 2, ml = -2, ms = +1/2", isCorrect: false, exp: "Incorrect. This is a completely valid set for an electron in a 3d orbital." }
+        ]
+      },
+      {
+        id: "q2",
+        category: "jee",
+        tag: "AIPMT 2012",
+        colorClass: "bg-pink-50 text-pink-700 border-pink-200",
+        question: "Maximum number of electrons in a subshell with l = 3 and n = 4 is:",
+        options: [
+          { text: "10", isCorrect: false, exp: "Incorrect. 10 is the maximum number of electrons for a d-subshell (where l = 2)." },
+          { text: "12", isCorrect: false, exp: "Incorrect. Check the formula for the maximum number of electrons in a subshell: 2(2l + 1)." },
+          { text: "14", isCorrect: true, exp: "Correct! The azimuthal quantum number l = 3 corresponds to an f-subshell. The number of orbitals in any subshell is (2l + 1), which gives 7 orbitals. Since each orbital holds 2 electrons, 7 × 2 = 14 electrons maximum." },
+          { text: "16", isCorrect: false, exp: "Incorrect. You may have squared the 'n' value, which gives the total number of orbitals in a main shell, not the electron capacity of a specific subshell." }
+        ]
+      },
+      {
+        id: "q3",
+        category: "school",
+        tag: "NEET 2016",
+        colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+        question: "Two electrons occupying the same orbital are distinguished by:",
+        options: [
+          { text: "Magnetic quantum number", isCorrect: false, exp: "Incorrect. The magnetic quantum number (ml) designates the specific spatial orientation of the orbital itself, not the electrons within it." },
+          { text: "Azimuthal quantum number", isCorrect: false, exp: "Incorrect. The azimuthal quantum number (l) defines the shape of the subshell (s, p, d, f)." },
+          { text: "Principal quantum number", isCorrect: false, exp: "Incorrect. The principal quantum number (n) defines the main energy level or shell." },
+          { text: "Spin quantum number", isCorrect: true, exp: "Correct! According to the Pauli Exclusion Principle, no two electrons in an atom can have the same four quantum numbers. If they are in the same orbital, their n, l, and ml are identical, so they must have opposite spins (+1/2 and -1/2)." }
+        ]
+      },
+      {
+        id: "q4",
+        category: "exemplar",
+        tag: "NCERT Exemplar",
+        colorClass: "bg-amber-50 text-amber-700 border-amber-200",
+        question: "Total number of orbitals associated with the principal quantum number n = 3 is:",
+        options: [
+          { text: "3", isCorrect: false, exp: "Incorrect. This is the number of subshells (3s, 3p, 3d), not the total number of individual orbitals." },
+          { text: "6", isCorrect: false, exp: "Incorrect. You may have just added the orbitals of the s and d subshells together." },
+          { text: "9", isCorrect: true, exp: "Correct! The total number of orbitals in a principal energy level is given by the formula n². For n = 3, there are 3² = 9 orbitals. (Specifically: one 3s orbital, three 3p orbitals, and five 3d orbitals. 1 + 3 + 5 = 9)." },
+          { text: "18", isCorrect: false, exp: "Incorrect. 18 is the maximum number of *electrons* that the n=3 shell can hold (calculated via 2n²), not the number of orbitals." }
+
+        ]
+      }
+    };
 
     const colorsMap = {
       q1: { text: "text-cyan-600", hover: "hover:bg-cyan-50/50 hover:border-cyan-400" },
@@ -516,6 +578,26 @@
         } else {
           card.classList.add('hidden');
         }
+<<<<<<< HEAD
+=======
+      });
+      
+      if (scoreLabel) {
+        scoreLabel.textContent = `Score: ${correctInFilter} / ${filtered.length}`;
+      }
+      
+      filtered.forEach(q => {
+        const card = document.createElement('div');
+        let cardHoverClass = "hover:border-cyan-400";
+        if (q.category === 'jee') {
+          cardHoverClass = "hover:border-pink-400";
+        } else if (q.category === 'school') {
+          cardHoverClass = "hover:border-emerald-400";
+        } else if (q.category === 'exemplar') {
+          cardHoverClass = "hover:border-amber-400";
+        }
+        card.className = `bg-white border border-slate-200 rounded-xl p-4 ${cardHoverClass} hover:shadow-md transition-all duration-300`;
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
         
         const optionsContainer = document.getElementById(`${qKey}-options`);
         const feedbackContainer = document.getElementById(`${qKey}-feedback`);
@@ -530,7 +612,24 @@
           const btn = document.createElement('button');
           const colors = colorsMap[qKey];
           
+<<<<<<< HEAD
           btn.className = "text-left p-3 rounded-lg text-xs border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
+=======
+          let themeColorClass = "text-cyan-600";
+          let hoverClass = "hover:bg-cyan-50/50 hover:border-cyan-400 hover:shadow-md hover:scale-[1.015]";
+          if (q.category === 'jee') {
+            themeColorClass = "text-pink-600";
+            hoverClass = "hover:bg-pink-50/50 hover:border-pink-400 hover:shadow-md hover:scale-[1.015]";
+          } else if (q.category === 'school') {
+            themeColorClass = "text-emerald-600";
+            hoverClass = "hover:bg-emerald-50/50 hover:border-emerald-400 hover:shadow-md hover:scale-[1.015]";
+          } else if (q.category === 'exemplar') {
+            themeColorClass = "text-amber-600";
+            hoverClass = "hover:bg-amber-50/50 hover:border-amber-400 hover:shadow-md hover:scale-[1.015]";
+          }
+          
+          btn.className = "text-left p-3 rounded-lg text-sm border leading-snug font-bold transition-all duration-200 w-full flex items-start gap-2 " +
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
             (hasBeenAnswered 
               ? "cursor-not-allowed" 
               : `bg-white border-slate-200 text-slate-700 transform ${colors.hover} active:scale-95 cursor-pointer shadow-sm`);
@@ -706,7 +805,11 @@
         sub = `(${q_ml})`;
       }
 
+<<<<<<< HEAD
       document.getElementById('telemetryName').innerHTML = `${q_n}${letter}${sub ? '<sub>' + sub + '</sub>' : ''}`;
+=======
+      document.getElementById('telemetryName').innerHTML = `${q_n}${letter}${sub ? `<sub>${sub}</sub>` : ''}`;
+>>>>>>> aa037e922fa0d082872158b9b16748449d3c3e51
       document.getElementById('telemetryRadial').innerText = (q_n - q_l - 1);
       document.getElementById('telemetryAngular').innerText = q_l;
     }
